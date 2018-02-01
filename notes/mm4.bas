@@ -5,7 +5,6 @@
  18  & WINDW(0,0,0,0,79,1,79,1): & SEL(0): & CURSR(0,0)
  19  INVERSE : &  PRINT ("Pitch Dark                                                                      "): NORMAL 
  20  GOSUB 1000: & BUTTN(14,1,2,12,800,B$): & STRW(1): REM  Previous
- 21  & BUTTN(14,1,2,12,800,B$): & STRW(1)
  25  GOSUB 1000: & BUTTN(15,65,2,13,900,B$): & STRW(1): REM   Next game
  40  GOSUB 1000: & BUTTN(1,34,10,13,200,B$): & STRW(1): REM  Play game
  41  GOSUB 1000: & BUTTN(2,66,7,11,300,B$): & STRW(1): REM  Clues

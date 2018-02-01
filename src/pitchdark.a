@@ -2,12 +2,16 @@
 ;(c) 2018 by 4am
 
 !cpu 65c02
+!ct "lcase.ct"
 !to "../build/PTCHDARK.SYSTEM#FF2000",plain
 *=$2000
 
 ; ROM routines
 INVERSE = $FE80
 NORMAL = $FE84
+
+; application constants
+RAW = 1
 
          jmp   Init
 
@@ -21,31 +25,74 @@ Init
          beq   +                     ; yes, continue
          jmp   QuitToProDOS
 +
-         jsr   LoadFile1Shot
+         jsr   LoadFile1Shot         ; load WEEGUI binary at $4000
          !word WGFILE
          !word $4000
          !word $2000
          !word $1C00
 
-         jsr   $4000
-         ldx   #WGClearScreen
+         jsr   $4000                 ; initialize WeeGUI
+
+         ldx   #WGClearScreen        ; clear screen
          jsr   WeeGUI
 
-         ldx   #WGCreateView
-         lda   #<view0
+         ldx   #WGCreateView         ; create title bar on top line
+         lda   #<view_title
          sta   PARAM0
-         lda   #>view0
+         lda   #>view_title
          sta   PARAM1
          jsr   WeeGUI
-
          jsr   INVERSE
          ldx   #WGPrint
-         lda   #<title
+         lda   #<string_title
          sta   PARAM0
-         lda   #>title
+         lda   #>string_title
          sta   PARAM1
          jsr   WeeGUI
          jsr   NORMAL
+
+         jsr   _create_button
+         !word view_previous
+         jsr   _create_button
+         !word view_next
+         jsr   _create_button
+         !word view_play
+         jsr   _create_button
+         !word view_clues
+         jsr   _create_button
+         !word view_boxart
+         jsr   _create_button
+         !word view_options
+
+         ldx   #WGCreateView         ; create game info box
+         lda   #<view_info
+         sta   PARAM0
+         lda   #>view_info
+         sta   PARAM1
+         jsr   WeeGUI
+
+         ldx   #WGSetCursor
+         stz   PARAM0
+         stz   PARAM1
+         jsr   WeeGUI
+         ldx   #WGPrint
+         lda   #<string_info1
+         sta   PARAM0
+         lda   #>string_info1
+         sta   PARAM1
+         jsr   WeeGUI
+
+         ldx   #WGSetCursor
+         stz   PARAM0
+         lda   #1
+         sta   PARAM1
+         jsr   WeeGUI
+         ldx   #WGPrint
+         lda   #<string_info2
+         sta   PARAM0
+         lda   #>string_info2
+         sta   PARAM1
+         jsr   WeeGUI
 
          bit   $c010
 -        lda   $c000
@@ -54,17 +101,139 @@ Init
          jsr   WeeGUI
          jmp   QuitToProDOS
 
-WGFILE    !byte wg_e-wg_b
-wg_b      !text "WEEGUI"
+callback_previous
+callback_next
+callback_play
+callback_clues
+callback_boxart
+callback_options
+         rts
+
+_create_button
+         pla
+         sta   $00
+         pla
+         sta   $01
+         tax
+         lda   #$02
+         clc
+         adc   $00
+         bcc   +
+         inx
++        phx
+         pha
+         ldy   #$01
+         lda   ($00),y
+         sta   PARAM0
+         iny
+         lda   ($00),y
+         sta   PARAM1
+         ldx   #WGCreateButton
+         jsr   WeeGUI
+         ldx   #WGViewSetRawTitle
+         lda   #RAW
+         sta   PARAM0
+         jsr   WeeGUI
+         ldx   #WGPaintView
+         jmp   WeeGUI
+
+WGFILE   !byte wg_e-wg_b
+wg_b     !raw  "WEEGUI"
 wg_e
 
-view0    !byte 0                     ; view ID
+view_title
+         !byte 0                     ; view ID
          !byte 0                     ; style
          !byte 0                     ; left
          !byte 0                     ; top
-         !byte 79                    ; visible width
+         !byte 80                    ; visible width
          !byte 1                     ; visible height
-         !byte 79                    ; width
+         !byte 80                    ; width
          !byte 1                     ; height
+string_title
+         !raw  "Pitch Dark                                                                       ",0
 
-title    !text "Pitch Dark                                                                      ",0
+view_previous
+         !byte 14                    ; view ID
+         !byte 1                     ; left
+         !byte 2                     ; top
+         !byte 12                    ; width
+         !word callback_previous     ; callback
+         !word string_previous       ; caption
+string_previous
+         !text "< Pre"
+         !byte $76                   ; 'v' inverse
+         !text "ious",0
+
+view_next
+         !byte 15                    ; view ID
+         !byte 65                    ; left
+         !byte 2                     ; top
+         !byte 13                    ; width
+         !word callback_next         ; callback
+         !word string_next           ; caption
+string_next
+         !byte $0E                   ; 'N' inverse
+         !text "ext game >",0
+
+view_play
+         !byte 1                     ; view ID
+         !byte 34                    ; left
+         !byte 10                    ; top
+         !byte 13                    ; width
+         !word callback_play         ; callback
+         !word string_play           ; caption
+string_play
+         !byte $10                   ; 'P' inverse
+         !text "lay game",0
+
+view_clues
+         !byte 2                     ; view ID
+         !byte 66                    ; left
+         !byte 7                     ; top
+         !byte 11                    ; width
+         !word callback_clues        ; callback
+         !word string_clues          ; caption
+string_clues
+         !byte $03                   ; 'C' inverse
+         !text "lues",0
+
+view_boxart
+         !byte 3                     ; view ID
+         !byte 66                    ; left
+         !byte 9                     ; top
+         !byte 11                    ; width
+         !word callback_boxart       ; callback
+         !word string_boxart         ; caption
+string_boxart
+         !byte $02                   ; 'B' inverse
+         !text "ox art",0
+
+view_options
+         !byte 4                     ; view ID
+         !byte 66                    ; left
+         !byte 11                    ; top
+         !byte 11                    ; width
+         !word callback_options      ; callback
+         !word string_options        ; caption
+string_options
+         !byte $0F                   ; 'O' inverse
+         !text "ptions",0
+
+view_info
+         !byte 12                    ; view ID
+         !byte 0                     ; style
+         !byte 31                    ; left
+         !byte 2                     ; top
+         !byte 18                    ; visible width
+         !byte 7                     ; visible height
+         !byte 18                    ; width
+         !byte 7                     ; height
+string_info1
+         !raw  "ZORK I: THE GREAT ",0
+string_info2
+         !raw  "UNDERGROUND EMPIRE",0
+string_info3
+         !raw  "1980       Fantasy",0
+string_info4
+         !raw  "Difficulty:  ",64,64,64,65,65,0
