@@ -1,9 +1,13 @@
-;license:BSD-3-Clause
+;license:MIT
 ;(c) 2018 by 4am
 
 !cpu 65c02
-!to "pitch.system#FF2000",plain
+!to "../build/PTCHDARK.SYSTEM#FF2000",plain
 *=$2000
+
+; ROM routines
+INVERSE = $FE80
+NORMAL = $FE84
 
          jmp   Init
 
@@ -26,8 +30,41 @@ Init
          jsr   $4000
          ldx   #WGClearScreen
          jsr   WeeGUI
-         rts
+
+         ldx   #WGCreateView
+         lda   #<view0
+         sta   PARAM0
+         lda   #>view0
+         sta   PARAM1
+         jsr   WeeGUI
+
+         jsr   INVERSE
+         ldx   #WGPrint
+         lda   #<title
+         sta   PARAM0
+         lda   #>title
+         sta   PARAM1
+         jsr   WeeGUI
+         jsr   NORMAL
+
+         bit   $c010
+-        lda   $c000
+         bpl   -
+         ldx   #WGExit
+         jsr   WeeGUI
+         jmp   QuitToProDOS
 
 WGFILE    !byte wg_e-wg_b
 wg_b      !text "WEEGUI"
 wg_e
+
+view0    !byte 0                     ; view ID
+         !byte 0                     ; style
+         !byte 0                     ; left
+         !byte 0                     ; top
+         !byte 79                    ; visible width
+         !byte 1                     ; visible height
+         !byte 79                    ; width
+         !byte 1                     ; height
+
+title    !text "Pitch Dark                                                                      ",0

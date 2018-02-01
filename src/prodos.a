@@ -479,8 +479,8 @@ GetVolumeInfo
          rts
 
 QuitToProDOS
-         lda   CMD_QUIT
-         ldy   PC_QUIT
+         lda   #CMD_QUIT
+         ldy   #PC_QUIT
 ; execution falls through here
 
 ;-------------------------------
