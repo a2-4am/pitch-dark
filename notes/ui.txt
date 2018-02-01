@@ -1,0 +1,198 @@
+0         1         2         3         4         5         6         7
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+[Pitch Dark]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]][  Exit  ]
+ ____________                                                     _____________
+|_<_Previous_|                 ZORK I: THE GREAT                 |_Next_game_>_|
+                               UNDERGROUND EMPIRE
+
+                               1980       Fantasy
+
+                               Difficulty:  OOOOO
+                                                                    _________
+                                                                   |__Hints__|
+                                   ___________                      _________
+                                  |_Play_game_|                    |_Box_art_|
+                                                                    _________
+                                                                   |_Options_|
+[------------------------------------------------------------------------------]
+[------------------------------------------------------------------------------]
+| Welcome to ZORK! You are about to experience a classic interactive fantasy,  ^
+| set in a magical universe. The ZORK trilogy takes place in the ruins of an   |
+| ancient empire lying far underground. You, a dauntless treasure-hunter, are  |
+| venturing into this dangerous land in search of wealth and adventure.        |
+| Because each part of the ZORK saga is a completely independent story, you    |
+| can explore them in any order. However, since ZORK I is the least difficult, |
+| it is usually the best place to begin.                                       v
+|______________________________________________________________________________|
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[Pitch Dark]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]][  Exit  ]
+ ____________                 _______________________             _____________
+|_<_Previous_|               /_____________________./|           |_Next_game_>_|
+                            |                      |||
+                            |  ZORK I: THE GREAT   |||
+Sort by                     |  UNDERGROUND EMPIRE  |||
+ ____________               |                      |||
+|____Name____|              |  1980       Fantasy  |||
+ ____________               |                      |||
+|____Year____|              |  Difficulty:  OOOOO  |||
+ ____________               |     _____________    |||
+|___Genre____|              |    |_Play_game_>_|   |||
+ ____________               |                      ||/
+|_Difficulty_|              |______________________|/
+
+[-------------------------------------Blurb------------------------------------]
+| Welcome to ZORK! You are about to experience a classic interactive fantasy,  ^
+| set in a magical universe. The ZORK trilogy takes place in the ruins of an   |
+| ancient empire lying far underground. You, a dauntless treasure-hunter, are  |
+| venturing into this dangerous land in search of wealth and adventure.        |
+| Because each part of the ZORK saga is a completely independent story, you    |
+| can explore them in any order. However, since ZORK I is the least difficult, |
+| it is usually the best place to begin.                                       v
+|______________________________________________________________________________|
+
+Many strange tales have been told of the fabulous treasures, exotic
+creatures and diabolical puzzles in the Great Underground Empire. As an
+aspiring adventurer you will undoubtedly want to locate the treasures and
+deposit them in your trophy case. You'd better equip yourself with a source
+of light (for the caverns are dark) and weapons (for some of the inhabitants
+are unfriendly -- especially the thief, a skilled pickpocket and ruthless
+opponent).
+
+
+
+
+
+      ___________________   ___________________
+  .-/|  78   ~~**~~      \ /      ~~**~~   79  |\-.
+  ||||                    :                    ||||
+  ||||   Dorothy asked    :   The Scarecrow    ||||
+  ||||   the Scarecrow    :   answered "Some   ||||
+  ||||   "How can you     :   people without   ||||
+  ||||   talk if you      :   brains do an     ||||
+  ||||   haven't got      :   awful lot        ||||
+  ||||   a brain?"        :   of talking."     ||||
+  ||||   She looked at    :   She replied,     ||||
+  ||||   him puzzled.     :   "That's true."   ||||
+  ||||                    :                    ||||
+  ||||  The Wizard Of Oz  :    boba@wwa.com    ||||
+  ||||___________________ : ___________________||||
+  ||/====================\:/====================\||
+  `---------------------~___~--------------------''
+
+
+      ___
+    _|   |_
+   / |___| \
+   |  ___  |
+   \_|   |_/
+     |___|
+ ___/
+|   |
+|___|
+
+
+       ___
+      |   |
+      |___|
+  ___/
+ |   |
+ |___|
+  _|_
+_|   |_
+ |___|
+
+
+
+0         1         2         3         4         5         6         7
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+1. _You_ don't.
+2. Have you tried saying OPEN EGG?
+3. It takes a great deal of manual dexterity and the proper
+   tools.
+4. Someone else in the game can do it.
+5. Only the Thief can open the egg. Give it to him or leave it
+   underground where he will find it.
+
+
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+0[Main Menu]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] [  Exit  ]
+1
+2>LOOK
+3
+4You see a collection of classic Infocom games, all playable.
+5
+6________________________________________________________________________________
+7
+8
+9Browse games by  [  Name  ]  [  / Genre  ]  [  Difficulty  ]
+0
+1 1. Fantasy
+2
+3 2. Science Fiction
+4
+5 3. Mystery
+6
+7 4. Adventure
+8
+9 5. Other
+0
+1
+2
+3
+
+
+
+
+
+
+
+
+
+
+
+|^: Disk 2 (Slot 7)                MAIN MENU
+_______________________________________________________________________________
+   ___________________________
+  |     Main Menu             |_____________________________________
+  |                                                                 |
+  |                                                                 |
+  |     1.  Add files to the Desktop                                |
+  |                                                                 |
+  |     2.  Work with one of the files on the Desktop               |
+  |                                                                 |
+  |     3.  Save Desktop files to disk                              |
+  |                                                                 |
+  |     4.  Remove files from the Desktop                           |
+  |                                                                 |
+  |     5.  Other Activities                                        |
+  |                                                                 |
+  |     6.  Quit                                                    |
+  |                                                                 |
+  |_________________________________________________________________|
+
+
+
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+Type number, or use arrows, then press Return                 12/16/17 10:11 pm

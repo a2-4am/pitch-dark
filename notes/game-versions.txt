@@ -1,0 +1,124 @@
+Ballyhoo
+  97/851218 - done
+Cutthroats
+  23/840809 - done
+Deadline
+  18/820311 - done
+  19/820427 - done
+  21/820512 - done
+  22/820809 - done
+  26/821108 - done
+  27/831005 - done
+Enchanter
+  10/830810 - done
+  15/831107 - done
+  16/831118 - done
+  24/851118 - done
+  29/860820 - done
+The Hitchhiker's Guide to the Galaxy
+  47/840914 - done
+  56/841221 - done
+  58/851002 - done
+  59/851108 - done
+  31/871119 - not Z3
+Hollywood Hijinx
+  235/861118- done
+  37/861215 - done
+Infidel
+  22/830916 - done
+Leather Goddesses of Phobos
+  50/860711 - done
+  59/860730 - done
+  4/880405  - not Z3
+The Lurking Horror
+  203/870506- done
+  219/870912- done
+  221/870918- done
+Moonmist
+  4/860918  - done
+  9/861022  - done
+Planetfall
+  20/830708 - done
+  26/831014 - done
+  29/840118 - done
+  37/851003 - done
+  10/880531 - not Z3
+Plundered Hearts
+  26/870730 - done
+Seastalker
+  15/840501 - done (as "r15a.840501")
+  15/840522 - done (as "r15b.840522")
+  16/850515 - done (as "r16a.850515")
+  16/850603 - done (as "r16b.850603")
+  86/840320 - done
+Sorcerer [has in-game protection]
+  4/840131  - done
+  6/840508  - done
+  13/851021 - done
+  15/851108 - done
+  18/860904 - done
+  4/840131/deprotected  - done (as "r4.deprot")
+  6/840508/deprotected  - done (as "r6.deprot")
+  13/851021/deprotected - done (as "r13.deprot")
+  15/851108/deprotected - done (as "r15.deprot")
+  18/860904/deprotected - done (as "r18.deprot")
+Spellbreaker [has in-game protection]
+  63/850916 - done
+  87/860904 - done
+  63/850916/deprotected - done (as "r63.deprot")
+  87/860904/deprotected - done (as "r87.deprot")
+Starcross
+  15/820901 - done
+  17/821021 - done
+Stationfall [has in-game protection]
+  107/870430- done
+  107/870430/deprotected - done (as "r107.deprot")
+Suspect
+  14/841005 - done
+Suspended
+  5/830222  - done
+  7/830419  - done
+  8/830521  - done (as "r8a")
+  8/840521  - done (as "r8b")
+Wishbringer
+  68/850501 - done
+  69/850920 - done
+  23/880706 - not Z3
+The Witness
+  13/830524 - done
+  18/830910 - done
+  20/831119 - done
+  21/831208 - done
+  22/840924 - done
+Zork I
+  2/AS000C  - not Z3
+  5/        - not Z3
+  15/UG3AU5 - not Z3
+  20/       - done (as "r20.000000")
+  23/820428 - done
+  25/820515 - done
+  26/820803 - done
+  28/821013 - done
+  30/830330 - done
+  75/830929 - done
+  76/840509 - done
+  88/840726 - done
+  52/871125 - not Z3
+Zork II
+  7/UG3AU5  - not Z3
+  15/820308 - done
+  17/820427 - done
+  18/820512 - done (as "r18a")
+  18/820517 - done (as "r18b")
+  19/820721 - done
+  22/830331 - done
+  23/830411 - done
+  48/840904 - done
+Zork III
+  10/820818 - done
+  12/821025 - done
+  15/830331 - done (as "r15a")
+  15/840518 - done (as "r15b")
+  16/830410 - done
+  15/840518 - done
+  17/840727 - done
