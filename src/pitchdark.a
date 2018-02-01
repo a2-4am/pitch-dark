@@ -1,0 +1,33 @@
+;license:BSD-3-Clause
+;(c) 2018 by 4am
+
+!cpu 65c02
+!to "pitch.system#FF2000",plain
+*=$2000
+
+         jmp   Init
+
+         !source "WeeGUI_MLI.s"
+         !source "prodos.a"
+
+Init
+         lda   MACHID
+         and   #$30
+         cmp   #$30                  ; 128K?
+         beq   +                     ; yes, continue
+         jmp   QuitToProDOS
++
+         jsr   LoadFile1Shot
+         !word WGFILE
+         !word $4000
+         !word $2000
+         !word $1C00
+
+         jsr   $4000
+         ldx   #WGClearScreen
+         jsr   WeeGUI
+         rts
+
+WGFILE    !byte wg_e-wg_b
+wg_b      !text "WEEGUI"
+wg_e
