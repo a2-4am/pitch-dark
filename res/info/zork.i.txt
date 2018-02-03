@@ -1,0 +1,35 @@
+[info]
+ ZORK I: THE GREAT
+ UNDERGROUND EMPIRE
+
+1980         Fantasy
+
+Difficulty:    ***..
+
+[description]
+Welcome to ZORK! You are about to experience a classic interactive fantasy,
+set in a magical universe. The ZORK trilogy takes place in the ruins of an
+ancient empire lying far underground. You, a dauntless treasure-hunter, are
+venturing into this dangerous land in search of wealth and adventure.
+Because each part of the ZORK saga is a completely independent story, you
+can explore them in any order. However, since ZORK I is the least difficult,
+it is usually the best place to begin.
+
+Many strange tales have been told of the fabulous treasures, exotic
+creatures and diabolical puzzles in the Great Underground Empire. As an
+aspiring adventurer you will undoubtedly want to locate the treasures and
+deposit them in your trophy case. You'd better equip yourself with a source
+of light (for the caverns are dark) and weapons (for some of the inhabitants
+are unfriendly -- especially the thief, a skilled pickpocket and ruthless
+opponent).
+
+[versions]
+R88.840726.Z3=r88 / 840726
+R76.840509.Z3=r76 / 840509
+R75.830929.Z3=r75 / 830929
+R30.830330.Z3=r30 / 830330
+R28.821013.Z3=r28 / 821013
+R26.820803.Z3=r26 / 820803
+R25.820515.Z3=r25 / 820515
+R23.820428.Z3=r23 / 820428
+R20.000000.Z3=r20 / 000000

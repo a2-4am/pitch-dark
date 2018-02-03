@@ -1,0 +1,103 @@
+kNumberOfGames = 25
+
+directories
+         !word .ballyhoo
+         !word .cutthroats
+         !word .deadline
+         !word .enchanter
+         !word .hgttg
+         !word .hollywoodhijinx
+         !word .infidel
+         !word .leathergoddesses
+         !word .lurkinghorror
+         !word .minizork
+         !word .moonmist
+         !word .planetfall
+         !word .plunderedhearts
+         !word .seastalker
+         !word .sorcerer
+         !word .spellbreaker
+         !word .starcross
+         !word .stationfall
+         !word .suspect
+         !word .suspended
+         !word .wishbringer
+         !word .witness
+         !word .zorki
+         !word .zorkii
+         !word .zorkiii
+.ballyhoo
+         !byte 8
+         !raw  "BALLYHOO"
+.cutthroats
+         !byte 10
+         !raw  "CUTTHROATS"
+.deadline
+         !byte 8
+         !raw  "DEADLINE"
+.enchanter
+         !byte 9
+         !raw  "ENCHANTER"
+.hgttg
+         !byte 5
+         !raw  "HGTTG"
+.hollywoodhijinx
+         !byte 9
+         !raw  "HOLLYWOOD"
+.infidel
+         !byte 7
+         !raw  "INFIDEL"
+.leathergoddesses
+         !byte 4
+         !raw  "LGOP"
+.lurkinghorror
+         !byte 14
+         !raw  "LURKING.HORROR"
+.minizork
+         !byte 9
+         !raw  "MINI.ZORK"
+.moonmist
+         !byte 8
+         !raw  "MOONMIST"
+.planetfall
+         !byte 10
+         !raw  "PLANETFALL"
+.plunderedhearts
+         !byte 9
+         !raw  "PLUNDERED"
+.seastalker
+         !byte 10
+         !raw  "SEASTALKER"
+.sorcerer
+         !byte 8
+         !raw  "SORCERER"
+.spellbreaker
+         !byte 12
+         !raw  "SPELLBREAKER"
+.starcross
+         !byte 9
+         !raw  "STARCROSS"
+.stationfall
+         !byte 11
+         !raw  "STATIONFALL"
+.suspect
+         !byte 7
+         !raw  "SUSPECT"
+.suspended
+         !byte 9
+         !raw  "SUSPENDED"
+.wishbringer
+         !byte 11
+         !raw  "WISHBRINGER"
+.witness
+         !byte 7
+         !raw  "WITNESS"
+.zorki
+         !byte 6
+         !raw  "ZORK.I"
+.zorkii
+         !byte 7
+         !raw  "ZORK.II"
+.zorkiii
+         !byte 8
+         !raw  "ZORK.III"

@@ -1,9 +1,40 @@
-    CUTTHROATS
+      BALLYHOO
 
 
-1984     Adventure
+1986         Mystery
 
-Difficulty:  OOO..
+Difficulty:    ***..
+
+
+Spurred by your natural curiosity, you stick around after the show in the
+big top, hoping to catch an after-hours performance. Perhaps you'll get a
+peek at an impromptu clown act, or watch the late-night feedings of the
+exotic animals you goggled at earlier. But life at the circus isn't
+glamorous after the audience has gone home: instead of flashy feats, you
+overhear a mysterious conversation: a little girl - the circus owner's
+daughter - has been kidnapped! Her father is too naive (or is he too
+pompously stupid?) to do more than hire an inept detective to find her. He
+remains blindly loyal to his overworked performers, but... could it be an
+inside job? The girl might be hidden somewhere on the circus grounds... and
+one of the performers might be her abductor!
+
+So you do what anyone would do in these circumstances: set out to rescue the
+damsel in distress. The odds aren't in your favor: you - a spectator, a
+bystander, an outsider in a defensive close-knit community - trying to find
+a girl you've never met, in a place you know nothing about, among bizarre
+people who want nothing to do with you. Some would call you brave. Some
+would call you foolish.
+
+Every circus has its seedy underside. But few are as dangerous as this.
+
+--
+
+     CUTTHROATS
+
+
+1984       Adventure
+
+Difficulty:    ***..
 
 
 In Cutthroats, you are a skilled diver living on Hardscrabble Island, a
@@ -19,12 +50,12 @@ story, you may find yourself diving for a different treasure.
 
 --
 
-     DEADLINE
+      DEADLINE
 
 
-1982       Mystery
+1982         Mystery
 
-Difficulty:  OOOOO
+Difficulty:    *****
 
 
 A wealthy industrialist, Mr. Marshall Robner, locked himself in the upstairs
@@ -47,12 +78,12 @@ facts better than any other, and you will know it when you reach it.
 
 --
 
-    ENCHANTER
+     ENCHANTER
 
 
-1983       Fantasy
+1983         Fantasy
 
-Difficulty:  OOO..
+Difficulty:    ***..
 
 
 Welcome to the World of the Enchanter saga - a world where magic is
@@ -79,12 +110,12 @@ observation and quick wits.
 
 --
 
-HITCHHIKER'S GUIDE
-  TO THE GALAXY
+ HITCHHIKER'S GUIDE
+   TO THE GALAXY
 
-1984        Sci-Fi
+1984          Sci-Fi
 
-Difficulty:  OOO..
+Difficulty:    ***..
 
 
 Don't Panic!
@@ -109,12 +140,38 @@ befuddle yourself.
 
 --
 
-     INFIDEL
+  HOLLYWOOD HIJINX
 
 
-1983     Adventure
+1987       Adventure
 
-Difficulty:  OOOO.
+Difficulty:    ***..
+
+
+As a child, you spent most of your summers with your Aunt Hildegard and
+Uncle Buddy. What memories! Uncle Buddy was a Hollywood big-shot, Aunt
+Hildegard his loving (and very rich!) wife. They had no children on their
+own, but you and your cousins loved their house, their parties, the
+Hollywood memorabilia, and them. Sure, Buddy and Hildy were a bit eccentric
+- but that added to their charm.
+
+Aunt Hildegard kept the house when Uncle Buddy passed away. And now that
+she's suddenly died, you remember her unusual will. You will inherit the
+entire estate - probably worth millions - if you can spend one night in the
+house and on the grounds, and find a treasure or two. But if you can't, then
+you inherit nothing.
+
+And so Hollywood Hijinx begins with you being dropped off in front of a dark
+house, not too far from Hollywood...
+
+--
+
+      INFIDEL
+
+
+1983       Adventure
+
+Difficulty:    ****.
 
 
 You like to think of yourself as a bold and adventurous soldier of fortune,
@@ -135,12 +192,98 @@ reputation and self-esteem, are at stake. For you are branded INFIDEL.
 
 --
 
-    PLANETFALL
+ LEATHER GOODESSES
+     OF PHOBOS
+
+1986          Comedy
+
+Difficulty:    ***..
 
 
-1983        Sci-Fi
+1936. In the United States, a new miracle fabric called nylon is becoming
+popular, the Great Plains continue to suffer from a severe drought that is
+turning the region into a Dust Bowl, Alf Landon is running for President,
+Victor Hess is receiving the Nobel Prize for Physics for discovering cosmic
+radiation, Gone With the Wind is the best-selling novel, and steak is
+twenty-five cents a pound. Elsewhere, black track star Jesse Owen is
+embarrassing Adolph Hitler by winning four gold medals at the Olympic Games
+in Berlin, Edward the VIII of England is abdicating the throne to marry a
+commoner, the Spanish Civil War is beginning to heat up, and the Leather
+Goddesses of Phobos are completing plans to invade the Earth and turn it
+into their private pleasure world.
 
-Difficulty:  OOO..
+Don't let anyone ever tell you that nothing happens in Upper Sandusky, Ohio,
+because on this day in 1936, you're snatched out of your favorite bar in
+Upper Sandusky - kidnapped by minions of the evil Leather Goddesses. You are
+brought back to Phobos as an experimental subject, as preparations continue
+to enslave every man and woman on Earth.
+
+If you succeed in escaping the clutches of the Leather Goddesses, you will
+begin an odyssey the likes of which you have never even imagined (except,
+perhaps, in certain very enjoyable dreams). With your loyal friend and
+fellow Earthmate at your side, you will begin a naughty, bawdy, rowdy,
+rousing and very, very amusing romp across the solar system. Your mission,
+should you be able to catch your breath long enough to think about it, is to
+collect the materials you'll need to ultimately defeat the Leather Goddesses
+of Phobos and save humanity! Are you "up" for the job?
+
+--
+
+ THE LURKING HORROR
+
+
+1987          Horror
+
+Difficulty:    ***..
+
+
+In The Lurking Horror, you are a student at G.U.E. Tech. You have braved a
+snowstorm to get to the Computer Center and finish work on an assignment.
+But the snowstorm has turned into a raging blizzard, and has trapped you in
+a complex of buildings late at night. You are not alone, fortunately ... or
+perhaps, unfortunately.
+
+In any event, you soon find yourself wandering away from your computer and
+into the dark nether regions of G.U.E. Tech. Suddenly, you're in a world
+that rivals your most hideous visions, a realm of horror lurking beneath the
+calm corridors and study halls.
+
+Shapes emerge from dark corners. Eerie sounds draw closer. Slimy passageways
+lead to sights so horrifying that they will feed your nightmares for weeks.
+
+--
+
+      MOONMIST
+
+
+1986         Mystery
+
+Difficulty:    **...
+
+
+In Moonmist, you are a famous young American detective. An old friend,
+Tamara Lynd, has written you a letter, asking for your help. And so you have
+travelled to England to test your detective skills.
+
+As the story begins, you meet some interesting guests. But your visit soon
+turns to mystery, as a trail of riddles and clues leads you to a hidden
+valuable treasure.
+
+But Tamara is worried about a ghost that is tormenting her. What does the
+ghost want? Is it jealous of her? Does the ghost want the hidden treasure
+for itself?  Or is the ghost a fake -- just someone dressing up to frighten
+Tamara? If so, why?
+
+These mysteries and others are waiting to test your wits in Moonmist.
+
+--
+
+     PLANETFALL
+
+
+1983          Sci-Fi
+
+Difficulty:    ***..
 
 
 After the fall of the Second Galactic Union in 1716 GY, a ten-thousand-year
@@ -172,12 +315,32 @@ out for the Stellar Patrol...
 
 --
 
-    SEASTALKER
+  PLUNDERED HEARTS
 
 
-1984     Adventure
+1987         Romance
 
-Difficulty:  O....
+Difficulty:    **...
+
+
+Plundered Hearts is set in the late 1600s, where you are living the gentle
+life of a beautiful young Englishwoman. You have received news that your
+dear father is ailing, and so you are travelling to the West Indies to care
+for him.
+
+As the story opens, the ship you are aboard is attacked by pirates, and you
+are carried off by the dashing pirate captain! But this does not dissuade
+you from your determination to find your father. Along the way, you shall
+encounter danger, adventure ... and more than a touch of romance.
+
+--
+
+     SEASTALKER
+
+
+1984       Adventure
+
+Difficulty:    *....
 
 
 Welcome to the world of Infocom's junior interactive fiction, a world where:
@@ -197,11 +360,12 @@ monster that is attacking it!
 
 --
 
-     SORCERER
+      SORCERER
 
-1984       Fantasy
 
-Difficulty:  OOOO.
+1984         Fantasy
+
+Difficulty:    ****.
 
 
 Welcome to the World of the Enchanter saga - a world where magic is
@@ -235,12 +399,39 @@ And now, unbeknownst to you, Belboz has vanished.
 
 --
 
-    STARCROSS
+    SPELLBREAKER
 
 
-1982        Sci-Fi
+1985         Fantasy
 
-Difficulty:  OOOOO
+Difficulty:    *****
+
+
+Welcome to the World of the Enchanter saga - a world founded on magic, where
+guilds of magicians have mastered the powers of sorcery; a world now
+threatened with destruction.
+
+You distinguished yourself among the young Enchanters by defeating the evil
+warlock Krill, whose attempt to subjugate the land was thwarted by your
+clerverness, as your inexperience allowed you to succeed where others might
+fave failed. This earned you a place on the Circle of Enchanters, second
+only to the great Belbox the Necromancer. Then Belboz himself was nearly
+destroyed, and your rescue of him from the evil demon Jeearr earned you the
+ultimate honor given a mage, the leadership of the Circle of Enchanters.
+
+Now, a crisis has befallen the kingdom. Magic itself seems to be failing.
+Spells fail to work or go strangely awry, the populace is confused and
+restive, and even the Enchanters Guild is baffled. And it is at this
+conclave that the final conflict between good and evil begins to unfold.
+
+--
+
+     STARCROSS
+
+
+1982          Sci-Fi
+
+Difficulty:    *****
 
 
 The year is 2186. Humanity has established colonies on the moon, Mars, and
@@ -272,200 +463,13 @@ from the outer fringes of the galaxy.
 
 --
 
-    SUSPENDED
+    STATIONFALL
 
 
-1983        Sci-Fi
+1987          Sci-Fi
 
-Difficulty:  OOOOO
+Difficulty:    ****.
 
-
-You are the Central Mentality on an advanced semi-automated planet. You were
-supposed to sleep -- in limited cryogenic suspension -- for the next 500
-years, 20 miles beneath the surface of the planet, while the great Filtering
-Computers maintained all surface systems. But the computers have taken you
-out of suspension because something is terribly wrong: the weather has
-become brutal, food production is dangerously low, and the Transportation
-System is malfunctioning, causing unprecedented accidents and casualties.
-The planet is in chaos.
-
-You are physically immobilized. But you have six robots at your disposal,
-and you must manipulate them strategically to bring the Filtering Computers
-back into balance. Each robot has a distinct perception of the world and
-offers you specific abilities. One offers you sight; a second, hearing; a
-third, access to information in the computer memory banks. Through the
-robots, you must save the planet from destruction.
-
---
-
-     SUSPECT
-
-
-1984       Mystery
-
-Difficulty:  OOOO.
-
-
-Halloween night.
-
-You are a guest at a very exclusive party: the annual Costume Ball at
-Ashcroft Farm. You are mingling with society's blue bloods and power
-brokers, sampling caviar and champagne, and enjoying the fine orchestra and
-the outlandish costumes. Quite a treat for a newspaper reporter like you -
-until someone plays a nasty trick on you.
-
-You're framed for a murder you didn't commit.
-
-You'll have a hard time convincing the police of your innocence. You'll have
-to figure out who did the heinous crime, and why. You'll need irrefutable
-proof. The murderer is no doubt watching your every move. But you have only
-a few hours to escape the trap that's been laid for you.
-
-The murderer is in your midst, laughing behind your back.
-
---
-
-Title:          Spellbreaker
-Author:         Dave Lebling
-Released:       1985
-Genre:          Fantasy
-Difficulty:     Expert (5/5)
-
-Welcome to the World of the Enchanter saga - a world founded on magic, where
-guilds of magicians have mastered the powers of sorcery; a world now
-threatened with destruction.
-
-You distinguished yourself among the young Enchanters by defeating the evil
-warlock Krill, whose attempt to subjugate the land was thwarted by your
-clerverness, as your inexperience allowed you to succeed where others might
-fave failed. This earned you a place on the Circle of Enchanters, second
-only to the great Belbox the Necromancer. Then Belboz himself was nearly
-destroyed, and your rescue of him from the evil demon Jeearr earned you the
-ultimate honor given a mage, the leadership of the Circle of Enchanters.
-
-Now, a crisis has befallen the kingdom. Magic itself seems to be failing.
-Spells fail to work or go strangely awry, the populace is confused and
-restive, and even the Enchanters Guild is baffled. And it is at this
-conclave that the final conflict between good and evil begins to unfold.
-
---
-
-Title:          Ballyhoo
-Author:         Jeff O'Neill
-Released:       1986
-Genre:          Mystery
-Difficulty:     Standard (3/5)
-
-Spurred by your natural curiosity, you stick around after the show in the
-big top, hoping to catch an after-hours performance. Perhaps you'll get a
-peek at an impromptu clown act, or watch the late-night feedings of the
-exotic animals you goggled at earlier. But life at the circus isn't
-glamorous after the audience has gone home: instead of flashy feats, you
-overhear a mysterious conversation: a little girl - the circus owner's
-daughter - has been kidnapped! Her father is too naive (or is he too
-pompously stupid?) to do more than hire an inept detective to find her. He
-remains blindly loyal to his overworked performers, but... could it be an
-inside job? The girl might be hidden somewhere on the circus grounds... and
-one of the performers might be her abductor!
-
-So you do what anyone would do in these circumstances: set out to rescue the
-damsel in distress. The odds aren't in your favor: you - a spectator, a
-bystander, an outsider in a defensive close-knit community - trying to find
-a girl you've never met, in a place you know nothing about, among bizarre
-people who want nothing to do with you. Some would call you brave. Some
-would call you foolish.
-
-Every circus has its seedy underside. But few are as dangerous as this.
-
---
-
-Title:          Leather Goddesses of Phobos
-Author:         Steve Meretzky
-Released:       1986
-Genre:          Comedy
-Difficulty:     Standard (3/5)
-
-1936. In the United States, a new miracle fabric called nylon is becoming
-popular, the Great Plains continue to suffer from a severe drought that is
-turning the region into a Dust Bowl, Alf Landon is running for President,
-Victor Hess is receiving the Nobel Prize for Physics for discovering cosmic
-radiation, Gone With the Wind is the best-selling novel, and steak is
-twenty-five cents a pound. Elsewhere, black track star Jesse Owen is
-embarrassing Adolph Hitler by winning four gold medals at the Olympic Games
-in Berlin, Edward the VIII of England is abdicating the throne to marry a
-commoner, the Spanish Civil War is beginning to heat up, and the Leather
-Goddesses of Phobos are completing plans to invade the Earth and turn it
-into their private pleasure world.
-
-Don't let anyone ever tell you that nothing happens in Upper Sandusky, Ohio,
-because on this day in 1936, you're snatched out of your favorite bar in
-Upper Sandusky - kidnapped by minions of the evil Leather Goddesses. You are
-brought back to Phobos as an experimental subject, as preparations continue
-to enslave every man and woman on Earth.
-
-If you succeed in escaping the clutches of the Leather Goddesses, you will
-begin an odyssey the likes of which you have never even imagined (except,
-perhaps, in certain very enjoyable dreams). With your loyal friend and
-fellow Earthmate at your side, you will begin a naughty, bawdy, rowdy,
-rousing and very, very amusing romp across the solar system. Your mission,
-should you be able to catch your breath long enough to think about it, is to
-collect the materials you'll need to ultimately defeat the Leather Goddesses
-of Phobos and save humanity! Are you "up" for the job?
-
---
-
-Title:          Moonmist
-Author:         Stu Galley and Jim Lawrence
-Released:       1986
-Genre:          Mystery
-Difficulty:     Introductory (2/5)
-
-In Moonmist, you are a famous young American detective. An old friend,
-Tamara Lynd, has written you a letter, asking for your help. And so you have
-travelled to England to test your detective skills.
-
-As the story begins, you meet some interesting guests. But your visit soon
-turns to mystery, as a trail of riddles and clues leads you to a hidden
-valuable treasure.
-
-But Tamara is worried about a ghost that is tormenting her. What does the
-ghost want? Is it jealous of her? Does the ghost want the hidden treasure
-for itself?  Or is the ghost a fake -- just someone dressing up to frighten
-Tamara? If so, why?
-
-These mysteries and others are waiting to test your wits in Moonmist.
-
---
-
-Title:          Hollywood Hijinx
-Author:         "Hollywood" Dave Anderson and Liz Cyr-Jones
-Released:       1987
-Genre:          Adventure
-Difficulty:     Standard (3/5)
-
-As a child, you spent most of your summers with your Aunt Hildegard and
-Uncle Buddy. What memories! Uncle Buddy was a Hollywood big-shot, Aunt
-Hildegard his loving (and very rich!) wife. They had no children on their
-own, but you and your cousins loved their house, their parties, the
-Hollywood memorabilia, and them. Sure, Buddy and Hildy were a bit eccentric
-- but that added to their charm.
-
-Aunt Hildegard kept the house when Uncle Buddy passed away. And now that
-she's suddenly died, you remember her unusual will. You will inherit the
-entire estate - probably worth millions - if you can spend one night in the
-house and on the grounds, and find a treasure or two. But if you can't, then
-you inherit nothing.
-
-And so Hollywood Hijinx begins with you being dropped off in front of a dark
-house, not too far from Hollywood...
-
---
-
-Title:          Stationfall
-Author:         Steve Meretzky
-Released:       1987
-Genre:          Sci-Fi
-Difficulty:     Advanced (4/5)
 
 After the fall of the Second Galactic Union in 1716 GY, a ten-thousand-year
 dark age settled upon the galaxy. Interstellar travel was nonexistent, and
@@ -508,52 +512,65 @@ for Stellar Patrol Issue Regulation Black Form Binders Request Form Forms...
 
 --
 
-Title:          The Lurking Horror
-Author:         Dave Lebling
-Released:       1987
-Genre:          Horror
-Difficulty:     Standard (3/5)
+      SUSPECT
 
-In The Lurking Horror, you are a student at G.U.E. Tech. You have braved a
-snowstorm to get to the Computer Center and finish work on an assignment.
-But the snowstorm has turned into a raging blizzard, and has trapped you in
-a complex of buildings late at night. You are not alone, fortunately ... or
-perhaps, unfortunately.
 
-In any event, you soon find yourself wandering away from your computer and
-into the dark nether regions of G.U.E. Tech. Suddenly, you're in a world
-that rivals your most hideous visions, a realm of horror lurking beneath the
-calm corridors and study halls.
+1984         Mystery
 
-Shapes emerge from dark corners. Eerie sounds draw closer. Slimy passageways
-lead to sights so horrifying that they will feed your nightmares for weeks.
+Difficulty:    ****.
 
---
 
-Title:          Plundered Hearts
-Author:         Amy Briggs
-Released:       1987
-Genre:          Romance
-Difficulty:     Introductory (2/5)
+Halloween night.
 
-Plundered Hearts is set in the late 1600s, where you are living the gentle
-life of a beautiful young Englishwoman. You have received news that your
-dear father is ailing, and so you are travelling to the West Indies to care
-for him.
+You are a guest at a very exclusive party: the annual Costume Ball at
+Ashcroft Farm. You are mingling with society's blue bloods and power
+brokers, sampling caviar and champagne, and enjoying the fine orchestra and
+the outlandish costumes. Quite a treat for a newspaper reporter like you -
+until someone plays a nasty trick on you.
 
-As the story opens, the ship you are aboard is attacked by pirates, and you
-are carried off by the dashing pirate captain! But this does not dissuade
-you from your determination to find your father. Along the way, you shall
-encounter danger, adventure ... and more than a touch of romance.
+You're framed for a murder you didn't commit.
+
+You'll have a hard time convincing the police of your innocence. You'll have
+to figure out who did the heinous crime, and why. You'll need irrefutable
+proof. The murderer is no doubt watching your every move. But you have only
+a few hours to escape the trap that's been laid for you.
+
+The murderer is in your midst, laughing behind your back.
 
 --
 
-WISHBRINGER: THE MAGICK
-    STONE OF DREAMS
+      SUSPENDED
 
-  1985       Fantasy
 
-  Difficulty:  OO...
+1983          Sci-Fi
+
+Difficulty:    *****
+
+
+You are the Central Mentality on an advanced semi-automated planet. You were
+supposed to sleep -- in limited cryogenic suspension -- for the next 500
+years, 20 miles beneath the surface of the planet, while the great Filtering
+Computers maintained all surface systems. But the computers have taken you
+out of suspension because something is terribly wrong: the weather has
+become brutal, food production is dangerously low, and the Transportation
+System is malfunctioning, causing unprecedented accidents and casualties.
+The planet is in chaos.
+
+You are physically immobilized. But you have six robots at your disposal,
+and you must manipulate them strategically to bring the Filtering Computers
+back into balance. Each robot has a distinct perception of the world and
+offers you specific abilities. One offers you sight; a second, hearing; a
+third, access to information in the computer memory banks. Through the
+robots, you must save the planet from destruction.
+
+--
+
+    WISHBRINGER
+
+
+1985         Fantasy
+
+Difficulty:    **...
 
 
 In Wishbringer, you're a postal clerk in a small seaside village called
@@ -569,12 +586,12 @@ your town safe again. And you only have a few hours!
 
 --
 
-   THE WITNESS
+    THE WITNESS
 
 
-1984       Mystery
+1984         Mystery
 
-Difficulty:  OOO..
+Difficulty:    ***..
 
 
 In The Witness, you are a police detective working near Los Angeles. The
@@ -604,12 +621,12 @@ it.
 
 --
 
-ZORK I: THE GREAT
-UNDERGROUND EMPIRE
+ ZORK I: THE GREAT
+ UNDERGROUND EMPIRE
 
-1980       Fantasy
+1980         Fantasy
 
-Difficulty:  OOO..
+Difficulty:    ***..
 
 
 Welcome to ZORK! You are about to experience a classic interactive fantasy,
@@ -630,12 +647,12 @@ opponent).
 
 --
 
-  ZORK II: THE
-WIZARD OF FROBOZZ
+ZORK II: THE WIZARD
+     OF FROBOZZ
 
-1981       Fantasy
+1981         Fantasy
 
-Difficulty:  OOOO.
+Difficulty:    ****.
 
 
 Welcome to ZORK! You are about to experience a classic interactive fantasy,
@@ -654,12 +671,12 @@ realm, is to avoid his capricious tricks and learn to control his magic.
 
 --
 
-  ZORK III: THE
-  DUNGEON MASTER
+   ZORK III: THE
+   DUNGEON MASTER
 
-1982       Fantasy
+1982         Fantasy
 
-Difficulty:  OOOO.
+Difficulty:    ****.
 
 
 Welcome to ZORK! You are about to experience a classic interactive fantasy,
