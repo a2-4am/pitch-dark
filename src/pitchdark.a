@@ -75,53 +75,36 @@ Init
          sta   PARAM1
          jsr   WeeGUI
 
+         lda   addrInfo
+         sta   $00
+         lda   addrInfo+1
+         sta   $01
+         stz   .line+1
+infoloop
          ldx   #WGSetCursor
          stz   PARAM0
-         stz   PARAM1
-         jsr   WeeGUI
-         ldx   #WGPrint
-         lda   #<string_info1
-         sta   PARAM0
-         lda   #>string_info1
-         sta   PARAM1
-         jsr   WeeGUI
-
-         ldx   #WGSetCursor
-         stz   PARAM0
-         lda   #1
+.line    lda   #$FD                  ; set at runtime
          sta   PARAM1
          jsr   WeeGUI
          ldx   #WGPrint
-         lda   #<string_info2
+         lda   $00
          sta   PARAM0
-         lda   #>string_info2
-         sta   PARAM1
-         jsr   WeeGUI
-
-         ldx   #WGSetCursor
-         stz   PARAM0
-         lda   #3
-         sta   PARAM1
-         jsr   WeeGUI
-         ldx   #WGPrint
-         lda   #<string_info3
-         sta   PARAM0
-         lda   #>string_info3
-         sta   PARAM1
-         jsr   WeeGUI
-
-         ldx   #WGSetCursor
-         stz   PARAM0
-         lda   #5
-         sta   PARAM1
-         jsr   WeeGUI
-         ldx   #WGPrint
-         lda   #<string_info4
-         sta   PARAM0
-         lda   #>string_info4
+         lda   $01
          sta   PARAM1
          bit   MAGICRTS              ; set overflow bit
          jsr   WeeGUI
+         bit   #%00000000
+-        lda   ($00)
+         bne   +
+         bit   MAGICRTS
++        inc   $00
+         bne   +
+         inc   $01
++        bvc   -
+         inc   .line+1
+         lda   .line+1
+         cmp   #$06
+         bne   infoloop
 
          bit   $c010
 -        lda   $c000
@@ -258,14 +241,6 @@ view_info
          !byte 7                     ; visible height
          !byte 20                    ; width
          !byte 7                     ; height
-string_info1
-         !text " ZORK I: THE GREAT  ",0
-string_info2
-         !text " UNDERGROUND EMPIRE ",0
-string_info3
-         !text "1980         Fantasy",0
-string_info4
-         !text "Difficulty:    ",64,64,64,65,65,0
 
 view_blurb
          !byte 12                    ; view ID

@@ -159,14 +159,6 @@ parseloop
          lda   #$FF
          sta   bFoundCR
          bra   .next
-+        cmp   #$5E                  ; '^' -> closed-apple mousetext
-         bne   +
-         lda   #$40
-         sta   ($00)
-+        cmp   #$26                  ; '&' -> open-apple mousetext
-         bne   +
-         lda   #$41
-         sta   ($00)
 +        cmp   #$5B                  ; '[' is section name start delimiter
          beq   .startsectionname
          cmp   #$5D                  ; ']' is section name end delimiter
@@ -174,6 +166,24 @@ parseloop
          bit   bInSectionName
          bmi   .parsesectionname
          bvs   .next
+
+         tax
+         beq   .nohighbit
++        cmp   #$5E                  ; '^' -> closed-apple mousetext
+         bne   +
+         lda   #$40
+         sta   ($00)
+         bra   .nohighbit
++        cmp   #$26                  ; '&' -> open-apple mousetext
+         bne   .highbit
+         lda   #$41
+         sta   ($00)
+         bra   .nohighbit
+.highbit
+         ora   #$80
+         sta   ($00)
+.nohighbit
+
          bit   bFoundCR
          bpl   .next
          stz   bFoundCR
