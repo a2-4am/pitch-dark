@@ -113,6 +113,7 @@ subdirectories                       ; length of this array must = kNumberOfGame
          !byte 8
          !raw  "ZORK.III"
 
+!zone {
 LoadGameInfo
          stz   .path
          lda   #<kGameDirectory
@@ -133,8 +134,125 @@ LoadGameInfo
          !word $0800
          !word $1400
          !word $1C00
-         rts
 
+; initialize all parser data
+         ldx   #9                    ; .END_PARSER_DATA-.BEGIN_PARSER_DATA-1
+-        stz   .BEGIN_PARSER_DATA,x
+         dex
+         bpl   -
+         stz   $00
+         lda   #$08
+         sta   $01
+         lda   mlilen
+         sta   $02
+         lda   mlilen+1
+         sta   $03
+parseloop
+         lda   ($00)
+; Replace all carriage returns with zeroes,
+; because WeeGUI wants zero-terminated strings
+; but I want to be able to edit files in a text editor.
+         cmp   #$0D
+         bne   +
+         lda   #$00
+         sta   ($00)
+         lda   #$FF
+         sta   bFoundCR
+         bra   .next
++        cmp   #$5E                  ; '^' -> closed-apple mousetext
+         bne   +
+         lda   #$40
+         sta   ($00)
++        cmp   #$26                  ; '&' -> open-apple mousetext
+         bne   +
+         lda   #$41
+         sta   ($00)
++        cmp   #$5B                  ; '[' is section name start delimiter
+         beq   .startsectionname
+         cmp   #$5D                  ; ']' is section name end delimiter
+         beq   .endsectionname
+         bit   bInSectionName
+         bmi   .parsesectionname
+         bvs   .next
+         bit   bFoundCR
+         bpl   .next
+         stz   bFoundCR
+         lda   iSection
+         beq   .next
+; We found the start of the first line after the end of the section name.
+; Save this address in the sectionPointers array.
+         asl
+         tax
+         lda   $00
+         sta   sectionPointers-2,x
+         lda   $01
+         sta   sectionPointers-1,x
+         stz   iSection
+         bra   .next
+.startsectionname
+         lda   #%11000000
+         sta   bInSectionName
+         bra   .next
+.endsectionname
+         stz   bInSectionName
+         bra   .next
+.parsesectionname
+         pha
+         lda   #%01000000
+         sta   bInSectionName
+         pla
+         cmp   #$69                  ; 'i'nfo
+         beq   .info
+         cmp   #$64                  ; 'd'escription
+         beq   .description
+         cmp   #$76                  ; 'v'ersions
+         beq   .versions
+         bne   .next
+.info
+         lda   #1
+         !byte $2C                   ; hide next LDA
+.description
+         lda   #2
+         !byte $2C                   ; hide next LDA
+.versions
+         lda   #3
+         sta   iSection
+         inc   iSectionsFound
+.next
+         inc   $00
+         bne   +
+         inc   $01
++        dec   $02
+         bne   +
+         dec   $03
+         bmi   .done
++        jmp   parseloop
+.done
+         lda   iSectionsFound
+         cmp   #$03
+         bne   +
+         clc
+         rts
++        sec
+         rts
+.BEGIN_PARSER_DATA
+bInSectionName
+         !byte 0
+bFoundCR
+         !byte 0
+iSection
+         !byte 0
+iSectionsFound
+         !byte 0
+
+sectionPointers                      ; array of pointers to start of each section (order matches constants used by parser)
+addrInfo
+         !word 0
+addrDescription
+         !word 0
+addrVersions
+         !word 0
+.END_PARSER_DATA
 
 addToPath
          sta   $00
@@ -157,3 +275,4 @@ addToPath
          !byte $FD                   ; set at runtime
 .pathbuffer
          !fill 64                    ; enough zeroes for any ProDOS pathname
+}

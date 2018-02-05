@@ -3,7 +3,7 @@
 
 1986         Mystery
 
-Difficulty:    ***..
+Difficulty:    ^^^&&
 
 
 Spurred by your natural curiosity, you stick around after the show in the
@@ -34,7 +34,7 @@ Every circus has its seedy underside. But few are as dangerous as this.
 
 1984       Adventure
 
-Difficulty:    ***..
+Difficulty:    ^^^&&
 
 
 In Cutthroats, you are a skilled diver living on Hardscrabble Island, a
@@ -55,7 +55,7 @@ story, you may find yourself diving for a different treasure.
 
 1982         Mystery
 
-Difficulty:    *****
+Difficulty:    ^^^^^
 
 
 A wealthy industrialist, Mr. Marshall Robner, locked himself in the upstairs
@@ -83,7 +83,7 @@ facts better than any other, and you will know it when you reach it.
 
 1983         Fantasy
 
-Difficulty:    ***..
+Difficulty:    ^^^&&
 
 
 Welcome to the World of the Enchanter saga - a world where magic is
@@ -115,7 +115,7 @@ observation and quick wits.
 
 1984          Sci-Fi
 
-Difficulty:    ***..
+Difficulty:    ^^^&&
 
 
 Don't Panic!
@@ -145,7 +145,7 @@ befuddle yourself.
 
 1987       Adventure
 
-Difficulty:    ***..
+Difficulty:    ^^^&&
 
 
 As a child, you spent most of your summers with your Aunt Hildegard and
@@ -171,7 +171,7 @@ house, not too far from Hollywood...
 
 1983       Adventure
 
-Difficulty:    ****.
+Difficulty:    ^^^^&
 
 
 You like to think of yourself as a bold and adventurous soldier of fortune,
@@ -197,7 +197,7 @@ reputation and self-esteem, are at stake. For you are branded INFIDEL.
 
 1986          Comedy
 
-Difficulty:    ***..
+Difficulty:    ^^^&&
 
 
 1936. In the United States, a new miracle fabric called nylon is becoming
@@ -234,7 +234,7 @@ of Phobos and save humanity! Are you "up" for the job?
 
 1987          Horror
 
-Difficulty:    ***..
+Difficulty:    ^^^&&
 
 
 In The Lurking Horror, you are a student at G.U.E. Tech. You have braved a
@@ -258,7 +258,7 @@ lead to sights so horrifying that they will feed your nightmares for weeks.
 
 1986         Mystery
 
-Difficulty:    **...
+Difficulty:    ^^&&&
 
 
 In Moonmist, you are a famous young American detective. An old friend,
@@ -283,7 +283,7 @@ These mysteries and others are waiting to test your wits in Moonmist.
 
 1983          Sci-Fi
 
-Difficulty:    ***..
+Difficulty:    ^^^&&
 
 
 After the fall of the Second Galactic Union in 1716 GY, a ten-thousand-year
@@ -320,7 +320,7 @@ out for the Stellar Patrol...
 
 1987         Romance
 
-Difficulty:    **...
+Difficulty:    ^^&&&
 
 
 Plundered Hearts is set in the late 1600s, where you are living the gentle
@@ -340,7 +340,7 @@ encounter danger, adventure ... and more than a touch of romance.
 
 1984       Adventure
 
-Difficulty:    *....
+Difficulty:    ^&&&&
 
 
 Welcome to the world of Infocom's junior interactive fiction, a world where:
@@ -365,7 +365,7 @@ monster that is attacking it!
 
 1984         Fantasy
 
-Difficulty:    ****.
+Difficulty:    ^^^^&
 
 
 Welcome to the World of the Enchanter saga - a world where magic is
@@ -404,7 +404,7 @@ And now, unbeknownst to you, Belboz has vanished.
 
 1985         Fantasy
 
-Difficulty:    *****
+Difficulty:    ^^^^^
 
 
 Welcome to the World of the Enchanter saga - a world founded on magic, where
@@ -431,7 +431,7 @@ conclave that the final conflict between good and evil begins to unfold.
 
 1982          Sci-Fi
 
-Difficulty:    *****
+Difficulty:    ^^^^^
 
 
 The year is 2186. Humanity has established colonies on the moon, Mars, and
@@ -468,7 +468,7 @@ from the outer fringes of the galaxy.
 
 1987          Sci-Fi
 
-Difficulty:    ****.
+Difficulty:    ^^^^&
 
 
 After the fall of the Second Galactic Union in 1716 GY, a ten-thousand-year
@@ -517,7 +517,7 @@ for Stellar Patrol Issue Regulation Black Form Binders Request Form Forms...
 
 1984         Mystery
 
-Difficulty:    ****.
+Difficulty:    ^^^^&
 
 
 Halloween night.
@@ -544,7 +544,7 @@ The murderer is in your midst, laughing behind your back.
 
 1983          Sci-Fi
 
-Difficulty:    *****
+Difficulty:    ^^^^^
 
 
 You are the Central Mentality on an advanced semi-automated planet. You were
@@ -570,7 +570,7 @@ robots, you must save the planet from destruction.
 
 1985         Fantasy
 
-Difficulty:    **...
+Difficulty:    ^^&&&
 
 
 In Wishbringer, you're a postal clerk in a small seaside village called
@@ -591,7 +591,7 @@ your town safe again. And you only have a few hours!
 
 1984         Mystery
 
-Difficulty:    ***..
+Difficulty:    ^^^&&
 
 
 In The Witness, you are a police detective working near Los Angeles. The
@@ -626,7 +626,7 @@ it.
 
 1980         Fantasy
 
-Difficulty:    ***..
+Difficulty:    ^^^&&
 
 
 Welcome to ZORK! You are about to experience a classic interactive fantasy,
@@ -652,7 +652,7 @@ ZORK II: THE WIZARD
 
 1981         Fantasy
 
-Difficulty:    ****.
+Difficulty:    ^^^^&
 
 
 Welcome to ZORK! You are about to experience a classic interactive fantasy,
@@ -676,7 +676,7 @@ realm, is to avoid his capricious tricks and learn to control his magic.
 
 1982         Fantasy
 
-Difficulty:    ****.
+Difficulty:    ^^^^&
 
 
 Welcome to ZORK! You are about to experience a classic interactive fantasy,
