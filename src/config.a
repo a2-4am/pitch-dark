@@ -1,11 +1,15 @@
-gCurrentGame = 22
-
 kNumberOfGames = 25
-kInfoFilename
+
+gCurrentGame
+         !byte 22
+kGameDirectory                       ; length-prefixed pathname of where game subdirectories are stored
+         !byte 2
+         !raw "Z/"
+kInfoFilename                        ; length-prefixed partial pathname of game info file, starting with '/' because reasons
          !byte 5
          !raw  "/INFO"
 
-directories
+subdirectories                       ; length of this array must = kNumberOfGames, there is no range checking
          !word .ballyhoo
          !word .cutthroats
          !word .deadline
@@ -31,6 +35,8 @@ directories
          !word .zorki
          !word .zorkii
          !word .zorkiii
+
+; length-prefixed names of each subdirectory in game directory, 1 per game
 .ballyhoo
          !byte 8
          !raw  "BALLYHOO"
@@ -108,38 +114,46 @@ directories
          !raw  "ZORK.III"
 
 LoadGameInfo
-         lda   gCurrentGameInfo
+         stz   .path
+         lda   #<kGameDirectory
+         ldy   #>kGameDirectory
+         jsr   addToPath
+         lda   gCurrentGame
          asl
          tax
-         lda   directories,x
-         sta   $00
-         lda   directories+1,x
-         sta   $01
-         ldx   #$02
+         lda   subdirectories,x
+         ldy   subdirectories+1,x
          jsr   addToPath
          lda   #<kInfoFilename
-         sta   $00
-         lda   #>kInfoFilename
-         sta   $01
+         ldy   #>kInfoFilename
          jsr   addToPath
-         lda   LoadFile1Shot
+
+         jsr   LoadFile
          !word .path
          !word $0800
          !word $1400
          !word $1C00
          rts
 
+
 addToPath
+         sta   $00
+         sty   $01
+         ldx   .path                 ; current pathname length
          ldy   #$00
-         lda   ($00),y
-         tay
+         lda   ($00),y               ; length of this segment
+         inc
+         sta   .a+1
+         ldy   #$01
 -        lda   ($00),y
-         sta   .path,x
+         sta   .pathbuffer,x
          inx
-         dey
-         bne   -
+         iny
+.a       cpy   #$FD                  ; set at runtime
+         bcc   -
          stx   .path
          rts
 .path
-         !byte $FF                   ; set at runtime
-         !raw  "Z/.............../...."
+         !byte $FD                   ; set at runtime
+.pathbuffer
+         !fill 64                    ; enough zeroes for any ProDOS pathname

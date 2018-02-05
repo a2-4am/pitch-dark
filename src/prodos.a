@@ -1,44 +1,108 @@
+; ProDOS functions
+;
+; Primary:
+; LoadFile
+; SaveFile
+; QuitToProDOS
+;
+
 ; MLI command codes
 CMD_QUIT =     $65        ; quit to ProDOS
 CMD_CREATE =   $C0        ; create new file
 CMD_DESTROY =  $C1        ; delete a file
-CMD_GETFILEINFO = $C4     ; get file (or volume) info
-CMD_ONLINE =   $C5        ; check online volume(s)
-CMD_SETPREFIX = $C6       ; change default pathname prefix
 CMD_OPEN =     $C8        ; open a file
-CMD_NEWLINE =  $C9        ; set line-by-line read mode
 CMD_READ =     $CA        ; read an open file
 CMD_WRITE =    $CB        ; write to an open file
 CMD_CLOSE =    $CC        ; close an open file
-CMD_SETMARK =  $CE        ; change position in an open file
-CMD_SETEOF  =  $D0        ; set file size
 
 ; MLI parameter counts
 PC_QUIT =      $04
 PC_CREATE =    $07
 PC_DESTROY =   $01
-PC_GETFILEINFO = $0A
-PC_ONLINE =    $02
-PC_SETPREFIX = $01
 PC_OPEN  =     $03
-PC_NEWLINE =   $03
 PC_READ  =     $04
 PC_WRITE =     $04
 PC_CLOSE =     $01
-PC_SETMARK =   $02
-PC_SETEOF  =   $02
 
 PRODOSMLI =    $BF00      ; [callable] MLI entry point
 MACHID = $BF98
 
-; MLI error codes
-ERR_FNF  =     $46
-ERR_EOF  =     $4C
+;-------------------------------
+; LoadFile
+; load a file into memory all at once, using ProDOS MLI calls
+;
+; in:  stack contains 8 bytes of parameters:
+;      +1 address of pathname
+;      +3 address of data buffer (to receive file contents)
+;      +5 [word] maximum length of data to read
+;      +7 address of ProDOS file buffer
+; out: if C set, load failed and A contains error code
+;        from open or read
+;      if C clear, load succeeded and ($02) contains
+;        data loaded from file
+;      all other flags clobbered
+;      all registers clobbered
+;      stack set to next instruction after parameters
+;-------------------------------
+!zone {
+LoadFile
+         pla
+         sta   $00
+         plx
+         stx   $01
+         lda   #$08
+         clc
+         adc   $00
+         bcc   +
+         inx
++        phx
+         pha
+
+         ldy   #$01
+         lda   ($00),y    ; lo byte of pathname
+         sta   mliparam+1
+         iny
+         lda   ($00),y    ; hi byte of pathname
+         sta   mliparam+2
+         ldy   #$07
+         lda   ($00),y    ; lo byte of ProDOS file buffer
+         sta   mliparam+3
+         iny
+         lda   ($00),y    ; hi byte of ProDOS file buffer
+         sta   mliparam+4
+
+         jsr   _openfile
+         bcs   .exit      ; C set on error
+
+         pha              ; push file reference number
+         ldy   #$03
+         lda   ($00),y    ; lo address of data buffer
+         sta   mliparam+2
+         iny
+         lda   ($00),y    ; hi address of data buffer
+         sta   mliparam+3
+         iny
+         lda   ($00),y    ; lo data length
+         sta   mliparam+4
+         iny
+         lda   ($00),y    ; hi data length
+         sta   mliparam+5
+         pla              ; pull file reference number
+         jsr   _readfile
+         php              ; save flags from readfile
+         pha
+         jsr   _closefile  ; always close whether read worked or not
+         pla
+         plp              ; restore flags from readfile
+                          ; (so caller gets codes from read attempt,
+                          ; not close)
+.exit
+         rts
+}
 
 ;-------------------------------
-; SaveFile1Shot
-; save a file to disk all at once,
-;   using ProDOS MLI calls
+; SaveFile
+; save a file to disk all at once, using ProDOS MLI calls
 ;
 ; in:  stack contains 11 ($0B) bytes of parameters:
 ;      +1 address of pathname
@@ -55,22 +119,17 @@ ERR_EOF  =     $4C
 ;      stack set to next instruction after parameters
 ;-------------------------------
 !zone {
-SaveFile1Shot
+SaveFile
          pla
          sta   $00
-         pla
-         sta   $01
-         tax
+         plx
+         stx   $01
          lda   #$0B
          clc
          adc   $00
-         bcc   .noinc
+         bcc   +
          inx
-.noinc
-         tay
-         txa
-         pha
-         tya
++        phx
          pha
 
          ldy   #$01
@@ -79,7 +138,7 @@ SaveFile1Shot
          iny
          lda   ($00),y    ; hi byte of pathname
          sta   mliparam+2
-         jsr   DeleteFile ; don't care if this fails
+         jsr   _deletefile ; don't care if this fails
          ldy   #$03
          lda   ($00),y    ; file type
          sta   mliparam+4
@@ -89,8 +148,8 @@ SaveFile1Shot
          iny
          lda   ($00),y    ; hi byte of aux file type
          sta   mliparam+6
-         jsr   CreateFile
-         bcs   .savefile1s
+         jsr   _createfile
+         bcs   .exit
 
          ldy   #$0A
          lda   ($00),y    ; lo byte of ProDOS file buffer
@@ -98,8 +157,8 @@ SaveFile1Shot
          iny
          lda   ($00),y    ; hi byte of ProDOS file buffer
          sta   mliparam+4
-         jsr   OpenFile
-         bcs   .savefile1s
+         jsr   _openfile
+         bcs   .exit
 
          pha              ; push file reference number
          ldy   #$06
@@ -115,95 +174,15 @@ SaveFile1Shot
          lda   ($00),y    ; hi data length
          sta   mliparam+5
          pla              ; pull file reference number
-         jsr   WriteFile
+         jsr   _writefile
          php              ; save flags from writefile
          pha
-         jsr   CloseFile  ; always close whether write worked or not
+         jsr   _closefile ; always close whether write worked or not
          pla
          plp              ; restore flags from write
                           ; (so caller gets codes from write attempt,
                           ; not close)
-
-.savefile1s
-         rts
-}
-
-;-------------------------------
-; LoadFile1Shot
-; load a file into memory all at once,
-;   using ProDOS MLI calls
-;
-; in:  stack contains 8 bytes of parameters:
-;      +1 address of pathname
-;      +3 address of data buffer (to receive file contents)
-;      +5 [word] maximum length of data to read
-;      +7 address of ProDOS file buffer
-; out: if C set, load failed and A contains error code
-;        from open or read
-;      if C clear, load succeeded and ($02) contains
-;        data loaded from file
-;      all other flags clobbered
-;      all registers clobbered
-;      stack set to next instruction after parameters
-;-------------------------------
-!zone {
-LoadFile1Shot
-         pla
-         sta   $00
-         pla
-         sta   $01
-         tax
-         lda   #$08
-         clc
-         adc   $00
-         bcc   .noinc
-         inx
-.noinc
-         tay
-         txa
-         pha
-         tya
-         pha
-
-         ldy   #$01
-         lda   ($00),y    ; lo byte of pathname
-         sta   mliparam+1
-         iny
-         lda   ($00),y    ; hi byte of pathname
-         sta   mliparam+2
-         ldy   #$07
-         lda   ($00),y    ; lo byte of ProDOS file buffer
-         sta   mliparam+3
-         iny
-         lda   ($00),y    ; hi byte of ProDOS file buffer
-         sta   mliparam+4
-
-         jsr   OpenFile
-         bcs   .loadfile1s ; C set on error
-
-         pha              ; push file reference number
-         ldy   #$03
-         lda   ($00),y    ; lo address of data buffer
-         sta   mliparam+2
-         iny
-         lda   ($00),y    ; hi address of data buffer
-         sta   mliparam+3
-         iny
-         lda   ($00),y    ; lo data length
-         sta   mliparam+4
-         iny
-         lda   ($00),y    ; hi data length
-         sta   mliparam+5
-         pla              ; pull file reference number
-         jsr   ReadFile
-         php              ; save flags from readfile
-         pha
-         jsr   CloseFile  ; always close whether read worked or not
-         pla
-         plp              ; restore flags from readfile
-                          ; (so caller gets codes from read attempt,
-                          ; not close)
-.loadfile1s
+.exit
          rts
 }
 
@@ -217,45 +196,15 @@ LoadFile1Shot
 ;      if C clear, open succeeded and A contains
 ;        file reference number
 ;-------------------------------
-!zone {
-OpenFile
+_openfile
          lda   #CMD_OPEN  ; MLI command
          ldy   #PC_OPEN   ; number of parameters for 'open' command
          jsr   mli
-         bcs   .openfile
+         bcs   +
          lda   refnum     ; caller should save file reference number
                           ; as this memory location may be
                           ; overwritten by later MLI calls
-.openfile
-         rts
-}
-
-;-------------------------------
-; set line-by-line mode via ProDOS MLI
-;
-; in:  A = file reference number
-; out: if C set, set failed and A contains error code
-;      if S clear, set succeeded and A contains the same
-;        file reference number that was passed in
-;-------------------------------
-lbl_mask =     $7F
-lbl_cr   =     $0D
-
-!zone {
-SetLineByLine
-         sta   mliparam+1 ; store file reference number
-         lda   #lbl_mask  ; accept high bit set or clear
-         sta   mliparam+2
-         lda   #lbl_cr    ; carriage return character
-         sta   mliparam+3
-         lda   #CMD_NEWLINE ; MLI 'newline' command to set read mode
-         ldy   #PC_NEWLINE ; number of parameters for 'newline' command
-         jsr   mli
-         bcs   .setlinebylin
-         lda   mliparam+1 ; if no error, return file reference number
-.setlinebylin
-         rts
-}
++        rts
 
 ;-------------------------------
 ; read an open file via ProDOS MLI
@@ -267,38 +216,14 @@ SetLineByLine
 ;      if C clear, read succeeded and A contains the same
 ;        file reference number that was passed in
 ;-------------------------------
-!zone {
-ReadFile
+_readfile
          sta   mliparam+1 ; store file reference number
          lda   #CMD_READ  ; MLI read command
          ldy   #PC_READ   ; number of parameters for 'read' command
          jsr   mli
-         bcs   .readfile
+         bcs   +
          lda   mliparam+1 ; if no error, return file reference number
-.readfile
-         rts
-}
-
-;-------------------------------
-; change file position in an open file via ProDOS MLI
-;
-; in:  A = file reference number
-;      caller has filled @mliparam+2/+3/+4 with
-;        new file position
-; out: if C set, set_mark call failed and A contains error code
-;      if C clear, set_mark call succeeded and A contains
-;        the same file reference number that was passed in
-;-------------------------------
-!zone {
-SetMark
-         sta   mliparam+1 ; store file reference number
-         lda   #CMD_SETMARK ; MLI set_mark command
-         ldy   #PC_SETMARK ; number of params for 'set_mark' cmd
-         jsr   mli
-         bcs   .exit
-         lda   mliparam+1 ; if no error, return file refnum
-.exit    rts
-}
++        rts
 
 ;-------------------------------
 ; write to an open file via ProDOS MLI
@@ -310,38 +235,14 @@ SetMark
 ;      if C clear, write succeeded and A contains the same
 ;        file reference number that was passed in
 ;-------------------------------
-!zone {
-WriteFile
+_writefile
          sta   mliparam+1 ; store file reference number
          lda   #CMD_WRITE ; MLI write command
          ldy   #PC_WRITE  ; number of parameters for 'write' command
          jsr   mli
-         bcs   .writefile
+         bcs   +
          lda   mliparam+1 ; if no error, return file reference number
-.writefile
-         rts
-}
-
-;-------------------------------
-; set file size in an open file via ProDOS MLI
-;
-; in:  A = file reference number
-;      caller has filled @mliparam+2/+3/+4 with
-;        new file size
-; out: if C set, set_eof call failed and A contains error code
-;      if C clear, set_eof call succeeded and A contains
-;        the same file reference number that was passed in
-;-------------------------------
-!zone {
-SetEOF
-         sta   mliparam+1 ; store file reference number
-         lda   #CMD_SETEOF ; MLI set_eof command
-         ldy   #PC_SETEOF ; number of params for 'set_eof' cmd
-         jsr   mli
-         bcs   .exit
-         lda   mliparam+1 ; if no error, return file refnum
-.exit    rts
-}
++        rts
 
 ;-------------------------------
 ; close an open file
@@ -349,7 +250,7 @@ SetEOF
 ; out: if error, C set and A contains error code
 ;      if success, C clear
 ;-------------------------------
-CloseFile
+_closefile
          sta   mliparam+1 ; store file reference number
          lda   #CMD_CLOSE ; MLI close command
          ldy   #PC_CLOSE  ; number of parameters for 'close' command
@@ -369,7 +270,7 @@ CloseFile
 ;-------------------------------
 accessbits =   $C3        ; full access
 
-CreateFile
+_createfile
          lda   #accessbits
          sta   mliparam+3 ; access bits (full access)
          ldy   #1
@@ -391,90 +292,9 @@ CreateFile
 ; out: if error, C set and A contains error code
 ;      if success, C clear
 ;-------------------------------
-DeleteFile
+_deletefile
          lda   #CMD_DESTROY ; MLI destroy command
          ldy   #PC_DESTROY ; number of parameters for 'destroy' command
-         jsr   mli
-         rts
-
-;-------------------------------
-; change current directory (set prefix)
-; using ProDOS MLI
-; in:  caller has filled @mliparam
-;        with address of pathname
-; out: if error, C set and A contains error code
-;      if success, C clear
-;-------------------------------
-SetPrefix
-         lda   #CMD_SETPREFIX
-         ldy   #PC_SETPREFIX
-         jsr   mli
-         rts
-
-;-------------------------------
-; get volume name of disk in specific slot+drive
-; in:  A = unit number (DSSS0000)
-; out: if no disk in drive or any MLI error, C set and A contains error code
-;      if disk found, C clear and @VolumeName contains volume name
-;      (length byte + up to 14 character name, no leading slash)
-;-------------------------------
-!zone {
-GetVolumeName
-         sta   mliparam+1
-         lda   #<OnlineReturn
-         sta   mliparam+2
-         lda   #>OnlineReturn
-         sta   mliparam+3
-         jsr   Online
-         rts
-OnlineReturn
-         !byte $FF
-VolumeName
-         !byte $FF,$FF,$FF,$FF,$FF,$FF,$FF
-         !byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-}
-
-;-------------------------------
-; check if volume is online
-; using ProDOS MLI
-; in:  caller has filled @mliparam
-;        with unit number
-; out: if error, C set and A contains error code
-;      if success, C clear
-;-------------------------------
-Online
-         lda   #CMD_ONLINE
-         ldy   #PC_ONLINE
-         jsr   mli
-         rts
-
-;-------------------------------
-; query volume information
-; using ProDOS MLI
-; in:  nothing (queries last fetched volume)
-; out: if error, C set and A contains error code
-;      if success, C clear and MLI buffer is filled
-;      (access, file type, block count, dates and times)
-;-------------------------------
-GetVolumeInfo
-         lda   OnlineReturn
-         and   #$0F
-         tax
-         inx
-         stx   OnlineReturn
-         tay
--        lda   OnlineReturn,y
-         sta   VolumeName,y
-         dey
-         bne   -
-         lda   #$2F ;'/'
-         sta   VolumeName
-         lda   #<OnlineReturn
-         sta   mliparam+1
-         lda   #>OnlineReturn
-         sta   mliparam+2
-         lda   #CMD_GETFILEINFO
-         ldy   #PC_GETFILEINFO
          jsr   mli
          rts
 

@@ -3,7 +3,7 @@
 
 !cpu 65c02
 !ct "lcase.ct"
-!to "../build/PTCHDARK.SYSTEM#FF2000",plain
+!to "../build/PITCHDRK.SYSTEM#FF2000",plain
 *=$2000
 
 ; ROM routines
@@ -27,7 +27,9 @@ Init
          beq   +                     ; yes, continue
          jmp   QuitToProDOS
 +
-         jsr   LoadFile1Shot         ; load WEEGUI binary at $4000
+         jsr   LoadGameInfo
+
+         jsr   LoadFile              ; load WEEGUI binary at $4000
          !word weeguifilename
          !word $4000
          !word $2000
