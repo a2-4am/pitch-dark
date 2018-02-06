@@ -1,7 +1,7 @@
 kNumberOfGames = 25
 
 gCurrentGame
-         !byte 22
+         !byte $FD                   ; set at runtime
 kGameDirectory                       ; length-prefixed pathname of where game subdirectories are stored
          !byte 2
          !raw "Z/"

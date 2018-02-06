@@ -27,8 +27,7 @@ Init
          beq   +                     ; yes, continue
          jmp   QuitToProDOS
 +
-         jsr   LoadGameInfo
-
+         bit   $c010
          jsr   LoadFile              ; load WEEGUI binary at $4000
          !word weeguifilename
          !word $4000
@@ -36,6 +35,13 @@ Init
          !word $1C00
 
          jsr   $4000                 ; initialize WeeGUI
+
+         lda   #22
+         sta   gCurrentGame
+         jsr   LoadGameInfo
+
+         ldx   #WGEnableMouse        ; enable mouse support
+         jsr   WeeGUI
 
          ldx   #WGClearScreen        ; clear screen
          jsr   WeeGUI
@@ -55,7 +61,7 @@ Init
          jsr   WeeGUI
          jsr   NORMAL
 
-         jsr   _create_button
+         jsr   _create_button        ; create buttons
          !word view_previous
          jsr   _create_button
          !word view_next
@@ -68,50 +74,43 @@ Init
          jsr   _create_button
          !word view_options
 
-         ldx   #WGCreateView         ; create game info box
+         ldx   #WGCreateView         ; create borderless frame for game title and info
          lda   #<view_info
          sta   PARAM0
          lda   #>view_info
          sta   PARAM1
          jsr   WeeGUI
 
-         lda   addrInfo
-         sta   $00
-         lda   addrInfo+1
-         sta   $01
-         stz   .line+1
-infoloop
-         ldx   #WGSetCursor
-         stz   PARAM0
-.line    lda   #$FD                  ; set at runtime
-         sta   PARAM1
-         jsr   WeeGUI
-         ldx   #WGPrint
-         lda   $00
+         ldx   #WGCreateView         ; create scrollable frame for game description text
+         lda   #<view_description
          sta   PARAM0
-         lda   $01
+         lda   #>view_description
          sta   PARAM1
-         bit   MAGICRTS              ; set overflow bit
          jsr   WeeGUI
-         bit   #%00000000
--        lda   ($00)
-         bne   +
-         bit   MAGICRTS
-+        inc   $00
-         bne   +
-         inc   $01
-+        bvc   -
-         inc   .line+1
-         lda   .line+1
-         cmp   #$06
-         bne   infoloop
+         ldx   #WGViewSetAction
+         lda   #<PaintDescription
+         sta   PARAM0
+         lda   #>PaintDescription
+         sta   PARAM1
+         jsr   WeeGUI
+         ldx   #WGPaintView
+         jsr   WeeGUI
 
-         bit   $c010
--        lda   $c000
-         bpl   -
-         ldx   #WGExit
+         jsr   PaintInfo
+         jsr   PaintDescription
+
+runloop
+         ldx   #WGPendingViewAction
          jsr   WeeGUI
-         jmp   QuitToProDOS
+         lda   $c000
+         bpl   runloop
+         bit   $c010
+
+         ldx   #WGDisableMouse       ; disable mouse support before quitting
+         jsr   WeeGUI
+         ldx   #WGExit               ; clean up WeeGUI
+         jsr   WeeGUI
+         jmp   QuitToProDOS          ; quit via ProDOS MLI
 
 callback_previous
 callback_next
@@ -148,6 +147,60 @@ _create_button
          jsr   WeeGUI
          ldx   #WGPaintView
          jmp   WeeGUI
+
+PaintInfo
+         ldx   #WGSelectView
+         lda   #12
+         jsr   WeeGUI
+         ldx   #WGEraseViewContents
+         jsr   WeeGUI
+         lda   addrInfo
+         ldy   addrInfo+1
+         ldx   #0
+         bra   MultiPrint
+
+PaintDescription
+         ldx   #WGSelectView
+         lda   #13
+         jsr   WeeGUI
+         ldx   #WGEraseViewContents
+         jsr   WeeGUI
+         lda   addrDescription
+         ldy   addrDescription+1
+         ldx   #1
+
+MultiPrint
+         sta   $00
+         sty   $01
+         stx   .htab+1
+         stx   .vtab+1
+printloop
+         ldx   #WGSetCursor
+.htab    lda   #$FD                  ; set at runtime
+         sta   PARAM0
+.vtab    lda   #$FD                  ; set at runtime
+         sta   PARAM1
+         jsr   WeeGUI
+         ldx   #WGPrint
+         lda   $00
+         sta   PARAM0
+         lda   $01
+         sta   PARAM1
+         bit   MAGICRTS              ; set overflow bit
+         jsr   WeeGUI
+         bit   #%00000000
+-        lda   ($00)
+         bne   +
+         bit   MAGICRTS
++        inc   $00
+         bne   +
+         inc   $01
++        bvc   -
+         inc   .vtab+1
+         lda   .vtab+1
+         cmp   #$06
+         bne   printloop
+         rts
 
 weeguifilename
          !byte 6
@@ -242,12 +295,12 @@ view_info
          !byte 20                    ; width
          !byte 7                     ; height
 
-view_blurb
-         !byte 12                    ; view ID
-         !byte 0                     ; style
-         !byte 30                    ; left
-         !byte 2                     ; top
-         !byte 20                    ; visible width
-         !byte 7                     ; visible height
-         !byte 20                    ; width
-         !byte 7                     ; height
+view_description
+         !byte 13                    ; view ID
+         !byte 2                     ; style
+         !byte 1                     ; left
+         !byte 15                    ; top
+         !byte 77                    ; visible width
+         !byte 8                     ; visible height
+         !byte 77                    ; width
+         !byte 17                    ; height
