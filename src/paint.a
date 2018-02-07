@@ -1,0 +1,317 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; User interface - views and paint routines
+;
+; Public functions
+; - CreateViews
+; - PaintAllViews
+; - RepaintSomeViews
+;
+
+; ROM routines
+INVERSE        = $FE80
+NORMAL         = $FE84
+MAGICRTS       = $FF58    ; used to set overflow bit
+
+; View IDs (application-specific, acceptable range 0..15, no duplicates)
+ID_TITLE       = 0
+ID_PLAY        = 1
+ID_CLUES       = 2
+ID_BOXART      = 3
+ID_OPTIONS     = 4
+ID_INFO        = 12
+ID_DESCRIPTION = 13
+ID_PREVIOUS    = 14
+ID_NEXT        = 15
+
+!zone {
+
+;------------------------------------------------------------------------------
+; CreateViews
+; call WeeGUI to create all application views
+;
+; in:    WeeGUI loaded and initialized
+; out:   all registers clobbered
+;        all flags clobbered
+;------------------------------------------------------------------------------
+CreateViews
+         ldx   #WGCreateView         ; create title bar on top line
+         lda   #<.viewTitle
+         sta   PARAM0
+         lda   #>.viewTitle
+         sta   PARAM1
+         jsr   WeeGUI
+         ldx   #WGViewSetAction
+         lda   #<.paintTitleView
+         sta   PARAM0
+         lda   #>.paintTitleView
+         sta   PARAM1
+         jsr   WeeGUI
+
+         jsr   .createButton         ; create various buttons
+         !word .viewPrevious
+         jsr   .createButton
+         !word .viewNext
+         jsr   .createButton
+         !word .viewPlay
+         jsr   .createButton
+         !word .viewClues
+         jsr   .createButton
+         !word .viewBoxArt
+         jsr   .createButton
+         !word .viewOptions
+
+         ldx   #WGCreateView         ; create borderless frame for game title and info
+         lda   #<.viewInfo
+         sta   PARAM0
+         lda   #>.viewInfo
+         sta   PARAM1
+         jsr   WeeGUI
+         ldx   #WGViewSetAction
+         lda   #<.paintInfoView
+         sta   PARAM0
+         lda   #>.paintInfoView
+         sta   PARAM1
+         jsr   WeeGUI
+
+         ldx   #WGCreateView         ; create scrollable frame for game description text
+         lda   #<.viewDescription
+         sta   PARAM0
+         lda   #>.viewDescription
+         sta   PARAM1
+         jsr   WeeGUI
+         ldx   #WGViewSetAction
+         lda   #<.paintDescriptionView
+         sta   PARAM0
+         lda   #>.paintDescriptionView
+         sta   PARAM1
+         jmp   WeeGUI
+
+;------------------------------------------------------------------------------
+; PaintAllViews
+; call WeeGUI to paint all UI elements
+;
+; in:    WeeGUI loaded and initialized
+;        CreateViews has been called
+; out:   all registers clobbered
+;        all flags clobbered
+;------------------------------------------------------------------------------
+PaintAllViews
+         ldx   #WGViewPaintAll       ; repaint all views that can be painted automatically
+         jsr   WeeGUI
+         jsr   .paintTitleView
+         jsr   .paintInfoView
+         jmp   .paintDescriptionView
+
+;------------------------------------------------------------------------------
+; RepaintSomeViews
+; call WeeGUI to repaint UI elements after changing the current game
+;
+; in:    WeeGUI loaded and initialized
+;        CreateViews has been called
+;        gCurrentGame has new game index
+;        LoadGameInfo has been called to load new game description text
+; out:   all registers clobbered
+;        all flags clobbered
+;------------------------------------------------------------------------------
+RepaintSomeViews
+         jsr   .paintInfoView
+         jmp   .paintDescriptionView
+
+;------------------------------------------------------------------------------
+
+.paintTitleView
+         ldx   #WGSelectView
+         lda   #0
+         jsr   WeeGUI
+         jsr   INVERSE
+         ldx   #WGPrint
+         lda   #<.stringTitle
+         sta   PARAM0
+         lda   #>.stringTitle
+         sta   PARAM1
+         jsr   WeeGUI
+         jsr   NORMAL
+         rts
+
+.paintInfoView
+         ldx   #WGSelectView
+         lda   #12
+         jsr   WeeGUI
+         ldx   #WGEraseViewContents
+         jsr   WeeGUI
+         lda   addrInfo
+         ldy   addrInfo+1
+         ldx   #0
+         bra   .multiPrint
+
+.paintDescriptionView
+         ldx   #WGSelectView
+         lda   #13
+         jsr   WeeGUI
+         ldx   #WGEraseViewContents
+         jsr   WeeGUI
+         lda   addrDescription
+         ldy   addrDescription+1
+         ldx   #1
+; note: execution falls through here
+
+.multiPrint
+         sta   $00
+         sty   $01
+         stx   .htab+1
+         stx   .vtab+1
+.printLoop
+         ldx   #WGSetCursor
+.htab    lda   #$FD                  ; set at runtime
+         sta   PARAM0
+.vtab    lda   #$FD                  ; set at runtime
+         sta   PARAM1
+         jsr   WeeGUI
+         ldx   #WGPrint
+         lda   $00
+         sta   PARAM0
+         lda   $01
+         sta   PARAM1
+         bit   MAGICRTS              ; set overflow bit
+         jsr   WeeGUI
+         bit   #%00000000
+-        lda   ($00)
+         bne   +
+         bit   MAGICRTS
++        inc   $00
+         bne   +
+         inc   $01
++        bvc   -
+         inc   .vtab+1
+         lda   .vtab+1
+         cmp   #$06
+         bne   .printLoop
+         rts
+
+.createButton
+         pla
+         sta   $00
+         pla
+         sta   $01
+         tax
+         lda   #$02
+         clc
+         adc   $00
+         bcc   +
+         inx
++        phx
+         pha
+         ldy   #$01
+         lda   ($00),y
+         sta   PARAM0
+         iny
+         lda   ($00),y
+         sta   PARAM1
+         ldx   #WGCreateButton
+         jsr   WeeGUI
+         ldx   #WGViewSetRawTitle
+         lda   #RAW
+         sta   PARAM0
+         jmp   WeeGUI
+
+.viewTitle
+         !byte ID_TITLE              ; view ID
+         !byte 0                     ; style
+         !byte 0                     ; left
+         !byte 0                     ; top
+         !byte 80                    ; visible width
+         !byte 1                     ; visible height
+         !byte 80                    ; width
+         !byte 1                     ; height
+.stringTitle
+         !raw  "Pitch Dark                                                                       ",0
+
+.viewPrevious
+         !byte ID_PREVIOUS           ; view ID
+         !byte 1                     ; left
+         !byte 2                     ; top
+         !byte 12                    ; width
+         !word callback_previous     ; callback
+         !word .stringPrevious       ; caption
+.stringPrevious
+         !text "< Pre"
+         !byte $76                   ; 'v' inverse
+         !text "ious",0
+
+.viewNext
+         !byte ID_NEXT               ; view ID
+         !byte 65                    ; left
+         !byte 2                     ; top
+         !byte 13                    ; width
+         !word callback_next         ; callback
+         !word .stringNext           ; caption
+.stringNext
+         !byte $0E                   ; 'N' inverse
+         !text "ext game >",0
+
+.viewPlay
+         !byte ID_PLAY               ; view ID
+         !byte 34                    ; left
+         !byte 10                    ; top
+         !byte 13                    ; width
+         !word callback_play         ; callback
+         !word .stringPlay           ; caption
+.stringPlay
+         !byte $10                   ; 'P' inverse
+         !text "lay game",0
+
+.viewClues
+         !byte ID_CLUES              ; view ID
+         !byte 66                    ; left
+         !byte 7                     ; top
+         !byte 11                    ; width
+         !word callback_clues        ; callback
+         !word .stringClues          ; caption
+.stringClues
+         !byte $03                   ; 'C' inverse
+         !text "lues",0
+
+.viewBoxArt
+         !byte ID_BOXART             ; view ID
+         !byte 66                    ; left
+         !byte 9                     ; top
+         !byte 11                    ; width
+         !word callback_boxart       ; callback
+         !word .stringBoxArt         ; caption
+.stringBoxArt
+         !byte $02                   ; 'B' inverse
+         !text "ox art",0
+
+.viewOptions
+         !byte ID_OPTIONS            ; view ID
+         !byte 66                    ; left
+         !byte 11                    ; top
+         !byte 11                    ; width
+         !word callback_options      ; callback
+         !word .stringOptions        ; caption
+.stringOptions
+         !byte $0F                   ; 'O' inverse
+         !text "ptions",0
+
+.viewInfo
+         !byte ID_INFO               ; view ID
+         !byte 0                     ; style
+         !byte 30                    ; left
+         !byte 2                     ; top
+         !byte 20                    ; visible width
+         !byte 7                     ; visible height
+         !byte 20                    ; width
+         !byte 7                     ; height
+
+.viewDescription
+         !byte ID_DESCRIPTION        ; view ID
+         !byte 2                     ; style
+         !byte 1                     ; left
+         !byte 15                    ; top
+         !byte 77                    ; visible width
+         !byte 8                     ; visible height
+         !byte 77                    ; width
+         !byte 17                    ; height
+}

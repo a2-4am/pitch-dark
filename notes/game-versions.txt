@@ -120,5 +120,4 @@ Zork III
   15/830331 - done (as "r15a")
   15/840518 - done (as "r15b")
   16/830410 - done
-  15/840518 - done
   17/840727 - done

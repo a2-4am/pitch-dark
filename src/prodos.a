@@ -1,9 +1,12 @@
-; ProDOS functions
+;license:MIT
+;(c) 2017-8 by 4am
 ;
-; Primary:
-; LoadFile
-; SaveFile
-; QuitToProDOS
+; ProDOS and file routines
+;
+; Public functions
+; - LoadFile
+; - SaveFile
+; - QuitToProDOS
 ;
 
 ; MLI command codes

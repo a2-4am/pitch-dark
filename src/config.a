@@ -1,10 +1,25 @@
-kNumberOfGames = 25
+;license:MIT
+;(c) 2018 by 4am
+;
+; Game descriptions and configuration
+;
+; Public functions
+; - LoadGameInfo
+;
+; Public variables
+; - gCurrentGame
+;
 
 gCurrentGame
          !byte $FD                   ; set at runtime
+
+!zone {
+
+; application-specific constants and strings
+kNumberOfGames = 25
 kGameDirectory                       ; length-prefixed pathname of where game subdirectories are stored
-         !byte 2
-         !raw "Z/"
+         !byte 14
+         !raw "/PITCH.DARK/Z/"       ; TODO use relative path ('Z/') for final release
 kInfoFilename                        ; length-prefixed partial pathname of game info file, starting with '/' because reasons
          !byte 5
          !raw  "/INFO"
@@ -113,29 +128,60 @@ subdirectories                       ; length of this array must = kNumberOfGame
          !byte 8
          !raw  "ZORK.III"
 
-!zone {
+.BEGIN_PARSER_DATA
+bInSectionName
+         !byte 0
+bFoundCR
+         !byte 0
+iSection
+         !byte 0
+iSectionsFound
+         !byte 0
+
+; array of pointers to start of each section (order must match code)
+sectionPointers
+addrInfo
+         !word 0
+addrDescription
+         !word 0
+addrVersions
+         !word 0
+.END_PARSER_DATA
+
+;------------------------------------------------------------------------------
+; LoadGameInfo
+; load file with information about the current game
+;
+; in:    gCurrentGame between 0 and (kNumberOfGames-1)
+; out:   if success, C clear and addrInfo, addrDescription, addrVersions
+;          populated with pointers to parsed data
+;        if error, C set
+;        all other registers and flags clobbered
+;------------------------------------------------------------------------------
 LoadGameInfo
          stz   .path
          lda   #<kGameDirectory
          ldy   #>kGameDirectory
-         jsr   addToPath
+         jsr   .addToPath
          lda   gCurrentGame
          asl
          tax
          lda   subdirectories,x
          ldy   subdirectories+1,x
-         jsr   addToPath
+         jsr   .addToPath
          lda   #<kInfoFilename
          ldy   #>kInfoFilename
-         jsr   addToPath
+         jsr   .addToPath
 
          jsr   LoadFile
          !word .path
          !word $0800
          !word $1400
          !word $1C00
+         bcc   .parseGameInfo
+         rts
 
-; initialize all parser data
+.parseGameInfo
          ldx   #9                    ; .END_PARSER_DATA-.BEGIN_PARSER_DATA-1
 -        stz   .BEGIN_PARSER_DATA,x
          dex
@@ -245,31 +291,12 @@ parseloop
          rts
 +        sec
          rts
-.BEGIN_PARSER_DATA
-bInSectionName
-         !byte 0
-bFoundCR
-         !byte 0
-iSection
-         !byte 0
-iSectionsFound
-         !byte 0
 
-sectionPointers                      ; array of pointers to start of each section (order matches constants used by parser)
-addrInfo
-         !word 0
-addrDescription
-         !word 0
-addrVersions
-         !word 0
-.END_PARSER_DATA
-
-addToPath
+.addToPath
          sta   $00
          sty   $01
          ldx   .path                 ; current pathname length
-         ldy   #$00
-         lda   ($00),y               ; length of this segment
+         lda   ($00)                 ; length of this segment
          inc
          sta   .a+1
          ldy   #$01

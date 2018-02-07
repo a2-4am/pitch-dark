@@ -6,21 +6,24 @@
 !to "../build/PITCHDRK.SYSTEM#FF2000",plain
 *=$2000
 
-; ROM routines
-INVERSE = $FE80
-NORMAL = $FE84
-MAGICRTS = $FF58
-
 ; application constants
 RAW = 1
 
-         jmp   Init
+!zone {
+         jmp   .start
 
          !source "WeeGUI_MLI.s"
+
+.weeguiFilename
+         !byte 6
+         !raw  "WEEGUI"
+
          !source "prodos.a"
          !source "config.a"
+         !source "action.a"
+         !source "paint.a"
 
-Init
+.start
          lda   MACHID
          and   #$30
          cmp   #$30                  ; 128K?
@@ -29,278 +32,38 @@ Init
 +
          bit   $c010
          jsr   LoadFile              ; load WEEGUI binary at $4000
-         !word weeguifilename
+         !word .weeguiFilename
          !word $4000
          !word $2000
          !word $1C00
 
          jsr   $4000                 ; initialize WeeGUI
 
-         lda   #22
+         lda   #22                   ; TODO load this from a prefs file instead
          sta   gCurrentGame
-         jsr   LoadGameInfo
+         jsr   LoadGameInfo          ; load and parse game description text
+
+         jsr   CreateViews           ; create all WeeGUI views (UI elements)
+
+         ldx   #WGClearScreen        ; clear screen
+         jsr   WeeGUI
+         jsr   PaintAllViews         ; draw all UI elements
 
          ldx   #WGEnableMouse        ; enable mouse support
          jsr   WeeGUI
 
-         ldx   #WGClearScreen        ; clear screen
-         jsr   WeeGUI
-
-         ldx   #WGCreateView         ; create title bar on top line
-         lda   #<view_title
-         sta   PARAM0
-         lda   #>view_title
-         sta   PARAM1
-         jsr   WeeGUI
-         jsr   INVERSE
-         ldx   #WGPrint
-         lda   #<string_title
-         sta   PARAM0
-         lda   #>string_title
-         sta   PARAM1
-         jsr   WeeGUI
-         jsr   NORMAL
-
-         jsr   _create_button        ; create buttons
-         !word view_previous
-         jsr   _create_button
-         !word view_next
-         jsr   _create_button
-         !word view_play
-         jsr   _create_button
-         !word view_clues
-         jsr   _create_button
-         !word view_boxart
-         jsr   _create_button
-         !word view_options
-
-         ldx   #WGCreateView         ; create borderless frame for game title and info
-         lda   #<view_info
-         sta   PARAM0
-         lda   #>view_info
-         sta   PARAM1
-         jsr   WeeGUI
-
-         ldx   #WGCreateView         ; create scrollable frame for game description text
-         lda   #<view_description
-         sta   PARAM0
-         lda   #>view_description
-         sta   PARAM1
-         jsr   WeeGUI
-         ldx   #WGViewSetAction
-         lda   #<PaintDescription
-         sta   PARAM0
-         lda   #>PaintDescription
-         sta   PARAM1
-         jsr   WeeGUI
-         ldx   #WGPaintView
-         jsr   WeeGUI
-
-         jsr   PaintInfo
-         jsr   PaintDescription
-
-runloop
+.runLoop
          ldx   #WGPendingViewAction
          jsr   WeeGUI
          lda   $c000
-         bpl   runloop
+         bpl   .runLoop
          bit   $c010
+         jsr   HandleKey
+         bcc   .runLoop
 
          ldx   #WGDisableMouse       ; disable mouse support before quitting
          jsr   WeeGUI
          ldx   #WGExit               ; clean up WeeGUI
          jsr   WeeGUI
          jmp   QuitToProDOS          ; quit via ProDOS MLI
-
-callback_previous
-callback_next
-callback_play
-callback_clues
-callback_boxart
-callback_options
-         rts
-
-_create_button
-         pla
-         sta   $00
-         pla
-         sta   $01
-         tax
-         lda   #$02
-         clc
-         adc   $00
-         bcc   +
-         inx
-+        phx
-         pha
-         ldy   #$01
-         lda   ($00),y
-         sta   PARAM0
-         iny
-         lda   ($00),y
-         sta   PARAM1
-         ldx   #WGCreateButton
-         jsr   WeeGUI
-         ldx   #WGViewSetRawTitle
-         lda   #RAW
-         sta   PARAM0
-         jsr   WeeGUI
-         ldx   #WGPaintView
-         jmp   WeeGUI
-
-PaintInfo
-         ldx   #WGSelectView
-         lda   #12
-         jsr   WeeGUI
-         ldx   #WGEraseViewContents
-         jsr   WeeGUI
-         lda   addrInfo
-         ldy   addrInfo+1
-         ldx   #0
-         bra   MultiPrint
-
-PaintDescription
-         ldx   #WGSelectView
-         lda   #13
-         jsr   WeeGUI
-         ldx   #WGEraseViewContents
-         jsr   WeeGUI
-         lda   addrDescription
-         ldy   addrDescription+1
-         ldx   #1
-
-MultiPrint
-         sta   $00
-         sty   $01
-         stx   .htab+1
-         stx   .vtab+1
-printloop
-         ldx   #WGSetCursor
-.htab    lda   #$FD                  ; set at runtime
-         sta   PARAM0
-.vtab    lda   #$FD                  ; set at runtime
-         sta   PARAM1
-         jsr   WeeGUI
-         ldx   #WGPrint
-         lda   $00
-         sta   PARAM0
-         lda   $01
-         sta   PARAM1
-         bit   MAGICRTS              ; set overflow bit
-         jsr   WeeGUI
-         bit   #%00000000
--        lda   ($00)
-         bne   +
-         bit   MAGICRTS
-+        inc   $00
-         bne   +
-         inc   $01
-+        bvc   -
-         inc   .vtab+1
-         lda   .vtab+1
-         cmp   #$06
-         bne   printloop
-         rts
-
-weeguifilename
-         !byte 6
-         !raw  "WEEGUI"
-
-view_title
-         !byte 0                     ; view ID
-         !byte 0                     ; style
-         !byte 0                     ; left
-         !byte 0                     ; top
-         !byte 80                    ; visible width
-         !byte 1                     ; visible height
-         !byte 80                    ; width
-         !byte 1                     ; height
-string_title
-         !raw  "Pitch Dark                                                                       ",0
-
-view_previous
-         !byte 14                    ; view ID
-         !byte 1                     ; left
-         !byte 2                     ; top
-         !byte 12                    ; width
-         !word callback_previous     ; callback
-         !word string_previous       ; caption
-string_previous
-         !text "< Pre"
-         !byte $76                   ; 'v' inverse
-         !text "ious",0
-
-view_next
-         !byte 15                    ; view ID
-         !byte 65                    ; left
-         !byte 2                     ; top
-         !byte 13                    ; width
-         !word callback_next         ; callback
-         !word string_next           ; caption
-string_next
-         !byte $0E                   ; 'N' inverse
-         !text "ext game >",0
-
-view_play
-         !byte 1                     ; view ID
-         !byte 34                    ; left
-         !byte 10                    ; top
-         !byte 13                    ; width
-         !word callback_play         ; callback
-         !word string_play           ; caption
-string_play
-         !byte $10                   ; 'P' inverse
-         !text "lay game",0
-
-view_clues
-         !byte 2                     ; view ID
-         !byte 66                    ; left
-         !byte 7                     ; top
-         !byte 11                    ; width
-         !word callback_clues        ; callback
-         !word string_clues          ; caption
-string_clues
-         !byte $03                   ; 'C' inverse
-         !text "lues",0
-
-view_boxart
-         !byte 3                     ; view ID
-         !byte 66                    ; left
-         !byte 9                     ; top
-         !byte 11                    ; width
-         !word callback_boxart       ; callback
-         !word string_boxart         ; caption
-string_boxart
-         !byte $02                   ; 'B' inverse
-         !text "ox art",0
-
-view_options
-         !byte 4                     ; view ID
-         !byte 66                    ; left
-         !byte 11                    ; top
-         !byte 11                    ; width
-         !word callback_options      ; callback
-         !word string_options        ; caption
-string_options
-         !byte $0F                   ; 'O' inverse
-         !text "ptions",0
-
-view_info
-         !byte 12                    ; view ID
-         !byte 0                     ; style
-         !byte 30                    ; left
-         !byte 2                     ; top
-         !byte 20                    ; visible width
-         !byte 7                     ; visible height
-         !byte 20                    ; width
-         !byte 7                     ; height
-
-view_description
-         !byte 13                    ; view ID
-         !byte 2                     ; style
-         !byte 1                     ; left
-         !byte 15                    ; top
-         !byte 77                    ; visible width
-         !byte 8                     ; visible height
-         !byte 77                    ; width
-         !byte 17                    ; height
+}

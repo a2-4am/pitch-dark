@@ -1,0 +1,87 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; User interface - click/activation callbacks
+;
+; Public functions
+; - HandleKey
+;
+; (all callbacks are defined in view configuration blocks in paint.a
+;  and triggered through UI actions or called from HandleKey)
+;
+
+!zone {
+.keys
+         !byte $D0,ID_PLAY           ; P
+         !byte $F0,ID_PLAY           ; p
+         !byte $C3,ID_CLUES          ; C
+         !byte $E3,ID_CLUES          ; c
+         !byte $C2,ID_BOXART         ; B
+         !byte $E2,ID_BOXART         ; b
+         !byte $CF,ID_OPTIONS        ; O
+         !byte $EF,ID_OPTIONS        ; o
+         !byte $D6,ID_PREVIOUS       ; V
+         !byte $F6,ID_PREVIOUS       ; v
+         !byte $CE,ID_NEXT           ; N
+         !byte $EE,ID_NEXT           ; n
+.endkeys
+
+;------------------------------------------------------------------------------
+; HandleKey
+; handle keypress to activate various UI elements
+;
+; in:    A contains key pressed
+; out:   C set if program should quit
+;        C clear otherwise (no other indication of whether the specific key
+;          was handled or not)
+;        all registers and other flags clobbered
+;------------------------------------------------------------------------------
+HandleKey
+         cmp   #$9B
+         bne   +
+         sec
+         rts
++        ldx   #$16
+-        cmp   .keys,x
+         beq   +
+         dex
+         dex
+         bpl   -
+         clc
+         rts
++        lda   .keys+1,x
+         ldx   #WGSelectView
+         jsr   WeeGUI
+         ldx   #WGViewFocus
+         jsr   WeeGUI
+         ldx   #WGViewFocusAction
+         jsr   WeeGUI
+         ldx   #WGViewUnfocus
+         jsr   WeeGUI
+         clc
+         rts
+
+callback_previous
+         lda   gCurrentGame
+         dec
+         bpl   +
+         lda   #kNumberOfGames-1
++        sta   gCurrentGame
+         bra   .loadNewGameInfoAndRepaint
+callback_next
+         lda   gCurrentGame
+         inc
+         cmp   #kNumberOfGames
+         bcc   +
+         lda   #0
++        sta   gCurrentGame
+.loadNewGameInfoAndRepaint
+         jsr   LoadGameInfo
+         jmp   RepaintSomeViews
+
+callback_play
+callback_clues
+callback_boxart
+callback_options
+         rts
+}

@@ -1,3 +1,4 @@
+[info]
       BALLYHOO
 
 
@@ -5,7 +6,7 @@
 
 Difficulty:    ^^^&&
 
-
+[description]
 Spurred by your natural curiosity, you stick around after the show in the
 big top, hoping to catch an after-hours performance. Perhaps you'll get a
 peek at an impromptu clown act, or watch the late-night feedings of the
@@ -27,8 +28,12 @@ would call you foolish.
 
 Every circus has its seedy underside. But few are as dangerous as this.
 
+[versions]
+R97.851218.Z3=r97 / 851218
+
 --
 
+[info]
      CUTTHROATS
 
 
@@ -36,7 +41,7 @@ Every circus has its seedy underside. But few are as dangerous as this.
 
 Difficulty:    ^^^&&
 
-
+[description]
 In Cutthroats, you are a skilled diver living on Hardscrabble Island, a
 small seaport past its prime. You will try to salvage a treasure from one of
 four shipwrecks; if you are successful, you will be fabulously and
@@ -48,8 +53,12 @@ There is more than one shipwreck in Cutthroats, but in each story you will
 be trying to recover only one particular treasure. When you restart the
 story, you may find yourself diving for a different treasure.
 
+[versions]
+R23.840809=r23 / 840809
+
 --
 
+[info]
       DEADLINE
 
 
@@ -57,7 +66,7 @@ story, you may find yourself diving for a different treasure.
 
 Difficulty:    ^^^^^
 
-
+[description]
 A wealthy industrialist, Mr. Marshall Robner, locked himself in the upstairs
 library of his New England colonial estate one night and committed suicide
 by taking a lethal overdose of anti-depressants. Or did he?
@@ -76,8 +85,17 @@ this case, and the one you reach is determined by your actions and by the
 deductions you draw from the evidence you gather. But one ending fits the
 facts better than any other, and you will know it when you reach it.
 
+[versions]
+R27.831005.Z3=r27 / 831005
+R26.821108.Z3=r26 / 821108
+R22.820809.Z3=r22 / 820809
+R21.820512.Z3=r21 / 820512
+R19.820427.Z3=r19 / 820427
+R18.820311.Z3=r18 / 820311
+
 --
 
+[info]
      ENCHANTER
 
 
@@ -85,12 +103,7 @@ facts better than any other, and you will know it when you reach it.
 
 Difficulty:    ^^^&&
 
-
-Welcome to the World of the Enchanter saga - a world where magic is
-commonplace, a world where guilds of professional magic-users spend their
-lifetimes mastering the intricacies of thaumaturgy, a world where great
-forces of evil must constantly be held at bay.
-
+[description]
 An Evil Warlock has subjugated the land to his power. All who have opposed
 him have failed. But many years ago, in another age, the great Elders of the
 Circle of Enchanters foresaw the possibility of these dreaded occurences.
@@ -108,8 +121,16 @@ the basics of magic, and you will be greatly aided by the spells you know
 and the spells you will learn. But you must also rely on your powers of
 observation and quick wits.
 
+[versions]
+R29.860820.Z3=r29 / 860820
+R24.851118.Z3=r24 / 851118
+R16.831118.Z3=r16 / 831118
+R15.831107.Z3=r15 / 831107
+R10.830810.Z3=r10 / 830810
+
 --
 
+[info]
  HITCHHIKER'S GUIDE
    TO THE GALAXY
 
@@ -117,7 +138,7 @@ observation and quick wits.
 
 Difficulty:    ^^^&&
 
-
+[description]
 Don't Panic!
 
 In this story, you will be Arthur Dent, a rather ordinary earth creature who
@@ -138,8 +159,15 @@ Familiarity with the story may make a few of the early puzzles easier, but
 if you rely too heavily on this previous knowledge you will certainly
 befuddle yourself.
 
+[versions]
+R59.851108.Z3=r59 / 851108
+R58.851002.Z3=r58 / 851002
+R56.841221.Z3=r56 / 841221
+R47.840914.Z3=r47 / 840914
+
 --
 
+[info]
   HOLLYWOOD HIJINX
 
 
@@ -147,7 +175,7 @@ befuddle yourself.
 
 Difficulty:    ^^^&&
 
-
+[description]
 As a child, you spent most of your summers with your Aunt Hildegard and
 Uncle Buddy. What memories! Uncle Buddy was a Hollywood big-shot, Aunt
 Hildegard his loving (and very rich!) wife. They had no children on their
@@ -164,8 +192,13 @@ you inherit nothing.
 And so Hollywood Hijinx begins with you being dropped off in front of a dark
 house, not too far from Hollywood...
 
+[versions]
+R37.861215.Z3=r37 / 861215
+R235.861118.Z3=r235 / 861118
+
 --
 
+[info]
       INFIDEL
 
 
@@ -173,7 +206,7 @@ house, not too far from Hollywood...
 
 Difficulty:    ^^^^&
 
-
+[description]
 You like to think of yourself as a bold and adventurous soldier of fortune,
 daring to brave the perils of the Egyptian Desert in search of a great lost
 pyramid. In fact, you're a small-time explorer, and you've just been
@@ -190,8 +223,12 @@ Still, you're driven onward against desperate odds. Undreamed-of riches and
 treasures beyond imagination await you. And your pride and dignity, your
 reputation and self-esteem, are at stake. For you are branded INFIDEL.
 
+[versions]
+R22.830916.Z3=r22 / 830916
+
 --
 
+[info]
  LEATHER GOODESSES
      OF PHOBOS
 
@@ -199,7 +236,7 @@ reputation and self-esteem, are at stake. For you are branded INFIDEL.
 
 Difficulty:    ^^^&&
 
-
+[description]
 1936. In the United States, a new miracle fabric called nylon is becoming
 popular, the Great Plains continue to suffer from a severe drought that is
 turning the region into a Dust Bowl, Alf Landon is running for President,
@@ -227,8 +264,13 @@ should you be able to catch your breath long enough to think about it, is to
 collect the materials you'll need to ultimately defeat the Leather Goddesses
 of Phobos and save humanity! Are you "up" for the job?
 
+[versions]
+R59.860730.Z3=r59 / 860730
+R50.860711.Z3=r50 / 860711
+
 --
 
+[info]
  THE LURKING HORROR
 
 
@@ -236,7 +278,7 @@ of Phobos and save humanity! Are you "up" for the job?
 
 Difficulty:    ^^^&&
 
-
+[description]
 In The Lurking Horror, you are a student at G.U.E. Tech. You have braved a
 snowstorm to get to the Computer Center and finish work on an assignment.
 But the snowstorm has turned into a raging blizzard, and has trapped you in
@@ -251,8 +293,38 @@ calm corridors and study halls.
 Shapes emerge from dark corners. Eerie sounds draw closer. Slimy passageways
 lead to sights so horrifying that they will feed your nightmares for weeks.
 
+[versions]
+R221.870918.Z3=r221 / 870918
+R219.870912.Z3=r219 / 870912
+R203.870506.Z3=r203 / 870506
+
 --
 
+[info]
+     MINI-ZORK
+
+
+1987         Fantasy
+
+Difficulty:    ^^^&&
+
+[description]
+This is a condensed version of Zork I, reduced to make it viable for the
+cassette-based Commodore 64. The only Infocom story file ever to be intended
+to run from cassette rather than disk, Mini-Zork has been compared to a
+Reader's Digest edition of a classic. It is one of several remakings of Zork
+from the final years of Infocom.
+
+In November 1990, a year after Infocom had effectively become defunct, Mini-
+Zork was given away with the British Commodore magazine "Zzap! 64" no. 67,
+which is now a collector's item.
+
+[versions]
+R34.871124.Z3=r34 / 871124
+
+--
+
+[info]
       MOONMIST
 
 
@@ -260,7 +332,7 @@ lead to sights so horrifying that they will feed your nightmares for weeks.
 
 Difficulty:    ^^&&&
 
-
+[description]
 In Moonmist, you are a famous young American detective. An old friend,
 Tamara Lynd, has written you a letter, asking for your help. And so you have
 travelled to England to test your detective skills.
@@ -271,13 +343,18 @@ valuable treasure.
 
 But Tamara is worried about a ghost that is tormenting her. What does the
 ghost want? Is it jealous of her? Does the ghost want the hidden treasure
-for itself?  Or is the ghost a fake -- just someone dressing up to frighten
+for itself? Or is the ghost a fake -- just someone dressing up to frighten
 Tamara? If so, why?
 
 These mysteries and others are waiting to test your wits in Moonmist.
 
+[versions]
+R9.861022.Z3=r9 / 861022
+R4.860918.Z3=r4 / 860918
+
 --
 
+[info]
      PLANETFALL
 
 
@@ -285,7 +362,7 @@ These mysteries and others are waiting to test your wits in Moonmist.
 
 Difficulty:    ^^^&&
 
-
+[description]
 After the fall of the Second Galactic Union in 1716 GY, a ten-thousand-year
 dark age settled upon the galaxy. Interstellar travel was non-existent, and
 many star systems descended into a near-barbaric state, buring coal and gas
@@ -313,8 +390,15 @@ Seventh Class. You superior officer, Ensign First Class Blather, has been
 making your life miserable. You're beginning to wonder if you're really cut
 out for the Stellar Patrol...
 
+[versions]
+R37.851003.Z3=r37 / 851003
+R29.840118.Z3=r29 / 840118
+R26.831014.Z3=r26 / 831014
+R20.830708.Z3=r20 / 830708
+
 --
 
+[info]
   PLUNDERED HEARTS
 
 
@@ -322,7 +406,7 @@ out for the Stellar Patrol...
 
 Difficulty:    ^^&&&
 
-
+[description]
 Plundered Hearts is set in the late 1600s, where you are living the gentle
 life of a beautiful young Englishwoman. You have received news that your
 dear father is ailing, and so you are travelling to the West Indies to care
@@ -333,8 +417,12 @@ are carried off by the dashing pirate captain! But this does not dissuade
 you from your determination to find your father. Along the way, you shall
 encounter danger, adventure ... and more than a touch of romance.
 
+[versions]
+R26.870730.Z3=r26 / 870730
+
 --
 
+[info]
      SEASTALKER
 
 
@@ -342,7 +430,7 @@ encounter danger, adventure ... and more than a touch of romance.
 
 Difficulty:    ^&&&&
 
-
+[description]
 Welcome to the world of Infocom's junior interactive fiction, a world where:
 
  * you can become the hero or heroine in a story,
@@ -358,8 +446,16 @@ dive deeply into the sea to capture plants and animals for you to study. But
 you will have to use it to save your undersea scientific station from a sea
 monster that is attacking it!
 
+[versions]
+R16B.850603.Z3=r16 / 850603
+R16A.850515.Z3=r16 / 850515
+R15B.840522.Z3=r15 / 840522
+R15A.840501.Z3=r15 / 840501
+R86.840320.Z3=r86 / 840320
+
 --
 
+[info]
       SORCERER
 
 
@@ -367,12 +463,7 @@ monster that is attacking it!
 
 Difficulty:    ^^^^&
 
-
-Welcome to the World of the Enchanter saga - a world where magic is
-commonplace, a world where guilds of professional magic-users spend their
-lifetimes mastering the intricacies of thaumaturgy, a world where great
-forces of evil must constantly be held at bay.
-
+[description]
 In your late youth you left home to join the Guild of Enchanters. After
 years of schooling, you achieved the rank of Apprentice Enchanter. In
 fulfillment of an ancient prophecy, you were sent to find Krill, an evil
@@ -397,8 +488,21 @@ darkness instead of the forces of light, who knows what would result?
 
 And now, unbeknownst to you, Belboz has vanished.
 
+[versions]
+R18.DEPROT.Z3=r18 / 860904 (deprotected)
+R15.DEPROT.Z3=r15 / 851108 (deprotected)
+R13.DEPROT.Z3=r13 / 851021 (deprotected)
+R6.DEPROT.Z3=r6 / 840508 (deprotected)
+R4.DEPROT.Z3=r4 / 840131 (deprotected)
+R18.860904.Z3=r18 / 860904
+R15.851108.Z3=r15 / 851108
+R13.851021.Z3=r13 / 851021
+R6.840508.Z3=r6 / 840508
+R4.840131.Z3=r4 / 840131
+
 --
 
+[info]
     SPELLBREAKER
 
 
@@ -406,11 +510,7 @@ And now, unbeknownst to you, Belboz has vanished.
 
 Difficulty:    ^^^^^
 
-
-Welcome to the World of the Enchanter saga - a world founded on magic, where
-guilds of magicians have mastered the powers of sorcery; a world now
-threatened with destruction.
-
+[description]
 You distinguished yourself among the young Enchanters by defeating the evil
 warlock Krill, whose attempt to subjugate the land was thwarted by your
 clerverness, as your inexperience allowed you to succeed where others might
@@ -424,8 +524,15 @@ Spells fail to work or go strangely awry, the populace is confused and
 restive, and even the Enchanters Guild is baffled. And it is at this
 conclave that the final conflict between good and evil begins to unfold.
 
+[versions]
+R87.DEPROT.Z3=r87 / 860904 (deprotected)
+R63.DEPROT.Z3=r63 / 850916 (deprotected)
+R87.860904.Z3=r87 / 860904
+R63.850916.Z3=r63 / 850916
+
 --
 
+[info]
      STARCROSS
 
 
@@ -433,7 +540,7 @@ conclave that the final conflict between good and evil begins to unfold.
 
 Difficulty:    ^^^^^
 
-
+[description]
 The year is 2186. Humanity has established colonies on the moon, Mars, and
 several of the larger asteroids. Earth's sky is dotted with space habitats,
 and the spaceways are always busy. As usual, there is urgent need for energy
@@ -461,8 +568,13 @@ grapple with the long-sought black hole. Your quest hast taken an unexpected
 turn, for you are destined to rendezvous with a gargantuan alien space ship
 from the outer fringes of the galaxy.
 
+[versions]
+R17.821021.Z3=r17 / 821021
+R15.820901.Z3=r15 / 820901
+
 --
 
+[info]
     STATIONFALL
 
 
@@ -470,7 +582,7 @@ from the outer fringes of the galaxy.
 
 Difficulty:    ^^^^&
 
-
+[description]
 After the fall of the Second Galactic Union in 1716 GY, a ten-thousand-year
 dark age settled upon the galaxy. Interstellar travel was nonexistent, and
 many star systems descended into a near-barbaric state, buring coal and gas
@@ -510,8 +622,13 @@ at today's "thrilling" assignment: scooting over to Space Station Gamma
 Delta Gamma 777-G 59/59 Sector Alpha-Mu-79 to pick up a supply of Request
 for Stellar Patrol Issue Regulation Black Form Binders Request Form Forms...
 
+[versions]
+R107.DEPROT.Z3=r107 / 870430 deprotected
+R107.870430.Z3=r107 / 870430
+
 --
 
+[info]
       SUSPECT
 
 
@@ -519,7 +636,7 @@ for Stellar Patrol Issue Regulation Black Form Binders Request Form Forms...
 
 Difficulty:    ^^^^&
 
-
+[description]
 Halloween night.
 
 You are a guest at a very exclusive party: the annual Costume Ball at
@@ -537,8 +654,12 @@ a few hours to escape the trap that's been laid for you.
 
 The murderer is in your midst, laughing behind your back.
 
+[versions]
+R14.841005.Z3=r14 / 841005
+
 --
 
+[info]
       SUSPENDED
 
 
@@ -546,7 +667,7 @@ The murderer is in your midst, laughing behind your back.
 
 Difficulty:    ^^^^^
 
-
+[description]
 You are the Central Mentality on an advanced semi-automated planet. You were
 supposed to sleep -- in limited cryogenic suspension -- for the next 500
 years, 20 miles beneath the surface of the planet, while the great Filtering
@@ -563,8 +684,15 @@ offers you specific abilities. One offers you sight; a second, hearing; a
 third, access to information in the computer memory banks. Through the
 robots, you must save the planet from destruction.
 
+[versions]
+R8B.840521.Z3=r8 / 840521
+R8A.830521.Z3=r8 / 830521
+R7.830419.Z3=r7 / 830419
+R5.830222.Z3=r5 / 830222
+
 --
 
+[info]
     WISHBRINGER
 
 
@@ -572,7 +700,7 @@ robots, you must save the planet from destruction.
 
 Difficulty:    ^^&&&
 
-
+[description]
 In Wishbringer, you're a postal clerk in a small seaside village called
 Festeron. You deliver a strange envelope to a magic shop, and discover that
 an old woman's black cat has been kidnapped by "the Evil One." The old woman
@@ -584,8 +712,13 @@ only in unusual places. Everyone seeks to possess a magic stone of dreams
 known as Wishbringer; but only you can find it and use its powers to make
 your town safe again. And you only have a few hours!
 
+[versions]
+R69.850920.Z3=r69 / 850920
+R68.850501.Z3=r68 / 850501
+
 --
 
+[info]
     THE WITNESS
 
 
@@ -593,7 +726,7 @@ your town safe again. And you only have a few hours!
 
 Difficulty:    ^^^&&
 
-
+[description]
 In The Witness, you are a police detective working near Los Angeles. The
 year is 1938, and on this stormy February night a wealthy but frightened man
 has asked your for protection. In spite of your best efforts, a death will
@@ -619,8 +752,16 @@ actions and by the deductions you draw from the evidence you gather. But one
 ending fits the facts better than any, and you will know it when you reach
 it.
 
+[versions]
+R22.840924.Z3=r22 / 840924
+R21.831208.Z3=r21 / 831208
+R20.831119.Z3=r20 / 831119
+R18.830910.Z3=r18 / 830910
+R13.830524.Z3=r13 / 830524
+
 --
 
+[info]
  ZORK I: THE GREAT
  UNDERGROUND EMPIRE
 
@@ -628,7 +769,7 @@ it.
 
 Difficulty:    ^^^&&
 
-
+[description]
 Welcome to ZORK! You are about to experience a classic interactive fantasy,
 set in a magical universe. The ZORK trilogy takes place in the ruins of an
 ancient empire lying far underground. You, a dauntless treasure-hunter, are
@@ -645,8 +786,20 @@ of light (for the caverns are dark) and weapons (for some of the inhabitants
 are unfriendly -- especially the thief, a skilled pickpocket and ruthless
 opponent).
 
+[versions]
+R88.840726.Z3=r88 / 840726
+R76.840509.Z3=r76 / 840509
+R75.830929.Z3=r75 / 830929
+R30.830330.Z3=r30 / 830330
+R28.821013.Z3=r28 / 821013
+R26.820803.Z3=r26 / 820803
+R25.820515.Z3=r25 / 820515
+R23.820428.Z3=r23 / 820428
+R20.000000.Z3=r20 / 000000
+
 --
 
+[info]
 ZORK II: THE WIZARD
      OF FROBOZZ
 
@@ -654,14 +807,7 @@ ZORK II: THE WIZARD
 
 Difficulty:    ^^^^&
 
-
-Welcome to ZORK! You are about to experience a classic interactive fantasy,
-set in a magical universe. The ZORK trilogy takes place in the ruins of an
-ancient empire lying far underground. You, a dauntless treasure-hunter, are
-venturing into this dangerous land in search of wealth and adventure.
-Because each part of the ZORK saga is a completely independent story, you
-can explore them in any order.
-
+[description]
 In Zork II, you will explore a long hidden region of the Empire, a region
 dominated by the Wizard of Frobozz. The Wizard was once a respected
 Enchanter, but when his powers began to fade he was exiled by Lord Dimwit
@@ -669,8 +815,19 @@ Flathead the Excessive. Now bordering on senility, the Wizard is still a
 force to be reckoned with. Your goal, as you venture into the Wizard's
 realm, is to avoid his capricious tricks and learn to control his magic.
 
+[versions]
+R48.840904.Z3=r48 / 840904
+R23.830411.Z3=r23 / 830411
+R22.830331.Z3=r22 / 830331
+R19.820721.Z3=r19 / 820721
+R18B.820517.Z3=r18 / 820517
+R18A.820512.Z3=r18 / 820512
+R17.820427.Z3=r17 / 820427
+R15.820308.Z3=r15 / 820308
+
 --
 
+[info]
    ZORK III: THE
    DUNGEON MASTER
 
@@ -678,17 +835,18 @@ realm, is to avoid his capricious tricks and learn to control his magic.
 
 Difficulty:    ^^^^&
 
-
-Welcome to ZORK! You are about to experience a classic interactive fantasy,
-set in a magical universe. The ZORK trilogy takes place in the ruins of an
-ancient empire lying far underground. You, a dauntless treasure-hunter, are
-venturing into this dangerous land in search of wealth and adventure.
-Because each part of the ZORK saga is a completely independent story, you
-can explore them in any order.
-
+[description]
 As ZORK III begins, your greatest challenge beckons as you take the final
 step down into the very heart of the Great Underground Empire. Your
 character and courage will be tested as the enigmatic Dungeon Master
 confronts you with predicaments and perils. Your quest hinges upon
 discovering his secret purpose, even as he oversees your ultimate triumph -
 or destruction!
+
+[versions]
+R17.840727.Z3=r17 / 840727
+R16.830410.Z3=r16 / 830410
+R15B.840518.Z3=r15 / 840518
+R15A.830331.Z3=r15 / 830331
+R12.821025.Z3=r12 / 821025
+R10.820818.Z3=r10 / 820818

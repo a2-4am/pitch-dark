@@ -15,12 +15,14 @@ ACME=acme
 # https://sourceforge.net/projects/applecommander/
 AC=bin/AppleCommander.jar
 
-BUILDDISK=build/work.po
+DISK=pitchdark.po
+MASTERDISK=res/$(DISK)
+BUILDDISK=build/$(DISK)
 
 asm:
 	mkdir -p build
 	cd src && $(ACME) pitchdark.a
-	cp res/work.po $(BUILDDISK)
+	cp $(MASTERDISK) $(BUILDDISK)
 	java -jar $(AC) -p $(BUILDDISK) "PITCHDRK.SYSTEM" sys 0x2000 < "build/PITCHDRK.SYSTEM#FF2000"
 
 clean:
