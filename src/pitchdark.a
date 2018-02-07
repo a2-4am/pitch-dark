@@ -6,37 +6,50 @@
 !to "../build/PITCHDRK.SYSTEM#FF2000",plain
 *=$2000
 
-; application constants
-RAW = 1
-
-!zone {
-         jmp   .start
+         ldx   #$20
+         ldy   #$00
+.copya   lda   CodeStart,y
+.copyb   sta   $6000,y
+         iny
+         bne   .copya
+         inc   .copya+2
+         inc   .copyb+2
+         dex
+         bne   .copya
+!cpu 65816
+         sep   #2                    ; set Z flag on 65816 only
+!cpu 65c02
+         bne   +                     ; skip GS-specific code on non-GS machines (required, will crash on //c, grr)
+         lda   $C029
+         and   #$1F
+         sta   $C029                 ; set GS NEWVIDEO mode to turn off linearize
++        jmp   Start
+CodeStart
+!pseudopc $6000 {
+.weeguiFilename
+         !byte 10
+         !raw  "BIN/WEEGUI"
 
          !source "WeeGUI_MLI.s"
-
-.weeguiFilename
-         !byte 6
-         !raw  "WEEGUI"
-
          !source "prodos.a"
+         !source "ramdisk.a"
+         !source "path.a"
          !source "config.a"
          !source "action.a"
          !source "paint.a"
-
-.start
+Start
          lda   MACHID
          and   #$30
          cmp   #$30                  ; 128K?
          beq   +                     ; yes, continue
          jmp   QuitToProDOS
-+
-         bit   $c010
++        jsr   DisconnectRAM32       ; disconnect /RAM in S3,D2 so we can use DHGR
+         bit   $C010
          jsr   LoadFile              ; load WEEGUI binary at $4000
          !word .weeguiFilename
          !word $4000
          !word $2000
          !word $1C00
-
          jsr   $4000                 ; initialize WeeGUI
 
          lda   #22                   ; TODO load this from a prefs file instead
@@ -44,14 +57,11 @@ RAW = 1
          jsr   LoadGameInfo          ; load and parse game description text
 
          jsr   CreateViews           ; create all WeeGUI views (UI elements)
-
          ldx   #WGClearScreen        ; clear screen
          jsr   WeeGUI
          jsr   PaintAllViews         ; draw all UI elements
-
          ldx   #WGEnableMouse        ; enable mouse support
          jsr   WeeGUI
-
 .runLoop
          ldx   #WGPendingViewAction
          jsr   WeeGUI
@@ -61,9 +71,12 @@ RAW = 1
          jsr   HandleKey
          bcc   .runLoop
 
+         jsr   ExitWeeGUI
+         jmp   QuitToProDOS          ; quit via ProDOS MLI
+
+ExitWeeGUI
          ldx   #WGDisableMouse       ; disable mouse support before quitting
          jsr   WeeGUI
          ldx   #WGExit               ; clean up WeeGUI
-         jsr   WeeGUI
-         jmp   QuitToProDOS          ; quit via ProDOS MLI
+         jmp   WeeGUI
 }

@@ -14,6 +14,7 @@
 .keys
          !byte $D0,ID_PLAY           ; P
          !byte $F0,ID_PLAY           ; p
+         !byte $8D,ID_PLAY           ; Return
          !byte $C3,ID_CLUES          ; C
          !byte $E3,ID_CLUES          ; c
          !byte $C2,ID_BOXART         ; B
@@ -22,8 +23,17 @@
          !byte $EF,ID_OPTIONS        ; o
          !byte $D6,ID_PREVIOUS       ; V
          !byte $F6,ID_PREVIOUS       ; v
+         !byte $88,ID_PREVIOUS       ; left arrow
          !byte $CE,ID_NEXT           ; N
          !byte $EE,ID_NEXT           ; n
+         !byte $95,ID_NEXT           ; right arrow
+; IDs of actions that do not correspond to WeeGUI view IDs have high bit set
+ID_QUIT        = $80
+ID_SCROLLUP    = $81
+ID_SCROLLDOWN  = $82
+         !byte $9B,ID_QUIT           ; Esc
+         !byte $8B,ID_SCROLLUP       ; up arrow
+         !byte $8A,ID_SCROLLDOWN     ; down arrow
 .endkeys
 
 ;------------------------------------------------------------------------------
@@ -37,29 +47,55 @@
 ;        all registers and other flags clobbered
 ;------------------------------------------------------------------------------
 HandleKey
-         cmp   #$9B
-         bne   +
-         sec
-         rts
-+        ldx   #$16
+         ldx   #.endkeys-.keys
 -        cmp   .keys,x
-         beq   +
+         beq   .foundKey
          dex
          dex
          bpl   -
-         clc
-         rts
-+        lda   .keys+1,x
+         bra   .unhandled
+.foundKey
+         lda   .keys+1,x
+         bpl   .activateView
+         cmp   #ID_SCROLLUP
+         beq   .handleScrollUp
+         cmp   #ID_SCROLLDOWN
+         beq   .handleScrollDown
+         cmp   #ID_QUIT
+         beq   .tellCallerToQuit
+         bra   .unhandled
+.handleScrollUp
+         lda   #$01
+         !byte $2C                   ; hide next LDA
+.handleScrollDown
+         lda   #$FF
+         pha
+.handleScroll
+         ldx   #WGSelectView
+         lda   #ID_DESCRIPTION
+         jsr   WeeGUI
+         ldx   #WGScrollYBy
+         pla
+         jsr   WeeGUI
+         bra   .focusAndDoAction
+.activateView
          ldx   #WGSelectView
          jsr   WeeGUI
+.focusAndDoAction
          ldx   #WGViewFocus
          jsr   WeeGUI
          ldx   #WGViewFocusAction
          jsr   WeeGUI
          ldx   #WGViewUnfocus
          jsr   WeeGUI
+.unhandled
          clc
          rts
+.tellCallerToQuit
+         sec
+         rts
+
+;------------------------------------------------------------------------------
 
 callback_previous
          lda   gCurrentGame
@@ -78,10 +114,60 @@ callback_next
 .loadNewGameInfoAndRepaint
          jsr   LoadGameInfo
          jmp   RepaintSomeViews
+         jmp   $ff59
 
 callback_play
+         jmp   LaunchInterpreter
+
 callback_clues
 callback_boxart
 callback_options
          rts
+
+LaunchInterpreter
+         jsr   ResetPath
+         lda   #<.interpreterFilename
+         ldy   #>.interpreterFilename
+         jsr   AddToPath
+         jsr   LoadFile              ; load interpreter at $2000
+         !word gPathname
+         !word $2000
+         !word $2000
+         !word $1C00
+         bcs   .nope
+; change prefix to folder of file we want the interpreter to open
+         jsr   ResetPath
+         lda   #<kGameRootDirectory
+         ldy   #>kGameRootDirectory
+         jsr   AddToPath
+         lda   gCurrentGame
+         asl
+         tax
+         lda   GAMES,x
+         ldy   GAMES+1,x
+         jsr   AddToPath
+         jsr   SetPrefix
+         !word gPathname
+; put .z3 filename at $2006
+         ldy   #0
+         lda   addrVersions
+         sta   $00
+         lda   addrVersions+1
+         sta   $01
+-        lda   ($00),y
+         cmp   #$BD                  ; '='
+         beq   .doneBuildingFilename
+         iny
+         and   #$7F
+         sta   $2006,y
+         bra   -
+.doneBuildingFilename
+         sty   $2006
+         jsr   ExitWeeGUI
+         jmp   $2000
+.nope    sec
+         rts
+.interpreterFilename
+         !byte 18
+         !raw  "BIN/INTERPP.SYSTEM"
 }

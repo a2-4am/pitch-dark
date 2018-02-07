@@ -6,6 +6,7 @@
 ; Public functions
 ; - LoadFile
 ; - SaveFile
+; - SetPrefix
 ; - QuitToProDOS
 ;
 
@@ -13,6 +14,7 @@
 CMD_QUIT =     $65        ; quit to ProDOS
 CMD_CREATE =   $C0        ; create new file
 CMD_DESTROY =  $C1        ; delete a file
+CMD_SETPREFIX= $C6        ; change default pathname prefix
 CMD_OPEN =     $C8        ; open a file
 CMD_READ =     $CA        ; read an open file
 CMD_WRITE =    $CB        ; write to an open file
@@ -22,6 +24,7 @@ CMD_CLOSE =    $CC        ; close an open file
 PC_QUIT =      $04
 PC_CREATE =    $07
 PC_DESTROY =   $01
+PC_SETPREFIX = $01
 PC_OPEN  =     $03
 PC_READ  =     $04
 PC_WRITE =     $04
@@ -190,6 +193,42 @@ SaveFile
 }
 
 ;-------------------------------
+; SetPrefix
+; set current directory
+;
+; in:  stack contains 2 bytes of parameters:
+;      +1 address of pathname
+; out: if C set, call failed and A contains error code
+;      if C clear, call succeeded
+;      all other flags clobbered
+;      all registers clobbered
+;      stack set to next instruction after parameters
+;-------------------------------
+!zone {
+SetPrefix
+         pla
+         sta   $00
+         plx
+         stx   $01
+         lda   #$02
+         clc
+         adc   $00
+         bcc   +
+         inx
++        phx
+         pha
+
+         ldy   #$01
+         lda   ($00),y    ; lo byte of pathname
+         sta   mliparam+1
+         iny
+         lda   ($00),y    ; hi byte of pathname
+         sta   mliparam+2
+
+         jmp   _setprefix
+}
+
+;-------------------------------
 ; open file via ProDOS MLI
 ;
 ; in:  caller has filled @mliparam with address of
@@ -301,6 +340,21 @@ _deletefile
          jsr   mli
          rts
 
+;-------------------------------
+; change current directory (set prefix)
+; using ProDOS MLI
+; in:  caller has filled @mliparam
+;        with address of pathname
+; out: if error, C set and A contains error code
+;      if success, C clear
+;-------------------------------
+_setprefix
+         lda   #CMD_SETPREFIX
+         ldy   #PC_SETPREFIX
+         jsr   mli
+         rts
+
+;-------------------------------
 QuitToProDOS
          lda   #CMD_QUIT
          ldy   #PC_QUIT

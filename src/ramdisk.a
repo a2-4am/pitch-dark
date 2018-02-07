@@ -1,0 +1,73 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; /RAM routines
+; see ProDOS TechNote #26 Polite Use of Auxiliary Memory
+; and ProDOS 8 Technical Reference Manual 5.2.2.2 Disconnecting /RAM
+;
+; Public functions
+; - DisconnectRAM32
+;
+; TODO reconnect on exit
+;
+MLI            = $BF00    ; ProDOS MLI entry point
+NODEV          = $BF10    ; means 'no device connected'
+RAM32          = $BF26    ; S3,D2 /RAM device
+DEVCNT         = $BF31    ; ProDOS device count
+DEVLST         = $BF32    ; ProDOS device list
+MACHID         = $BF98    ; machine identification byte
+
+;------------------------------------------------------------------------------
+; DisconnectRAM32
+; disconnect ProDOS /RAM disk in S3,D2
+; (does not affect other RAM disks like RAMWorks or RAMFactor)
+;
+; in:    ProDOS in memory
+; out:   C clear if /RAM was found and disconnected
+;        C set if /RAM was not found or could not be disconnected
+;        all other registers and flags clobbered
+;------------------------------------------------------------------------------
+!zone {
+DisconnectRAM32
+         lda   RAM32                 ; search for /RAM and disconnect if found
+         cmp   NODEV
+         bne   +
+         lda   RAM32+1
+         cmp   NODEV+1
+         beq   .noRAMdisk
++        ldy   DEVCNT
+-        lda   DEVLST, y
+         and   #$F3
+         cmp   #$B3
+         beq   .foundRAMdisk
+         dey
+         bpl   -
+         bmi   .noRAMdisk
+.foundRAMdisk
+         lda   DEVLST, y
+         sta   saveRAMDiskUnit       ; save RAM disk unit number
+-        lda   DEVLST+1, y           ; move other devices up in list
+         sta   DEVLST, y
+         beq   +                     ; device list is zero-terminated
+         iny
+         bne   -                     ; always branches
++
+         lda   RAM32
+         sta   saveRAMDiskDriver     ; save RAM disk device address
+         lda   RAM32+1
+         sta   saveRAMDiskDriver+1
+         lda   NODEV                 ; tell ProDOS there's no RAM disk anymore
+         sta   RAM32
+         lda   NODEV+1
+         sta   RAM32+1
+         dec   DEVCNT                ; reduce ProDOS device count
+         clc
+         rts
+.noRAMdisk
+         sec
+         rts
+saveRAMDiskUnit
+         !byte 0
+saveRAMDiskDriver
+         !word 0
+}

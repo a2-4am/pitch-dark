@@ -117,6 +117,7 @@ PaintAllViews
 ;------------------------------------------------------------------------------
 RepaintSomeViews
          jsr   .paintInfoView
+         jsr   .resetDescriptionViewScrolling
          jmp   .paintDescriptionView
 
 ;------------------------------------------------------------------------------
@@ -135,17 +136,6 @@ RepaintSomeViews
          jsr   NORMAL
          rts
 
-.paintInfoView
-         ldx   #WGSelectView
-         lda   #12
-         jsr   WeeGUI
-         ldx   #WGEraseViewContents
-         jsr   WeeGUI
-         lda   addrInfo
-         ldy   addrInfo+1
-         ldx   #0
-         bra   .multiPrint
-
 .paintDescriptionView
          ldx   #WGSelectView
          lda   #13
@@ -155,6 +145,23 @@ RepaintSomeViews
          lda   addrDescription
          ldy   addrDescription+1
          ldx   #1
+         jsr   .multiPrint
+         lda   .vtab+1
+         cmp   #10
+         bcs   +
+         lda   #10
++        sta   $59B6                            ; HACKHACKHACK set view height inside WeeGUI internals (WG_VIEWRECORDS)
+         rts
+
+.paintInfoView
+         ldx   #WGSelectView
+         lda   #12
+         jsr   WeeGUI
+         ldx   #WGEraseViewContents
+         jsr   WeeGUI
+         lda   addrInfo
+         ldy   addrInfo+1
+         ldx   #0
 ; note: execution falls through here
 
 .multiPrint
@@ -163,6 +170,8 @@ RepaintSomeViews
          stx   .htab+1
          stx   .vtab+1
 .printLoop
+         lda   ($00)
+         beq   .printDone
          ldx   #WGSetCursor
 .htab    lda   #$FD                  ; set at runtime
          sta   PARAM0
@@ -179,15 +188,14 @@ RepaintSomeViews
          bit   #%00000000
 -        lda   ($00)
          bne   +
-         bit   MAGICRTS
+         bit   MAGICRTS              ; set overflow bit
 +        inc   $00
          bne   +
          inc   $01
 +        bvc   -
          inc   .vtab+1
-         lda   .vtab+1
-         cmp   #$06
          bne   .printLoop
+.printDone
          rts
 
 .createButton
@@ -212,8 +220,19 @@ RepaintSomeViews
          ldx   #WGCreateButton
          jsr   WeeGUI
          ldx   #WGViewSetRawTitle
-         lda   #RAW
+         lda   #1
          sta   PARAM0
+         jmp   WeeGUI
+
+.resetDescriptionViewScrolling
+         ldx   #WGSelectView
+         lda   #ID_DESCRIPTION
+         jsr   WeeGUI
+         ldx   #WGScrollX
+         lda   #0
+         jsr   WeeGUI
+         ldx   #WGScrollY
+         lda   #0
          jmp   WeeGUI
 
 .viewTitle
@@ -309,9 +328,11 @@ RepaintSomeViews
          !byte ID_DESCRIPTION        ; view ID
          !byte 2                     ; style
          !byte 1                     ; left
+.viewDescriptionMinHeight
          !byte 15                    ; top
          !byte 77                    ; visible width
          !byte 8                     ; visible height
          !byte 77                    ; width
-         !byte 17                    ; height
+.viewDescriptionHeight
+         !byte 39                    ; height
 }

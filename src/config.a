@@ -5,26 +5,28 @@
 ;
 ; Public functions
 ; - LoadGameInfo
+; - AddToPath
 ;
 ; Public variables
 ; - gCurrentGame
 ;
-
-gCurrentGame
-         !byte $FD                   ; set at runtime
+; Public constants
+; - kNumberOfGames
+; - kGameRootDirectory
+; - GAMES
+;
 
 !zone {
-
-; application-specific constants and strings
 kNumberOfGames = 25
-kGameDirectory                       ; length-prefixed pathname of where game subdirectories are stored
+gCurrentGame
+         !byte $FD                   ; set at runtime
+kGameRootDirectory                   ; length-prefixed pathname of where game subdirectories are stored
          !byte 14
          !raw "/PITCH.DARK/Z/"       ; TODO use relative path ('Z/') for final release
-kInfoFilename                        ; length-prefixed partial pathname of game info file, starting with '/' because reasons
+.infoFilename                        ; length-prefixed partial pathname of game info file, starting with '/' because reasons
          !byte 5
          !raw  "/INFO"
-
-subdirectories                       ; length of this array must = kNumberOfGames, there is no range checking
+GAMES                                ; length of this array must = kNumberOfGames, there is no range checking
          !word .ballyhoo
          !word .cutthroats
          !word .deadline
@@ -159,22 +161,22 @@ addrVersions
 ;        all other registers and flags clobbered
 ;------------------------------------------------------------------------------
 LoadGameInfo
-         stz   .path
-         lda   #<kGameDirectory
-         ldy   #>kGameDirectory
-         jsr   .addToPath
+         jsr   ResetPath
+         lda   #<kGameRootDirectory
+         ldy   #>kGameRootDirectory
+         jsr   AddToPath
          lda   gCurrentGame
          asl
          tax
-         lda   subdirectories,x
-         ldy   subdirectories+1,x
-         jsr   .addToPath
-         lda   #<kInfoFilename
-         ldy   #>kInfoFilename
-         jsr   .addToPath
+         lda   GAMES,x
+         ldy   GAMES+1,x
+         jsr   AddToPath
+         lda   #<.infoFilename
+         ldy   #>.infoFilename
+         jsr   AddToPath
 
          jsr   LoadFile
-         !word .path
+         !word gPathname
          !word $0800
          !word $1400
          !word $1C00
@@ -291,25 +293,4 @@ parseloop
          rts
 +        sec
          rts
-
-.addToPath
-         sta   $00
-         sty   $01
-         ldx   .path                 ; current pathname length
-         lda   ($00)                 ; length of this segment
-         inc
-         sta   .a+1
-         ldy   #$01
--        lda   ($00),y
-         sta   .pathbuffer,x
-         inx
-         iny
-.a       cpy   #$FD                  ; set at runtime
-         bcc   -
-         stx   .path
-         rts
-.path
-         !byte $FD                   ; set at runtime
-.pathbuffer
-         !fill 64                    ; enough zeroes for any ProDOS pathname
 }

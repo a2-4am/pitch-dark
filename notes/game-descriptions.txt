@@ -815,6 +815,9 @@ Flathead the Excessive. Now bordering on senility, the Wizard is still a
 force to be reckoned with. Your goal, as you venture into the Wizard's
 realm, is to avoid his capricious tricks and learn to control his magic.
 
+Because each part of the ZORK saga is a completely independent story, you
+can explore them in any order.
+
 [versions]
 R48.840904.Z3=r48 / 840904
 R23.830411.Z3=r23 / 830411
@@ -842,6 +845,9 @@ character and courage will be tested as the enigmatic Dungeon Master
 confronts you with predicaments and perils. Your quest hinges upon
 discovering his secret purpose, even as he oversees your ultimate triumph -
 or destruction!
+
+Because each part of the ZORK saga is a completely independent story, you
+can explore them in any order.
 
 [versions]
 R17.840727.Z3=r17 / 840727

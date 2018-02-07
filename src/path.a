@@ -1,0 +1,51 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; Functions to build a ProDOS pathname from length-prefixed strings
+;
+; Public functions
+; - ResetPath
+; - AddToPath
+;
+; Public variables
+; - gPathname
+;
+
+;------------------------------------------------------------------------------
+; ResetPath
+; reset gPathname to length 0
+;
+; in:    none
+; out:   all registers preserved
+;------------------------------------------------------------------------------
+ResetPath
+         stz   gPathname
+         rts
+
+;------------------------------------------------------------------------------
+; AddToPath
+; append a length-prefixed string to gPathname
+;
+; in:    A contains low byte of address of length-prefixed string to append
+;        Y contains high byte of address of length-prefixed string to append
+; out:   all registers and flags clobbered
+;------------------------------------------------------------------------------
+AddToPath
+         sta   $00
+         sty   $01
+         ldx   gPathname             ; current pathname length
+         lda   ($00)                 ; length of this segment
+         inc
+         sta   .a+1
+         ldy   #$01
+-        lda   ($00),y
+         sta   gPathname+1,x
+         inx
+         iny
+.a       cpy   #$FD                  ; set at runtime
+         bcc   -
+         stx   gPathname
+         rts
+
+gPathname
+         !fill 65                    ; enough zeroes for any ProDOS pathname
