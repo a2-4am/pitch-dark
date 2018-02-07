@@ -17,9 +17,9 @@
          dex
          bne   .copya
 !cpu 65816
-         sep   #2                    ; set Z flag on 65816 only
+         rep   #2                    ; clear Z flag on 65816 only
 !cpu 65c02
-         bne   +                     ; skip GS-specific code on non-GS machines (required, will crash on //c, grr)
+         beq   +                     ; skip GS-specific code on non-GS machines (required, will crash on //c, grr)
          lda   $C029
          and   #$1F
          sta   $C029                 ; set GS NEWVIDEO mode to turn off linearize
