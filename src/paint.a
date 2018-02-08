@@ -102,13 +102,6 @@ PaintAllViews
          jsr   WeeGUI
          jsr   .paintTitleView
          jsr   .paintInfoView
-
-         ldx   #WGSelectView
-         lda   #ID_DESCRIPTION
-         jsr   WeeGUI
-         ldx   #WGPaintView
-         jsr   WeeGUI
-
          jmp   .paintDescriptionView
 
 ;------------------------------------------------------------------------------
@@ -147,10 +140,9 @@ RepaintSomeViews
          ldx   #WGSelectView
          lda   #ID_DESCRIPTION
          jsr   WeeGUI
-         ;ldx   #WGEraseViewContents
-         ;jsr   WeeGUI
          lda   addrDescription
          ldy   addrDescription+1
+         ldx   #78
          jsr   .multiPrint
          lda   .vtab+1
          cmp   #10
@@ -161,17 +153,16 @@ RepaintSomeViews
 
 .paintInfoView
          ldx   #WGSelectView
-         lda   #12
-         jsr   WeeGUI
-         ldx   #WGEraseViewContents
+         lda   #ID_INFO
          jsr   WeeGUI
          lda   addrInfo
          ldy   addrInfo+1
-; note: execution falls through here
+         ldx   #21
 
 .multiPrint
          sta   $00
          sty   $01
+         stx   .printLineLength+1
          stz   .htab+1
          stz   .vtab+1
 .printLoop
@@ -190,15 +181,14 @@ RepaintSomeViews
          sta   PARAM1
          bit   MAGICRTS              ; set overflow bit
          jsr   WeeGUI
-         bit   #%00000000
--        lda   ($00)
-         bne   +
-         bit   MAGICRTS              ; set overflow bit
-+        inc   $00
-         bne   +
+         lda   $00
+         clc
+.printLineLength
+         adc   #$fd                  ; set at runtime
+         sta   $00
+         bcc   +
          inc   $01
-+        bvc   -
-         inc   .vtab+1
++        inc   .vtab+1
          bne   .printLoop
 .printDone
          rts

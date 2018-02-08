@@ -12,7 +12,6 @@
 ;
 ; Public constants
 ; - kNumberOfGames
-; - kGameRootDirectory
 ; - GAMES
 ;
 
@@ -191,27 +190,24 @@ LoadGameInfo
          sta   $03
 parseloop
          lda   ($00)
-; Replace all carriage returns with zeroes,
-; because WeeGUI wants zero-terminated strings
-; but I want to be able to edit files in a text editor.
-         cmp   #$0D
-         bne   +
+         cmp   #$0D                  ; CR -> 0x00 (WeeGUI wants null-terminated strings)
+         bne   .notCR
          lda   #$00
          sta   ($00)
          lda   #$FF
          sta   bFoundCR
          bra   .next
-+        cmp   #$5B                  ; '[' is section name start delimiter
+.notCR
+         cmp   #$5B                  ; '[' is section name start delimiter
          beq   .startsectionname
          cmp   #$5D                  ; ']' is section name end delimiter
          beq   .endsectionname
          bit   bInSectionName
          bmi   .parsesectionname
          bvs   .next
-
          tax
          beq   .nohighbit
-+        cmp   #$5E                  ; '^' -> closed-apple mousetext
+         cmp   #$5E                  ; '^' -> closed-apple mousetext
          bne   +
          lda   #$40
          sta   ($00)
@@ -225,7 +221,6 @@ parseloop
          ora   #$80
          sta   ($00)
 .nohighbit
-
          bit   bFoundCR
          bpl   .next
          stz   bFoundCR
