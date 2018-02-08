@@ -102,6 +102,13 @@ PaintAllViews
          jsr   WeeGUI
          jsr   .paintTitleView
          jsr   .paintInfoView
+
+         ldx   #WGSelectView
+         lda   #ID_DESCRIPTION
+         jsr   WeeGUI
+         ldx   #WGPaintView
+         jsr   WeeGUI
+
          jmp   .paintDescriptionView
 
 ;------------------------------------------------------------------------------
@@ -124,7 +131,7 @@ RepaintSomeViews
 
 .paintTitleView
          ldx   #WGSelectView
-         lda   #0
+         lda   #ID_TITLE
          jsr   WeeGUI
          jsr   INVERSE
          ldx   #WGPrint
@@ -138,13 +145,12 @@ RepaintSomeViews
 
 .paintDescriptionView
          ldx   #WGSelectView
-         lda   #13
+         lda   #ID_DESCRIPTION
          jsr   WeeGUI
-         ldx   #WGEraseViewContents
-         jsr   WeeGUI
+         ;ldx   #WGEraseViewContents
+         ;jsr   WeeGUI
          lda   addrDescription
          ldy   addrDescription+1
-         ldx   #1
          jsr   .multiPrint
          lda   .vtab+1
          cmp   #10
@@ -161,14 +167,13 @@ RepaintSomeViews
          jsr   WeeGUI
          lda   addrInfo
          ldy   addrInfo+1
-         ldx   #0
 ; note: execution falls through here
 
 .multiPrint
          sta   $00
          sty   $01
-         stx   .htab+1
-         stx   .vtab+1
+         stz   .htab+1
+         stz   .vtab+1
 .printLoop
          lda   ($00)
          beq   .printDone
