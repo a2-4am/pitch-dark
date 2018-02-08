@@ -3,6 +3,7 @@
 
 !cpu 6502
 *=$2000
+!to "../build/QUIT.SYSTEM#FF2000",plain
 
 	lda	$c083
 	lda	$c083
@@ -76,6 +77,6 @@ prefix_e
 
 filename
 	!byte	(filename_e-filename)-1
-	!text	"BIN/PITCHDRK.SYSTEM"
+	!text	"PITCHDRK.SYSTEM"
 filename_e
 }

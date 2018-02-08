@@ -20,12 +20,9 @@
 kNumberOfGames = 25
 gCurrentGame
          !byte $FD                   ; set at runtime
-kGameRootDirectory                   ; length-prefixed pathname of where game subdirectories are stored
-         !byte 14
-         !raw "/PITCH.DARK/Z/"       ; TODO use relative path ('Z/') for final release
-.infoFilename                        ; length-prefixed partial pathname of game info file, starting with '/' because reasons
+kTextRootDirectory
          !byte 5
-         !raw  "/INFO"
+         !raw "TEXT/"
 GAMES                                ; length of this array must = kNumberOfGames, there is no range checking
          !word .ballyhoo
          !word .cutthroats
@@ -162,17 +159,14 @@ addrVersions
 ;------------------------------------------------------------------------------
 LoadGameInfo
          jsr   ResetPath
-         lda   #<kGameRootDirectory
-         ldy   #>kGameRootDirectory
+         lda   #<kTextRootDirectory
+         ldy   #>kTextRootDirectory
          jsr   AddToPath
          lda   gCurrentGame
          asl
          tax
          lda   GAMES,x
          ldy   GAMES+1,x
-         jsr   AddToPath
-         lda   #<.infoFilename
-         ldy   #>.infoFilename
          jsr   AddToPath
 
          jsr   LoadFile

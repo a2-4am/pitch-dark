@@ -11,6 +11,9 @@
 ;
 
 !zone {
+kGameRootDirectory                   ; length-prefixed pathname of where game subdirectories are stored
+         !byte 14
+         !raw "/PITCH.DARK/Z/"       ; TODO use relative path ('Z/') for final release
 .keys
          !byte $D0,ID_PLAY           ; P
          !byte $F0,ID_PLAY           ; p
