@@ -3,19 +3,10 @@
 
 !cpu 65c02
 !ct "lcase.ct"
-!to "../build/PITCHDRK.SYSTEM#FF2000",plain
-*=$2000
+!to "../build/PITCH.DARK#066000",plain
+*=$6000
 
-         ldx   #$20
-         ldy   #$00
-.copya   lda   CodeStart,y
-.copyb   sta   $6000,y
-         iny
-         bne   .copya
-         inc   .copya+2
-         inc   .copyb+2
-         dex
-         bne   .copya
+         lda   #0                    ; set Z flag always
 !cpu 65816
          rep   #2                    ; clear Z flag on 65816 only
 !cpu 65c02
@@ -24,8 +15,6 @@
          and   #$1F
          sta   $C029                 ; set GS NEWVIDEO mode to turn off linearize
 +        jmp   Start
-CodeStart
-!pseudopc $6000 {
 .weeguiFilename
          !byte 10
          !raw  "BIN/WEEGUI"
@@ -79,4 +68,3 @@ ExitWeeGUI
          jsr   WeeGUI
          ldx   #WGExit               ; clean up WeeGUI
          jmp   WeeGUI
-}
