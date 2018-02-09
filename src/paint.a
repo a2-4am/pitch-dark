@@ -96,6 +96,7 @@ CreateViews
 ;        CreateViews has been called
 ; out:   all registers clobbered
 ;        all flags clobbered
+;        $00/$01 clobbered
 ;------------------------------------------------------------------------------
 PaintAllViews
          ldx   #WGViewPaintAll       ; repaint all views that can be painted automatically

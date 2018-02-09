@@ -29,6 +29,8 @@ ResetPath
 ; in:    A contains low byte of address of length-prefixed string to append
 ;        Y contains high byte of address of length-prefixed string to append
 ; out:   all registers and flags clobbered
+;        $00/$01 clobbered
+;        gPathname updated with concatenated length-prefixed string
 ;------------------------------------------------------------------------------
 AddToPath
          sta   $00

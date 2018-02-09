@@ -20,9 +20,11 @@
          !raw  "BIN/WEEGUI"
 
          !source "WeeGUI_MLI.s"
+         !source "memory.a"
          !source "prodos.a"
          !source "ramdisk.a"
          !source "path.a"
+         !source "prefs.a"
          !source "config.a"
          !source "action.a"
          !source "paint.a"
@@ -38,11 +40,11 @@ Start
          !word .weeguiFilename
          !word $4000
          !word $2000
-         !word $1C00
+         !word kProDOSFileBuffer
+
          jsr   $4000                 ; initialize WeeGUI
 
-         lda   #22                   ; TODO load this from a prefs file instead
-         sta   gCurrentGame
+         jsr   LoadGlobalPreferences ; get current game
          jsr   LoadGameInfo          ; load and parse game description text
 
          jsr   CreateViews           ; create all WeeGUI views (UI elements)
@@ -58,10 +60,7 @@ Start
          bpl   .runLoop
          bit   $c010
          jsr   HandleKey
-         bcc   .runLoop
-
-         jsr   ExitWeeGUI
-         jmp   QuitToProDOS          ; quit via ProDOS MLI
+         bra   .runLoop
 
 ExitWeeGUI
          ldx   #WGDisableMouse       ; disable mouse support before quitting

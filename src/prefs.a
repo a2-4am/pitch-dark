@@ -1,0 +1,53 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; Global and per-game preferences
+;
+; Public functions
+; - LoadGlobalPreferences
+
+!zone {
+kDefaultGame              = 22       ; Zork I
+kPrefsRecord              = $0800
+kPrefsLength              = 1
+kPrefsCurrentGame         = kPrefsRecord + 0
+
+;------------------------------------------------------------------------------
+; LoadGlobalPreferences
+;
+; in:    current ProDOS prefix is the same as the PITCH.DARK binary
+; out:   all registers and flags clobbered
+;------------------------------------------------------------------------------
+LoadGlobalPreferences
+         jsr   LoadFile              ; load prefs file at $0800
+         !word .globalPrefsFilename
+         !word kPrefsRecord
+         !word kPrefsLength
+         !word kProDOSFileBuffer
+         bcs   .useDefaults
+         lda   kPrefsCurrentGame
+         cmp   #kNumberOfGames
+         bcs   .useDefaults
+         sta   gCurrentGame
+         rts
+.useDefaults
+         lda   #kDefaultGame
+         sta   gCurrentGame
+         rts
+
+SaveGlobalPreferences
+         lda   gCurrentGame
+         sta   kPrefsCurrentGame
+         jsr   SaveFile
+         !word .globalPrefsFilename
+         !byte $06
+         !word $0000
+         !word kPrefsRecord
+         !word kPrefsLength
+         !word kProDOSFileBuffer
+         rts
+
+.globalPrefsFilename
+         !byte 15
+         !raw  "PITCH.DARK.CONF"
+}

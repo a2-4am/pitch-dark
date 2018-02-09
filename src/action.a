@@ -31,10 +31,8 @@ kGameRootDirectory                   ; length-prefixed pathname of where game su
          !byte $EE,ID_NEXT           ; n
          !byte $95,ID_NEXT           ; right arrow
 ; IDs of actions that do not correspond to WeeGUI view IDs have high bit set
-ID_QUIT        = $80
 ID_SCROLLUP    = $81
 ID_SCROLLDOWN  = $82
-         !byte $9B,ID_QUIT           ; Esc
          !byte $8B,ID_SCROLLUP       ; up arrow
          !byte $8A,ID_SCROLLDOWN     ; down arrow
 .endkeys
@@ -44,10 +42,7 @@ ID_SCROLLDOWN  = $82
 ; handle keypress to activate various UI elements
 ;
 ; in:    A contains key pressed
-; out:   C set if program should quit
-;        C clear otherwise (no other indication of whether the specific key
-;          was handled or not)
-;        all registers and other flags clobbered
+; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 HandleKey
          ldx   #.endkeys-.keys
@@ -56,7 +51,7 @@ HandleKey
          dex
          dex
          bpl   -
-         bra   .unhandled
+         rts
 .foundKey
          lda   .keys+1,x
          bpl   .activateView
@@ -64,9 +59,7 @@ HandleKey
          beq   .handleScrollUp
          cmp   #ID_SCROLLDOWN
          beq   .handleScrollDown
-         cmp   #ID_QUIT
-         beq   .tellCallerToQuit
-         bra   .unhandled
+         rts
 .handleScrollUp
          lda   #$01
          !byte $2C                   ; hide next LDA
@@ -90,13 +83,7 @@ HandleKey
          ldx   #WGViewFocusAction
          jsr   WeeGUI
          ldx   #WGViewUnfocus
-         jsr   WeeGUI
-.unhandled
-         clc
-         rts
-.tellCallerToQuit
-         sec
-         rts
+         jmp   WeeGUI
 
 ;------------------------------------------------------------------------------
 
@@ -117,7 +104,6 @@ callback_next
 .loadNewGameInfoAndRepaint
          jsr   LoadGameInfo
          jmp   RepaintSomeViews
-         jmp   $ff59
 
 callback_play
          jmp   LaunchInterpreter
@@ -128,6 +114,7 @@ callback_options
          rts
 
 LaunchInterpreter
+         jsr   SaveGlobalPreferences
          jsr   ResetPath
          lda   #<.interpreterFilename
          ldy   #>.interpreterFilename
@@ -136,7 +123,7 @@ LaunchInterpreter
          !word gPathname
          !word $2000
          !word $2000
-         !word $1C00
+         !word kProDOSFileBuffer
          bcs   .nope
 ; change prefix to folder of file we want the interpreter to open
          jsr   ResetPath

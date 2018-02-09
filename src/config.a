@@ -5,7 +5,6 @@
 ;
 ; Public functions
 ; - LoadGameInfo
-; - AddToPath
 ;
 ; Public variables
 ; - gCurrentGame
@@ -172,7 +171,7 @@ LoadGameInfo
          !word gPathname
          !word $0800
          !word $1400
-         !word $1C00
+         !word kProDOSFileBuffer
          bcc   .parseGameInfo
          rts
 
