@@ -23,7 +23,7 @@ asm:
 	mkdir -p build
 	cd src && $(ACME) pitchdark.a
 	cp $(MASTERDISK) $(BUILDDISK)
-	java -jar $(AC) -p $(BUILDDISK) "PITCHDRK.SYSTEM" sys 0x2000 < "build/PITCHDRK.SYSTEM#FF2000"
+	java -jar $(AC) -p $(BUILDDISK) "PITCH.DARK" bin 0x6000 < "build/PITCH.DARK#066000"
 
 clean:
 	rm -rf build/
