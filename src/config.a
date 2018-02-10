@@ -15,14 +15,18 @@
 ;
 
 !zone {
-kNumberOfGames = 25
+kNumberOfGames = 29
 gCurrentGame
          !byte $FD                   ; set at runtime
 kTextRootDirectory
          !byte 5
          !raw "TEXT/"
 GAMES                                ; length of this array must = kNumberOfGames, there is no range checking
+         !word .amfv
          !word .ballyhoo
+         !word .beyondzork
+         !word .borderzone
+         !word .bureaucracy
          !word .cutthroats
          !word .deadline
          !word .enchanter
@@ -49,9 +53,21 @@ GAMES                                ; length of this array must = kNumberOfGame
          !word .zorkiii
 
 ; length-prefixed names of each subdirectory in game directory, 1 per game
+.amfv
+         !byte 4
+         !raw  "AMFV"
 .ballyhoo
          !byte 8
          !raw  "BALLYHOO"
+.beyondzork
+         !byte 11
+         !raw  "BEYOND.ZORK"
+.borderzone
+         !byte 11
+         !raw  "BORDER.ZONE"
+.bureaucracy
+         !byte 11
+         !raw  "BUREAUCRACY"
 .cutthroats
          !byte 10
          !raw  "CUTTHROATS"

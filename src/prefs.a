@@ -7,7 +7,7 @@
 ; - LoadGlobalPreferences
 
 !zone {
-kDefaultGame              = 22       ; Zork I
+kDefaultGame              = 22       ; Zork I -- TODO fix this after adding other games
 kPrefsRecord              = $0800
 kPrefsLength              = 1
 kPrefsCurrentGame         = kPrefsRecord + 0

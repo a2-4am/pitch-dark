@@ -1,3 +1,74 @@
+New:
+* A Mind Forever Voyaging
+* Beyond Zork
+* Border Zone
+* Bureaucracy
+* Nord and Bert
+- Sherlock
+- Trinity
+
+New versions:
+- HGTTG
+- LGOP
+- Planetfall
+- Wishbringer
+- Zork I
+
+[info]
+SHERLOCK: THE RIDDLE
+OF THE CROWN JEWELS
+
+[description]
+
+[info]
+   A MIND FOREVER
+      VOYAGING
+
+1985          Sci-Fi
+
+Difficulty:   ^^^^^&
+
+[description]
+Welcome to A Mind Forever Voyaging. In this story, you will be PRISM, the
+world's first sentient machine. Before you "boot up" your disk, make sure
+you read the short story in the first part of the booklet.
+
+The story begins in the world of 2031, a world on the brink of chaos. The
+economy of the United States of North America (USNA) has been stagnating for
+decades. Crackpot religions are springing up all over the place. Crime and
+urban decay are rampant. Schools have become violent, chaotic places
+ill-suited for educating children. Today's youth frequently use joybooths to
+"tune-out" the world, leading in the extreme case to joybooth suicide, where
+a psychological addict wastes away in his or her private nirvana.
+
+The global situation is even grimmer. The calcuttization of the Third World
+has almost reached its limit, causing extreme overpopulation and poverty.
+This has created a climate ripe for East Bloc adventurism, exploiting
+instability and fanning the numerous flash points around the globe. The
+superpower race to build an impenetrable missile defense has ended in a tie,
+with the foreseeable but unforseen result that an even more dangerous arms
+race has begun -- a race to build miniature nuclear weapons, some as small
+as a cigarette pack, and smuggle them into enemy cities -- a race which
+threatens to turn the USNA into a giant police state.
+
+Things are bad, and it appears that they can only get worse. So when Senator
+Richard Ryder, along with a small group of leaders from government,
+business, and the universities, announces the Plan for Renewed National
+Purpose, everyone is only too willing to embrace it.
+
+Only one thing stands between the Plan and its adoption: a test of its
+validity. That's why you have been "awakened" from your simulated life and
+had your true nature revealed to you several years ahead of schedule. You
+have been chosen to use your unique abilities to enter a simulation of the
+future, based on the tenents of the Plan, in order to check its
+effectiveness. The eyes of the world are on you.
+
+[versions]
+R79.851122.Z4=r79 / 851122
+R77.850814.Z4=r77 / 850814
+
+--
+
 [info]
       BALLYHOO
 
@@ -30,6 +101,128 @@ Every circus has its seedy underside. But few are as dangerous as this.
 
 [versions]
 R97.851218.Z3=r97 / 851218
+
+--
+
+[info]
+    BEYOND ZORK
+
+
+1987         Fantasy
+
+Difficulty:    ^^^&&
+
+[description]
+Dark times have fallen upon the Southlands of Quendor. All the enchanters
+have disappeared without a trace. Monsters roam the countryside. And the
+taverns are filled with disturbing rumours and un-savory characters.
+
+A simple peasant like yourself knows better than to get involved in the
+affairs of wizards. But everyone you meet seems intent on testing your
+abilities to the utmost. You find yourself drawn into a web of fantasy and
+magic, solving puzzles, avoiding traps and fighting monsters. Your strength
+and power grow with every encounter, until the most fabulous treasure of all
+- the fabled Coconut of Quendor - lies within your grasp. If only you can
+survive long enough to claim it!
+
+Unlike other Infocom stories in which your character is "set" from the
+start, Beyond Zork lets you create your own character with six attributes:
+endurance, strength, dexterity, intelligence, compassion, and luck. Some
+situations in the story require dexterity, some require strength, some
+require intelligence, and so on; some situations require a combination of
+these attributes. You can choose your attributes yourself, or you can use a
+character already set up by the computer.
+
+You must fight monsters and solve puzzles to succeed in your quest. Since
+your success will often depend on your attributes, mindful players will try
+to improve their attributes as they venture onward.
+
+[versions]
+R57.871221.Z5=r57 / 871221
+R51.870923.Z5=r51 / 870923
+R49.870917.Z5=r49 / 870917
+R47.870915.Z5=r47 / 870915
+
+--
+
+[info]
+    BORDER ZONE
+
+
+1987       Espionage
+
+Difficulty:    ^^^^&
+
+[description]
+
+Washington and Moscow are the capitals of the Superpowers, but the Cold War
+is fought at the front: in Eastern Bloc countries like Frobnia and adjacent
+neutral countries like Litzenburg. In these countries, where all strangers
+are suspect and all actions observed, paranoia and vulnerability are
+inescapable. In these countries, innocent travelers get caught in the web of
+international espoinage. This is the setting for Border Zone.
+
+Border Zone consists of three chapters. In each chapter, you play a
+different character (an American businessman, a Western spy, and an Eastern
+spy) involved in unique puzzles and goals. The chapters take place at
+different times and at different locations. As a player, you will get the
+most satisfaction if you play the chapters in order.
+
+Border Zone has a built-in clock which drives the story forward. Unlike
+other Infocom stories, the clock in Border Zone continues to tick even while
+you stop to think. So if you find yourself in a dangerous situation, you
+can't just sit back and relax. Whether you type in a command or not,
+characters will move around, events will happen, and the story will proceed.
+
+[versions]
+R9.871008.Z5=r9 / 871008
+
+--
+
+[info]
+    BUREAUCRACY
+
+
+1987          Comedy
+
+Difficulty:    ^^^^&
+
+[description]
+Once upon a time (not very long ago), a man moved from one apartment in
+London to another. He dutifully notified everyone of his new address,
+including his bank; in fact, he went to the bank and filled out a change-
+of-address form himself. The man was very happy in his new apartment.
+
+Then, one day, the man tried to use a credit card but couldn't. He
+discovered that his bank had invalidated his credit card. Apparently, the
+bank had sent a new card to his old address.
+
+For weeks, the man tried to get the bank to acknowledge his change-of-
+address form. He talked to many bank officials, and filled out new forms,
+and tried to get a new credit card issued, but nothing worked. The man had
+no credit, and the bank behaved like, well, a bank.
+
+It's a sad story, one that gets replayed every day for millions of people
+worldwide. Of course, sometimes it's not a bank at fault: sometimes it's the
+postal service, or an insurance company, or the telephone company, or an
+airline, or the Government. But all of us, at one time or another, feel
+persecuted by a bureaucracy.
+
+You begin Bureaucracy in your new house. As per the letter in your package,
+you will fly to Paris (for business and pleasure) just as soon as you get
+some money to take you to the airport. That money should be in today's mail,
+so you should be off soon... unless, of course, there's some problem with
+the mail.
+
+Oh, by the way: The man in our story about the bank was Douglas Adams, the
+principal author of this game. The bank finally did send him a letter,
+apologizing for the inconvenience - but they sent it to his old address.
+
+[versions]
+R116.DEPROT.Z4=r116 / 870602 (deprotected)
+R86.DEPROT.Z4=r86 / 870212 (deprotected)
+R116.870602.Z4=r116 / 870602
+R86.870212.Z4=r86 / 870212
 
 --
 
@@ -351,6 +544,37 @@ These mysteries and others are waiting to test your wits in Moonmist.
 [versions]
 R9.861022.Z3=r9 / 861022
 R4.860918.Z3=r4 / 860918
+
+--
+
+[info]
+   NORD AND BERT
+
+
+1987          Comedy
+
+Difficulty:    ^^^^^
+
+[description]
+
+Nord and Bert Couldn't Make Head or Tail of It is different from any other
+Infocom story you may have seen. Rather than being one long story, it's a
+collection of eight short stories, or scenarios. Each of the eight stories
+involves some sort of punning, wordplay, or verbal trickery.
+
+The people and items you meet in one scenario won't appear in another, and
+so each story is played independently of the others. However, to get into
+the scenario called Meet the Mayor, you need to know seven passwords. You
+get one password everytime you complete one of the other seven scenarios.
+You can play these other seven scenarios in any order.
+
+Nord and Bert also differs from other Infocom stories in that no mapping is
+needed, and you won't use compass directions to move from one place to
+another. Instead, the status line (at the top of your screen) will tell you
+what places you can go next.
+
+[versions]
+R19.870722.Z4=r19 / 870722
 
 --
 
