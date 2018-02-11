@@ -21,11 +21,13 @@ CADIUS=cadius
 asm:
 	mkdir -p build
 	cd src && $(ACME) pitchdark.a
+
+dsk: asm
 	cp res/$(DISK) build/
 	cp res/_FileInformation.txt build/
 	$(CADIUS) ADDFILE build/$(DISK) "/PDBOOT/" "build/PITCH.DARK"
 
-txt:
+txt: dsk
 	mkdir -p build/text
 	$(PY3) bin/textnormalize.py text/*
 	cd build && $(CADIUS) ADDFOLDER $(DISK) "/PDBOOT/TEXT" text
@@ -36,4 +38,4 @@ clean:
 mount:
 	osascript bin/V2Make.scpt "`pwd`" build/$(DISK)
 
-all: clean asm txt mount
+all: clean asm dsk txt mount

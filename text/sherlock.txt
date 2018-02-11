@@ -1,0 +1,54 @@
+[info]
+ SHERLOCK: RIDDLE OF
+  THE CROWN JEWELS
+ 
+1987         Mystery
+ 
+Difficulty:    ^^^&&
+
+[description]
+ 
+ MORIARTY HAS SET A DEADLY TRAP FOR SHERLOCK HOLMES. AND ONLY YOU CAN STOP
+ HIM...
+ 
+ Travel back in time to Victorian London, where the city is bustling with
+ preparations for Her Majesty's Golden Jubilee. Crowds of sightseers and
+ souvenir vendors fill the streets in eager anticipation of the Jubilee Week
+ events. Newspapers detail the gala array of festivities. Sumptuous
+ receptions for foreign dignitaries. Special services at Westminster Abbey.
+ A Royal Procession through the streets of London. And the Queen reigning
+ over all, resplendent in the Crown Jewels.
+ 
+ At least, that's the official plan. Unbeknownst to the celebrants thronging
+ the cit, a crisis has arisen: the Crown Jewels have been stolen from the
+ Tower of London. If they're not recovered before the festivities begin, the
+ theft will be exposed and the government will fall into international
+ disgrace.
+ 
+ Only 48 hours remain to solve the crime. With Scotland Yard failing to make
+ headway, the Prime Minister calls on Sherlock Holmes, the famous consulting
+ detective. But riddles left at the scene of the crime include a direct
+ challenge to Holmes, who suspects a deadly trap. To throw the scoundrel off
+ his guard, Holmes turns the investigation over to you, his trusted cohort,
+ Dr. Watson.  With Holmes by your side, you use your wits, intuition, and a
+ myriad of clues to solve the riddles and piece together the mystery. Your
+ search for the jewels and the villain leads you all over London, from the
+ most popular tourist attractions to the seediest back alleys. As Big Ben
+ strikes each successive hour and dangerous complications impede your
+ progress, you realize you're facing that most dastardly of foes, Holmes's
+ archnemesis... the vile Professor Moriarty.
+ 
+ Sherlock: The Riddle of the Crown Jewels is the first story in Inform's new
+ Immortal Legends series, developed by Challenge, Inc. Using Infocom's
+ sophisticated development tools, Challenge lends its own brand of puzzles
+ and plotting to interactive fiction. In The Riddle of the Crown Jewels,
+ author Bob Bates brings Holmes's London to life, filling it with familiar
+ characters and locations. Onscreen hints provide clues when your magnifying
+ glass falls short of the task.
+ 
+ And now, come, Watson! The game is afoot...
+
+[versions]
+R26.880127.Z5=r26 / 880127
+R21.871214.Z5=r21 / 871214
+
