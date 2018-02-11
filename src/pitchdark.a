@@ -3,7 +3,7 @@
 
 !cpu 65c02
 !ct "lcase.ct"
-!to "../build/PITCH.DARK#066000",plain
+!to "../build/PITCH.DARK",plain
 *=$6000
 
          lda   #0                    ; set Z flag always

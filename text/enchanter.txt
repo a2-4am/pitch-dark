@@ -1,0 +1,30 @@
+[info]
+     ENCHANTER
+ 
+ 
+1983         Fantasy
+ 
+Difficulty:    ^^^&&
+
+[description]
+ 
+ In Enchanter, the first of a spellbinding series in the tradition of Zork,
+ you are a novice magician whom Fate has chosen to do singlehanded combat
+ with a dark and fierce power. But worldly weapons will avail you naught,
+ for your foe is the Evil Warlock who holds sway over the land.
+ 
+ To defeat him, you will have to match your skills as a necromancer against
+ his, casting spells you have learned from your masters in the Circle of
+ Enchanters and other incantations you will acquire as you proceed on your
+ quest.
+ 
+ If you succeed, you will be elevated to a seat in the illustrious Circle;
+ if you fail, your land will be doomed to an eternity of darkness.
+
+[versions]
+R29.860820.Z3=r29 / 860820
+R24.851118.Z3=r24 / 851118
+R16.831118.Z3=r16 / 831118
+R15.831107.Z3=r15 / 831107
+R10.830810.Z3=r10 / 830810
+

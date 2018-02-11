@@ -1,0 +1,29 @@
+[info]
+ LEATHER GOODESSES
+     OF PHOBOS
+ 
+1986          Comedy
+ 
+Difficulty:    ^^^&&
+
+[description]
+ 
+ And now... the next exciting episode of humanoids in space!
+ 
+ How did you, a regular at Joe's Bar in Upper Sandusky, Ohio, end up on a
+ Martian moon? Can you prevent the hideous space creature from abducting the
+ naked heiress? Why does scratch 'n' sniff no. 2 smell so familiar? How many
+ uses can you find for a rubber hose? Is it easy to remove a brass bikini?
+ Is it hard to outsmart a robotoid sumo wrestler? Can you stop the Leather
+ Goddesses' fiendish plan to turn all Earthlings into sex slaves?
+ 
+ Learn the answers to these burning questions in Leather Goddesses of
+ Phobos, Infocom's racy spoof of 1930s pulp fiction. But first, a word from
+ our sponsor: Why put up with only one playing mode, when you can have
+ three? That's right, three! So whether your tastes run to Tame, Suggestive,
+ or Lewd, Leather Goddesses of Phobos can satisfy you!
+
+[versions]
+R59.860730.Z3=r59 / 860730
+R50.860711.Z3=r50 / 860711
+

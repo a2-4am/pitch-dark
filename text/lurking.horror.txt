@@ -1,0 +1,44 @@
+[info]
+ THE LURKING HORROR
+ 
+ 
+1987          Horror
+ 
+Difficulty:    ^^^&&
+
+[description]
+ 
+ Ever since you arrived at G.U.E. Tech, you've heard stories about the
+ creepy old campus basements and storage rooms, some so ancient that they
+ contain only rotting piles of unidentifiable junk. Until now, you have
+ never ventured lower than the ground floors of the monolithic classroom and
+ dorm buildings, avoiding the warren of tunnels that connect them.
+ 
+ But tonight, something draws you down into the mysterious depths of the
+ institute. Perhaps it's the blizzard raging outside, making the outdoors as
+ threatening as anything you could imagine within. Perhaps it's the
+ nightmare you had, hinting at horrific mysteries below and leaving you with
+ a strange object that seems to lead you inexorably downward. Or perhaps
+ it's just another way for you to avoid writing that twenty page term paper
+ you have due tomorrow.
+ 
+ In any event, you soon find yourself wandering away from your computer and
+ into the dark nether regions of G.U.E. Tech. Suddenly, you're in a world
+ that rivals your most hideous visions, a realm of horror lurking beneath
+ the calm corridors and study halls.
+ 
+ Shapes emerge from dark corners. Eerie sounds draw closer. Slimy
+ passageways lead to sights so horrifying that they will feed you nightmares
+ for weeks.
+ 
+ THE LURKING HORROR recalls the ghastly visions of H.P. Lovecraft and
+ Stephen King, as author Dave Lebling turns an everyday world into a
+ frightening web of uncertainty. The numerous puzzles will challenge both
+ first-time and experienced players, and Lebling's chilling descriptions
+ will leave you with images you'll never forget.
+
+[versions]
+R221.870918.Z3=r221 / 870918
+R219.870912.Z3=r219 / 870912
+R203.870506.Z3=r203 / 870506
+

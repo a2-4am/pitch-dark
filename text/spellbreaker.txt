@@ -1,0 +1,30 @@
+[info]
+    SPELLBREAKER
+ 
+ 
+1985         Fantasy
+ 
+Difficulty:    ^^^^^
+
+[description]
+ 
+ Spellbreaker, the riveting conclusion to the Enchanter trilogy, explores
+ the mysterious underpinnings of the Zorkian universe. A world founded on
+ sorcery suddenly finds its magic failing, and only you, leader of the
+ Circle of Enchanters, can uncover and destroy the cause of this paralyzing
+ chaos.
+ 
+ The very core of your civilization is under siege, and only a perilous
+ journey through the black foundation of magic itself will yield a chance
+ for survival.
+ 
+ And although your triumph over this unknown Evil is uncertain, you must
+ embark without hesitation and prove yourself the worthiest mage in the
+ land.
+
+[versions]
+R87.DEPROT.Z3=r87 / 860904 (deprotected)
+R63.DEPROT.Z3=r63 / 850916 (deprotected)
+R87.860904.Z3=r87 / 860904
+R63.850916.Z3=r63 / 850916
+

@@ -1,0 +1,32 @@
+[info]
+      MOONMIST
+ 
+ 
+1986         Mystery
+ 
+Difficulty:    ^^&&&
+
+[description]
+ 
+ More ghosts haunt the misty sea-coast and stone ramparts of Cornwall than
+ anyplace else on earth. One such soul roams Tresyllian Castle: a pale
+ phantom with flaxen hair and a luminous, flowing gown. It seems like a
+ fanciful legend... until the spectral "White Lady" threatens the life of
+ your friend Tamara!
+ 
+ Arriving at the fog-shrouded castle, you meet a cast of eccentric
+ characters ranging from a blue-blood debutante to an overly helpful butler.
+ Has one of them donned the ghostly guise of the White Lady? Or has the
+ drowned lover of Lord Jack, Tamara's fiance, returned to haunt her
+ successor? Perhaps the spectre is seeking the valuable treasure hidden
+ somewhere in the lavish rooms and secret passageways of the castle. The
+ solution to the mystery, as well as the location of the treasure, changes
+ in each of the four variations of Moonmist.
+ 
+ Get ready to spend the night in a haunted castle. But don't sleep too
+ soundly. The next victim might be you.
+
+[versions]
+R9.861022.Z3=r9 / 861022
+R4.860918.Z3=r4 / 860918
+

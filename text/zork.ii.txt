@@ -1,0 +1,35 @@
+[info]
+ZORK II: THE WIZARD
+     OF FROBOZZ
+ 
+1981         Fantasy
+ 
+Difficulty:    ^^^^&
+
+[description]
+ 
+ The Wizard appears, floating nonchalantly in the air beside you. He grins
+ sideways at you.
+ 
+ The Wizard incants "Fantasize," but nothing happens. He shakes his wand.
+ Nothing happens. With a slightly embarrassed glance in your direction, he
+ vanishes.
+ 
+ Expect the unexpected when you take on Zork II: The Wizard of Frobozz.
+ 
+ As you explore the subterranean realm of Zork, you'll continually be
+ confronted with new surprises. Chief among these is the Wizard himself,
+ who'll constantly endeavor to confound you with his capricious powers. But
+ more than that, you'll face a challenge the likes of which you've never
+ experienced before.
+
+[versions]
+R48.840904.Z3=r48 / 840904
+R23.830411.Z3=r23 / 830411
+R22.830331.Z3=r22 / 830331
+R19.820721.Z3=r19 / 820721
+R18B.820517.Z3=r18 / 820517
+R18A.820512.Z3=r18 / 820512
+R17.820427.Z3=r17 / 820427
+R15.820308.Z3=r15 / 820308
+

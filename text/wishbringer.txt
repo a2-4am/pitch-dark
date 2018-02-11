@@ -1,0 +1,24 @@
+[info]
+    WISHBRINGER
+ 
+ 
+1985         Fantasy
+ 
+Difficulty:    ^^&&&
+
+[description]
+ 
+ It's an ordinary day in your ordinary little town, and you've been
+ performing your ordinary mail clerk's duties in an altogether ordinary
+ way. But there's something quite extraordinary in today's mail. It's a
+ ransom note for a kidnapped cat, and it will lead you through unbelievably
+ harrowing adventures to Wishbringer, a stone possessing undreamt-of powers.
+ For though the note in question is addressed to someone in your ordinary
+ little town, it's postmarked for Special Delivery to Parts Unknown. And its
+ true destination is somewhere beyond your wildest dreams, c/o the magic of
+ Infocom's interactive fiction.
+
+[versions]
+R69.850920.Z3=r69 / 850920
+R68.850501.Z3=r68 / 850501
+

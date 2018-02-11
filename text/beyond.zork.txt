@@ -1,0 +1,49 @@
+[info]
+    BEYOND ZORK
+ 
+ 
+1987         Fantasy
+ 
+Difficulty:    ^^^&&
+
+[description]
+ 
+ Dread times have befallen the Kingdom of Quendor. The wizards have
+ mysteriously disappeared. The Enchanter's Guild Hall lies in ruins.
+ Villages are abandoned, drunken men mutter strange tales, and vicious
+ monsters haunt the streets and wastelands. Now it falls to you, a lowly
+ peasant, to unravel the meaning behind these ominous events. Will you
+ accept the challenge?
+ 
+ Of course you will. For you're a hardy adventurer, ready to confront the
+ most fearsome foe. And in Beyond Zork, you have an arsenal of new weapons
+ and abilities at your disposal.
+ 
+ You start by designing your own character. Choose from such diverse
+ attributes as strength, endurance, compassion, and luck, or let the
+ computer select for you. As you venture onward, your character will evolve,
+ reflecting your success in your quest.
+ 
+ Beyond Zork's sophisticated new interface makes interaction more natural
+ than ever. In the heat of battle, the special function keys let you strike
+ the decisive blow with a single keystroke. There's even an on-screen map to
+ chart your progress!
+ 
+ As you grow in experience and abilities, you realize that you're being
+ prepared for a great task, a task of which you know nothing... as yet. Your
+ search for the answer will lead you deep underground, where unspeakable
+ monsters guard the world's most fabulous treasure - the fabled Coconut of
+ Quendor.
+ 
+ Beyond Zork was written by Brian Moriarty, award-winning author of
+ Wishbringer and Trinity. Fans of Infocom's fantasy series will recognise
+ characters and locations from previous stories, while old and new players
+ alike will enjoy exploring the Zorkian landscape as their challenge
+ increases and their character grows in strength and power.
+
+[versions]
+R57.871221.Z5=r57 / 871221
+R51.870923.Z5=r51 / 870923
+R49.870917.Z5=r49 / 870917
+R47.870915.Z5=r47 / 870915
+

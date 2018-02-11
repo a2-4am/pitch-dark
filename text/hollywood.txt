@@ -1,0 +1,47 @@
+[info]
+  HOLLYWOOD HIJINX
+ 
+ 
+1987       Adventure
+ 
+Difficulty:    ^^^&&
+
+[description]
+ 
+ Vampire Penguins. A Corpse Line. Meltdown on Elm Street. Who could forget
+ these classic Hollywood movies produced by your uncle, Buddy Burbank? But
+ his greatest masterpiece has yet to be experienced... Hollywood Hijinx,
+ starring you!
+ 
+ Your Uncle Buddy and Aunt Hildegarde have passed away, but their memory
+ lives on in their Malibu mansion, filled with a lifetime of Hollywood
+ memorabilia. And you've inherited it all, with one stipulation - you can
+ only claim your booty if you find the treasures hidden throughout the
+ sprawling beachfront estate. If you can't find the treasures in one night,
+ you lose the whole caboodle.
+ 
+ It's just the sort of thing you'd expect from Aunt Hildegarde and Uncle
+ Buddy. And their home is familiar territory: you spent your childhood
+ summers there with your Cousin Herman. Although some say the house is
+ haunted, you're not fooled. You know that Uncle Buddy, who wore a different
+ polyester leisure suit each day of the week, was always rigging the place
+ with goofy gags and booby traps.
+ 
+ Inside the house, everything is just as glitzy and full of fun as you
+ remember it to be. There's the luxurious private screening room, the gold-
+ plated bathroom faucets in the shape of Oscars, and the wacky props from
+ old Buddy Burbank movies.
+ 
+ The Malibu estate seems like a funhouse at first. But the puzzles you must
+ solve prove that Aunt Hildegarde and Uncle Buddy weren't just kidding
+ around. Claiming the Burbank bundle turns out to be quite a challenge - and
+ it's all in your honor.
+ 
+ Hollywood Hijinx is as zany as its author, "Hollywood" Dave Anderson. It's
+ cram-packed with puzzles that will test the wits and tickle the ribs of
+ both first time and experienced players.
+
+[versions]
+R37.861215.Z3=r37 / 861215
+R235.861118.Z3=r235 / 861118
+

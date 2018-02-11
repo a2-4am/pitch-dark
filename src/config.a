@@ -205,7 +205,7 @@ LoadGameInfo
          sta   $03
 parseloop
          lda   ($00)
-         cmp   #$0D                  ; CR -> 0x00 (WeeGUI wants null-terminated strings)
+         cmp   #$0A                  ; LF -> 0x00 (WeeGUI wants null-terminated strings)
          bne   .notCR
          lda   #$00
          sta   ($00)

@@ -1,0 +1,31 @@
+[info]
+     SEASTALKER
+ 
+ 
+1984       Adventure
+ 
+Difficulty:    ^&&&&
+
+[description]
+ 
+ There's something down there in the ocean, something terrifying. And you
+ have to face it - because only you can save the Aquadome, the world's first
+ undersea research station.
+ 
+ The alarm sounds and your submarine, the Scimitar, is docked nearby. But
+ not so fast - you haven't even tested the Scimitar in deep water, and the
+ crew at the Aquadome may have a traitor in its ranks. So be careful! You
+ have many possibilities to consider, mysteries to unravel, and life-and-
+ death decisions to make!
+ 
+ Success won't come easily. It may not come at all - because, if you
+ challenge the deep without using all your wits, you just might wind up as
+ shark bait!
+
+[versions]
+R16B.850603.Z3=r16 / 850603
+R16A.850515.Z3=r16 / 850515
+R15B.840522.Z3=r15 / 840522
+R15A.840501.Z3=r15 / 840501
+R86.840320.Z3=r86 / 840320
+

@@ -1,0 +1,36 @@
+[info]
+   A MIND FOREVER
+      VOYAGING
+ 
+1985          Sci-Fi
+ 
+Difficulty:   ^^^^^&
+
+[description]
+ 
+ It's 2031. The world is on the brink of chaos. In the United States of
+ North America, spiraling crime and unemployment rates, decayed school
+ systems and massive government regulations have led to a lazy, contentious
+ society.
+ 
+ To reverse this critical situation, government and industry leaders have
+ developed a Plan combining the economic freedom and strong moral values of
+ the 1950's with the technological advancements of the 21st century. Will
+ the Plan ensure peace and prosperity? Or will it set the earth on a suicide
+ course to destruction?
+ 
+ As the world's first conscious, intelligent computer, only you can visit
+ places that have never been seen before. Only you can view the future. And
+ only you know what must be done to save humanity.
+ 
+ A major departure for Infocom, A Mind Forever Voyaging is reminiscent of
+ such classic works of science fiction as Brave New World and 1984. You'll
+ spend less time solving puzzles, as you explore realistic worlds of the
+ future.
+
+[versions]
+R79.DEPROT.Z4=r79 / 851122 (deprotected)
+R77.DEPROT.Z4=r77 / 850814 (deprotected)
+R79.851122.Z4=r79 / 851122
+R77.850814.Z4=r77 / 850814
+

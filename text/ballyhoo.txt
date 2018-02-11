@@ -1,0 +1,28 @@
+[info]
+      BALLYHOO
+ 
+ 
+1986         Mystery
+ 
+Difficulty:    ^^^&&
+
+[description]
+ 
+ Spangleland! Sawdust and glitter, buffoons and cotton candy! It's a place
+ where your wildest dreams come true! At least, that's what you think...
+ until you get behind the scenes at the big top. Then you learn how easily
+ sweet dreams can turn into nightmares.
+ 
+ Beyond the spangles lies a seedy world of deception and crime. Exploring
+ the tattered corners of the circus lot, you overhear a conversation about
+ the owner's daughter. It seems she's been kidnapped, and the hired gumshoe
+ couldn't find the nose on his face. Good samaritan that you are, you start
+ poking around on your own.
+ 
+ But watch your step. As the night progresses, you realize you're in as much
+ danger as the little girl. For the kidnapper is lurking right there on the
+ lot, trying to set you up for a permanent slot in the freak show.
+
+[versions]
+R97.851218.Z3=r97 / 851218
+

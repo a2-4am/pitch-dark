@@ -1,0 +1,30 @@
+[info]
+     PLANETFALL
+ 
+ 
+1983          Sci-Fi
+ 
+Difficulty:    ^^^&&
+
+[description]
+ 
+ "Join the Patrol, and see the Galaxy!" You took the poster's advice, bait
+ and all, and marched right over to the recruitment station near your home
+ on the backwater planet of Gallium. Images of exotic worlds, strange and
+ colorful aliens, and Deep Space heroism had danced in your head as you
+ signed the dotted line. And since that day the closest you've come to Deep
+ Space heroism was scrubbing down the radioactive leper colony on Ishmael-3.
+ 
+ But suppose that jumbo fortune cookie you got at Qwang's Take-Out Asteroid
+ last shore leave was right. Maybe you will indeed narrowly escape disaster.
+ It's even possible that you'll actually travel to an unknown corner of the
+ Universe, where you'll save a doomed planet - or die in the attempt. In
+ fact, we'll guarantee it - every crumb of it - because that's just the way
+ the cosmic cookie crumbles.
+
+[versions]
+R37.851003.Z3=r37 / 851003
+R29.840118.Z3=r29 / 840118
+R26.831014.Z3=r26 / 831014
+R20.830708.Z3=r20 / 830708
+

@@ -1,0 +1,28 @@
+[info]
+      SUSPECT
+ 
+ 
+1984         Mystery
+ 
+Difficulty:    ^^^^&
+
+[description]
+ 
+ YOU'RE GUILTY UNTIL PROVEN INNOCENT
+ 
+ You have walked into a hotbed of deceit and trickery. And now they're
+ accusing you of something you couldn't have done. But they have proof that
+ you did it. "You're a killer," they say. And until you can prove them
+ wrong, you're guilty as charged - murder.
+ 
+ Among society's upper crust, murder is the kind of nastiness that must be
+ cleaned up quickly. So isn't it convenient that you, a struggling
+ journalist looking for a good time and a good story, end up the scapegoat?
+ The evidence is stacked against you, and you're being forced to prove your
+ own innocence. And someone else's guilt. But, no one wants to help you.
+ You're an outsider. And only an outsider could be so rude as to accept an
+ invitation to the social event of the season. Then spoil it all.
+
+[versions]
+R14.841005.Z3=r14 / 841005
+

@@ -1,0 +1,32 @@
+[info]
+    THE WITNESS
+ 
+ 
+1984         Mystery
+ 
+Difficulty:    ^^^&&
+
+[description]
+ 
+ February 1938, Los Angeles. FDR's New Deal is finally rolling. Hitler's
+ rolling, too; this time through Austria. But as Chief Detective for a quiet
+ burgh on the outskirts of L.A., you've got other fish to fry.
+ 
+ One gilt-edged society dame is dead. And now it looks like some two-bit
+ grifter is putting the screws to her multi-millionaire old man. Then you
+ step in, and the shakedown turns ugly. You're left with a stiff and race
+ against the clock to nail your suspect... unless you get nailed first!
+ 
+ Nobody said a sordid family affair like this was going to be a cinch.
+ Everyone from the knock-out heiress to the poker-faced butler may end up in
+ the slammer before it's over. Ahead of you is a Gordian knot of motives and
+ alibis. And the only testimony you can trust is that of your own eyes -
+ because you are The Witness.
+
+[versions]
+R22.840924.Z3=r22 / 840924
+R21.831208.Z3=r21 / 831208
+R20.831119.Z3=r20 / 831119
+R18.830910.Z3=r18 / 830910
+R13.830524.Z3=r13 / 830524
+

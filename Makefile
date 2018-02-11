@@ -9,26 +9,31 @@
 # adapted by 4am on 2018-01-07
 #
 
+DISK=pitchdark.po
+
 # third-party tools required to build
 # https://sourceforge.net/projects/acme-crossass/
 ACME=acme
-# https://sourceforge.net/projects/applecommander/
-AC=bin/AppleCommander.jar
-
-DISK=pitchdark.po
-MASTERDISK=res/$(DISK)
-BUILDDISK=build/$(DISK)
+# https://www.brutaldeluxe.fr/products/crossdevtools/cadius/
+# https://github.com/mach-kernel/cadius
+CADIUS=cadius
 
 asm:
 	mkdir -p build
 	cd src && $(ACME) pitchdark.a
-	cp $(MASTERDISK) $(BUILDDISK)
-	java -jar $(AC) -p $(BUILDDISK) "PITCH.DARK" bin 0x6000 < "build/PITCH.DARK#066000"
+	cp res/$(DISK) build/
+	cp res/_FileInformation.txt build/
+	$(CADIUS) ADDFILE build/$(DISK) "/PDBOOT/" "build/PITCH.DARK"
+
+txt:
+	mkdir -p build/text
+	$(PY3) bin/textnormalize.py text/*
+	cd build && $(CADIUS) ADDFOLDER $(DISK) "/PDBOOT/TEXT" text
 
 clean:
 	rm -rf build/
 
 mount:
-	osascript bin/V2Make.scpt "`pwd`" $(BUILDDISK)
+	osascript bin/V2Make.scpt "`pwd`" build/$(DISK)
 
-all: clean asm mount
+all: clean asm txt mount

@@ -1,0 +1,45 @@
+[info]
+    BUREAUCRACY
+ 
+ 
+1987          Comedy
+ 
+Difficulty:    ^^^^&
+
+[description]
+ 
+ IMPORTANT! Our records show that you do not have a license to operate this
+ software. Normally, you would be required to complete a License Application
+ Form and mail it (with proof of purchase) to our Licensing Department, and
+ then wait the customary four to six months for processing.
+ 
+ Luckily, for your convenience, we have, at the last minute and at great
+ expense, installed a remarkable new on-line electronic application form on
+ this very disk, which will be processed by our modern 24-hour computer
+ service moments after you fill it in.
+ 
+ Bureaucracy! Everyone, at one time or another, feels bound up in an endless
+ swathe of red tape. In Bureaucracy, best-selling humorist Douglas Adams
+ draws on his own battles with beadledom to create a hilarious misadventure.
+ You'll find yourself in the midst of a bureaucratic muddle so convoluted
+ that you can't help but laugh.
+ 
+ You've just landed a great new job and moved to a spiffy house in a nice
+ little town. You're even being sent to Paris this very afternoon for a
+ combination training seminar and vacation. What could possibly go wrong?
+ The answer, of course, is everything. When the bank refuses to acknowledge
+ your change-of-address form, you'll find yourself entangled in a series of
+ bureaucratic mishaps that take you from the feeding trough of a greedy
+ llama to the lofty branches of a tree deep in the Zalagasan jungle.
+ 
+ The distinctive humor that made The Hitchhiker's Guide to the Galaxy a
+ runaway success will keep you in stitches as you confront a series of
+ bureaucratic puzzles and experience the thrill of outsmarting the powers
+ that be.
+
+[versions]
+R116.DEPROT.Z4=r116 / 870602 (deprotected)
+R86.DEPROT.Z4=r86 / 870212 (deprotected)
+R116.870602.Z4=r116 / 870602
+R86.870212.Z4=r86 / 870212
+

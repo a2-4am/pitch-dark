@@ -1,0 +1,32 @@
+[info]
+      SUSPENDED
+ 
+ 
+1983          Sci-Fi
+ 
+Difficulty:    ^^^^^
+
+[description]
+ 
+ They said you would sleep for half a millennium - not an unreasonable
+ length of time, considering you'd be in limited cryogenic suspension. Your
+ body would rest at the planet's nerve center, an underground complex 20
+ miles beneath the surface. Your brain, they told you, would be wired to a
+ network of computers; your mind would continue to operate at a minimal
+ level, overseeing maintenance of surface-side equilibrium. And you would
+ not awake, so they promised, until your 500 years had elapsed - barring, of
+ course, the most dire emergency.
+ 
+ Then, and only then, you would be awakened to save your planet by
+ strategically manipulating six robots, each of whom perceives the world
+ differently. But such a catastrophe, you have been assured, could not
+ possibly occur.
+ 
+ Good morning.
+
+[versions]
+R8B.840521.Z3=r8 / 840521
+R8A.830521.Z3=r8 / 830521
+R7.830419.Z3=r7 / 830419
+R5.830222.Z3=r5 / 830222
+

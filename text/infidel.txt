@@ -1,0 +1,24 @@
+[info]
+      INFIDEL
+ 
+ 
+1983       Adventure
+ 
+Difficulty:    ^^^^&
+
+[description]
+ 
+ Infidel finds you marooned by your followers in the heart of the deadly
+ Egyptian Desert. A soldier of fortune by trade, you've come hither in
+ search of a great lost pyramid and its untold riches. Now, alone, you must
+ locate and gain entry to the tomb, decipher its hieroglyphics and unravel
+ its mysteries one by one.
+ 
+ Through the Antechamber, the Barge Room, the Chamber of Ra, death will lick
+ at your heels as you race to the shattering climax of this match of wits
+ between you and the most ingenious architects, builders and murderers of
+ all time - the ancient Egyptians.
+
+[versions]
+R22.830916.Z3=r22 / 830916
+

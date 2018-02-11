@@ -1,0 +1,48 @@
+[info]
+   NORD AND BERT
+ 
+ 
+1987          Comedy
+ 
+Difficulty:    ^^^^^
+
+[description]
+ 
+ You are standing at the edge of a barren field. A steady wind, having
+ secreted away the topsoil, is now drifting sandy dirt across the plain. A
+ scant sign of life here is a freshly-burrowed molehill on the ground.
+ 
+ > MAKE A MOUNTAIN OUT OF THE MOLEHILL
+ 
+ There is a tremendous rumbling in the distance, getting louder and louder,
+ until it is deafening. The dirt around the molehill crumbles away as
+ mighty, jagged granite peaks emerge from deep underground.  The surrounding
+ landscape transforms into a fertile valley before your very eyes.
+ 
+ Infocom's first collection of short stories takes you to a place where
+ nothing is quite as it seems. It's a place where you really can make a
+ mountain out of a molehill, where "the fur is flying" is taken literally,
+ and where a bow can be turned into a beau.
+ 
+ Each of the eight stories in Nord and Bert Couldn't Make Head or Tail of It
+ involves a different type of wordplay. You'll find yourself challenging
+ your wits and your memory to come up with the cliches, spoonerisms, and
+ other verbal trickeries needed to complete the puzzles. But don't view this
+ as a hard row to hoe. Nord and Bert contains built-in hints, which you can
+ call upon when the going gets rough.
+ 
+ All eight stories take place in the mixed-up town of Punster. However, no
+ two contain the same people, locations, or objects. Each is played
+ independently of the others, although you'll use passwords obtained in
+ seven of the stories to get into the eighth. As for mapping, it's out of
+ the window. You simply type where you want to go.
+ 
+ The tall tales in Nord and Bert are every bit as fun and clever as
+ Infocom's other interactive fiction stories. They can each be completed in
+ one sitting, making them a highly entertaining way to spend an evening,
+ alone or with friends. Nord and Bert was authored by Jeff O'Neill, whose
+ mind is constantly working on artful new turns of phrase.
+
+[versions]
+R19.870722.Z4=r19 / 870722
+

@@ -1,0 +1,32 @@
+[info]
+      SORCERER
+ 
+ 
+1984         Fantasy
+ 
+Difficulty:    ^^^^&
+
+[description]
+ 
+ Sorcerer, the second of a spellbinding fantasy series in the tradition of
+ Zork, takes you on a magical tour through the darker side of Zorkian
+ enchantment. Your journey begins with a cryptic diary - the last trace of
+ the now-vanished Belboz the Necromancer, grand and powerful leader of the
+ Guild of Enchanters. It is feared that Belboz is in thrall to evil sorcery.
+ If so, the very existence of the Circle of Enchanters could be forfeit.
+ 
+ To rescue the kingdom and locate your mentor in the treacherous mists of
+ time, you must gain the power and cunning of a true Sorcerer.
+
+[versions]
+R18.DEPROT.Z3=r18 / 860904 (deprotected)
+R15.DEPROT.Z3=r15 / 851108 (deprotected)
+R13.DEPROT.Z3=r13 / 851021 (deprotected)
+R6.DEPROT.Z3=r6 / 840508 (deprotected)
+R4.DEPROT.Z3=r4 / 840131 (deprotected)
+R18.860904.Z3=r18 / 860904
+R15.851108.Z3=r15 / 851108
+R13.851021.Z3=r13 / 851021
+R6.840508.Z3=r6 / 840508
+R4.840131.Z3=r4 / 840131
+

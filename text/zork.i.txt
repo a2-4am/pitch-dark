@@ -1,0 +1,37 @@
+[info]
+ ZORK I: THE GREAT
+ UNDERGROUND EMPIRE
+ 
+1980         Fantasy
+ 
+Difficulty:    ^^^&&
+
+[description]
+ 
+ > Throw the sack at the troll.
+ 
+ The troll, who is remarkably coordinated, catches the brown sack and, not
+ having the most discriminating taste, gleefully eats it. The flat of the
+ troll's axe hits you on the head...
+ 
+ Welcome to Zork I: The Great Underground Empire.
+ 
+ It beckons you into a world fraught with danger and discovery. Using all
+ the cunning you can muster, you'll plunge far below the surface of the
+ earth in search of the incomparable treasures of Zork. But this is no mere
+ treasure hunt. During your amazing journey, you'll come face to face with
+ creatures so outlandish, they defy description. And you'll wander through
+ an underground domain so vast, with so many twists and turns, it can offer
+ you new surprises no matter how many times you explore it.
+
+[versions]
+R88.840726.Z3=r88 / 840726
+R76.840509.Z3=r76 / 840509
+R75.830929.Z3=r75 / 830929
+R30.830330.Z3=r30 / 830330
+R28.821013.Z3=r28 / 821013
+R26.820803.Z3=r26 / 820803
+R25.820515.Z3=r25 / 820515
+R23.820428.Z3=r23 / 820428
+R20.000000.Z3=r20 / 000000
+

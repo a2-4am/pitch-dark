@@ -1,0 +1,23 @@
+[info]
+     MINI-ZORK
+ 
+ 
+1987         Fantasy
+ 
+Difficulty:    ^^^&&
+
+[description]
+ 
+ This is a condensed version of Zork I, reduced to make it viable for the
+ cassette-based Commodore 64. The only Infocom story file ever intended to
+ be run from cassette rather than disk, Mini-Zork has been compared to a
+ Reader's Digest edition of a classic. It is one of several remakings of
+ Zork from the final years of Infocom.
+ 
+ In November 1990, a year after Infocom had effectively become defunct,
+ Mini-Zork was given away with the British Commodore magazine "Zzap! 64"
+ no. 67, which is now a collector's item.
+
+[versions]
+R34.871124.Z3=r34 / 871124
+

@@ -1,0 +1,32 @@
+[info]
+   ZORK III: THE
+   DUNGEON MASTER
+ 
+1982         Fantasy
+ 
+Difficulty:    ^^^^&
+
+[description]
+ 
+ An old, oddly youthful man turns toward you slowly. His long, silver hair
+ dances about him as a fresh breeze blows. "You have reached the final test,
+ my friend! You are proved clever and powerful, but this is not yet enough!
+ Seek me when you feel yourself worthy!"
+ 
+ Zork III: The Dungeon Master draws you into the deepest and most mysterious
+ reaches of the Great Underground Empire. Nothing is as it seems. And the
+ one responsible for the shadow and darkness - the Dungeon Master - embodies
+ the greatest mystery of all.
+ 
+ In this test of wisdom and courage, you will face countless dangers. But
+ what awaits you at the culmination of your odyssey is well worth risking
+ all.
+
+[versions]
+R17.840727.Z3=r17 / 840727
+R16.830410.Z3=r16 / 830410
+R15B.840518.Z3=r15 / 840518
+R15A.830331.Z3=r15 / 830331
+R12.821025.Z3=r12 / 821025
+R10.820818.Z3=r10 / 820818
+

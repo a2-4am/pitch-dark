@@ -1,0 +1,44 @@
+[info]
+    STATIONFALL
+ 
+ 
+1987          Sci-Fi
+ 
+Difficulty:    ^^^^&
+
+[description]
+ 
+ What a trotting krip! Since your incredible heroics in Planetfall, where
+ you risked life and limb to save the planet Resida, things have hardly
+ changed at all. Sure, you were promoted to Lieutenant First Class, but this
+ only meant that your dull life of cleaning grotch cages was replaced by an
+ equally dull life of paperwork. Now you've got another assignment tailor-
+ made for a grotchbrain: pilot a spacetruck to a nearby station to pick up a
+ load of trivial forms. Trot and doublt trot!
+ 
+ But all is not lost. By a happy twist of fate, your companion for the
+ journey is your old pal Floyd! That's right, it's the same mischievous
+ little robot, crayons and paddleball at the ready, who was your helpful
+ buddy in Planetfall.
+ 
+ Getting to the space station is easy. But once there, you find it strangely
+ deserted. Even the seedy space village surrounding the station is missing
+ its ragtag tenants. A spooky alien ship carrying only an empty pedestal
+ rests in a docking bay. An ostrich and an Arcturian balloon creature are
+ found, abandoned but in perfect health. The commander's log describes the
+ mysterious breakdown of machiner, demonstrated by a roving hull-welder who
+ seems bent on your destruction. And finally even Floyd begins acting
+ oddly...
+ 
+ Steve Meretzky, whose interactive fiction successes include The
+ Hitchhiker's Guide to the Galaxy and Leather Goddesses of Phobos, won a
+ Best Computer Software Designer award for Planetfall. Infocom fans,
+ consistently rating Planetfall among their favorite computer games, have
+ been begging for a sequel. Even if you've never played Planetfall, you will
+ enjoy Stationfall: the puzzles will challenge your intellect, the humor
+ will keep you laughing, and Floyd will win your heart.
+
+[versions]
+R107.DEPROT.Z3=r107 / 870430 deprotected
+R107.870430.Z3=r107 / 870430
+

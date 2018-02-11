@@ -1,0 +1,39 @@
+[info]
+  PLUNDERED HEARTS
+ 
+ 
+1987         Romance
+ 
+Difficulty:    ^^&&&
+
+[description]
+ 
+ In the 17th century, the seas are as wild as the untamed heart of a young
+ woman. But when you set out on the schooner Lafond Deux, bound for the West
+ Indies, your thoughts are only of your ailing father who awaits your care.
+ Little do you know that your innocent journey will soon turn to dangerous
+ adventure.  You barely survive an encounter with pirates, whose plans for
+ you include a fate worse than death. The explosives, the rocky reefs, the
+ vicious crocodile - all these are obstacles which you must overcome with
+ cunning and agility. True, it's not easy; but at least you can control your
+ fate. What you cannot control is much more dangerous: your passion for
+ Nicholas Jamison, the handsome pirate captain.
+ 
+ Tall and lean, with azure eyes that penetrate deep into your soul, he makes
+ your blood quicken despite his unsavory past. When you're in his arms,
+ swirling around the dance floor or secluded in the flowered depths of the
+ gazebo, you are apt to forget your mission.
+ 
+ But don't dally too long with Nick. For your father is waiting, and on his
+ rescue lies the fate of more than one man. Prepare for adventure on the
+ high seas, lass. You'll need every bit of pluck you can muster.
+ 
+ In Plundered Hearts, Infocom brings your wildest fantasies to life. You'll
+ throll to spine-tingling peril, heart-pounding romance, and challenging
+ predicaments. To create this exotic adventure, author Amy Briggs read
+ hundreds of romance novels, researched 17th century costumes and ships, and
+ was wooed by a dashing pirate.
+
+[versions]
+R26.870730.Z3=r26 / 870730
+

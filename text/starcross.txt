@@ -1,0 +1,22 @@
+[info]
+     STARCROSS
+ 
+ 
+1982          Sci-Fi
+ 
+Difficulty:    ^^^^^
+
+[description]
+ 
+ Starcross, Infocom's science fiction mind-bender, launches you headlong
+ into the year 2186 and the depths of space. And not without good reason,
+ for you are destined to rendezvous with a gargantuan starship from the
+ outer fringes of the galaxy, peopled with both harmful and helpful
+ beings. But the great starship serves a far larger purpose than mere
+ cultural exchange. It bears a challenge that was issued eons ago, from
+ light years away - and only you can meet it.
+
+[versions]
+R17.821021.Z3=r17 / 821021
+R15.820901.Z3=r15 / 820901
+

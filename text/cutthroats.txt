@@ -1,0 +1,27 @@
+[info]
+     CUTTHROATS
+ 
+ 
+1984       Adventure
+ 
+Difficulty:    ^^^&&
+
+[description]
+ 
+ You're about to get yourself into very deep trouble.
+ 
+ You're a backwater island's top diver and foremost expert on local
+ shipwrecks. Which makes you perfect for the job a band of the island's
+ shadiest characters has in mind for you. It's a simple business
+ proposition: all you have to do is locate and salvage a fortune in sunken
+ treasure. You stand to gain millions. The only drawback is, it could cost
+ you your neck. Because to successfully recover the treasure, you'll have to
+ survive the perils of diving in unknown waters - and the even greater
+ danger of an untrustworthy crew. But none of that will stop you from taking
+ the plunge. You're the type who believes that when stakes are this high,
+ even when your odds are this low, it's worth running the risks of dealing
+ with Cutthroats.
+
+[versions]
+R23.840809=r23 / 840809
+
