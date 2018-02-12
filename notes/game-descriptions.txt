@@ -5,8 +5,8 @@ New:
 * Bureaucracy
 * Nord and Bert
 * Sherlock
-- Trinity
-- Zork: The Undiscovered Underground
+* Trinity
+* Zork: The Undiscovered Underground
 
 New versions:
 - HGTTG

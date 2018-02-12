@@ -15,7 +15,7 @@
 ;
 
 !zone {
-kNumberOfGames = 31
+kNumberOfGames = 32
 gCurrentGame
          !byte $FD                   ; set at runtime
 kTextRootDirectory
@@ -53,6 +53,7 @@ GAMES                                ; length of this array must = kNumberOfGame
          !word .zorki
          !word .zorkii
          !word .zorkiii
+         !word .ztuu
 
 ; length-prefixed names of each subdirectory in game directory, 1 per game
 .amfv
@@ -148,6 +149,9 @@ GAMES                                ; length of this array must = kNumberOfGame
 .zorkiii
          !byte 8
          !raw  "ZORK.III"
+.ztuu
+         !byte 4
+         !raw  "ZTUU"
 
 .BEGIN_PARSER_DATA
 bInSectionName

@@ -1,0 +1,46 @@
+[info]
+ ZORK: UNDISCOVERED
+    UNDERGROUND
+ 
+1997         Fantasy
+ 
+Difficulty:    ^^^&&
+
+[description]
+ 
+ The year is 1066. You are a Private, Seventh Class, in the Inquisition
+ Guard. After being relieved by Earl at the Port Foozle Inquisition Gift
+ Kiosk, you find yourself standing in the Headquarters of Frobozz
+ Electric. Gesticulating in front of you is the Pastor of Disaster, the
+ Minister of Sinister, the Grand Inquisitor. It appears he has a very
+ special mission for you.
+ 
+ "It is with great hope and expectation I send you on this mission," the
+ Grand Inquisitor intones, his voice booming like distant, rumbling
+ thunderheads. "We have discovered what appears to be a piece of the Great
+ Underground Empire, never before explored. I would have sent Grubald the
+ Bold, but he's busy. As is Matchlick the Mighty. So, 'tis you."
+ 
+ "What of Linklaw the Lucky?" you ask shyly.
+ 
+ "Laid up. I'm afraid 'tis you and none other. A simple, solo quest, one of
+ fun and mirth, mischief and merriment, a jaunt, an excursion, a simple
+ outing. Merely explore, enjoy yourself, and bring back news of what lies
+ there, long-ago buried for countless ages."
+ 
+ "And Fretsham the Fortunate?" you ask hopefully.
+ 
+ "A fatality!" the Inquisitor booms. "Here," he says with evaporating
+ patience, "take these and be of good cheer." He thrusts into your hands two
+ things: a brass lantern of dubious quality, and a plastic sword of no
+ antiquity or use whatsoever.
+ 
+ "But what of Kolchack the --"
+ 
+ "Enough! Kolchack is contracted. Remember, who is the boss of you!" He
+ pauses briefly as if awaiting a reply. Then without warning, he answers his
+ own question. "Me! I am the boss of you! Now begone!"
+
+[versions]
+R16.970828.Z5=r16 / 970828
+
