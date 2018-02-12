@@ -15,7 +15,7 @@
 ;
 
 !zone {
-kNumberOfGames = 30
+kNumberOfGames = 31
 gCurrentGame
          !byte $FD                   ; set at runtime
 kTextRootDirectory
@@ -47,6 +47,7 @@ GAMES                                ; length of this array must = kNumberOfGame
          !word .stationfall
          !word .suspect
          !word .suspended
+         !word .trinity
          !word .wishbringer
          !word .witness
          !word .zorki
@@ -129,6 +130,9 @@ GAMES                                ; length of this array must = kNumberOfGame
 .suspended
          !byte 9
          !raw  "SUSPENDED"
+.trinity
+         !byte 7
+         !raw  "TRINITY"
 .wishbringer
          !byte 11
          !raw  "WISHBRINGER"

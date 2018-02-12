@@ -1,0 +1,28 @@
+[info]
+      TRINITY
+ 
+ 
+1986         Fantasy
+ 
+Difficulty:    ^^^&&
+
+[description]
+ 
+ It's the last day of your $599 London vacation. Unfortunately, it's also
+ the first day of World War III. Only seconds remain before an H-bomb
+ vaporizes the city ... and you with it.
+ 
+ Unless you escape to another time, another dimension.
+ 
+ For every atomic explosion unlocks the door to a secret universe; a plane
+ between fantasy and reality, filled with curious artifacts and governed by
+ its own mischievous logic. You'll criscross time and space as you explore
+ this fascinating universe, learning to control its inexorable power.
+ 
+ Trinity leads you on a journey back to the dawn of the atomic age ... and
+ puts the course of history in your hands.
+
+[versions]
+R12.860926.Z4=r12 / 860926
+R11.860509.Z4=r11 / 860509
+

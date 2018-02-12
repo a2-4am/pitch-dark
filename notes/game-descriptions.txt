@@ -4,7 +4,7 @@ New:
 * Border Zone
 * Bureaucracy
 * Nord and Bert
-- Sherlock
+* Sherlock
 - Trinity
 - Zork: The Undiscovered Underground
 
