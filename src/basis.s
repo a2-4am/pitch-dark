@@ -1,7 +1,7 @@
 ;license:MIT 
 ;(c) 2018 by qkumba 
 
-!to "basis.system#ff0000",plain
+!to "..\build\basis.system#ff0000",plain
 *=$2000
 
 jmp init
