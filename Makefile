@@ -35,9 +35,11 @@ asm: md
 
 dsk: md asm
 	cp res/"Pitch Dark.master games collection.do.not.edit.2mg" build/$(DISK)
+	cp res/WEEGUI build/
 	cp res/_FileInformation.txt build/
 	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/GRUE.SYSTEM"
 	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/PITCH.DARK"
+	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/WEEGUI"
 	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/ONBEYOND.SYSTEM"
 	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/ONBEYONDZ3"
 	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/ONBEYONDZ4"
@@ -50,6 +52,6 @@ txt: md dsk
 	cd build && $(CADIUS) ADDFOLDER $(DISK) "/PITCH.DARK/TEXT" text
 
 mount: dsk
-	osascript bin/V2Make.scpt "`pwd`" build/$(DISK)
+	osascript bin/V2Make.scpt "`pwd`" bin/pitchdark.vii build/$(DISK)
 
 all: clean asm dsk txt mount
