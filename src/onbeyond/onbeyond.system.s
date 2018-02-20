@@ -73,7 +73,7 @@ quit    jsr     $bf00
         bcs     quit
         dec     filename
         ora     #$30
-        sta     filename+2
+        sta     version
 +
 
         ;get volume name
@@ -156,7 +156,8 @@ ca_parms
 
 filename
         !byte   (filename_e-filename)-1
-        !text   "ONBEYONDZ5U"
+        !text   "ONBEYONDZ"
+version !text   "5U"
 filename_e
 
 !byte $D3,$C1,$CE,$A0,$C9,$CE,$C3,$AE
