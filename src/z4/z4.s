@@ -387,18 +387,27 @@ useupper
                 sta     inversemask+1
 
 skipupper
+                ldx     $302
+                inx
+                beq     +
+                ldy     #callback_e-callback1
+-               lda     hookkbd-1, y
+                sta     callback1-1, y
+                dey
+                bne     -
+                txa
+                clc
+                adc     #$af
+                sta     callback3+1
+                lda     $da86
+                sta     loadcall1+1
+                lda     $da87
+                sta     loadcall2+1
+                lda     #<callback1
+                sta     $da86
+                lda     #>callback1
+                sta     $da87
 
-;;	ldx	$302
-;;	inx
-;;	beq	+
-;;	lda	$11de
-;;	sta	loadcall1+1
-;;	lda	$11df
-;;	sta	loadcall2+1
-;;	lda	#<callback1
-;;	sta	$11de
-;;	lda	#>callback1
-;;	sta	$11df
 +
 
                 ldy     #save_end-saveme
@@ -1732,6 +1741,45 @@ readpart        lda     istree
                 rts
 }
 save_end
+
+hookkbd
+!pseudopc $2cf {;;-(callback_e-callback1) {
+callback1
+                cpy     #0
+                beq     +
+                jmp     $fd0c
+
++               ldx     #<callback2
+                jsr     setcall
+
+callback2
+                ldx     #<callback3
+                lda     xrestore,y
+                cmp     #$8d
+                beq     setcall
+                rts
+
+callback3
+                lda     #$d1
+                ldx     #<callback4
+                bne     setcall
+
+callback4
+                lda     #$D9
+loadcall2
+                ldx     #$fd
+                stx     $da87
+loadcall1
+                ldx     #$0c
+setcall
+                stx     $da86
+                rts
+
+xrestore
+                !byte   $d2,$c5,$d3,$d4,$cf,$d2,$c5,$8d
+callback_e
+}
+!warn "base=",$300-(callback_e-callback1)
 
 unpack ;unpacker entrypoint
 		lda	#0
