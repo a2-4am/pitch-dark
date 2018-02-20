@@ -324,6 +324,72 @@ slot            lda     $cfff
                 sta     reloc, y
                 iny
                 bne     -
+
+                lda     $305
+                eor     $304
+                eor     $303
+                eor     $302
+                eor     $301
+                eor     $300
+                eor     #$a5
+                beq     +
+
+                lda     #$D9
+                sta     $300	;80-cols
+                ldx     #1
+                stx     $301	;lowercase
+                dex
+                dex
+                stx     $302	;no load
++
+
+                lda     #<call80
+                sta     $ddcc
+                lda     #>call80
+                sta     $ddcd
+
+                ldx     $300
+                cpx     #$ce
+                beq     skip80
+                lda     $bf98
+                and     #2
+                bne     okay80
+
+skip80
+                lda     #$2c
+                sta     call80
+                lda     #$88
+                sta     bspace+1
+                lda     #$df
+                sta     inversemask+1
+                lda     #7
+                sta     $dde0
+
+okay80
+                lda     $301
+                beq     useupper
+                lda     $bf98
+                bmi     skipupper
+useupper
+                lda     #$df
+                sta     normalmask+1
+                sta     inversemask+1
+
+skipupper
+
+;;	ldx	$302
+;;	inx
+;;	beq	+
+;;	lda	$11de
+;;	sta	loadcall1+1
+;;	lda	$11df
+;;	sta	loadcall2+1
+;;	lda	#<callback1
+;;	sta	$11de
+;;	lda	#>callback1
+;;	sta	$11df
++
+
                 ldy     #save_end-saveme
 -               lda     saveme-1, y
                 sta     $2ff, y
@@ -351,6 +417,17 @@ slot            lda     $cfff
                 sta     $2006-1,y
                 jsr     hddopendir
                 jmp     entry
+
+call80          jsr     $c300
+                lda     $36
+                sta     printchar + 1
+                lda     $37
+                sta     printchar + 2
+                lda     #<casemap
+                sta     $36
+                lda     #>casemap
+                sta     $37
+                rts
 
 !if load_aux = 1 {
                 sta     CLRAUXWR + (load_banked * 4) ;CLRAUXWR or CLRAUXZP
@@ -1362,6 +1439,29 @@ unrunit = unrelochdd + (* + 1 - reloc)
 unrentry = unrelochdd + (* + 1 - reloc)
                 jmp     $d1d1
 
+casemap
+        cmp     #8
+        beq     bspace
+        cmp     #$e1
+        bcc     +
+        cmp     #$fb
+        bcs     +
+normalmask
+        and     #$ff
++       ldy     $32
+        bmi     +
+        cmp     #$e1
+        bcc     +
+        cmp     #$fb
+        bcs     +
+inversemask
+        and     #$ff
+        !byte   $2c
+bspace
+        lda     #8
+printchar
++       jmp     $d1d1
+
 hddcodeend
   !if swap_zp = 1 {
 zp_array        !fill last_zp - first_zp
@@ -1778,8 +1878,8 @@ getsrc		sty	tmp
 		rts
 
 pakoff
-!bin "bz1_d500-ffff.pak"
-!bin "bz2_0800-09ff.pak"
+!bin "d500-ffff.pak"
+!bin "0800-09ff.pak"
 
 readbuff
 !byte $D3,$C1,$CE,$A0,$C9,$CE,$C3,$AE

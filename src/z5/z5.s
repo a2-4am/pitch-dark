@@ -324,6 +324,72 @@ slot            lda     $cfff
                 sta     reloc, y
                 iny
                 bne     -
+
+                lda     $305
+                eor     $304
+                eor     $303
+                eor     $302
+                eor     $301
+                eor     $300
+                eor     #$a5
+                beq     +
+
+                lda     #$D9
+                sta     $300	;80-cols
+                ldx     #1
+                stx     $301	;lowercase
+                dex
+                dex
+                stx     $302	;no load
++
+
+                lda     #<call80
+                sta     $ddcc
+                lda     #>call80
+                sta     $ddcd
+
+                ldx     $300
+                cpx     #$ce
+                beq     skip80
+                lda     $bf98
+                and     #2
+                bne     okay80
+
+skip80
+                lda     #$2c
+                sta     call80
+                lda     #$88
+                sta     bspace+1
+                lda     #$df
+                sta     inversemask+1
+                lda     #7
+                sta     $dde0
+
+okay80
+                lda     $301
+                beq     useupper
+                lda     $bf98
+                bmi     skipupper
+useupper
+                lda     #$df
+                sta     normalmask+1
+                sta     inversemask+1
+
+skipupper
+
+;;	ldx	$302
+;;	inx
+;;	beq	+
+;;	lda	$11de
+;;	sta	loadcall1+1
+;;	lda	$11df
+;;	sta	loadcall2+1
+;;	lda	#<callback1
+;;	sta	$11de
+;;	lda	#>callback1
+;;	sta	$11df
++
+
                 ldy     #save_end-saveme
 -               lda     saveme-1, y
                 sta     $2ff, y
@@ -351,6 +417,17 @@ slot            lda     $cfff
                 sta     $2006-1,y
                 jsr     hddopendir
                 jmp     entry
+
+call80          jsr     $c300
+                lda     $36
+                sta     printchar + 1
+                lda     $37
+                sta     printchar + 2
+                lda     #<casemap
+                sta     $36
+                lda     #>casemap
+                sta     $37
+                rts
 
 !if load_aux = 1 {
                 sta     CLRAUXWR + (load_banked * 4) ;CLRAUXWR or CLRAUXZP
@@ -1362,12 +1439,138 @@ unrunit = unrelochdd + (* + 1 - reloc)
 unrentry = unrelochdd + (* + 1 - reloc)
                 jmp     $d1d1
 
+casemap
+        cmp     #8
+        beq     bspace
+        cmp     #$e1
+        bcc     +
+        cmp     #$fb
+        bcs     +
+normalmask
+        and     #$ff
++       ldy     $32
+        bmi     +
+        cmp     #$e1
+        bcc     +
+        cmp     #$fb
+        bcs     +
+inversemask
+        and     #$ff
+        !byte   $2c
+bspace
+        lda     #8
+printchar
++       jmp     $d1d1
+
 hddcodeend
   !if swap_zp = 1 {
 zp_array        !fill last_zp - first_zp
   } ;swap_zp
 hdddataend
 } ;reloc
+
+;[music] you can't touch this [music]
+;math magic to determine ideal loading address, and information dump
+!ifdef PASS2 {
+} else { ;PASS2 not defined
+  !set PASS2=1
+  !if reloc < $c000 {
+    !if ((hdddataend + $ff) & -256) > $c000 {
+      !serious "initial reloc too high, adjust to ", $c000 - (((hdddataend + $ff) & -256) - reloc)
+    } ;hdddataend
+    !if load_high = 1 {
+      !if ((hdddataend + $ff) & -256) != $c000 {
+        !warn "initial reloc too low, adjust to ", $c000 - (((hdddataend + $ff) & -256) - reloc)
+      } ;hdddataend
+      hdddirbuf = reloc - $200
+      !if aligned_read = 0 {
+        hddencbuf = hdddirbuf - $200
+      } ;aligned_read
+      !if allow_trees = 1 {
+        !if aligned_read = 0 {
+          hddtreebuf = hddencbuf - $200
+        } else { ;aligned_read = 1
+          hddtreebuf = hdddirbuf - $200
+        } ;aligned_read
+      } ;allow_trees
+    } else { ;load_high = 0
+      !pseudopc ((hdddataend + $ff) & -256) {
+        hdddirbuf = *
+      }
+      !if aligned_read = 0 {
+        hddencbuf = hdddirbuf + $200
+        !if hddencbuf >= $c000 {
+          !if hddencbuf < $d000 {
+            !set hddencbuf = reloc - $200
+          }
+        }
+      } ;aligned_read
+      !if allow_trees = 1 {
+        !if aligned_read = 0 {
+          hddtreebuf = hddencbuf + $200
+          !if hddtreebuf >= reloc {
+            !if hddencbuf < hddcodeend {
+              !set hddtreebuf = hddencbuf - $200
+            }
+          }
+        } else { ;aligned_read = 1
+          hddtreebuf = hdddirbuf + $200
+        } ;aligned_read
+      } ;allow_trees
+    } ;load_high
+  } else { ;reloc > $c000
+    !if ((hdddataend + $ff) & -256) < reloc {
+      !serious "initial reloc too high, adjust to ", (0 - (((hdddataend + $ff) & -256) - reloc)) & $ffff
+    } ;hdddataend
+    !if load_high = 1 {
+        !if (((hdddataend + $ff) & -256) & $ffff) != 0 {
+          !warn "initial reloc too low, adjust to ", (0 - (((hdddataend + $ff) & -256) - reloc)) & $ffff
+        } ;hdddataend
+      hdddirbuf = reloc - $200
+      !if aligned_read = 0 {
+        hddencbuf = hdddirbuf - $200
+      } ;aligned_read
+      !if allow_trees = 1 {
+        !if aligned_read = 0 {
+          hddtreebuf = hddencbuf - $200
+        } else { ;aligned_read = 1
+          hddtreebuf = hdddirbuf - $200
+        } ;aligned_read
+      } ;allow_trees
+    } else { ;load_high = 0
+      !pseudopc ((hdddataend + $ff) & -256) {
+        hdddirbuf = reloc - $200
+      }
+      !if aligned_read = 0 {
+        hddencbuf = hdddirbuf - $200
+      } ;aligned_read
+      !if (allow_trees + fast_trees) > 1 {
+        !if aligned_read = 0 {
+          hddtreebuf = hddencbuf + $200
+        } else { ;aligned_read = 1
+          hddtreebuf = hdddirbuf + $200
+        } ;aligned_read
+      } ;allow_trees
+    } ;load_high
+  } ;reloc
+  !if verbose_info = 1 {
+    !warn "hdd code: ", reloc, "-", hddcodeend - 1
+    !warn "hdd data: ", hddcodeend, "-", hdddataend - 1
+    !warn "hdd dirbuf: ", hdddirbuf, "-", hdddirbuf + $1ff
+    !if aligned_read = 0 {
+      !warn "hdd encbuf: ", hddencbuf, "-", hddencbuf + $1ff
+    } ;aligned_read
+    !if (allow_trees + fast_trees) > 1 {
+      !warn "hdd treebuf: ", hddtreebuf, "-", hddtreebuf + $1ff
+    } ;allow_trees
+    !warn "hdd driver start: ", unrelochdd - init
+    !if one_page = 0 {
+      !if ((hddcodeend - hddopendir) < $100) {
+        !warn "one_page can be enabled, code is small enough"
+      } ;hddcodeend
+    } ;!one_page
+  } ;verbose_info
+} ;PASS2
 
 saveme
 !pseudopc $300 {
@@ -1518,110 +1721,6 @@ readpart        lda     istree
                 rts
 }
 save_end
-
-;[music] you can't touch this [music]
-;math magic to determine ideal loading address, and information dump
-!ifdef PASS2 {
-} else { ;PASS2 not defined
-  !set PASS2=1
-  !if reloc < $c000 {
-    !if ((hdddataend + $ff) & -256) > $c000 {
-      !serious "initial reloc too high, adjust to ", $c000 - (((hdddataend + $ff) & -256) - reloc)
-    } ;hdddataend
-    !if load_high = 1 {
-      !if ((hdddataend + $ff) & -256) != $c000 {
-        !warn "initial reloc too low, adjust to ", $c000 - (((hdddataend + $ff) & -256) - reloc)
-      } ;hdddataend
-      hdddirbuf = reloc - $200
-      !if aligned_read = 0 {
-        hddencbuf = hdddirbuf - $200
-      } ;aligned_read
-      !if allow_trees = 1 {
-        !if aligned_read = 0 {
-          hddtreebuf = hddencbuf - $200
-        } else { ;aligned_read = 1
-          hddtreebuf = hdddirbuf - $200
-        } ;aligned_read
-      } ;allow_trees
-    } else { ;load_high = 0
-      !pseudopc ((hdddataend + $ff) & -256) {
-        hdddirbuf = *
-      }
-      !if aligned_read = 0 {
-        hddencbuf = hdddirbuf + $200
-        !if hddencbuf >= $c000 {
-          !if hddencbuf < $d000 {
-            !set hddencbuf = reloc - $200
-          }
-        }
-      } ;aligned_read
-      !if allow_trees = 1 {
-        !if aligned_read = 0 {
-          hddtreebuf = hddencbuf + $200
-          !if hddtreebuf >= reloc {
-            !if hddencbuf < hddcodeend {
-              !set hddtreebuf = hddencbuf - $200
-            }
-          }
-        } else { ;aligned_read = 1
-          hddtreebuf = hdddirbuf + $200
-        } ;aligned_read
-      } ;allow_trees
-    } ;load_high
-  } else { ;reloc > $c000
-    !if ((hdddataend + $ff) & -256) < reloc {
-      !serious "initial reloc too high, adjust to ", (0 - (((hdddataend + $ff) & -256) - reloc)) & $ffff
-    } ;hdddataend
-    !if load_high = 1 {
-        !if (((hdddataend + $ff) & -256) & $ffff) != 0 {
-          !warn "initial reloc too low, adjust to ", (0 - (((hdddataend + $ff) & -256) - reloc)) & $ffff
-        } ;hdddataend
-      hdddirbuf = reloc - $200
-      !if aligned_read = 0 {
-        hddencbuf = hdddirbuf - $200
-      } ;aligned_read
-      !if allow_trees = 1 {
-        !if aligned_read = 0 {
-          hddtreebuf = hddencbuf - $200
-        } else { ;aligned_read = 1
-          hddtreebuf = hdddirbuf - $200
-        } ;aligned_read
-      } ;allow_trees
-    } else { ;load_high = 0
-      !pseudopc ((hdddataend + $ff) & -256) {
-        hdddirbuf = reloc - $200
-      }
-      !if aligned_read = 0 {
-        hddencbuf = hdddirbuf - $200
-      } ;aligned_read
-      !if (allow_trees + fast_trees) > 1 {
-        !if aligned_read = 0 {
-          hddtreebuf = hddencbuf + $200
-        } else { ;aligned_read = 1
-          hddtreebuf = hdddirbuf + $200
-        } ;aligned_read
-      } ;allow_trees
-    } ;load_high
-  } ;reloc
-  !if verbose_info = 1 {
-    !warn "hdd code: ", reloc, "-", hddcodeend - 1
-    !warn "hdd data: ", hddcodeend, "-", hdddataend - 1
-    !warn "hdd dirbuf: ", hdddirbuf, "-", hdddirbuf + $1ff
-    !if aligned_read = 0 {
-      !warn "hdd encbuf: ", hddencbuf, "-", hddencbuf + $1ff
-    } ;aligned_read
-    !if (allow_trees + fast_trees) > 1 {
-      !warn "hdd treebuf: ", hddtreebuf, "-", hddtreebuf + $1ff
-    } ;allow_trees
-    !warn "hdd driver start: ", unrelochdd - init
-    !if one_page = 0 {
-      !if ((hddcodeend - hddopendir) < $100) {
-        !warn "one_page can be enabled, code is small enough"
-      } ;hddcodeend
-    } ;!one_page
-    !warn "save code: ", $300, "-", $300 + (save_end - saveme) - 1
-  } ;verbose_info
-} ;PASS2
 
 unpack ;unpacker entrypoint
 		lda	#0
