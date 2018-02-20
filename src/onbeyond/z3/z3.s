@@ -2,7 +2,7 @@
 ;(c) 2017-2018 by qkumba
 
 !cpu 6502
-!to "..\..\build\ONBEYONDZ3#063000",plain
+!to "build/ONBEYONDZ3",plain
 *=$3000
 
 vars=$306
@@ -219,4 +219,4 @@ c4_parms        !byte   $0a
 quit_parms      !byte   4
 
 pakoff
-!bin "0800-23ff.pak"
+!bin "src/onbeyond/z3/0800-23ff.pak"

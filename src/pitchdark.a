@@ -2,8 +2,8 @@
 ;(c) 2018 by 4am
 
 !cpu 65c02
-!ct "lcase.ct"
-!to "../build/PITCH.DARK",plain
+!ct "src/lcase.ct"
+!to "build/PITCH.DARK",plain
 *=$6000
 
          lda   #0                    ; set Z flag always
@@ -19,15 +19,15 @@
          !byte 10
          !raw  "BIN/WEEGUI"
 
-         !source "WeeGUI_MLI.s"
-         !source "memory.a"
-         !source "prodos.a"
-         !source "ramdisk.a"
-         !source "path.a"
-         !source "prefs.a"
-         !source "config.a"
-         !source "action.a"
-         !source "paint.a"
+         !source "src/WeeGUI_MLI.s"
+         !source "src/memory.a"
+         !source "src/prodos.a"
+         !source "src/ramdisk.a"
+         !source "src/path.a"
+         !source "src/prefs.a"
+         !source "src/config.a"
+         !source "src/action.a"
+         !source "src/paint.a"
 Start
          lda   MACHID
          and   #$30

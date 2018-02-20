@@ -9,7 +9,7 @@ ver_02 = 1
 } else { ;ver_02
   !cpu 65c02
 } ;ver_02
-!to "..\..\build\ONBEYONDZ5#063000",plain
+!to "build/ONBEYONDZ5",plain
 *=$3000
 
 xsechi=$b7
@@ -27,7 +27,7 @@ tmp	=	$8
 ;place no code before init label below.
 
                 ;user-defined options
-                verbose_info = 1        ;set to 1 to enable display of memory usage
+                verbose_info = 0        ;set to 1 to enable display of memory usage
                 poll_drive   = 0        ;set to 1 to check if disk is in drive, recommended if allow_multi is enabled
                 override_adr = 1        ;set to 1 to require an explicit load address
                 aligned_read = 0        ;set to 1 if all reads can be a multiple of block size
@@ -1590,7 +1590,9 @@ printchar
 +       jmp     $d1d1
 casemap_e
 }
-!warn "case=",$300-(casemap_e-casemap)
+!if verbose_info = 1 {
+         !warn "case=",$300-(casemap_e-casemap)
+}
 
 saveme
 !pseudopc $300 {
@@ -1780,7 +1782,9 @@ xrestore
                 !byte   $d2,$c5,$d3,$d4,$cf,$d2,$c5,$8d
 callback_e
 }
-!warn "base=",casemap-(callback_e-callback1)
+!if verbose_info = 1 {
+         !warn "base=",casemap-(callback_e-callback1)
+}
 
 unpack ;unpacker entrypoint
 		lda	#0
@@ -1938,8 +1942,8 @@ getsrc		sty	tmp
 		rts
 
 pakoff
-!bin "d500-ffff.pak"
-!bin "0800-09ff.pak"
+!bin "src/onbeyond/z5/d500-ffff.pak"
+!bin "src/onbeyond/z5/0800-09ff.pak"
 
 readbuff
 !byte $D3,$C1,$CE,$A0,$C9,$CE,$C3,$AE

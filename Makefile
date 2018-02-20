@@ -9,7 +9,7 @@
 # adapted by 4am on 2018-01-07
 #
 
-DISK=pitchdark.po
+DISK=PitchDark.2mg
 
 # third-party tools required to build
 # https://sourceforge.net/projects/acme-crossass/
@@ -18,24 +18,38 @@ ACME=acme
 # https://github.com/mach-kernel/cadius
 CADIUS=cadius
 
-asm:
+md:
 	mkdir -p build
-	cd src && $(ACME) pitchdark.a
-
-dsk: asm
-	cp res/$(DISK) build/
-	cp res/_FileInformation.txt build/
-	$(CADIUS) ADDFILE build/$(DISK) "/PDBOOT/" "build/PITCH.DARK"
-
-txt: dsk
-	mkdir -p build/text
-	$(PY3) bin/textnormalize.py text/*
-	cd build && $(CADIUS) ADDFOLDER $(DISK) "/PDBOOT/TEXT" text
 
 clean:
 	rm -rf build/
 
-mount:
+asm: md
+	$(ACME) src/grue.system.s
+	$(ACME) src/pitchdark.a
+	$(ACME) src/onbeyond/onbeyond.system.s
+	$(ACME) src/onbeyond/z3/z3.s
+	$(ACME) src/onbeyond/z4/z4.s
+	$(ACME) src/onbeyond/z5/z5.s
+	$(ACME) src/onbeyond/z5u/z5u.s
+
+dsk: md asm
+	cp res/"Pitch Dark.master games collection.do.not.edit.2mg" build/$(DISK)
+	cp res/_FileInformation.txt build/
+	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/GRUE.SYSTEM"
+	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/PITCH.DARK"
+	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/ONBEYOND.SYSTEM"
+	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/ONBEYONDZ3"
+	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/ONBEYONDZ4"
+	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/ONBEYONDZ5"
+	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/ONBEYONDZ5U"
+
+txt: md dsk
+	mkdir -p build/text
+	$(PY3) bin/textnormalize.py text/*
+	cd build && $(CADIUS) ADDFOLDER $(DISK) "/PITCH.DARK/TEXT" text
+
+mount: dsk
 	osascript bin/V2Make.scpt "`pwd`" build/$(DISK)
 
 all: clean asm dsk txt mount

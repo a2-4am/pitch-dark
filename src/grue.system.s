@@ -3,7 +3,7 @@
 
 !cpu 6502
 *=$2000
-!to "../build/GRUE.SYSTEM#FF2000",plain
+!to "build/GRUE.SYSTEM",plain
 
 -       jsr     $bf00
 op_c7
@@ -17,7 +17,7 @@ op_c7
         !byte   $c5
         !word   c5_parms
         ldx     runme+prefix+1-reloc
-        inx        
+        inx
         txa
         and     #$0f
         sta     runme+prefix-reloc
@@ -27,7 +27,7 @@ op_c7
         bne     -
 +       lda     #<prefix
         sta     runme+c6_parms+1-reloc
-        lda     #>prefix        
+        lda     #>prefix
         sta     runme+c6_parms+2-reloc
         lda     $c083
         lda     $c083

@@ -158,6 +158,6 @@ LaunchInterpreter
 .nope    sec
          rts
 .interpreterFilename
-         !byte 18
-         !raw  "BIN/INTERPP.SYSTEM"
+         !byte 15
+         !raw  "ONBEYOND.SYSTEM"
 }

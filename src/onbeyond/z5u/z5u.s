@@ -9,13 +9,13 @@ ver_02 = 1
 } else { ;ver_02
   !cpu 65c02
 } ;ver_02
-!to "..\..\build\ONBEYONDZ4#063000",plain
+!to "build/ONBEYONDZ5U",plain
 *=$3000
 
-xsechi=$b1
-xseclo=$b0
-xside=$e7
-entry=$dd86
+xsechi=$b6
+xseclo=$b5
+xside=$ec
+entry=$dd4a
 
 ;unpacker variables, no need to change these
 src	=	$0
@@ -27,7 +27,7 @@ tmp	=	$8
 ;place no code before init label below.
 
                 ;user-defined options
-                verbose_info = 1        ;set to 1 to enable display of memory usage
+                verbose_info = 0        ;set to 1 to enable display of memory usage
                 poll_drive   = 0        ;set to 1 to check if disk is in drive, recommended if allow_multi is enabled
                 override_adr = 1        ;set to 1 to require an explicit load address
                 aligned_read = 0        ;set to 1 if all reads can be a multiple of block size
@@ -296,18 +296,7 @@ set_slot        sta     slot + 2
 
                 ;copy interpreter to language card
 
-                lda     $c089
-                lda     $c089
-                ldy     #0
-
-yyy
--               lda     $f800,y
-                sta     $f800,y
-                iny
-                bne     -
-                inc     yyy+2
-                inc     yyy+5
-                bne     -
+                lda     $c08b
                 lda     $c08b
                 lda     #>pakoff
                 sta     src + 1
@@ -354,10 +343,16 @@ slot            lda     $cfff
                 stx     $302	;no load
 +
 
+                ldy     #casemap_e-casemap
+-               lda     xcasemap-1, y
+                sta     casemap-1, y
+                dey
+                bne     -
+
                 lda     #<call80
-                sta     $ddcc
+                sta     $965
                 lda     #>call80
-                sta     $ddcd
+                sta     $966
 
                 ldx     $300
                 cpx     #$ce
@@ -374,7 +369,7 @@ skip80
                 lda     #$df
                 sta     inversemask+1
                 lda     #7
-                sta     $dde0
+                sta     $dd9e
 
 okay80
                 lda     $301
@@ -399,14 +394,14 @@ skipupper
                 clc
                 adc     #$af
                 sta     callback3+1
-                lda     $da86
+                lda     $914
                 sta     loadcall1+1
-                lda     $da87
+                lda     $915
                 sta     loadcall2+1
                 lda     #<callback1
-                sta     $da86
+                sta     $914
                 lda     #>callback1
-                sta     $da87
+                sta     $915
 
 +
 
@@ -431,7 +426,7 @@ skipupper
                 sta     hddsavetreehi
                 dec     $2006
                 ldy     $2006
-                lda     #'4'
+                lda     #'5'
                 sta     $2006,y
                 lda     #'Z'
                 sta     $2006-1,y
@@ -681,7 +676,7 @@ readimm
                 inc     adrhi
 +
 intercept
-                lda     #9
+                lda     #$0a
                 sta     blokhi
                 ldy     #0
                 sty     bloklo
@@ -1459,29 +1454,6 @@ unrunit = unrelochdd + (* + 1 - reloc)
 unrentry = unrelochdd + (* + 1 - reloc)
                 jmp     $d1d1
 
-casemap
-        cmp     #8
-        beq     bspace
-        cmp     #$e1
-        bcc     +
-        cmp     #$fb
-        bcs     +
-normalmask
-        and     #$ff
-+       ldy     $32
-        bmi     +
-        cmp     #$e1
-        bcc     +
-        cmp     #$fb
-        bcs     +
-inversemask
-        and     #$ff
-        !byte   $2c
-bspace
-        lda     #8
-printchar
-+       jmp     $d1d1
-
 hddcodeend
   !if swap_zp = 1 {
 zp_array        !fill last_zp - first_zp
@@ -1592,6 +1564,36 @@ hdddataend
   } ;verbose_info
 } ;PASS2
 
+xcasemap !pseudopc $2dc {;;-(callback_e-callback1) {
+casemap
+        cmp     #8
+        beq     bspace
+        cmp     #$e1
+        bcc     +
+        cmp     #$fb
+        bcs     +
+normalmask
+        and     #$ff
++       ldy     $32
+        bmi     +
+        ora     #$80
+        cmp     #$e1
+        bcc     +
+        cmp     #$fb
+        bcs     +
+inversemask
+        and     #$ff
+        !byte   $2c
+bspace
+        lda     #8
+printchar
++       jmp     $d1d1
+casemap_e
+}
+!if verbose_info = 1 {
+         !warn "case=",$300-(casemap_e-casemap)
+}
+
 saveme
 !pseudopc $300 {
                 jsr     swap_zpg
@@ -1631,7 +1633,7 @@ hddsavetreehi = * + 1
                 inc     command
 
 copyblock       ldy     #0
--               lda     $900, y
+-               lda     $a00, y
                 sta     (adrlo), y
                 iny
                 bne     -
@@ -1743,18 +1745,19 @@ readpart        lda     istree
 save_end
 
 hookkbd
-!pseudopc $2cf {;;-(callback_e-callback1) {
+!pseudopc $2aa {;;-(callback_e-callback1) {
 callback1
-                cpy     #0
-                beq     +
-                jmp     $fd0c
-
-+               ldx     #<callback2
-                jsr     setcall
+                ldx     #<callback2
+                lda     #$8d
+                bne     setcall
 
 callback2
+                cpy     #$ff
+                beq     callback3
                 ldx     #<callback3
-                lda     xrestore,y
+restpos
+                lda     xrestore
+                inc     restpos+1
                 cmp     #$8d
                 beq     setcall
                 rts
@@ -1768,18 +1771,20 @@ callback4
                 lda     #$D9
 loadcall2
                 ldx     #$fd
-                stx     $da87
+                stx     $915
 loadcall1
                 ldx     #$0c
 setcall
-                stx     $da86
+                stx     $914
                 rts
 
 xrestore
                 !byte   $d2,$c5,$d3,$d4,$cf,$d2,$c5,$8d
 callback_e
 }
-!warn "base=",$300-(callback_e-callback1)
+!if verbose_info = 1 {
+         !warn "base=",casemap-(callback_e-callback1)
+}
 
 unpack ;unpacker entrypoint
 		lda	#0
@@ -1924,7 +1929,8 @@ putdst		sty	tmp
 		inc	dst
 		bne	+
 		inc	dst+1
-		bne	+
++		ldy	tmp
+		rts
 
 getsrc		sty	tmp
 		ldy	#0
@@ -1936,8 +1942,8 @@ getsrc		sty	tmp
 		rts
 
 pakoff
-!bin "d500-f7ff.pak"
-!bin "0800-08ff.pak"
+!bin "src/onbeyond/z5u/d500-ffff.pak"
+!bin "src/onbeyond/z5u/0800-09ff.pak"
 
 readbuff
 !byte $D3,$C1,$CE,$A0,$C9,$CE,$C3,$AE
