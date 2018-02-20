@@ -343,10 +343,16 @@ slot            lda     $cfff
                 stx     $302	;no load
 +
 
+                ldy     #casemap_e-casemap
+-               lda     xcasemap-1, y
+                sta     casemap-1, y
+                dey
+                bne     -
+
                 lda     #<call80
-                sta     $ddcc
+                sta     $965
                 lda     #>call80
-                sta     $ddcd
+                sta     $966
 
                 ldx     $300
                 cpx     #$ce
@@ -363,7 +369,7 @@ skip80
                 lda     #$df
                 sta     inversemask+1
                 lda     #7
-                sta     $dde0
+                sta     $dda6
 
 okay80
                 lda     $301
@@ -376,18 +382,27 @@ useupper
                 sta     inversemask+1
 
 skipupper
+                ldx     $302
+                inx
+                beq     +
+                ldy     #callback_e-callback1
+-               lda     hookkbd-1, y
+                sta     callback1-1, y
+                dey
+                bne     -
+                txa
+                clc
+                adc     #$af
+                sta     callback3+1
+                lda     $914
+                sta     loadcall1+1
+                lda     $915
+                sta     loadcall2+1
+                lda     #<callback1
+                sta     $914
+                lda     #>callback1
+                sta     $915
 
-;;	ldx	$302
-;;	inx
-;;	beq	+
-;;	lda	$11de
-;;	sta	loadcall1+1
-;;	lda	$11df
-;;	sta	loadcall2+1
-;;	lda	#<callback1
-;;	sta	$11de
-;;	lda	#>callback1
-;;	sta	$11df
 +
 
                 ldy     #save_end-saveme
@@ -1439,29 +1454,6 @@ unrunit = unrelochdd + (* + 1 - reloc)
 unrentry = unrelochdd + (* + 1 - reloc)
                 jmp     $d1d1
 
-casemap
-        cmp     #8
-        beq     bspace
-        cmp     #$e1
-        bcc     +
-        cmp     #$fb
-        bcs     +
-normalmask
-        and     #$ff
-+       ldy     $32
-        bmi     +
-        cmp     #$e1
-        bcc     +
-        cmp     #$fb
-        bcs     +
-inversemask
-        and     #$ff
-        !byte   $2c
-bspace
-        lda     #8
-printchar
-+       jmp     $d1d1
-
 hddcodeend
   !if swap_zp = 1 {
 zp_array        !fill last_zp - first_zp
@@ -1571,6 +1563,34 @@ hdddataend
     } ;!one_page
   } ;verbose_info
 } ;PASS2
+
+xcasemap !pseudopc $2dc {;;-(callback_e-callback1) {
+casemap
+        cmp     #8
+        beq     bspace
+        cmp     #$e1
+        bcc     +
+        cmp     #$fb
+        bcs     +
+normalmask
+        and     #$ff
++       ldy     $32
+        bmi     +
+        ora     #$80
+        cmp     #$e1
+        bcc     +
+        cmp     #$fb
+        bcs     +
+inversemask
+        and     #$ff
+        !byte   $2c
+bspace
+        lda     #8
+printchar
++       jmp     $d1d1
+casemap_e
+}
+!warn "case=",$300-(casemap_e-casemap)
 
 saveme
 !pseudopc $300 {
@@ -1721,6 +1741,46 @@ readpart        lda     istree
                 rts
 }
 save_end
+
+hookkbd
+!pseudopc $2aa {;;-(callback_e-callback1) {
+callback1
+                ldx     #<callback2
+                lda     #$8d
+                bne     setcall
+
+callback2
+                cpy     #$ff
+                beq     callback3
+                ldx     #<callback3
+restpos
+                lda     xrestore
+                inc     restpos+1
+                cmp     #$8d
+                beq     setcall
+                rts
+
+callback3
+                lda     #$d1
+                ldx     #<callback4
+                bne     setcall
+
+callback4
+                lda     #$D9
+loadcall2
+                ldx     #$fd
+                stx     $915
+loadcall1
+                ldx     #$0c
+setcall
+                stx     $914
+                rts
+
+xrestore
+                !byte   $d2,$c5,$d3,$d4,$cf,$d2,$c5,$8d
+callback_e
+}
+!warn "base=",casemap-(callback_e-callback1)
 
 unpack ;unpacker entrypoint
 		lda	#0
