@@ -23,5 +23,5 @@ Difficulty:    ^^^&&
  with Cutthroats.
 
 [versions]
-R23.840809=r23 / 840809
+R23.840809.Z3=r23 / 840809
 
