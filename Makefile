@@ -48,7 +48,7 @@ dsk: md asm
 
 txt: dsk
 	mkdir -p build/text
-	$(PY3) bin/textnormalize.py text/*
+	$(PY3) bin/textnormalize.py res/text/*
 	cd build && $(CADIUS) ADDFOLDER "$(DISK)" "/PITCH.DARK/TEXT" text
 
 artwork: dsk

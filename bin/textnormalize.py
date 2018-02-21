@@ -7,7 +7,7 @@ for f in sys.argv[1:]:
     linelength = 0
     with open(f) as buffer:
         lines = buffer.readlines()
-    shortf = f.replace(".txt", "").replace("text/", "").upper()
+    shortf = f.replace(".txt", "").replace("res/text/", "").upper()
     newf = "build/text/" + shortf
     fileinfo.append(shortf + "=Type(04),AuxType(0000),VersionCreate(70),MinVersion(BE),Access(C3)")
     with open(newf, 'w') as buffer:
