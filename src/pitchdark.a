@@ -47,7 +47,6 @@ Start
          jsr   LoadGlobalPreferences ; get current game
          jsr   LoadGameInfo          ; load and parse game description text
 
-Restart
          jsr   CreateViews           ; create all WeeGUI views (UI elements)
          ldx   #WGClearScreen        ; clear screen
          jsr   WeeGUI

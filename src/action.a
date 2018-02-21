@@ -133,7 +133,7 @@ callback_boxart
          ldy   GAMES+1, x
          jsr   AddToPath
 
-         jsr   LoadDHRFile
+         jsr   LoadDHRFile           ; load artwork from file
          !word gPathname
          !word kProDOSFileBuffer
          bcs   .nope

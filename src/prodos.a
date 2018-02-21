@@ -149,9 +149,9 @@ LoadDHRFile
          sta   .saverefnum+1         ; store file refnum
 
          ldy   #$20
-         stz   mliparam+2            ; read into $2000
+         stz   mliparam+2            ; read into $2000 in main mem
          sty   mliparam+3
-         stz   mliparam+4            ; max $2000 bytes
+         stz   mliparam+4            ; read length = $2000 bytes (first half of file)
          sty   mliparam+5
 
          jsr   _readfile
@@ -175,7 +175,7 @@ LoadDHRFile
          bne   .writeToAux
 
          lda   .saverefnum+1
-         jsr   _readfile
+         jsr   _readfile             ; read another $2000 bytes into $2000 (stays in main mem)
 
 .close
          php                         ; save flags from readfile
