@@ -32,7 +32,6 @@ asm: md
 	$(ACME) src/onbeyond/z4/z4.s
 	$(ACME) src/onbeyond/z5/z5.s
 	$(ACME) src/onbeyond/z5u/z5u.s
-	$(ACME) src/createsave.s
 
 dsk: md asm
 	cp res/"Pitch Dark.master games collection.do.not.edit.2mg" build/$(DISK)
@@ -46,7 +45,6 @@ dsk: md asm
 	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/ONBEYONDZ4"
 	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/ONBEYONDZ5"
 	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/ONBEYONDZ5U"
-	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/CREATESAVE"
 
 txt: md dsk
 	mkdir -p build/text
