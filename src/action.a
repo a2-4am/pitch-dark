@@ -12,8 +12,13 @@
 
 !zone {
 kGameRootDirectory                   ; length-prefixed pathname of where game subdirectories are stored
-         !byte 14
-         !raw "/PITCH.DARK/Z/"       ; TODO use relative path ('Z/') for final release
+         !byte 2
+         !raw  "Z/"
+kArtworkRootDirectory                ; length-prefixed pathname of DHGR box art
+         !byte 8
+         !raw  "ARTWORK/"
+
+; action keys for main screen (should correspond to button titles in paint.a)
 .keys
          !byte $D0,ID_PLAY           ; P
          !byte $F0,ID_PLAY           ; p
@@ -36,6 +41,8 @@ ID_SCROLLDOWN  = $82
          !byte $8B,ID_SCROLLUP       ; up arrow
          !byte $8A,ID_SCROLLDOWN     ; down arrow
 .endkeys
+
+BELL =         $FF3A
 
 ;------------------------------------------------------------------------------
 ; HandleKey
@@ -84,9 +91,11 @@ HandleKey
          jsr   WeeGUI
          ldx   #WGViewUnfocus
          jmp   WeeGUI
+}
 
 ;------------------------------------------------------------------------------
 
+!zone {
 callback_previous
          lda   gCurrentGame
          dec
@@ -104,15 +113,53 @@ callback_next
 .loadNewGameInfoAndRepaint
          jsr   LoadGameInfo
          jmp   RepaintSomeViews
-
-callback_play
-         jmp   LaunchInterpreter
+}
 
 callback_clues
-callback_boxart
+         rts
 callback_options
          rts
 
+!zone {
+callback_boxart
+         jsr   ResetPath
+         lda   #<kArtworkRootDirectory
+         ldy   #>kArtworkRootDirectory
+         jsr   AddToPath
+         lda   gCurrentGame
+         asl
+         tax
+         lda   GAMES, x
+         ldy   GAMES+1, x
+         jsr   AddToPath
+
+         jsr   LoadDHRFile
+         !word gPathname
+         !word kProDOSFileBuffer
+         bcs   .nope
+
+         sta   $C000                 ; display double hi-res page 1
+         sta   $C00D
+         sta   $C05E
+         sta   $C057
+         sta   $C052
+         sta   $C054
+         sta   $C050
+
+         bit   $c010
+-        lda   $c000
+         bpl   -
+         bit   $c010
+
+         sta   $C001                 ; back to text
+         sta   $C051
+         rts
+.nope
+         jmp   BELL
+}
+
+!zone {
+callback_play
 LaunchInterpreter
          jsr   SaveGlobalPreferences
          jsr   ResetPath

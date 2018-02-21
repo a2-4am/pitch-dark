@@ -5,6 +5,7 @@
 ;
 ; Public functions
 ; - LoadFile
+; - LoadDHRFile
 ; - SaveFile
 ; - SetPrefix
 ; - QuitToProDOS
@@ -31,7 +32,6 @@ PC_WRITE =     $04
 PC_CLOSE =     $01
 
 PRODOSMLI =    $BF00      ; [callable] MLI entry point
-MACHID = $BF98
 
 ;-------------------------------
 ; LoadFile
@@ -102,6 +102,87 @@ LoadFile
          plp              ; restore flags from readfile
                           ; (so caller gets codes from read attempt,
                           ; not close)
+.exit
+         rts
+}
+
+;-------------------------------
+; LoadDHRFile
+; load uncompressed DHR file into memory from .A2FC file
+; 1. load first half ($2000 bytes)
+; 2. copy to auxmem
+; 3. load second half ($2000 bytes)
+;
+; always loads into graphics page 1 ($2000/main and $2000/aux)
+;
+; in:  stack contains 4 bytes of parameters:
+;      +1 address of pathname
+;      +3 address of ProDOS file buffer
+; out: if C set, load failed
+;      if C clear, load succeeded
+;      all other flags clobbered
+;      all registers clobbered
+;      stack set to next instruction after parameters
+;-------------------------------
+!zone {
+LoadDHRFile
+         pla
+         sta   $00
+         plx
+         stx   $01
+         lda   #$04
+         clc
+         adc   $00
+         bcc   +
+         inx
++        phx
+         pha
+
+         ldy   #$04
+-        lda   ($00),y
+         sta   mliparam,y
+         dey
+         bne   -
+
+         jsr   _openfile
+         bcs   .exit                 ; C set on error
+         sta   .saverefnum+1         ; store file refnum
+
+         ldy   #$20
+         stz   mliparam+2            ; read into $2000
+         sty   mliparam+3
+         stz   mliparam+4            ; max $2000 bytes
+         sty   mliparam+5
+
+         jsr   _readfile
+         bcs   .close
+
+         sta   $C000
+         ldx   #$20                  ; copy $2000 bytes to auxmem
+         stx   .copya+2
+         stx   .copyb+2
+         ldy   #$00
+.writeToAux
+         sta   $C005
+.copya   lda   $FF00, y
+.copyb   sta   $FF00, y
+         iny
+         bne   .copya
+         sta   $C004
+         inc   .copya+2
+         inc   .copyb+2
+         dex
+         bne   .writeToAux
+
+         lda   .saverefnum+1
+         jsr   _readfile
+
+.close
+         php                         ; save flags from readfile
+.saverefnum
+         lda   #$d1                  ; file refnum (set above)
+         jsr   _closefile
+         plp                         ; restore flags from readfile
 .exit
          rts
 }

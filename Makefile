@@ -9,7 +9,7 @@
 # adapted by 4am on 2018-01-07
 #
 
-DISK=PitchDark.2mg
+DISK=Pitch Dark.2mg
 
 # third-party tools required to build
 # https://sourceforge.net/projects/acme-crossass/
@@ -34,24 +34,28 @@ asm: md
 	$(ACME) src/onbeyond/z5u/z5u.s
 
 dsk: md asm
-	cp res/"Pitch Dark.master games collection.do.not.edit.2mg" build/$(DISK)
+	cp res/"Pitch Dark.master games collection.do.not.edit.2mg" build/"$(DISK)"
 	cp res/WEEGUI build/
 	cp res/_FileInformation.txt build/
-	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/GRUE.SYSTEM"
-	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/PITCH.DARK"
-	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/WEEGUI"
-	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/ONBEYOND.SYSTEM"
-	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/ONBEYONDZ3"
-	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/ONBEYONDZ4"
-	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/ONBEYONDZ5"
-	$(CADIUS) ADDFILE build/$(DISK) "/PITCH.DARK/" "build/ONBEYONDZ5U"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/GRUE.SYSTEM"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/PITCH.DARK"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/WEEGUI"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/ONBEYOND.SYSTEM"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/ONBEYONDZ3"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/ONBEYONDZ4"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/ONBEYONDZ5"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/ONBEYONDZ5U"
 
-txt: md dsk
+txt: dsk
 	mkdir -p build/text
 	$(PY3) bin/textnormalize.py text/*
-	cd build && $(CADIUS) ADDFOLDER $(DISK) "/PITCH.DARK/TEXT" text
+	cd build && $(CADIUS) ADDFOLDER "$(DISK)" "/PITCH.DARK/TEXT" text
+
+artwork: dsk
+	rsync -a res/artwork build/
+	cd build && $(CADIUS) ADDFOLDER "$(DISK)" "/PITCH.DARK/ARTWORK" artwork
 
 mount: dsk
-	osascript bin/V2Make.scpt "`pwd`" bin/pitchdark.vii build/$(DISK)
+	osascript bin/V2Make.scpt "`pwd`" bin/pitchdark.vii build/"$(DISK)"
 
-all: clean asm dsk txt mount
+all: clean asm dsk txt artwork mount
