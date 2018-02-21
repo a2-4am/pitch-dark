@@ -15,7 +15,7 @@
 ;
 
 !zone {
-kNumberOfGames = 32
+kNumberOfGames = 33
 gCurrentGame
          !byte $FD                   ; set at runtime
 kTextRootDirectory
@@ -37,6 +37,7 @@ GAMES                                ; length of this array must = kNumberOfGame
          !word .lurkinghorror
          !word .minizork
          !word .moonmist
+         !word .nordandbert
          !word .planetfall
          !word .plunderedhearts
          !word .seastalker
@@ -101,6 +102,9 @@ GAMES                                ; length of this array must = kNumberOfGame
 .moonmist
          !byte 8
          !raw  "MOONMIST"
+.nordandbert
+         !byte 13
+         !raw  "NORD.AND.BERT"
 .planetfall
          !byte 10
          !raw  "PLANETFALL"

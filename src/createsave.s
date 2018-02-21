@@ -2,7 +2,7 @@
 ;(c) 2018 by qkumba 
 
 !cpu 6502
-!to "..\build\createsave#061000",plain
+!to "build/CREATESAVE",plain
 
 *=$1000
 
