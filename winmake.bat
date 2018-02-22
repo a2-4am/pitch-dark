@@ -30,10 +30,10 @@ cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\GRUE.SYSTEM"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\PITCH.DARK"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\WEEGUI"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\ONBEYOND.SYSTEM"
-cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\ONBEYONDZ3"
-cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\ONBEYONDZ4"
-cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\ONBEYONDZ5"
-cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\ONBEYONDZ5U"
+cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ3"
+cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ4"
+cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ5"
+cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ5U"
 if not "%1" equ "" set DISK=
 goto :EOF
 )

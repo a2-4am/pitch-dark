@@ -156,7 +156,7 @@ ca_parms
 
 filename
         !byte   (filename_e-filename)-1
-        !text   "ONBEYONDZ"
+        !text   "LIB/ONBEYONDZ"
 version !text   "5U"
 filename_e
 
