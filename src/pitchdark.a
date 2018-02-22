@@ -16,8 +16,8 @@
          sta   $C029                 ; set GS NEWVIDEO mode to turn off linearize
 +        jmp   Start
 .weeguiFilename
-         !byte 6
-         !raw  "WEEGUI"
+         !byte 10
+         !raw  "LIB/WEEGUI"
 
          !source "src/WeeGUI_MLI.s"
          !source "src/memory.a"

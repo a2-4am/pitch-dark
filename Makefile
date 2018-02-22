@@ -39,12 +39,13 @@ dsk: md asm
 	cp res/_FileInformation.txt build/
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/GRUE.SYSTEM"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/PITCH.DARK"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/WEEGUI"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/ONBEYOND.SYSTEM"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/ONBEYONDZ3"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/ONBEYONDZ4"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/ONBEYONDZ5"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/ONBEYONDZ5U"
+	$(CADIUS) CREATEFOLDER build/"$(DISK)" "/PITCH.DARK/LIB/"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/WEEGUI"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ3"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ4"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ5"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ5U"
 
 txt: dsk
 	mkdir -p build/text
