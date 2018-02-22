@@ -12,6 +12,8 @@ ver_02 = 1
 !to "build/ONBEYONDZ5U",plain
 *=$3000
 
+!macro version {!text "1/180221"}
+
 xsechi=$b6
 xseclo=$b5
 xside=$ec
@@ -364,12 +366,12 @@ slot            lda     $cfff
 skip80
                 lda     #$2c
                 sta     call80
-                lda     #$88
-                sta     bspace+1
                 lda     #$df
                 sta     inversemask+1
                 lda     #7
                 sta     $dd9e
+                lda     #$28
+                sta     $dea8
 
 okay80
                 lda     $301
@@ -411,6 +413,11 @@ skipupper
                 dey
                 bne     -
 
+                lda     #<brand
+                sta     $ddae
+                lda     #>brand
+                sta     $ddaf
+
                 ldy     $2006
                 inc     $2006
                 lda     #'V'
@@ -443,6 +450,22 @@ call80          jsr     $c300
                 lda     #>casemap
                 sta     $37
                 rts
+
+brand           jsr     $db53
+                lda     #$17
+                sta     $25
+                lda     #0
+                sta     $24
+                sta     $57b
+                jsr     $8a9
+                lda     #>brandtext
+                ldx     #<brandtext
+                ldy     #(brandtext_e-brandtext)
+                jmp     $db53
+
+brandtext       !text   "On Beyond Z-Machine! revision "
+                +version
+brandtext_e
 
 !if load_aux = 1 {
                 sta     CLRAUXWR + (load_banked * 4) ;CLRAUXWR or CLRAUXZP
@@ -1564,30 +1587,23 @@ hdddataend
   } ;verbose_info
 } ;PASS2
 
-xcasemap !pseudopc $2dc {;;-(callback_e-callback1) {
+xcasemap !pseudopc $2e7 {;;-(callback_e-callback1) {
 casemap
-        cmp     #8
-        beq     bspace
-        cmp     #$e1
-        bcc     +
-        cmp     #$fb
-        bcs     +
-normalmask
-        and     #$ff
-+       ldy     $32
-        bmi     +
         ora     #$80
         cmp     #$e1
-        bcc     +
+        bcc     printchar
         cmp     #$fb
-        bcs     +
+        bcs     printchar
+normalmask
+        and     #$ff
+        sty     $35
+        ldy     $32
+        bmi     +
 inversemask
         and     #$ff
-        !byte   $2c
-bspace
-        lda     #8
++       ldy     $35
 printchar
-+       jmp     $d1d1
+        jmp     $d1d1
 casemap_e
 }
 !if verbose_info = 1 {
@@ -1745,7 +1761,7 @@ readpart        lda     istree
 save_end
 
 hookkbd
-!pseudopc $2aa {;;-(callback_e-callback1) {
+!pseudopc $2b5 {;;-(callback_e-callback1) {
 callback1
                 ldx     #<callback2
                 lda     #$8d

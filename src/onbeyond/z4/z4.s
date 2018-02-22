@@ -12,6 +12,8 @@ ver_02 = 1
 !to "build/ONBEYONDZ4",plain
 *=$3000
 
+!macro version {!text "1/180221"}
+
 xsechi=$b1
 xseclo=$b0
 xside=$e7
@@ -369,12 +371,12 @@ slot            lda     $cfff
 skip80
                 lda     #$2c
                 sta     call80
-                lda     #$88
-                sta     bspace+1
                 lda     #$df
                 sta     inversemask+1
                 lda     #7
                 sta     $dde0
+                lda     #$28
+                sta     $f433
 
 okay80
                 lda     $301
@@ -416,6 +418,11 @@ skipupper
                 dey
                 bne     -
 
+                lda     #<brand
+                sta     $ddf0
+                lda     #>brand
+                sta     $ddf1
+
                 ldy     $2006
                 inc     $2006
                 lda     #'V'
@@ -448,6 +455,22 @@ call80          jsr     $c300
                 lda     #>casemap
                 sta     $37
                 rts
+
+brand           jsr     $dbda
+                lda     #$17
+                sta     $25
+                lda     #0
+                sta     $24
+                sta     $57b
+                jsr     $fc22
+                lda     #>brandtext
+                ldx     #<brandtext
+                ldy     #(brandtext_e-brandtext)
+                jmp     $dbda
+
+brandtext       !text   "On Beyond Z-Machine! revision "
+                +version
+brandtext_e
 
 !if load_aux = 1 {
                 sta     CLRAUXWR + (load_banked * 4) ;CLRAUXWR or CLRAUXZP
@@ -1460,27 +1483,21 @@ unrentry = unrelochdd + (* + 1 - reloc)
                 jmp     $d1d1
 
 casemap
-        cmp     #8
-        beq     bspace
+        ora     #$80
         cmp     #$e1
-        bcc     +
+        bcc     printchar
         cmp     #$fb
-        bcs     +
+        bcs     printchar
 normalmask
         and     #$ff
-+       ldy     $32
+        sty     $35
+        ldy     $32
         bmi     +
-        cmp     #$e1
-        bcc     +
-        cmp     #$fb
-        bcs     +
 inversemask
         and     #$ff
-        !byte   $2c
-bspace
-        lda     #8
++       ldy     $35
 printchar
-+       jmp     $d1d1
+        jmp     $d1d1
 
 hddcodeend
   !if swap_zp = 1 {
