@@ -1,10 +1,10 @@
 [info]
-      SORCERER
- 
- 
-1984         Fantasy
- 
-Difficulty:    ^^^^&
+ SORCERER
+ by Steve Meretzky
+ Copyright 1984 Infocom, Inc.
+ Genre: fantasy
+ Difficulty: ^^^^&
+ Release 18 / Serial number 860904
 
 [description]
  

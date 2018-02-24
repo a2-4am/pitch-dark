@@ -1,10 +1,10 @@
 [info]
-     PLANETFALL
- 
- 
-1983          Sci-Fi
- 
-Difficulty:    ^^^&&
+ PLANETFALL
+ by Steve Meretzky
+ Copyright 1983 Infocom, Inc.
+ Genre: science fiction
+ Difficulty: ^^^&&
+ Release 37 / Serial number 851003
 
 [description]
  

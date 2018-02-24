@@ -1,10 +1,10 @@
 [info]
-     SEASTALKER
- 
- 
-1984       Adventure
- 
-Difficulty:    ^&&&&
+ SEASTALKER: <YOUR NAME> AND THE ULTRAMARINE BIOCEPTOR
+ by Stu Galley and Jim Lawrence
+ Copyright 1984 Infocom, Inc.
+ Genre: adventure
+ Difficulty: ^&&&&
+ Release 16 / Serial number 850603
 
 [description]
  

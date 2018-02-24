@@ -1,10 +1,10 @@
 [info]
  THE LURKING HORROR
- 
- 
-1987          Horror
- 
-Difficulty:    ^^^&&
+ by Dave Lebling
+ Copyright 1987 Infocom, Inc.
+ Genre: horror
+ Difficulty: ^^^&&
+ Release 221 / Serial number 870918
 
 [description]
  

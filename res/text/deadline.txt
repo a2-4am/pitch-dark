@@ -1,10 +1,10 @@
 [info]
-      DEADLINE
- 
- 
-1982         Mystery
- 
-Difficulty:    ^^^^^
+ DEADLINE: an Interlogic mystery
+ by Marc Blank
+ Copyright 1982 Infocom, Inc.
+ Genre: mystery
+ Difficulty: ^^^^^
+ Release 27 / Serial number 831005
 
 [description]
  

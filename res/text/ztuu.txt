@@ -1,10 +1,10 @@
 [info]
- ZORK: UNDISCOVERED
-    UNDERGROUND
- 
-1997         Fantasy
- 
-Difficulty:    ^^^&&
+ ZORK: THE UNDISCOVERED UNDERGROUND
+ by Marc Blank and Mike Berlyn, programmed by Gerry Kevin Wilson
+ Copyright 1997 Activision, Inc.
+ Genre: fantasy
+ Difficulty: ^^^&&
+ Release 16 / Serial number 970828 / Inform v6.13 Library 6/2
 
 [description]
  

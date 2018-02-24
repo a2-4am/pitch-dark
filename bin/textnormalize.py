@@ -19,7 +19,7 @@ for f in sys.argv[1:]:
                 l = l + ' '*(linelength-len(l))
             buffer.write(l + "\n")
             if l.startswith("[info]"):
-                linelength = 20
+                linelength = 64
             elif l.startswith("[description]"):
                 linelength = 77
 with open("build/text/_FileInformation.txt", "w") as infobuff:

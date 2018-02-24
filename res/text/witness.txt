@@ -1,10 +1,10 @@
 [info]
-    THE WITNESS
- 
- 
-1984         Mystery
- 
-Difficulty:    ^^^&&
+ THE WITNESS: an Interlogic mystery
+ by Stu Galley
+ Copyright 1983 Infocom, Inc.
+ Genre: mystery
+ Difficulty: ^^^&&
+ Release 22 / Serial number 840924
 
 [description]
  

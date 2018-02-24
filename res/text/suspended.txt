@@ -1,10 +1,10 @@
 [info]
-      SUSPENDED
- 
- 
-1983          Sci-Fi
- 
-Difficulty:    ^^^^^
+ SUSPENDED
+ by Michael Berlyn
+ Copyright 1983 Infocom, Inc.
+ Genre: science fiction
+ Difficulty: ^^^^^
+ Release 8 / Serial number 840521
 
 [description]
  

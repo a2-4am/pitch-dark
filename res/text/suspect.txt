@@ -1,10 +1,10 @@
 [info]
-      SUSPECT
- 
- 
-1984         Mystery
- 
-Difficulty:    ^^^^&
+ SUSPECT
+ by Dave Lebling
+ Copyright 1984 Infocom, Inc.
+ Genre: mystery
+ Difficulty: ^^^^&
+ Release 14 / Serial number 841005
 
 [description]
  

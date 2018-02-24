@@ -1,10 +1,10 @@
 [info]
-     CUTTHROATS
- 
- 
-1984       Adventure
- 
-Difficulty:    ^^^&&
+ CUTTHROATS
+ by Michael Berlyn and Jerry Wolper
+ Copyright 1984 Infocom, Inc.
+ Genre: adventure
+ Difficulty: ^^^&&
+ Release 23 / Serial number 840809
 
 [description]
  

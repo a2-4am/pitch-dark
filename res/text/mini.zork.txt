@@ -1,10 +1,10 @@
 [info]
-     MINI-ZORK
- 
- 
-1987         Fantasy
- 
-Difficulty:    ^^^&&
+ MINI-ZORK I: THE GREAT UNDERGROUND EMPIRE
+ by Dave Lebling and Marc Blank
+ Copyright 1988 Infocom, Inc.
+ Genre: fantasy
+ Difficulty: ^^^&&
+ Release 34 / Serial number 871124
 
 [description]
  

@@ -1,10 +1,10 @@
 [info]
-   NORD AND BERT
- 
- 
-1987          Comedy
- 
-Difficulty:    ^^^^^
+ NORD AND BERT COULDN'T MAKE HEAD OR TAIL OF IT
+ by Jeff O'Neill
+ Copyright 1987 Infocom, Inc.
+ Genre: comedy
+ Difficulty: ^^^^^
+ Release 19 / Serial number 870722 / Interpreter 2 Version H
 
 [description]
  

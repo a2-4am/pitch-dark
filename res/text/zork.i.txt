@@ -1,10 +1,10 @@
 [info]
- ZORK I: THE GREAT
- UNDERGROUND EMPIRE
- 
-1980         Fantasy
- 
-Difficulty:    ^^^&&
+ ZORK I: THE GREAT UNDERGROUND EMPIRE
+ by Dave Lebling and Marc Blank
+ Copyright 1981 Infocom, Inc.
+ Genre: fantasy
+ Difficulty: ^^^&&
+ Release 88 / Serial number 840726
 
 [description]
  

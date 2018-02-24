@@ -1,10 +1,10 @@
 [info]
-      MOONMIST
- 
- 
-1986         Mystery
- 
-Difficulty:    ^^&&&
+ MOONMIST
+ by Stu Galley and Jim Lawrence
+ Copyright 1986 Infocom, Inc.
+ Genre: mystery
+ Difficulty: ^^&&&
+ Release number 9 / Serial number 861022
 
 [description]
  

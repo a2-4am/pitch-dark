@@ -6,15 +6,7 @@
 !to "build/PITCH.DARK",plain
 *=$6000
 
-         lda   #0                    ; set Z flag always
-!cpu 65816
-         rep   #2                    ; clear Z flag on 65816 only
-!cpu 65c02
-         beq   +                     ; skip GS-specific code on non-GS machines (required, will crash on //c, grr)
-         lda   $C029
-         and   #$1F
-         sta   $C029                 ; set GS NEWVIDEO mode to turn off linearize
-+        jmp   Start
+         jmp   Start
 .weeguiFilename
          !byte 10
          !raw  "LIB/WEEGUI"

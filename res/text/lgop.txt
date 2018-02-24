@@ -1,10 +1,10 @@
 [info]
- LEATHER GOODESSES
-     OF PHOBOS
- 
-1986          Comedy
- 
-Difficulty:    ^^^&&
+ LEATHER GOODESSES OF PHOBOS: a racy space-age spoof
+ by Steve Meretzky
+ Copyright 1986 Infocom, Inc.
+ Genre: Comedy
+ Difficulty: ^^^&&
+ Release 59 / Serial number 860730
 
 [description]
  

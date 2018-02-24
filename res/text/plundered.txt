@@ -1,10 +1,10 @@
 [info]
-  PLUNDERED HEARTS
- 
- 
-1987         Romance
- 
-Difficulty:    ^^&&&
+ PLUNDERED HEARTS
+ by Amy Briggs
+ Copyright 1987 Infocom, Inc.
+ Genre: romance
+ Difficulty: ^^&&&
+ Release 26 / Serial number 870730
 
 [description]
  

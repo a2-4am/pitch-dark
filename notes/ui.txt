@@ -1,5 +1,214 @@
 0         1         2         3         4         5         6         7
 01234567890123456789012345678901234567890123456789012345678901234567890123456789
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]][Pitch Dark]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] 0
+
+ _________________                 __________                     _____________  2
+|_<_Previous game_|               |_Settings_|                   |_Next_game_>_|
+
+________________________________________________________________________________ 5
+
+                                                                  _____________
+WISHBRINGER: THE MAGICK STONE OF DREAMS                          |__PLAY GAME__| 8    or |_RESUME GAME_|
+by Brian Moriarty                                                 _____________
+Copyright (c) 1985 Infocom, Inc.                                 |_Box artwork_| 10   may disappear if no artwork (e.g. Mini-Zork)
+Genre: Fantasy                                                    _____________
+Difficulty: OOooo                    __________                  |_InvisiClues_| 12   may disappear if no clues (e.g. Mini-Zork)
+Release 69 / Serial Number 850920   |_Versions_|                                      may disappear if no versions (e.g. Cutthroats)
+
+[------------------------------------------------------------------------------] 15
+[------------------------------------------------------------------------------]
+| It's an ordinary day in your ordinary little town, and you've been           ^
+| performing your ordinary mail clerk's duties in an altogether ordinary way.  |
+| But there's something quite extraordinary in today's mail. It's a ransom     |
+| note for a kidnapped cat, and it will lead you through unbelievably          |
+| harrowing adventures to Wishbringer, a stone possessing undreamt-of powers.  |
+| For though the note in question is addressed to someone in your ordinary     |
+| little town, it's postmarked for Special Delivery to Parts Unknown. And its  v
+|______________________________________________________________________________|
+
+
+Keys:
+P previous game
+S settings
+N next game
+G PLAY GAME / RESUME GAME
+C InvisiClues
+B Box artwork
+V Versions
+
+
+A MIND FOREVER VOYAGING
+by Steve Meretzky
+Copyright (c) 1985 Infocom, Inc.
+Genre: science fiction
+Difficulty: OOOOo
+Release 79 / Serial number 851122
+
+BALLYHOO
+by Jeff O'Neill
+Copyright (c) 1986 Infocom, Inc.
+Genre: mystery
+Difficulty: OOOoo
+Release 97 / Serial number 851218
+
+BEYOND ZORK: THE COCONUT OF QUENDOR
+by Brian Moriarty
+Copyright (c) 1987 Infocom, Inc.
+Genre: Fantasy
+Difficulty: OOOoo
+Release 57 / Serial Number 871221
+
+BORDER ZONE: A GAME OF INTRIGUE
+by Marc Blank
+Copyright (c) 1987 Infocom, Inc.
+Genre: espionage
+Difficulty: OOOOo
+Release 9 / Serial number 871008
+
+BUREAUCRACY: A PARANOID FANTASY
+Copyright (c) 1987 Infocom, Inc.
+Release 116 / Licence Number 870602
+
+CUTTHROATS
+Copyright (c) 1984 Infocom, Inc.
+Release 23 / Serial number 840809
+
+DEADLINE: AN INTERLOGIC MYSTERY
+by Marc Blank
+Copyright (c) 1982 Infocom, Inc.
+Release 27 / Serial number 831005
+
+ENCHANTER
+Copyright (c) 1983 Infocom, Inc.
+Release 29 / Serial number 860820
+
+THE HITCHHIKER'S GUIDE TO THE GALAXY
+Copyright (c) 1984 Infocom, Inc.
+Release 59 / Serial number 851108
+
+HOLLYWOOD HIJINX
+Copyright (c) 1986 Infocom, Inc.
+Release 37 / Serial Number 861215
+
+INFIDEL
+Copyright (c) 1983 Infocom, Inc.
+Release 22 / Serial number 830916
+
+LEATHER GODDESSES OF PHOBOS
+Copyright (c) 1986 Infocom, Inc.
+Release 59 / Serial number 860730
+
+THE LURKING HORROR
+Copyright (c) 1987 Infocom, Inc.
+Release 221 / Serial number 870918
+
+MINI-ZORK I: THE GREAT UNDERGROUND EMPIRE
+Copyright (c) 1988 Infocom, Inc.
+Release 34 / Serial number 871124
+
+MOONMIST
+Copyright (c) 1986 Infocom, Inc.
+Release number 9 / Serial number 861022
+
+NORD AND BERT COULDN'T MAKE HEAD OR TAIL OF IT
+Copyright (c) 1987 Infocom, Inc.
+Release 19 / Serial number 870722 / Interpreter 2 Version H
+
+PLANETFALL
+by Steve Meretzky
+Copyright (c) 1983 Infocom, Inc.
+Genre: science fiction
+Difficulty: OOOoo
+Release 37 / Serial number 851003
+
+PLUNDERED HEARTS
+Copyright (c) 1987 Infocom, Inc.
+Release 26 / Serial number 870730
+
+SEASTALKER: <YOUR NAME> AND THE ULTRAMARINE BIOCEPTOR
+Copyright (c) 1984 Infocom, Inc.
+Release 16 / Serial number 850603
+
+SHERLOCK: THE RIDDLE OF THE CROWN JEWELS
+Copyright (c) 1987 Infocom, Inc.
+Release 26 / Serial Number 880127
+
+SORCERER
+Copyright (c) 1984 Infocom, Inc.
+Release 18 / Serial number 860904
+
+SPELLBREAKER
+Copyright (c) 1985 Infocom, Inc.
+Release 87 / Serial number 860904
+
+STARCROSS
+Copyright (c) 1982 Infocom, Inc.
+by Dave Lebling
+Release 17 / Serial number 821021
+
+STATIONFALL
+Copyright (c) 1987 Infocom, Inc.
+Release 107 / Serial number 870430
+
+SUSPECT
+Copyright (c) 1984 Infocom, Inc.
+Release 14 / Serial number 841005
+
+SUSPENDED
+Copyright (c) 1983 Infocom, Inc.
+by Michael Berlyn
+Release 8 / Serial number 840521
+
+TRINITY
+Copyright (c) 1986 Infocom, Inc.
+Release 12 / Serial Number 860926
+
+WISHBRINGER: THE MAGICK STONE OF DREAMS
+Copyright (c) 1985 Infocom, Inc.
+Release 69 / Serial Number 850920
+
+THE WITNESS
+by Stu Galley
+Copyright (c) 1983 Infocom, Inc.
+Genre: mystery
+Difficulty: OOOoo
+Release 22 / Serial number 840924
+
+ZORK I: THE GREAT UNDERGROUND EMPIRE
+by Dave Lebling and Marc Blank
+Copyright (c) 1981 Infocom, Inc.
+Release 88 / Serial number 840726
+
+ZORK II: THE WIZARD OF FROBOZZ
+by Dave Lebling and Marc Blank
+Copyright (c) 1981 Infocom, Inc.
+Release 48 / Serial number 840904
+
+ZORK III: THE DUNGEON MASTER
+by Dave Lebling and Marc Blank
+Copyright (c) 1982 Infocom, Inc.
+Release 17 / Serial number 840727
+
+ZORK: THE UNDISCOVERED UNDERGROUND
+by Marc Blank and Mike Berlyn
+Copyright (c) 1997 Activision Inc.
+Release 16 / Serial number 970828
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0         1         2         3         4         5         6         7
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
 [Pitch Dark]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]][  Exit  ]
  ____________                                                     _____________
 |_<_Previous_|                 ZORK I: THE GREAT                 |_Next_game_>_|

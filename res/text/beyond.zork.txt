@@ -1,10 +1,10 @@
 [info]
-    BEYOND ZORK
- 
- 
-1987         Fantasy
- 
-Difficulty:    ^^^&&
+ BEYOND ZORK: THE COCONUT OF QUENDOR
+ by Brian Moriarty
+ Copyright 1987 Infocom, Inc.
+ Genre: fantasy
+ Difficulty: ^^^&&
+ Release 57 / Serial Number 871221
 
 [description]
  

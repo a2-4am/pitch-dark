@@ -1,10 +1,10 @@
 [info]
-ZORK II: THE WIZARD
-     OF FROBOZZ
- 
-1981         Fantasy
- 
-Difficulty:    ^^^^&
+ ZORK II: THE WIZARD OF FROBOZZ
+ by Dave Lebling and Marc Blank
+ Copyright 1981 Infocom, Inc.
+ Genre: fantasy
+ Difficulty: ^^^^&
+ Release 48 / Serial number 840904
 
 [description]
  

@@ -1,10 +1,10 @@
 [info]
-    SPELLBREAKER
- 
- 
-1985         Fantasy
- 
-Difficulty:    ^^^^^
+ SPELLBREAKER
+ by Dave Lebling
+ Copyright 1985 Infocom, Inc.
+ Genre: fantasy
+ Difficulty: ^^^^^
+ Release 87 / Serial number 860904
 
 [description]
  

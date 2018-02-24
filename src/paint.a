@@ -16,14 +16,16 @@ MAGICRTS       = $FF58    ; used to set overflow bit
 
 ; View IDs (application-specific, acceptable range 0..15, no duplicates)
 ID_TITLE       = 0
-ID_PLAY        = 1
-ID_CLUES       = 2
-ID_BOXART      = 3
-ID_OPTIONS     = 4
-ID_INFO        = 12
+ID_PREVIOUS    = 1
+ID_OPTIONS     = 2
+ID_NEXT        = 3
+ID_HR          = 4
+ID_PLAY        = 5
+ID_VERSIONS    = 6
+ID_BOXART      = 7
+ID_CLUES       = 8
+ID_INFO        = 9
 ID_DESCRIPTION = 13
-ID_PREVIOUS    = 14
-ID_NEXT        = 15
 
 !zone {
 
@@ -49,6 +51,19 @@ CreateViews
          sta   PARAM1
          jsr   WeeGUI
 
+         ldx   #WGCreateView         ; create horizontal rule
+         lda   #<.viewHR
+         sta   PARAM0
+         lda   #>.viewHR
+         sta   PARAM1
+         jsr   WeeGUI
+         ldx   #WGViewSetAction
+         lda   #<.paintHRView
+         sta   PARAM0
+         lda   #>.paintHRView
+         sta   PARAM1
+         jsr   WeeGUI
+
          jsr   .createButton         ; create various buttons
          !word .viewPrevious
          jsr   .createButton
@@ -56,9 +71,11 @@ CreateViews
          jsr   .createButton
          !word .viewPlay
          jsr   .createButton
-         !word .viewClues
+         !word .viewVersions
          jsr   .createButton
          !word .viewBoxArt
+         jsr   .createButton
+         !word .viewClues
          jsr   .createButton
          !word .viewOptions
 
@@ -102,6 +119,7 @@ PaintAllViews
          ldx   #WGViewPaintAll       ; repaint all views that can be painted automatically
          jsr   WeeGUI
          jsr   .paintTitleView
+         jsr   .paintHRView
          jsr   .paintInfoView
          jmp   .paintDescriptionView
 
@@ -134,8 +152,19 @@ RepaintSomeViews
          lda   #>.stringTitle
          sta   PARAM1
          jsr   WeeGUI
-         jsr   NORMAL
-         rts
+         jmp   NORMAL
+
+.paintHRView
+         ldx   #WGSelectView
+         lda   #ID_HR
+         jsr   WeeGUI
+         ldx   #WGPrint
+         lda   #<.stringHR
+         sta   PARAM0
+         lda   #>.stringHR
+         sta   PARAM1
+         bit   MAGICRTS              ; set overflow bit
+         jmp   WeeGUI
 
 .paintDescriptionView
          ldx   #WGSelectView
@@ -158,7 +187,8 @@ RepaintSomeViews
          jsr   WeeGUI
          lda   addrInfo
          ldy   addrInfo+1
-         ldx   #21
+         ldx   #65
+; note: execution falls through here
 
 .multiPrint
          sta   $00
@@ -241,23 +271,23 @@ RepaintSomeViews
          !byte 80                    ; width
          !byte 1                     ; height
 .stringTitle
-         !raw  "Pitch Dark                                                                       ",0
+         !raw  "                                   Pitch Dark                                   ",0
 
 .viewPrevious
          !byte ID_PREVIOUS           ; view ID
          !byte 1                     ; left
          !byte 2                     ; top
-         !byte 12                    ; width
+         !byte 17                    ; width
          !word callback_previous     ; callback
          !word .stringPrevious       ; caption
 .stringPrevious
-         !text "< Pre"
-         !byte $76                   ; 'v' inverse
-         !text "ious",0
+         !text "< "
+         !byte $10                   ; 'P' inverse
+         !text "revious game",0
 
 .viewNext
          !byte ID_NEXT               ; view ID
-         !byte 65                    ; left
+         !byte 66                    ; left
          !byte 2                     ; top
          !byte 13                    ; width
          !word callback_next         ; callback
@@ -266,69 +296,93 @@ RepaintSomeViews
          !byte $0E                   ; 'N' inverse
          !text "ext game >",0
 
+.viewOptions
+         !byte ID_OPTIONS            ; view ID
+         !byte 34                    ; left
+         !byte 2                     ; top
+         !byte 12                    ; width
+         !word callback_options      ; callback
+         !word .stringOptions
+.stringOptions
+         !byte $13                   ; 'S' inverse
+         !text "ettings",0
+
+.viewHR
+         !byte ID_HR                 ; view ID
+         !byte 0                     ; style
+         !byte 1                     ; left
+         !byte 4                     ; top
+         !byte 78                    ; visible width
+         !byte 1                     ; visible height
+         !byte 78                    ; width
+         !byte 1                     ; height
+.stringHR
+         !fill 78,83
+         !byte 0
+
 .viewPlay
          !byte ID_PLAY               ; view ID
-         !byte 34                    ; left
-         !byte 10                    ; top
+         !byte 66                    ; left
+         !byte 6                     ; top
          !byte 13                    ; width
          !word callback_play         ; callback
          !word .stringPlay           ; caption
 .stringPlay
-         !byte $10                   ; 'P' inverse
-         !text "lay game",0
-
-.viewClues
-         !byte ID_CLUES              ; view ID
-         !byte 66                    ; left
-         !byte 7                     ; top
-         !byte 11                    ; width
-         !word callback_clues        ; callback
-         !word .stringClues          ; caption
-.stringClues
-         !byte $03                   ; 'C' inverse
-         !text "lues",0
+         !byte 144
+         !text "lay "
+         !byte $67                   ; 'g' inverse
+         !text "ame",0
 
 .viewBoxArt
          !byte ID_BOXART             ; view ID
          !byte 66                    ; left
-         !byte 9                     ; top
-         !byte 11                    ; width
+         !byte 8                     ; top
+         !byte 13                    ; width
          !word callback_boxart       ; callback
          !word .stringBoxArt         ; caption
 .stringBoxArt
-         !byte $02                   ; 'B' inverse
-         !text "ox art",0
+         !byte $01                   ; 'A' inverse
+         !text "rtwork",0
 
-.viewOptions
-         !byte ID_OPTIONS            ; view ID
+.viewClues
+         !byte ID_CLUES              ; view ID
          !byte 66                    ; left
-         !byte 11                    ; top
-         !byte 11                    ; width
-         !word callback_options      ; callback
-         !word .stringOptions        ; caption
-.stringOptions
-         !byte $0F                   ; 'O' inverse
-         !text "ptions",0
+         !byte 10                    ; top
+         !byte 13                    ; width
+         !word callback_clues        ; callback
+         !word .stringClues          ; caption
+.stringClues
+         !byte $08                   ; 'H' inverse
+         !text "ints",0
+
+.viewVersions
+         !byte ID_VERSIONS           ; view ID
+         !byte 66                    ; left
+         !byte 12                    ; top
+         !byte 13                    ; width
+         !word callback_versions     ; callback
+         !word .stringVersions       ; caption
+.stringVersions
+         !byte $12                   ; 'R' inverse
+         !text "evisions",0
 
 .viewInfo
          !byte ID_INFO               ; view ID
          !byte 0                     ; style
-         !byte 30                    ; left
-         !byte 2                     ; top
-         !byte 20                    ; visible width
-         !byte 7                     ; visible height
-         !byte 20                    ; width
-         !byte 7                     ; height
+         !byte 0                     ; left
+         !byte 6                     ; top
+         !byte 65                    ; visible width
+         !byte 6                     ; visible height
+         !byte 65                    ; width
+         !byte 6                     ; height
 
 .viewDescription
          !byte ID_DESCRIPTION        ; view ID
          !byte 2                     ; style
          !byte 1                     ; left
-.viewDescriptionMinHeight
          !byte 15                    ; top
          !byte 77                    ; visible width
          !byte 8                     ; visible height
          !byte 77                    ; width
-.viewDescriptionHeight
          !byte 39                    ; height
 }

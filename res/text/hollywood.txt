@@ -1,10 +1,10 @@
 [info]
-  HOLLYWOOD HIJINX
- 
- 
-1987       Adventure
- 
-Difficulty:    ^^^&&
+ HOLLYWOOD HIJINX: a zany treasure hunt
+ by "Hollywood" Dave Anderson and Liz Cyr-Jones
+ Copyright 1986 Infocom, Inc.
+ Genre: adventure
+ Difficulty: ^^^&&
+ Release 37 / Serial Number 861215
 
 [description]
  

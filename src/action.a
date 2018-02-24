@@ -20,17 +20,17 @@ kArtworkRootDirectory                ; length-prefixed pathname of DHGR box art
 
 ; action keys for main screen (should correspond to button titles in paint.a)
 .keys
-         !byte $D0,ID_PLAY           ; P
-         !byte $F0,ID_PLAY           ; p
+         !byte $C7,ID_PLAY           ; G
+         !byte $E7,ID_PLAY           ; g
          !byte $8D,ID_PLAY           ; Return
-         !byte $C3,ID_CLUES          ; C
-         !byte $E3,ID_CLUES          ; c
-         !byte $C2,ID_BOXART         ; B
-         !byte $E2,ID_BOXART         ; b
-         !byte $CF,ID_OPTIONS        ; O
-         !byte $EF,ID_OPTIONS        ; o
-         !byte $D6,ID_PREVIOUS       ; V
-         !byte $F6,ID_PREVIOUS       ; v
+         !byte $C8,ID_CLUES          ; H
+         !byte $E8,ID_CLUES          ; h
+         !byte $C1,ID_BOXART         ; A
+         !byte $E1,ID_BOXART         ; a
+         !byte $D3,ID_OPTIONS        ; S
+         !byte $E3,ID_OPTIONS        ; s
+         !byte $D0,ID_PREVIOUS       ; P
+         !byte $F0,ID_PREVIOUS       ; p
          !byte $88,ID_PREVIOUS       ; left arrow
          !byte $CE,ID_NEXT           ; N
          !byte $EE,ID_NEXT           ; n
@@ -115,6 +115,8 @@ callback_next
          jmp   RepaintSomeViews
 }
 
+callback_versions
+         rts
 callback_clues
          rts
 callback_options
@@ -133,7 +135,16 @@ callback_boxart
          ldy   GAMES+1, x
          jsr   AddToPath
 
-         jsr   LoadDHRFile           ; load artwork from file
+         lda   #0                    ; set Z flag always
+!cpu 65816
+         rep   #2                    ; clear Z flag on 65816 only
+!cpu 65c02
+         beq   +                     ; skip GS-specific code on non-GS machines (required, will crash on //c, grr)
+         lda   $C029
+         and   #$1F
+         sta   $C029                 ; set GS NEWVIDEO mode to turn off linearize
+
++        jsr   LoadDHRFile           ; load artwork from file
          !word gPathname
          !word kProDOSFileBuffer
          bcs   .nope

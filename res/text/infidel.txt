@@ -1,10 +1,10 @@
 [info]
-      INFIDEL
- 
- 
-1983       Adventure
- 
-Difficulty:    ^^^^&
+ INFIDEL
+ by Michael Berlyn
+ Copyright 1983 Infocom, Inc.
+ Genre: adventure
+ Difficulty: ^^^^&
+ Release 22 / Serial number 830916
 
 [description]
  

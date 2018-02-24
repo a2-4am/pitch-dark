@@ -1,17 +1,17 @@
 [info]
-    WISHBRINGER
- 
- 
-1985         Fantasy
- 
-Difficulty:    ^^&&&
+ WISHBRINGER: THE MAGICK STONE OF DREAMS
+ by Brian Moriarty
+ Copyright 1985 Infocom, Inc.
+ Genre: fantasy
+ Difficulty: ^^&&&
+ Release 69 / Serial Number 850920
 
 [description]
  
  It's an ordinary day in your ordinary little town, and you've been
- performing your ordinary mail clerk's duties in an altogether ordinary
- way. But there's something quite extraordinary in today's mail. It's a
- ransom note for a kidnapped cat, and it will lead you through unbelievably
+ performing your ordinary mail clerk's duties in an altogether ordinary way.
+ But there's something quite extraordinary in today's mail. It's a ransom
+ note for a kidnapped cat, and it will lead you through unbelievably
  harrowing adventures to Wishbringer, a stone possessing undreamt-of powers.
  For though the note in question is addressed to someone in your ordinary
  little town, it's postmarked for Special Delivery to Parts Unknown. And its

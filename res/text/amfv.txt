@@ -1,10 +1,10 @@
 [info]
-   A MIND FOREVER
-      VOYAGING
- 
-1985          Sci-Fi
- 
-Difficulty:   ^^^^^&
+ A MIND FOREVER VOYAGING
+ by Steve Meretzky
+ Copyright 1985 Infocom, Inc.
+ Genre: science fiction
+ Difficulty: ^^^^^&
+ Release 79 / Serial number 851122
 
 [description]
  

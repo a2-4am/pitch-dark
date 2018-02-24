@@ -1,10 +1,10 @@
 [info]
- HITCHHIKER'S GUIDE
-   TO THE GALAXY
- 
-1984          Sci-Fi
- 
-Difficulty:    ^^^&&
+ THE HITCHHIKER'S GUIDE TO THE GALAXY
+ by Douglas Adams and Steve Meretzky
+ Copyright 1984 Infocom, Inc.
+ Genre: science fiction
+ Difficulty: ^^^&&
+ Release 59 / Serial number 851108
 
 [description]
  

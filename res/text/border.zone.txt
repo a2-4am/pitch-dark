@@ -1,25 +1,25 @@
 [info]
-    BORDER ZONE
- 
- 
-1987       Espionage
- 
-Difficulty:    ^^^^&
+ BORDER ZONE: A GAME OF INTRIGUE
+ by Marc Blank
+ Copyright 1987 Infocom, Inc.
+ Genre: espionage
+ Difficulty: ^^^^&
+ Release 9 / Serial number 871008 / Interpreter 2 Version F
 
 [description]
-                                                                            
- Where the Iron Curtain divides East and West, the frontier is a no man's   
- land between freedom and captivity, a place where moments lost or          
- precautions not taken exact a toll in men's lives. In Border Zone, you     
+ 
+ Where the Iron Curtain divides East and West, the frontier is a no man's
+ land between freedom and captivity, a place where moments lost or
+ precautions not taken exact a toll in men's lives. In Border Zone, you
  cross this barrier not once, but three times, as three different characters
- in a fast-paced story of international intrigue                            
-                                                                            
- The pulse-pounding tension of espionage is heightened by the addition of   
- real time, which ticks on regardless of your actions. As you race against  
- the clock to complete your missions, you'll find yourself caught up in a   
- spine-tingling adventure that's far more suspenseful than any spy thriller 
- you've ever read.                                                          
-                                                                            
+ in a fast-paced story of international intrigue.
+ 
+ The pulse-pounding tension of espionage is heightened by the addition of
+ real time, which ticks on regardless of your actions. As you race against
+ the clock to complete your missions, you'll find yourself caught up in a
+ spine-tingling adventure that's far more suspenseful than any spy thriller
+ you've ever read.
+ 
  The story begins on the train to Litzenburg, a peaceful country just
  outside the Iron Curtain. In the border town of Ostnitz, Constitution day
  festivities include a speech by the American ambassador. But plans are
@@ -30,27 +30,25 @@ Difficulty:    ^^^^&
  assassination plot, their lives intertwining as each carries out his
  perilous assignment.
  
- You'll see the story from three viewpoints, as you step into the
- shoes of a different major character in each of the three chapters of
- Border Zone. Set in separate locations on or near the border, the
- chapters are complete stories in themselves, each with its own
- riveting conclusion.
+ You'll see the story from three viewpoints, as you step into the shoes of a
+ different major character in each of the three chapters of Border Zone. Set
+ in separate locations on or near the border, the chapters are complete
+ stories in themselves, each with its own riveting conclusion.
  
- The on-line hints in Border Zone will help you out when you need
- it. But hints take you only so far. Even when you know exactly what
- to do, discretion and timing are crucial as you outwit the KGB, evade
- a snarling pack of search dogs, make a desperate assault on the
- border, and count down the moments to the assassination.
+ The on-line hints in Border Zone will help you out when you need it. But
+ hints take you only so far. Even when you know exactly what to do, to do,
+ discretion and timing are crucial as you outwit the KGB, evade a snarling
+ pack of search dogs, make a desperate assault on the border, and count down
+ the moments to the assassination.
  
- Border Zone was written by Marc Blank, a pioneer in interactive
- fiction and the author of such ground-breaking works as Zork and
- Deadline. In Border Zone, Marc takes the clever plotting and masterly
- prose of a top-notch thriller, brings it to life through interactive
- fiction, and intensifies the experience with the addition of real
- time.
+ Border Zone was written by Marc Blank, a pioneer in interactive fiction and
+ the author of such ground-breaking works as Zork and Deadline. In Border
+ Zone, Marc takes the clever plotting and masterly prose of a top-notch
+ thriller, brings it to life through interactive fiction, and intensifies
+ the experience with the addition of real time.
  
- So steel your nerves, and don't blow your cover, friend. You've a
- long way to go before you come in from the cold.
+ So steel your nerves, and don't blow your cover, friend. You've a long way
+ to go before you come in from the cold.
 
 [versions]
 R9.871008.Z5=r9 / 871008

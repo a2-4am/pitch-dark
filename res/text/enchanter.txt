@@ -1,10 +1,10 @@
 [info]
-     ENCHANTER
- 
- 
-1983         Fantasy
- 
-Difficulty:    ^^^&&
+ ENCHANTER
+ by Marc Blank and Dave Lebling
+ Copyright 1983 Infocom, Inc.
+ Genre: fantasy
+ Difficulty: ^^^&&
+ Release 29 / Serial number 860820
 
 [description]
  

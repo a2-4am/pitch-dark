@@ -1,10 +1,10 @@
 [info]
-    STATIONFALL
- 
- 
-1987          Sci-Fi
- 
-Difficulty:    ^^^^&
+ STATIONFALL
+ by Steve Meretzky
+ Copyright 1987 Infocom, Inc.
+ Genre: science fiction
+ Difficulty: ^^^^&
+ Release 107 / Serial number 870430
 
 [description]
  

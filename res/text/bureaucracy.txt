@@ -1,10 +1,10 @@
 [info]
-    BUREAUCRACY
- 
- 
-1987          Comedy
- 
-Difficulty:    ^^^^&
+ BUREAUCRACY: a paranoid fantasy
+ by Michael Bywater, Douglas Adams, et. al.
+ Copyright 1987 Infocom, Inc.
+ Genre: comedy
+ Difficulty: ^^^^&
+ Release 116 / Licence Number 870602 / Interpreter 2 Version H
 
 [description]
  

@@ -1,10 +1,10 @@
 [info]
- SHERLOCK: RIDDLE OF
-  THE CROWN JEWELS
- 
-1988         Mystery
- 
-Difficulty:    ^^^&&
+ SHERLOCK: THE RIDDLE OF THE CROWN JEWELS
+ by Bob Bates
+ Copyright 1987 Infocom, Inc.
+ Genre: mystery
+ Difficulty: ^^^&&
+ Release 26 / Serial Number 880127 / Interpreter 2 Version F
 
 [description]
  
