@@ -452,6 +452,10 @@ call80          jsr     $c300
                 rts
 
 brand           jsr     $db5b
+                lda     #$5b
+                sta     $ddb6
+                lda     #$db
+                sta     $ddb7
                 lda     #$17
                 sta     $25
                 lda     #0
