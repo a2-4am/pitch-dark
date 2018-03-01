@@ -10,12 +10,10 @@
 ;
 
 ; ROM routines
-INVERSE        = $FE80
-NORMAL         = $FE84
 MAGICRTS       = $FF58    ; used to set overflow bit
 
 ; View IDs (application-specific, acceptable range 0..15, no duplicates)
-ID_TITLE       = 0
+; ID_TITLE is defined in paintcommon.a
 ID_PREVIOUS    = 1
 ID_OPTIONS     = 2
 ID_NEXT        = 3
@@ -38,18 +36,7 @@ ID_DESCRIPTION = 13
 ;        all flags clobbered
 ;------------------------------------------------------------------------------
 CreateViews
-         ldx   #WGCreateView         ; create title bar on top line
-         lda   #<.viewTitle
-         sta   PARAM0
-         lda   #>.viewTitle
-         sta   PARAM1
-         jsr   WeeGUI
-         ldx   #WGViewSetAction
-         lda   #<.paintTitleView
-         sta   PARAM0
-         lda   #>.paintTitleView
-         sta   PARAM1
-         jsr   WeeGUI
+         jsr   CreateTitleView
 
          ldx   #WGCreateView         ; create horizontal rule
          lda   #<.viewHR
@@ -57,26 +44,20 @@ CreateViews
          lda   #>.viewHR
          sta   PARAM1
          jsr   WeeGUI
-         ldx   #WGViewSetAction
-         lda   #<.paintHRView
-         sta   PARAM0
-         lda   #>.paintHRView
-         sta   PARAM1
-         jsr   WeeGUI
 
-         jsr   .createButton         ; create various buttons
+         jsr   CreateButton          ; create various buttons
          !word .viewPrevious
-         jsr   .createButton
+         jsr   CreateButton
          !word .viewNext
-         jsr   .createButton
+         jsr   CreateButton
          !word .viewPlay
-         jsr   .createButton
+         jsr   CreateButton
          !word .viewVersions
-         jsr   .createButton
+         jsr   CreateButton
          !word .viewBoxArt
-         jsr   .createButton
+         jsr   CreateButton
          !word .viewClues
-         jsr   .createButton
+         jsr   CreateButton
          !word .viewOptions
 
          ldx   #WGCreateView         ; create borderless frame for game title and info
@@ -118,7 +99,7 @@ CreateViews
 PaintAllViews
          ldx   #WGViewPaintAll       ; repaint all views that can be painted automatically
          jsr   WeeGUI
-         jsr   .paintTitleView
+         jsr   PaintTitleView
          jsr   .paintHRView
          jsr   .paintInfoView
          jmp   .paintDescriptionView
@@ -141,29 +122,20 @@ RepaintSomeViews
 
 ;------------------------------------------------------------------------------
 
-.paintTitleView
-         ldx   #WGSelectView
-         lda   #ID_TITLE
-         jsr   WeeGUI
-         jsr   INVERSE
-         ldx   #WGPrint
-         lda   #<.stringTitle
-         sta   PARAM0
-         lda   #>.stringTitle
-         sta   PARAM1
-         jsr   WeeGUI
-         jmp   NORMAL
-
 .paintHRView
          ldx   #WGSelectView
          lda   #ID_HR
          jsr   WeeGUI
-         ldx   #WGPrint
-         lda   #<.stringHR
+         lda   #1
          sta   PARAM0
-         lda   #>.stringHR
+         lda   #5
          sta   PARAM1
-         bit   MAGICRTS              ; set overflow bit
+         lda   #78
+         sta   PARAM2
+         lda   #0
+         sta   PARAM3
+         ldy   #83
+         ldx   #WGFillRect
          jmp   WeeGUI
 
 .paintDescriptionView
@@ -178,8 +150,8 @@ RepaintSomeViews
          cmp   #10
          bcs   +
          lda   #10
-+        sta   $59B6                            ; HACKHACKHACK set view height inside WeeGUI internals (WG_VIEWRECORDS)
-         rts
++        ldx   #WGSetContentHeight
+         jmp   WeeGUI
 
 .paintInfoView
          ldx   #WGSelectView
@@ -224,32 +196,6 @@ RepaintSomeViews
 .printDone
          rts
 
-.createButton
-         pla
-         sta   $00
-         pla
-         sta   $01
-         tax
-         lda   #$02
-         clc
-         adc   $00
-         bcc   +
-         inx
-+        phx
-         pha
-         ldy   #$01
-         lda   ($00),y
-         sta   PARAM0
-         iny
-         lda   ($00),y
-         sta   PARAM1
-         ldx   #WGCreateButton
-         jsr   WeeGUI
-         ldx   #WGViewSetRawTitle
-         lda   #1
-         sta   PARAM0
-         jmp   WeeGUI
-
 .resetDescriptionViewScrolling
          ldx   #WGSelectView
          lda   #ID_DESCRIPTION
@@ -260,18 +206,6 @@ RepaintSomeViews
          ldx   #WGScrollY
          lda   #0
          jmp   WeeGUI
-
-.viewTitle
-         !byte ID_TITLE              ; view ID
-         !byte 0                     ; style
-         !byte 0                     ; left
-         !byte 0                     ; top
-         !byte 80                    ; visible width
-         !byte 1                     ; visible height
-         !byte 80                    ; width
-         !byte 1                     ; height
-.stringTitle
-         !raw  "                                   Pitch Dark                                   ",0
 
 .viewPrevious
          !byte ID_PREVIOUS           ; view ID
@@ -316,9 +250,6 @@ RepaintSomeViews
          !byte 1                     ; visible height
          !byte 78                    ; width
          !byte 1                     ; height
-.stringHR
-         !fill 78,83
-         !byte 0
 
 .viewPlay
          !byte ID_PLAY               ; view ID

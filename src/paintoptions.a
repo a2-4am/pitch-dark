@@ -1,0 +1,265 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; User interface - views and paint routines for options screen
+;
+; Public functions
+; - OptionsDialog
+;
+
+; View IDs (application-specific, acceptable range 0..15, no duplicates)
+; ID_TITLE is defined in paintcommon.a
+ID_OPTIONS_FRAME          = 1
+ID_OPTIONS_NAME           = 2
+ID_OPTIONS_YEAR           = 3
+ID_OPTIONS_GENRE          = 4
+ID_OPTIONS_DIFFICULTY     = 5
+ID_OPTIONS_FORCE40        = 6
+ID_OPTIONS_FORCEUPPER     = 7
+ID_OPTIONS_OK             = 8
+ID_OPTIONS_CANCEL         = 9
+
+!zone {
+;------------------------------------------------------------------------------
+; OptionsDialog
+; call WeeGUI to create and paint all option screen views
+;
+; in:    WeeGUI loaded and initialized
+; out:   all registers clobbered
+;        all flags clobbered
+;------------------------------------------------------------------------------
+OptionsDialog
+         ldx   #$FF
+         txs
+         jsr   WGInit                ; reset WeeGUI
+
+         jsr   CreateTitleView       ; create title bar (defined in paintcommon.a)
+
+         ldx   #WGCreateView         ; create frame
+         lda   #<.viewFrame
+         sta   PARAM0
+         lda   #>.viewFrame
+         sta   PARAM1
+         jsr   WeeGUI
+         ldx   #WGViewSetTitle
+         lda   #<.stringFrame
+         sta   PARAM0
+         lda   #>.stringFrame
+         sta   PARAM1
+         jsr   WeeGUI
+
+         jsr   CreateButton          ; create UI controls
+         !word .viewOK
+         jsr   CreateButton
+         !word .viewCancel
+         jsr   CreateRadio
+         !word .viewName
+         ldx   #WGSetState           ; TODO: set the appropriate radio button based on preferences
+         lda   #1
+         jsr   WeeGUI
+         jsr   CreateRadio
+         !word .viewYear
+         jsr   CreateRadio
+         !word .viewGenre
+         jsr   CreateRadio
+         !word .viewDifficulty
+         jsr   CreateCheckbox
+         !word .viewForce40
+         jsr   CreateCheckbox
+         !word .viewForceUpper
+
+         ldx   #WGDesktop            ; paint background
+         jsr   WeeGUI
+
+         ldx   #WGViewPaintAll       ; paint UI controls (window frame, buttons, checkboxes, radio buttons)
+         jsr   WeeGUI
+
+         jsr   PaintTitleView        ; paint top title bar
+
+         ldx   #WGSelectView
+         lda   #ID_OPTIONS_FRAME
+         jsr   WeeGUI
+
+         ldx   #WGSetCursor          ; paint static text labels
+         lda   #2
+         sta   PARAM0
+         lda   #1
+         sta   PARAM1
+         jsr   WeeGUI
+         ldx   #WGPrint
+         lda   #<.stringSortBy
+         sta   PARAM0
+         lda   #>.stringSortBy
+         sta   PARAM1
+         jsr   WeeGUI
+
+         ldx   #WGSetCursor
+         lda   #2
+         sta   PARAM0
+         lda   #12
+         sta   PARAM1
+         jsr   WeeGUI
+         ldx   #WGPrint
+         lda   #<.stringGameplay
+         sta   PARAM0
+         lda   #>.stringGameplay
+         sta   PARAM1
+         jsr   WeeGUI
+
+.runLoop
+         ldx   #WGPendingViewAction
+         jsr   WeeGUI
+         lda   $c000
+         bpl   .runLoop
+         bit   $c010
+         jsr   HandleOptionsKey
+         bra   .runLoop
+
+; action keys for options screen
+.keys
+         !byte $CF,ID_OPTIONS_OK     ; O
+         !byte $EF,ID_OPTIONS_OK     ; o
+         !byte $8D,ID_OPTIONS_OK     ; Return
+         !byte $C3,ID_OPTIONS_CANCEL ; C
+         !byte $E3,ID_OPTIONS_CANCEL ; c
+         !byte $9B,ID_OPTIONS_CANCEL ; Esc
+         !byte $CE,ID_OPTIONS_NAME   ; N
+         !byte $EE,ID_OPTIONS_NAME   ; n
+         !byte $D9,ID_OPTIONS_YEAR   ; Y
+         !byte $F9,ID_OPTIONS_YEAR   ; y
+         !byte $C7,ID_OPTIONS_GENRE  ; G
+         !byte $E7,ID_OPTIONS_GENRE  ; g
+         !byte $C4,ID_OPTIONS_DIFFICULTY ; D
+         !byte $E4,ID_OPTIONS_DIFFICULTY ; d
+         !byte $B4,ID_OPTIONS_FORCE40    ; 4
+         !byte $D5,ID_OPTIONS_FORCEUPPER ; U
+         !byte $F5,ID_OPTIONS_FORCEUPPER ; u
+.endkeys
+
+HandleOptionsKey
+         ldx   #.endkeys-.keys
+-        cmp   .keys,x
+         beq   .foundKey
+         dex
+         dex
+         bpl   -
+         rts
+.foundKey
+         lda   .keys+1,x
+         ldx   #WGSelectView
+         jsr   WeeGUI
+         ldx   #WGViewFocus
+         jsr   WeeGUI
+         ldx   #WGViewFocusAction
+         jsr   WeeGUI
+         ldx   #WGViewUnfocus
+         jmp   WeeGUI
+
+callback_options_ok
+; TODO set preferences
+callback_options_cancel
+         ldx   #$FF
+         txs
+         jsr   WGInit
+         jmp   MainScreen
+
+.viewFrame
+         !byte ID_OPTIONS_FRAME      ; view ID
+         !byte 2                     ; style (decorated frame)
+         !byte 22                    ; left
+         !byte 3                     ; top
+         !byte 36                    ; visible width
+         !byte 18                    ; visible height
+         !byte 36                    ; width
+         !byte 18                    ; height
+.stringFrame
+         !text "Settings",0
+
+.viewOK
+         !byte ID_OPTIONS_OK         ; view ID
+         !byte 46                    ; left
+         !byte 4                     ; top
+         !byte 10                    ; width
+         !word callback_options_ok   ; callback
+         !word .stringOK             ; caption
+.stringOK
+         !byte $0F                   ; 'P' inverse
+         !byte 139,0
+
+.viewCancel
+         !byte ID_OPTIONS_CANCEL     ; view ID
+         !byte 46                    ; left
+         !byte 6                     ; top
+         !byte 10                    ; width
+         !word callback_options_cancel ; callback
+         !word .stringCancel         ; caption
+.stringCancel
+         !byte $03                   ; 'C' inverse
+         !text "ancel",0
+
+.viewName
+         !byte ID_OPTIONS_NAME       ; view ID
+         !byte 26                    ; left
+         !byte 6                     ; top
+         !word .stringName
+.stringName
+         !text " "
+         !byte $0E                   ; 'N' inverse
+         !text "ame",0
+
+.viewYear
+         !byte ID_OPTIONS_YEAR       ; view ID
+         !byte 26                    ; left
+         !byte 8                     ; top
+         !word .stringYear
+.stringYear
+         !text " "
+         !byte $19                   ; 'Y' inverse
+         !text "ear",0
+
+.viewGenre
+         !byte ID_OPTIONS_GENRE      ; view ID
+         !byte 26                    ; left
+         !byte 10                    ; top
+         !word .stringGenre
+.stringGenre
+         !text " "
+         !byte $07                   ; 'G' inverse
+         !text "enre",0
+
+.viewDifficulty
+         !byte ID_OPTIONS_DIFFICULTY ; view ID
+         !byte 26                    ; left
+         !byte 12                    ; top
+         !word .stringDifficulty
+.stringDifficulty
+         !text " "
+         !byte $04                   ; 'D' inverse
+         !text "ifficulty",0
+
+.viewForce40
+         !byte ID_OPTIONS_FORCE40    ; view ID
+         !byte 26                    ; left
+         !byte 17                    ; top
+         !word .stringForce40        ; caption
+.stringForce40
+         !text "Force "
+         !byte $34                   ; '4' inverse
+         !text "0 column",0
+
+.viewForceUpper
+         !byte ID_OPTIONS_FORCEUPPER ; view ID
+         !byte 26                    ; left
+         !byte 19                    ; top
+         !word .stringForceUpper     ; caption
+.stringForceUpper
+         !text "Force "
+         !byte $75                   ; 'u' inverse
+         !text "ppercase",0
+
+.stringSortBy
+         !raw  "Browse games by",0
+
+.stringGameplay
+         !raw  "During gameplay:",0
+}

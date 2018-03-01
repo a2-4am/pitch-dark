@@ -1,0 +1,100 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; User interface - common views and paint routines across screens
+;
+; Public functions
+; - CreateRadio
+; - CreateCheckbox
+; - CreateButton
+; - CreateTitleView
+; - PaintTitleView
+; - DeleteAllViews
+;
+
+; ROM routines
+INVERSE        = $FE80
+NORMAL         = $FE84
+
+; View IDs (application-specific, acceptable range 0..15, no duplicates)
+ID_TITLE       = 0
+
+!zone {
+CreateRadio
+         ldx   #WGCreateRadio
+         !byte $2C                   ; hide next 2 bytes
+CreateCheckbox
+         ldx   #WGCreateCheckbox
+         !byte $2C                   ; hide next 2 bytes
+CreateButton
+         ldx   #WGCreateButton
+         stx   .type+1
+         pla
+         sta   $00
+         pla
+         sta   $01
+         tax
+         lda   #$02
+         clc
+         adc   $00
+         bcc   +
+         inx
++        phx
+         pha
+         ldy   #$01
+         lda   ($00),y
+         sta   PARAM0
+         iny
+         lda   ($00),y
+         sta   PARAM1
+.type
+         ldx   #$FD                  ; set at runtime
+         jsr   WeeGUI
+         ldx   #WGViewSetRawTitle
+         lda   #1
+         sta   PARAM0
+         jmp   WeeGUI
+
+CreateTitleView
+         ldx   #WGCreateView         ; create title bar on top line
+         lda   #<viewTitle
+         sta   PARAM0
+         lda   #>viewTitle
+         sta   PARAM1
+         jmp   WeeGUI
+
+PaintTitleView
+         ldx   #WGSelectView
+         lda   #ID_TITLE
+         jsr   WeeGUI
+         jsr   INVERSE
+         ldx   #WGPrint
+         lda   #<.stringTitle
+         sta   PARAM0
+         lda   #>.stringTitle
+         sta   PARAM1
+         jsr   WeeGUI
+         jmp   NORMAL
+
+viewTitle
+         !byte ID_TITLE              ; view ID
+         !byte 0                     ; style
+         !byte 0                     ; left
+         !byte 0                     ; top
+         !byte 80                    ; visible width
+         !byte 1                     ; visible height
+         !byte 80                    ; width
+         !byte 1                     ; height
+.stringTitle
+         !raw  "                                   Pitch Dark                                   ",0
+
+DeleteAllViews
+         lda   #15
+-        ldx   #WGSelectView
+         jsr   WeeGUI
+         ldx   #WGDeleteView
+         jsr   WeeGUI
+         dec
+         bpl   -
+         rts
+}

@@ -7,3 +7,4 @@
 ; - kProDOSFileBuffer
 
 kProDOSFileBuffer         = $1C00
+WGInit                    = $4000

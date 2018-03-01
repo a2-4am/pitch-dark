@@ -19,7 +19,9 @@
          !source "src/prefs.a"
          !source "src/config.a"
          !source "src/action.a"
+         !source "src/paintcommon.a"
          !source "src/paint.a"
+         !source "src/paintoptions.a"
 Start
          lda   MACHID
          and   #$30
@@ -30,21 +32,23 @@ Start
          bit   $C010
          jsr   LoadFile              ; load WEEGUI binary at $4000
          !word .weeguiFilename
-         !word $4000
+         !word WGInit
          !word $2000
          !word kProDOSFileBuffer
 
-         jsr   $4000                 ; initialize WeeGUI
+         jsr   WGInit                ; initialize WeeGUI
 
          jsr   LoadGlobalPreferences ; get current game
          jsr   LoadGameInfo          ; load and parse game description text
 
+         ldx   #WGEnableMouse        ; enable mouse support
+         jsr   WeeGUI
+
+MainScreen
          jsr   CreateViews           ; create all WeeGUI views (UI elements)
          ldx   #WGClearScreen        ; clear screen
          jsr   WeeGUI
          jsr   PaintAllViews         ; draw all UI elements
-         ldx   #WGEnableMouse        ; enable mouse support
-         jsr   WeeGUI
 .runLoop
          ldx   #WGPendingViewAction
          jsr   WeeGUI

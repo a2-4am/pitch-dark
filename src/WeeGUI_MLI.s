@@ -69,3 +69,8 @@ WGExit					= 70
 WGCreateProgress		= 72
 WGSetState				= 74
 WGViewSetRawTitle		= 76
+WGSetContentWidth		= 78
+WGSetContentHeight		= 80
+WGStrokeRoundRect		= 82
+WGCreateRadio			= 84
+
