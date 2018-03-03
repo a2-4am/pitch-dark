@@ -26,3 +26,7 @@
 [versions]
 R97.851218.Z3=r97 / 851218
 
+[options]
+VERSIONS=0
+
+[eof]

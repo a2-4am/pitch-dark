@@ -53,3 +53,7 @@
 [versions]
 R9.871008.Z5=r9 / 871008
 
+[options]
+VERSIONS=0
+
+[eof]

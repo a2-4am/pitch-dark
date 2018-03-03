@@ -21,3 +21,9 @@
 [versions]
 R34.871124.Z3=r34 / 871124
 
+[options]
+ARTWORK=0
+CLUES=0
+VERSIONS=0
+
+[eof]

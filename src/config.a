@@ -158,6 +158,10 @@ GAMES                                ; length of this array must = kNumberOfGame
          !raw  "ZTUU"
 
 sectionPointers                      ; array of pointers to start of each section
+addrEOF
+         !word 0
+addrOptions
+         !word 0
 addrVersions
          !word 0
 addrDescription
@@ -170,7 +174,7 @@ addrInfo
 ; load file with information about the current game
 ;
 ; in:    gCurrentGame between 0 and (kNumberOfGames-1)
-; out:   addrInfo, addrDescription, addrVersions populated
+; out:   addrInfo, addrDescription, addrVersions, addrOptions populated
 ;        all registers and flags clobbered
 ;------------------------------------------------------------------------------
 LoadGameInfo
@@ -196,7 +200,7 @@ LoadGameInfo
          lda   #$07
          sta   $01                   ; ($00) points to start of data buffer
          ldy   #$00                  ; index into ($00) pointing to current character
-         ldx   #$04                  ; index into sectionPointers array, stores pointer to start of each section
+         ldx   #$08                  ; index into sectionPointers array, stores pointer to start of each section
 
 .convertSectionLoop
          jsr   IncAndGetChar

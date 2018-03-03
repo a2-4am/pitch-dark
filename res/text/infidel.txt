@@ -22,3 +22,7 @@
 [versions]
 R22.830916.Z3=r22 / 830916
 
+[options]
+VERSIONS=0
+
+[eof]

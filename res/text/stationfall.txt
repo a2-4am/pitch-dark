@@ -39,6 +39,9 @@
  will keep you laughing, and Floyd will win your heart.
 
 [versions]
-R107.DEPROT.Z3=r107 / 870430 deprotected
+R107.DEPROT.Z3=r107 / cracked
 R107.870430.Z3=r107 / 870430
 
+[options]
+
+[eof]

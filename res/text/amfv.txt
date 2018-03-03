@@ -29,8 +29,11 @@
  future.
 
 [versions]
-R79.DEPROT.Z4=r79 / 851122 (deprotected)
-R77.DEPROT.Z4=r77 / 850814 (deprotected)
+R79.DEPROT.Z4=r79 / cracked
 R79.851122.Z4=r79 / 851122
+R77.DEPROT.Z4=r77 / cracked
 R77.850814.Z4=r77 / 850814
 
+[options]
+
+[eof]

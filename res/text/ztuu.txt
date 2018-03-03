@@ -44,3 +44,9 @@
 [versions]
 R16.970828.Z5=r16 / 970828
 
+[options]
+ARTWORK=0
+CLUES=0
+VERSIONS=0
+
+[eof]

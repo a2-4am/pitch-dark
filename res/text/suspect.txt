@@ -26,3 +26,7 @@
 [versions]
 R14.841005.Z3=r14 / 841005
 
+[options]
+VERSIONS=0
+
+[eof]

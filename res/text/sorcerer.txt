@@ -19,14 +19,17 @@
  time, you must gain the power and cunning of a true Sorcerer.
 
 [versions]
-R18.DEPROT.Z3=r18 / 860904 (deprotected)
-R15.DEPROT.Z3=r15 / 851108 (deprotected)
-R13.DEPROT.Z3=r13 / 851021 (deprotected)
-R6.DEPROT.Z3=r6 / 840508 (deprotected)
-R4.DEPROT.Z3=r4 / 840131 (deprotected)
+R18.DEPROT.Z3=r18 / cracked
 R18.860904.Z3=r18 / 860904
+R15.DEPROT.Z3=r15 / cracked
 R15.851108.Z3=r15 / 851108
+R13.DEPROT.Z3=r13 / cracked
 R13.851021.Z3=r13 / 851021
+R6.DEPROT.Z3=r6 / cracked
 R6.840508.Z3=r6 / 840508
+R4.DEPROT.Z3=r4 / cracked
 R4.840131.Z3=r4 / 840131
 
+[options]
+
+[eof]

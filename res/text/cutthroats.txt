@@ -25,3 +25,7 @@
 [versions]
 R23.840809.Z3=r23 / 840809
 
+[options]
+VERSIONS=0
+
+[eof]

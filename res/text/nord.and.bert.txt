@@ -46,3 +46,7 @@
 [versions]
 R19.870722.Z4=r19 / 870722
 
+[options]
+VERSIONS=0
+
+[eof]

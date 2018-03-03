@@ -38,8 +38,11 @@
  that be.
 
 [versions]
-R116.DEPROT.Z4=r116 / 870602 (deprotected)
-R86.DEPROT.Z4=r86 / 870212 (deprotected)
+R116.DEPROT.Z4=r116 / cracked
 R116.870602.Z4=r116 / 870602
+R86.DEPROT.Z4=r86 / cracked
 R86.870212.Z4=r86 / 870212
 
+[options]
+
+[eof]
