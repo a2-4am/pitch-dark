@@ -201,7 +201,7 @@ LoadGameInfo
 .convertSectionLoop
          jsr   IncAndGetChar
 .convertSectionNoInc
-         cmp   #$5B                  ; '['
+         cmp   #$5B                  ; '[' is the start of a new section
          beq   .skipSectionName
          cmp   #$0A                  ; LF -> 0x00 (WeeGUI wants null-terminated strings)
          beq   .null
@@ -209,7 +209,7 @@ LoadGameInfo
          beq   .ca
          cmp   #$26                  ; '&' -> open-apple mousetext
          beq   .oa
-         ora   #$80
+         ora   #$80                  ; all other characters -> set high bit
          !byte $2C
 .null    lda   #$00
          !byte $2C
