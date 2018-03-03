@@ -219,12 +219,13 @@ LoadGameInfo
          sta   $02
          lda   mlilen+1
          sta   $03
+         ldy   #$00
 parseloop
-         lda   ($00)
+         lda   ($00),y
          cmp   #$0A                  ; LF -> 0x00 (WeeGUI wants null-terminated strings)
          bne   .notCR
          lda   #$00
-         sta   ($00)
+         sta   ($00),y
          lda   #$FF
          sta   bFoundCR
          bra   .next
@@ -237,21 +238,20 @@ parseloop
          bmi   .parsesectionname
          bvs   .next
          tax
-         beq   .nohighbit
+         beq   .nostore
          cmp   #$5E                  ; '^' -> closed-apple mousetext
          bne   +
          lda   #$40
-         sta   ($00)
-         bra   .nohighbit
+         bra   .store
 +        cmp   #$26                  ; '&' -> open-apple mousetext
          bne   .highbit
          lda   #$41
-         sta   ($00)
-         bra   .nohighbit
+         bra   .store
 .highbit
          ora   #$80
-         sta   ($00)
-.nohighbit
+.store
+         sta   ($00),y
+.nostore
          bit   bFoundCR
          bpl   .next
          stz   bFoundCR
@@ -261,10 +261,14 @@ parseloop
 ; Save this address in the sectionPointers array.
          asl
          tax
-         lda   $00
+         tya
+         clc
+         adc   $00
          sta   sectionPointers-2,x
          lda   $01
-         sta   sectionPointers-1,x
+         bcc   +
+         inc
++        sta   sectionPointers-1,x
          stz   iSection
          bra   .next
 .startsectionname

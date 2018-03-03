@@ -31,7 +31,8 @@ ID_OPTIONS_CANCEL         = 9
 OptionsDialog
          ldx   #$FF
          txs
-         jsr   WGInit                ; reset WeeGUI
+         ldx   #WGReset              ; reset WeeGUI
+         jsr   WeeGUI
 
          jsr   CreateTitleView       ; create title bar (defined in paintcommon.a)
 
@@ -158,9 +159,6 @@ HandleOptionsKey
 callback_options_ok
 ; TODO set preferences
 callback_options_cancel
-         ldx   #$FF
-         txs
-         jsr   WGInit
          jmp   MainScreen
 
 .viewFrame

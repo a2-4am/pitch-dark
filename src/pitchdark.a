@@ -45,6 +45,10 @@ Start
          jsr   WeeGUI
 
 MainScreen
+         ldx   #$FF
+         txs
+         ldx   #WGReset              ; reset WeeGUI views
+         jsr   WeeGUI
          jsr   CreateViews           ; create all WeeGUI views (UI elements)
          ldx   #WGClearScreen        ; clear screen
          jsr   WeeGUI

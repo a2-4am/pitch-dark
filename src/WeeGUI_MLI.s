@@ -73,4 +73,5 @@ WGSetContentWidth		= 78
 WGSetContentHeight		= 80
 WGStrokeRoundRect		= 82
 WGCreateRadio			= 84
+WGReset					= 86
 
