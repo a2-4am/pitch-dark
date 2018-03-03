@@ -157,35 +157,21 @@ GAMES                                ; length of this array must = kNumberOfGame
          !byte 4
          !raw  "ZTUU"
 
-.BEGIN_PARSER_DATA
-bInSectionName
-         !byte 0
-bFoundCR
-         !byte 0
-iSection
-         !byte 0
-iSectionsFound
-         !byte 0
-
-; array of pointers to start of each section (order must match code)
-sectionPointers
-addrInfo
+sectionPointers                      ; array of pointers to start of each section
+addrVersions
          !word 0
 addrDescription
          !word 0
-addrVersions
+addrInfo
          !word 0
-.END_PARSER_DATA
 
 ;------------------------------------------------------------------------------
 ; LoadGameInfo
 ; load file with information about the current game
 ;
 ; in:    gCurrentGame between 0 and (kNumberOfGames-1)
-; out:   if success, C clear and addrInfo, addrDescription, addrVersions
-;          populated with pointers to parsed data
-;        if error, C set
-;        all other registers and flags clobbered
+; out:   addrInfo, addrDescription, addrVersions populated
+;        all registers and flags clobbered
 ;------------------------------------------------------------------------------
 LoadGameInfo
          jsr   ResetPath
@@ -204,117 +190,61 @@ LoadGameInfo
          !word $0800
          !word $1400
          !word kProDOSFileBuffer
-         bcc   .parseGameInfo
-         rts
 
-.parseGameInfo
-         ldx   #9                    ; .END_PARSER_DATA-.BEGIN_PARSER_DATA-1
--        stz   .BEGIN_PARSER_DATA,x
-         dex
-         bpl   -
-         stz   $00
-         lda   #$08
-         sta   $01
-         lda   mlilen
-         sta   $02
-         lda   mlilen+1
-         sta   $03
-         ldy   #$00
-parseloop
-         lda   ($00),y
-         cmp   #$0A                  ; LF -> 0x00 (WeeGUI wants null-terminated strings)
-         bne   .notCR
-         lda   #$00
-         sta   ($00),y
          lda   #$FF
-         sta   bFoundCR
-         bra   .next
-.notCR
-         cmp   #$5B                  ; '[' is section name start delimiter
-         beq   .startsectionname
-         cmp   #$5D                  ; ']' is section name end delimiter
-         beq   .endsectionname
-         bit   bInSectionName
-         bmi   .parsesectionname
-         bvs   .next
-         tax
-         beq   .nostore
+         sta   $00
+         lda   #$07
+         sta   $01                   ; ($00) points to start of data buffer
+         ldy   #$00                  ; index into ($00) pointing to current character
+         ldx   #$04                  ; index into sectionPointers array, stores pointer to start of each section
+
+.convertSectionLoop
+         jsr   IncAndGetChar
+.convertSectionNoInc
+         cmp   #$5B                  ; '['
+         beq   .skipSectionName
+         cmp   #$0A                  ; LF -> 0x00 (WeeGUI wants null-terminated strings)
+         beq   .null
          cmp   #$5E                  ; '^' -> closed-apple mousetext
-         bne   +
-         lda   #$40
-         bra   .store
-+        cmp   #$26                  ; '&' -> open-apple mousetext
-         bne   .highbit
-         lda   #$41
-         bra   .store
-.highbit
+         beq   .ca
+         cmp   #$26                  ; '&' -> open-apple mousetext
+         beq   .oa
          ora   #$80
-.store
+         !byte $2C
+.null    lda   #$00
+         !byte $2C
+.ca      lda   #$40
+         !byte $2C
+.oa      lda   #$41
          sta   ($00),y
-.nostore
-         bit   bFoundCR
-         bpl   .next
-         stz   bFoundCR
-         lda   iSection
-         beq   .next
-; We found the start of the first line after the end of the section name.
-; Save this address in the sectionPointers array.
-         asl
-         tax
+         bra   .convertSectionLoop
+
+; We found the start of a new section, so skip to the first character on the next line
+.skipSectionName
+         jsr   IncAndGetChar
+         cmp   #$0A                  ; LF
+         bne   .skipSectionName
+         jsr   IncAndGetChar
+
+; We are at the start of a section, so save this address in the sectionPointers array
+         pha
          tya
          clc
          adc   $00
-         sta   sectionPointers-2,x
+         sta   sectionPointers,x
          lda   $01
          bcc   +
          inc
-+        sta   sectionPointers-1,x
-         stz   iSection
-         bra   .next
-.startsectionname
-         lda   #%11000000
-         sta   bInSectionName
-         bra   .next
-.endsectionname
-         stz   bInSectionName
-         bra   .next
-.parsesectionname
-         pha
-         lda   #%01000000
-         sta   bInSectionName
++        sta   sectionPointers+1,x
          pla
-         cmp   #$69                  ; 'i'nfo
-         beq   .info
-         cmp   #$64                  ; 'd'escription
-         beq   .description
-         cmp   #$76                  ; 'v'ersions
-         beq   .versions
-         bne   .next
-.info
-         lda   #1
-         !byte $2C                   ; hide next LDA
-.description
-         lda   #2
-         !byte $2C                   ; hide next LDA
-.versions
-         lda   #3
-         sta   iSection
-         inc   iSectionsFound
-.next
-         inc   $00
+         dex
+         dex
+         bpl   .convertSectionNoInc
+
+IncAndGetChar
+         iny
          bne   +
          inc   $01
-+        dec   $02
-         bne   +
-         dec   $03
-         bmi   .done
-+        jmp   parseloop
-.done
-         lda   iSectionsFound
-         cmp   #$03
-         bne   +
-         clc
-         rts
-+        sec
++        lda   ($00),y
          rts
 }
