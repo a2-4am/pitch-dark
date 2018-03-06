@@ -5,6 +5,13 @@
 *=$2000
 !to "build/GRUE.SYSTEM",plain
 
+        lda     $BF98        ; machine identification byte
+        and     #$30
+        cmp     #$30         ; 128K?
+        bne     QuitToProDOS ; no, quit to ProDOS
+        !byte   $1a          ; 65C02 INC, clear Z flag if supported
+        beq     QuitToProDOS ; not a 65C02
+
 -       jsr     $bf00
 op_c7
         !byte   $c7
@@ -38,6 +45,13 @@ op_c7
         iny
         bne     -
         jmp     $1000
+
+QuitToProDOS
+        jsr     $bf00
+        !byte   $65
+        !word   quit_parms
+quit_parms
+        !byte   4
 
 c5_parms
         !byte   2
