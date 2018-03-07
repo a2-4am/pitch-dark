@@ -27,8 +27,10 @@ Start
          and   #$30
          cmp   #$30                  ; 128K?
          beq   +                     ; yes, continue
-         jmp   QuitToProDOS
-+        jsr   DisconnectRAM32       ; disconnect /RAM in S3,D2 so we can use DHGR
+-        jmp   QuitToProDOS
++        !byte $1a                   ; 65C02 INC, clear Z flag if supported
+         beq   -                     ; not a 65C02
+         jsr   DisconnectRAM32       ; disconnect /RAM in S3,D2 so we can use DHGR
          bit   $C010
          jsr   LoadFile              ; load WEEGUI binary at $4000
          !word .weeguiFilename
