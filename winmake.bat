@@ -9,13 +9,13 @@ goto :EOF
 if "%1" equ "asm" (
 :asm
 2>nul md build
-acme src\grue.system.s
-acme src\pitchdark.a
-acme src\onbeyond\onbeyond.system.s
-acme src\onbeyond\z3\z3.s
-acme src\onbeyond\z4\z4.s
-acme src\onbeyond\z5\z5.s
-acme src\onbeyond\z5u\z5u.s
+acme -r build\grue.system.lst src\grue.system.s
+acme -r build\pitchdark.lst src\pitchdark.a
+acme -r build\onbeyond.system.lst src\onbeyond\onbeyond.system.s
+acme -r build\z3.lst src\onbeyond\z3\z3.s
+acme -r build\z4.lst src\onbeyond\z4\z4.s
+acme -r build\z5.lst src\onbeyond\z5\z5.s
+acme -r build\z5u.lst src\onbeyond\z5u\z5u.s
 goto :EOF
 )
 
