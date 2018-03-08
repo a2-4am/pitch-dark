@@ -407,6 +407,22 @@ skipupper
 
 +
 
+                ldy     #quit_e-waitkey
+-               lda     hookquit-1, y
+                sta     waitkey-1, y
+                dey
+                bne     -
+
+                lda     #<waitkey
+                sta     $f6a7
+                lda     #>waitkey
+                sta     $f6a8
+
+                lda     #<quit
+                sta     $f6b6
+                lda     #>quit
+                sta     $f6b7
+
                 ldy     #save_end-saveme
 -               lda     saveme-1, y
                 sta     $2ff, y
@@ -1765,7 +1781,7 @@ readpart        lda     istree
 save_end
 
 hookkbd
-!pseudopc $2b5 {;;-(callback_e-callback1) {
+!pseudopc $2a7 {;;-(callback_e-callback1) {
 callback1
                 ldx     #<callback2
                 lda     #$8d
@@ -1802,8 +1818,22 @@ xrestore
                 !byte   $d2,$c5,$d3,$d4,$cf,$d2,$c5,$8d
 callback_e
 }
+
+hookquit
+!pseudopc $2d9 {;;-(quit_e-waitkey) {
+waitkey
+                lda     $c010
+-               lda     $c000
+                bpl     -
+
+quit            lda     $c081
+                jmp     $faa6
+quit_e
+}
+
 !if verbose_info = 1 {
-         !warn "base=",casemap-(callback_e-callback1)
+        !warn "base=",casemap-((quit_e-waitkey)+(callback_e-callback1))
+        !warn "quit=",casemap-(quit_e-waitkey)
 }
 
 unpack ;unpacker entrypoint
