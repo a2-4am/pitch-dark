@@ -25,13 +25,13 @@ clean:
 	rm -rf build/
 
 asm: md
-	$(ACME) src/grue.system.s
-	$(ACME) src/pitchdark.a
-	$(ACME) src/onbeyond/onbeyond.system.s
-	$(ACME) src/onbeyond/z3/z3.s
-	$(ACME) src/onbeyond/z4/z4.s
-	$(ACME) src/onbeyond/z5/z5.s
-	$(ACME) src/onbeyond/z5u/z5u.s
+	$(ACME) -r build/grue.system.lst src/grue.system.s
+	$(ACME) -r build/pitchdark.lst src/pitchdark.a
+	$(ACME) -r build/onbeyond.system.lst src/onbeyond/onbeyond.system.s
+	$(ACME) -r build/z3.lst src/onbeyond/z3/z3.s
+	$(ACME) -r build/z4.lst src/onbeyond/z4/z4.s
+	$(ACME) -r build/z5.lst src/onbeyond/z5/z5.s
+	$(ACME) -r build/z5u.lst src/onbeyond/z5u/z5u.s
 
 dsk: md asm
 	cp res/"Pitch Dark.master games collection.do.not.edit.2mg" build/"$(DISK)"
