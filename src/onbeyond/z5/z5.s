@@ -40,7 +40,7 @@ tmp	=	$8
                                         ;seeking with aligned_read=1 requires non-zero offset
                 check_chksum = 0        ;set to 1 to enforce checksum verification for floppies
                 allow_subdir = 0        ;set to 1 to allow opening subdirectories to access files
-                might_exist  = 0        ;set to 1 if file is not known to always exist already
+                might_exist  = 1        ;set to 1 if file is not known to always exist already
                                         ;makes use of status to indicate success or failure
                 allow_aux    = 0        ;set to 1 to allow read/write directly to/from aux memory
                                         ;requires load_high to be set for arbitrary memory access
@@ -406,7 +406,6 @@ skipupper
                 sta     $915
 
 +
-
                 ldy     #quit_e-waitkey
 -               lda     hookquit-1, y
                 sta     waitkey-1, y
@@ -447,7 +446,17 @@ skipupper
                 sta     hddsavetreelo
                 lda     hddgametreehi
                 sta     hddsavetreehi
-                dec     $2006
+
+                ;disable save if no .sav file exists
+
+                lda     status
+                beq     +
+                lda     #$38 ;sec
+                sta     $300
+                lda     #$60 ;rts
+                sta     $301
+
++               dec     $2006
                 ldy     $2006
                 lda     #'5'
                 sta     $2006,y
@@ -481,11 +490,27 @@ brand           jsr     $db5b
                 lda     #>brandtext
                 ldx     #<brandtext
                 ldy     #(brandtext_e-brandtext)
-                jmp     $db5b
+                jsr     $db5b
+                lda     $300
+                cmp     #$38
+                bne     +
+                dec     $25
+                lda     #0
+                sta     $24
+                sta     $57b
+                jsr     $8a9
+                lda     #>nosave
+                ldx     #<nosave
+                ldy     #(nosave_e-nosave)
+                jsr     $db5b
++               rts
 
 brandtext       !text   "On Beyond Z-Machine! revision "
                 +version
 brandtext_e
+
+nosave          !text   "No .sav file, saving disabled"
+nosave_e
 
 !if load_aux = 1 {
                 sta     CLRAUXWR + (load_banked * 4) ;CLRAUXWR or CLRAUXZP
@@ -514,6 +539,12 @@ hddreaddir1
                 ;include volume directory header in count
 
 hddreaddir
+  !if might_exist = 1 {
+                ldx     hdddirbuf + FILE_COUNT ;assuming only 256 files per subdirectory
+                inx
+                stx     entries
+  } ;might_exist
+
 hddfirstent     lda     #NAME_LENGTH
                 sta     bloklo
                 lda     #>(hdddirbuf - 1)
@@ -523,7 +554,16 @@ hddfirstent     lda     #NAME_LENGTH
 
 hddnextent1     inc     blokhi
 hddnextent      ldy     #0
-  !if allow_trees = 1 {
+  !if (might_exist + allow_trees) > 0 {
+                lda     (bloklo), y
+    !if might_exist = 1 {
+                sty     status
+
+                ;skip deleted entries without counting
+
+                and     #MASK_ALL
+                beq     +
+    } ;might_exist
                 lda     (bloklo), y
 
                 ;remember type
@@ -538,7 +578,7 @@ hddnextent      ldy     #0
                 sta     adrhi
                 bit     adrhi
                 php
-  } ;allow_trees
+  } ;might_exist or allow_trees
 
                 ;match name lengths before attempting to match names
 
@@ -549,11 +589,19 @@ hddnextent      ldy     #0
 -               cmp     $2006, y
                 beq     hddfoundname
 
+                ;match failed, check if any directory entries remain
+
   !if allow_trees = 1 {
                 plp
   } ;allow_trees
+  !if might_exist = 1 {
+                dec     entries
+                bne     +
+                inc     status
+                rts
+  } ;might_exist
 
-                ;match failed, move to next directory in this block, if possible
+                ;move to next directory in this block, if possible
 
 +               clc
                 lda     bloklo
