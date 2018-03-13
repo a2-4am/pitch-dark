@@ -369,8 +369,10 @@ slot            lda     $cfff
                 bne     okay80
 
 skip80
-                lda     #$2c
-                sta     call80
+                lda     #$93
+                sta     call80+1
+                lda     #$fe
+                sta     call80+2
                 lda     #$df
                 sta     inversemask+1
                 lda     #7

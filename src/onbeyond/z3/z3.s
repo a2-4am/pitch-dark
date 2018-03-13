@@ -117,6 +117,7 @@ op_c7
         stx     $302        ;no load
 +
 
+        jsr     $fe93
         ldx     $300
         cpx     #$ce
         beq     skip80
