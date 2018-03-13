@@ -138,7 +138,8 @@ okay80
         inc     $17ba
         bne     ++
 +
-        inc     $17b6
+        lda     #0
+        sta     $1267
 ++
         lda     $303
         beq     +
