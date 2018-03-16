@@ -10,7 +10,7 @@
                 ;user-defined options
                 verbose_info = 0        ;set to 1 to enable display of memory usage
 
-gamename=$306
+gamename=$307
 savename=$350
 scrpname=$390
 
@@ -99,7 +99,8 @@ op_c7
         dey
         bne     -
 
-        lda     $305
+        lda     $306
+        eor     $305
         eor     $304
         eor     $303
         eor     $302

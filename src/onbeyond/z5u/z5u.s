@@ -327,7 +327,8 @@ slot            lda     $cfff
                 iny
                 bne     -
 
-                lda     $305
+                lda     $306
+                eor     $305
                 eor     $304
                 eor     $303
                 eor     $302
@@ -340,6 +341,7 @@ slot            lda     $cfff
                 sta     $300	;80-cols
                 ldx     #1
                 stx     $301	;lowercase
+                stx     $305	;warn about missing .sav
                 dex
                 dex
                 stx     $302	;no load
@@ -461,11 +463,29 @@ brand           jsr     $db53
                 lda     #>brandtext
                 ldx     #<brandtext
                 ldy     #(brandtext_e-brandtext)
-                jmp     $db53
+                jsr     $db53
+                lda     $305
+                beq     +
+                lda     $300
+                cmp     #$38
+                bne     +
+                dec     $25
+                lda     #0
+                sta     $24
+                sta     $57b
+                jsr     $8a9
+                lda     #>nosave
+                ldx     #<nosave
+                ldy     #(nosave_e-nosave)
+                jsr     $db53
++               rts
 
 brandtext       !text   "On Beyond Z-Machine! revision "
                 +version
 brandtext_e
+
+nosave          !text   "No .sav file, saving disabled"
+nosave_e
 
 !if load_aux = 1 {
                 sta     CLRAUXWR + (load_banked * 4) ;CLRAUXWR or CLRAUXZP
