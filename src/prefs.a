@@ -5,12 +5,30 @@
 ;
 ; Public functions
 ; - LoadGlobalPreferences
+;
+; Public variables
+; - gForce40              byte       0=false, 1=true
+; - gForceUpper           byte       0=false, 1=true
+; - gSort                 byte       0=name, 1=year, 2=genre, 3=difficulty
+; - gCurrentGame          byte       0..kNumberOfGames-1
+; - gVersions[]           array of fixed length records, each 16 bytes
 
 !zone {
+TRUE                      = 1
+FALSE                     = 0
 kDefaultGame              = 29       ; Zork I
-kPrefsRecord              = $0800
-kPrefsLength              = 1
-kPrefsCurrentGame         = kPrefsRecord + 0
+
+; global storage for parsed preference values
+gForce40
+         !byte 0
+gForceUpper
+         !byte 0
+gSort
+         !byte 0
+gCurrentGame
+         !byte 0
+gVersions
+         !fill kNumberOfGames*16,0
 
 ;------------------------------------------------------------------------------
 ; LoadGlobalPreferences
@@ -19,35 +37,50 @@ kPrefsCurrentGame         = kPrefsRecord + 0
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 LoadGlobalPreferences
-         jsr   LoadFile              ; load prefs file at $0800
-         !word .globalPrefsFilename
-         !word kPrefsRecord
-         !word kPrefsLength
-         !word kProDOSFileBuffer
-         bcs   .useDefaults
-         lda   kPrefsCurrentGame
-         cmp   #kNumberOfGames
-         bcs   .useDefaults
-         sta   gCurrentGame
-         rts
-.useDefaults
+; set defaults first in case prefs file is missing or incomplete
+         lda   #FALSE
+         sta   gForce40
+         lda   #FALSE
+         sta   gForceUpper
+         lda   #0
+         sta   gSort
          lda   #kDefaultGame
          sta   gCurrentGame
+
+         bra   .exit
+         ; TODO
+         jsr   LoadFile              ; load prefs file at $2000
+         !word .globalPrefsFilename
+         !word $2000
+         !word $2000
+         !word kProDOSFileBuffer
+         bcs   .exit
+.exit
          rts
 
 SaveGlobalPreferences
-         lda   gCurrentGame
-         sta   kPrefsCurrentGame
-         jsr   SaveFile
-         !word .globalPrefsFilename
-         !byte $06
-         !word $0000
-         !word kPrefsRecord
-         !word kPrefsLength
-         !word kProDOSFileBuffer
+         ; TODO
          rts
 
 .globalPrefsFilename
          !byte 15
          !raw  "PITCH.DARK.CONF"
+
+.globalPrefsKeys
+         !word .force40
+         !word .forceupper
+         !word .sort
+         !word .lastplayed
+.force40
+         !byte 14
+         !raw  "FORCE40COLUMNS"
+.forceupper
+         !byte 14
+         !raw  "FORCEUPPERCASE"
+.sort
+         !byte 4
+         !raw  "SORT"
+.lastplayed
+         !byte 10
+         !raw  "LASTPLAYED"
 }

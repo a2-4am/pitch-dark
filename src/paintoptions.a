@@ -144,7 +144,7 @@ HandleOptionsKey
          dex
          dex
          bpl   -
-         rts
+         jmp   SoftBell
 .foundKey
          lda   .keys+1,x
          ldx   #WGSelectView

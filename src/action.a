@@ -14,6 +14,12 @@
 kGameRootDirectory                   ; length-prefixed pathname of where game subdirectories are stored
          !byte 2
          !raw  "Z/"
+kHintsRootDirectory                  ; length-prefixed pathname of where game subdirectories are stored
+         !byte 5
+         !raw  "PRIZM/"
+kHintsSuffix
+         !byte 3
+         !raw  ".Z5"
 kArtworkRootDirectory                ; length-prefixed pathname of DHGR box art
          !byte 8
          !raw  "ARTWORK/"
@@ -42,8 +48,6 @@ ID_SCROLLDOWN  = $82
          !byte $8A,ID_SCROLLDOWN     ; down arrow
 .endkeys
 
-BELL =         $FF3A
-
 ;------------------------------------------------------------------------------
 ; HandleKey
 ; handle keypress to activate various UI elements
@@ -58,15 +62,12 @@ HandleKey
          dex
          dex
          bpl   -
-         rts
+         jmp   SoftBell
 .foundKey
          lda   .keys+1,x
          bpl   .activateView
-         cmp   #ID_SCROLLUP
-         beq   .handleScrollUp
          cmp   #ID_SCROLLDOWN
          beq   .handleScrollDown
-         rts
 .handleScrollUp
          lda   #$01
          !byte $2C                   ; hide next LDA
@@ -117,8 +118,7 @@ callback_next
 
 callback_versions
          rts
-callback_clues
-         rts
+
 callback_options
          jmp   OptionsDialog
 
@@ -166,22 +166,45 @@ callback_boxart
          sta   $C051
          rts
 .nope
-         jmp   BELL
+         jmp   SoftBell
 }
 
 !zone {
+callback_clues
+         jsr   SaveGlobalPreferences
+         jsr   LoadInterpreter
+         bcs   .nope
+; change prefix to folder of file we want the interpreter to open
+         jsr   ResetPath
+         lda   #<kHintsRootDirectory
+         ldy   #>kHintsRootDirectory
+         jsr   AddToPath
+         jsr   SetPrefix
+         !word gPathname
+; put just the filename at $2006
+         jsr   ResetPath
+         lda   gCurrentGame
+         asl
+         tax
+         lda   GAMES,x
+         ldy   GAMES+1,x
+         jsr   AddToPath             ; hints filename = game filename + hints suffix
+         lda   #<kHintsSuffix
+         ldy   #>kHintsSuffix
+         jsr   AddToPath
+         lda   #<gPathname
+         ldy   #>gPathname
+         jsr   SetStartupPath
+; shutdown WeeGUI and transfer control to interpreter
+         jsr   ExitWeeGUI
+         jmp   $2000
+.nope    sec
+         rts
+
 callback_play
 LaunchInterpreter
          jsr   SaveGlobalPreferences
-         jsr   ResetPath
-         lda   #<.interpreterFilename
-         ldy   #>.interpreterFilename
-         jsr   AddToPath
-         jsr   LoadFile              ; load interpreter at $2000
-         !word gPathname
-         !word $2000
-         !word $2000
-         !word kProDOSFileBuffer
+         jsr   LoadInterpreter
          bcs   .nope
 ; change prefix to folder of file we want the interpreter to open
          jsr   ResetPath
@@ -196,7 +219,7 @@ LaunchInterpreter
          jsr   AddToPath
          jsr   SetPrefix
          !word gPathname
-; put .z3 filename at $2006
+; put just the filename at $2006
          ldy   #0
          lda   addrVersions
          sta   $00
@@ -211,9 +234,20 @@ LaunchInterpreter
          bra   -
 .doneBuildingFilename
          sty   $2006
+; shut down WeeGUI and transfer control to interpreter
          jsr   ExitWeeGUI
          jmp   $2000
-.nope    sec
+
+LoadInterpreter
+         jsr   ResetPath
+         lda   #<.interpreterFilename
+         ldy   #>.interpreterFilename
+         jsr   AddToPath
+         jsr   LoadFile              ; load interpreter at $2000
+         !word gPathname
+         !word $2000
+         !word $2000
+         !word kProDOSFileBuffer
          rts
 .interpreterFilename
          !byte 15

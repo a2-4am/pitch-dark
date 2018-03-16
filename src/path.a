@@ -6,6 +6,7 @@
 ; Public functions
 ; - ResetPath
 ; - AddToPath
+; - SetStartupPath
 ;
 ; Public variables
 ; - gPathname
@@ -32,6 +33,7 @@ ResetPath
 ;        $00/$01 clobbered
 ;        gPathname updated with concatenated length-prefixed string
 ;------------------------------------------------------------------------------
+!zone {
 AddToPath
          sta   $00
          sty   $01
@@ -48,6 +50,31 @@ AddToPath
          bcc   -
          stx   gPathname
          rts
+}
+
+;------------------------------------------------------------------------------
+; SetStartupPath
+; copy a length-prefixed string to $2006 (to pass it as the startup file when
+; launching a .system file)
+;
+; in:    A contains low byte of address of length-prefixed string to append
+;        Y contains high byte of address of length-prefixed string to append
+; out:   all registers and flags clobbered
+;        $00/$01 clobbered
+;------------------------------------------------------------------------------
+!zone {
+SetStartupPath
+         sta   $00
+         sty   $01
+         lda   ($00)
+         tay
+-        lda   ($00),y
+         and   #$7F
+         sta   $2006,y
+         dey
+         bpl   -
+         rts
+}
 
 gPathname
          !fill 65                    ; enough zeroes for any ProDOS pathname

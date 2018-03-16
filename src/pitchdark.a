@@ -16,8 +16,8 @@
          !source "src/prodos.a"
          !source "src/ramdisk.a"
          !source "src/path.a"
-         !source "src/prefs.a"
          !source "src/config.a"
+         !source "src/prefs.a"
          !source "src/action.a"
          !source "src/paintcommon.a"
          !source "src/paint.a"
@@ -69,3 +69,24 @@ ExitWeeGUI
          jsr   WeeGUI
          ldx   #WGExit               ; clean up WeeGUI
          jmp   WeeGUI
+
+WAIT     = $FCA8
+SPEAKER  = $C030
+
+SoftBell
+         php
+         phx
+         pha
+         ldx   #32
+-        lda   #2
+         jsr   WAIT
+         bit   SPEAKER
+         lda   #33
+         jsr   WAIT
+         bit   SPEAKER
+         dex
+         bne   -
+         pla
+         plx
+         plp
+         rts

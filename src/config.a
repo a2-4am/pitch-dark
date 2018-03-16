@@ -16,8 +16,6 @@
 
 !zone {
 kNumberOfGames = 33
-gCurrentGame
-         !byte $FD                   ; set at runtime
 kTextRootDirectory
          !byte 5
          !raw "TEXT/"
