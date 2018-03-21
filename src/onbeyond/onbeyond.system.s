@@ -62,19 +62,21 @@ quit    jsr     $bf00
         bne     quit
 
         ;select interpreter by auxtype
-        ;3, 4, 5, "$55" (special case)
+        ;1, 3, 4, 5, "$55" (special case)
 
         lda     c4_parms+5
+        cmp     #1
+        beq     +
         cmp     #3
         bcc     quit
         cmp     #$55
-        beq     +
+        beq     ++
         cmp     #6
         bcs     quit
-        dec     filename
++       dec     filename
         ora     #$30
         sta     version
-+
+++
 
         ;get volume name
 
