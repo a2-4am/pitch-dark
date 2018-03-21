@@ -28,6 +28,8 @@ asm: md
 	$(ACME) -r build/grue.system.lst src/grue.system.s
 	$(ACME) -r build/pitchdark.lst src/pitchdark.a
 	$(ACME) -r build/onbeyond.system.lst src/onbeyond/onbeyond.system.s
+	$(ACME) -r build/z3.lst src/onbeyond/z1/z1.s
+	$(ACME) -r build/z3.lst src/onbeyond/z2/z2.s
 	$(ACME) -r build/z3.lst src/onbeyond/z3/z3.s
 	$(ACME) -r build/z4.lst src/onbeyond/z4/z4.s
 	$(ACME) -r build/z5.lst src/onbeyond/z5/z5.s
@@ -43,6 +45,8 @@ dsk: md asm
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "res/PITCH.DARK.CONF"
 	$(CADIUS) CREATEFOLDER build/"$(DISK)" "/PITCH.DARK/LIB/"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/WEEGUI"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ1"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ2"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ3"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ4"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ5"

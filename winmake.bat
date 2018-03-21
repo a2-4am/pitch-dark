@@ -13,6 +13,7 @@ acme -r build\grue.system.lst src\grue.system.s
 acme -r build\pitchdark.lst src\pitchdark.a
 acme -r build\onbeyond.system.lst src\onbeyond\onbeyond.system.s
 acme -r build\z1.lst src\onbeyond\z1\z1.s
+acme -r build\z2.lst src\onbeyond\z2\z2.s
 acme -r build\z3.lst src\onbeyond\z3\z3.s
 acme -r build\z4.lst src\onbeyond\z4\z4.s
 acme -r build\z5.lst src\onbeyond\z5\z5.s
@@ -34,6 +35,7 @@ cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\ONBEYOND.SYSTEM"
 cadius CREATEFOLDER "build\%DISK%" "/PITCH.DARK/LIB/"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\WEEGUI"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ1"
+cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ2"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ3"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ4"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ5"
