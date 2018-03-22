@@ -27,13 +27,13 @@ if "%1" equ "dsk" (
 :dsk
 call :asm
 1>nul copy /y res\"Pitch Dark.master games collection.do.not.edit.2mg" "build\%DISK%"
-1>nul copy /y res\WEEGUI build\
 1>nul copy /y res\_FileInformation.txt build\
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\GRUE.SYSTEM"
-cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\PITCH.DARK"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\ONBEYOND.SYSTEM"
+cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\PITCH.DARK"
+cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "res\PITCH.DARK.CONF"
 cadius CREATEFOLDER "build\%DISK%" "/PITCH.DARK/LIB/"
-cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\WEEGUI"
+cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "res\WEEGUI"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ1"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ2"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ3"
@@ -62,6 +62,7 @@ call :dsk
 1>nul xcopy /q /y /i res\artwork build\artwork
 cd build
 cadius ADDFOLDER "%DISK%" "/PITCH.DARK/ARTWORK" artwork
+cadius ADDFILE "build\%DISK%" "/PITCH.DARK/ARTWORK/" "res\DHRSLIDE.SYSTEM"
 cd ..
 if not "%1" equ "" set DISK=
 goto :EOF
