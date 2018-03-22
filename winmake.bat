@@ -49,9 +49,7 @@ call :dsk
 :txt
 2>nul md build\text
 cscript /nologo //e:jscript %~f0
-cd build
-cadius ADDFOLDER "%DISK%" "/PITCH.DARK/TEXT" text
-cd ..
+cd build & cadius ADDFOLDER "%DISK%" "/PITCH.DARK/TEXT" text & cd ..
 if not "%1" equ "" set DISK=
 goto :EOF
 )
@@ -60,10 +58,8 @@ if "%1" equ "artwork" (
 call :dsk
 :artwork
 1>nul xcopy /q /y /i res\artwork build\artwork
-cd build
-cadius ADDFOLDER "%DISK%" "/PITCH.DARK/ARTWORK" artwork
+cd build & cadius ADDFOLDER "%DISK%" "/PITCH.DARK/ARTWORK" artwork & cd ..
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/ARTWORK/" "res\DHRSLIDE.SYSTEM"
-cd ..
 if not "%1" equ "" set DISK=
 goto :EOF
 )
