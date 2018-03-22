@@ -28,8 +28,8 @@ asm: md
 	$(ACME) -r build/grue.system.lst src/grue.system.s
 	$(ACME) -r build/pitchdark.lst src/pitchdark.a
 	$(ACME) -r build/onbeyond.system.lst src/onbeyond/onbeyond.system.s
-	$(ACME) -r build/z3.lst src/onbeyond/z1/z1.s
-	$(ACME) -r build/z3.lst src/onbeyond/z2/z2.s
+	$(ACME) -r build/z1.lst src/onbeyond/z1/z1.s
+	$(ACME) -r build/z2.lst src/onbeyond/z2/z2.s
 	$(ACME) -r build/z3.lst src/onbeyond/z3/z3.s
 	$(ACME) -r build/z4.lst src/onbeyond/z4/z4.s
 	$(ACME) -r build/z5.lst src/onbeyond/z5/z5.s

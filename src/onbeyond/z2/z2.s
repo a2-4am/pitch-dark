@@ -2,7 +2,7 @@
 ;(c) 2017-2018 by qkumba
 
 !cpu 6502
-!to "build/ONBEYONDZ2#063000",plain
+!to "build/ONBEYONDZ2",plain
 *=$3000
 
 !macro version {!scrxor $80, "1/180221"}
