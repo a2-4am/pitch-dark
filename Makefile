@@ -37,14 +37,13 @@ asm: md
 
 dsk: md asm
 	cp res/"Pitch Dark.master games collection.do.not.edit.2mg" build/"$(DISK)"
-	cp res/WEEGUI build/
 	cp res/_FileInformation.txt build/
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/GRUE.SYSTEM"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/ONBEYOND.SYSTEM"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/PITCH.DARK"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "res/PITCH.DARK.CONF"
 	$(CADIUS) CREATEFOLDER build/"$(DISK)" "/PITCH.DARK/LIB/"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/WEEGUI"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "res/WEEGUI"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ1"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ2"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ3"
@@ -60,6 +59,7 @@ txt: dsk
 artwork: dsk
 	rsync -a res/artwork build/
 	cd build && $(CADIUS) ADDFOLDER "$(DISK)" "/PITCH.DARK/ARTWORK" artwork
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/ARTWORK/" "res/DHRSLIDE.SYSTEM"
 
 mount: dsk
 	osascript bin/V2Make.scpt "`pwd`" bin/pitchdark.vii build/"$(DISK)"

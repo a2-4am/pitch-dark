@@ -44,8 +44,17 @@ kArtworkRootDirectory                ; length-prefixed pathname of DHGR box art
 ; IDs of actions that do not correspond to WeeGUI view IDs have high bit set
 ID_SCROLLUP    = $81
 ID_SCROLLDOWN  = $82
+ID_X           = $83
+ID_Y           = $84
+ID_Z           = $85
          !byte $8B,ID_SCROLLUP       ; up arrow
          !byte $8A,ID_SCROLLDOWN     ; down arrow
+         !byte $D8,ID_X              ; X
+         !byte $F8,ID_X              ; x
+         !byte $D9,ID_Y              ; Y
+         !byte $F9,ID_Y              ; y
+         !byte $DA,ID_Z              ; Z
+         !byte $FA,ID_Z              ; z
 .endkeys
 
 ;------------------------------------------------------------------------------
@@ -66,6 +75,12 @@ HandleKey
 .foundKey
          lda   .keys+1,x
          bpl   .activateView
+         cmp   #ID_X
+         beq   .x
+         cmp   #ID_Y
+         beq   .y
+         cmp   #ID_Z
+         beq   .z
          cmp   #ID_SCROLLDOWN
          beq   .handleScrollDown
 .handleScrollUp
@@ -92,6 +107,64 @@ HandleKey
          jsr   WeeGUI
          ldx   #WGViewUnfocus
          jmp   WeeGUI
+.y
+         lda   .xyzzy
+         cmp   #1
+         beq   .y1
+         cmp   #4
+         bne   .xyzzyReset
+         beq   .xyzzyGo
+.z
+         lda   .xyzzy
+         cmp   #2
+         beq   .z1
+         cmp   #3
+         beq   .z2
+         bra   .xyzzyReset
+.x
+         lda   #1
+         !byte $2C
+.y1
+         lda   #2
+         !byte $2C
+.z1
+         lda   #3
+         !byte $2C
+.z2
+         lda   #4
+         !byte $2C
+.xyzzyReset
+         lda   #0
+.xyzzyStoreAndExit
+         sta   .xyzzy
+         jmp   SoftBell
+.xyzzy
+         !byte $00
+.xyzzyGo
+         ldx   #WGClearScreen
+         jsr   WeeGUI
+         jsr   SaveGlobalPreferences
+         jsr   ResetPath
+         lda   #<kArtworkRootDirectory
+         ldy   #>kArtworkRootDirectory
+         jsr   AddToPath
+         jsr   SetPrefix
+         !word gPathname
+         jsr   ResetPath
+         lda   #<.dhrslideFilename
+         ldy   #>.dhrslideFilename
+         jsr   AddToPath
+         jsr   LoadFile
+         !word gPathname
+         !word $2000
+         !word $2000
+         !word kProDOSFileBuffer
+         jsr   ExitWeeGUI
+         jmp   $2000
+.dhrslideFilename
+         !byte 15
+         !raw  "DHRSLIDE.SYSTEM"
+
 }
 
 ;------------------------------------------------------------------------------
