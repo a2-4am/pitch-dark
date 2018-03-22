@@ -57,8 +57,7 @@ txt: dsk
 	cd build && $(CADIUS) ADDFOLDER "$(DISK)" "/PITCH.DARK/TEXT" text
 
 artwork: dsk
-	rsync -a res/artwork build/
-	cd build && $(CADIUS) ADDFOLDER "$(DISK)" "/PITCH.DARK/ARTWORK" artwork
+	$(CADIUS) ADDFOLDER build/"$(DISK)" "/PITCH.DARK/ARTWORK" "res/artwork"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/ARTWORK/" "res/DHRSLIDE.SYSTEM"
 
 mount: dsk
