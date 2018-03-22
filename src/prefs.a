@@ -16,7 +16,7 @@
 !zone {
 TRUE                      = 1
 FALSE                     = 0
-kDefaultGame              = 29       ; Zork I
+kDefaultGame              = 30       ; Zork I
 
 ; global storage for parsed preference values
 gForce40

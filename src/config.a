@@ -15,11 +15,12 @@
 ;
 
 !zone {
-kNumberOfGames = 33
+kNumberOfGames = 34
 kTextRootDirectory
          !byte 5
          !raw "TEXT/"
 GAMES                                ; length of this array must = kNumberOfGames, there is no range checking
+         !word .adventure
          !word .amfv
          !word .ballyhoo
          !word .beyondzork
@@ -55,6 +56,9 @@ GAMES                                ; length of this array must = kNumberOfGame
          !word .ztuu
 
 ; length-prefixed names of each subdirectory in game directory, 1 per game
+.adventure
+         !byte 9
+         !raw  "ADVENTURE"
 .amfv
          !byte 4
          !raw  "AMFV"
