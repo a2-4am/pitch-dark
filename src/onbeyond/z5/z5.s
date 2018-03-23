@@ -437,7 +437,12 @@ skipupper
                 lda     #>brand
                 sta     $ddb7
 
+                ;skip suffix handling if not present
+
                 ldy     $2006
+                lda     $2006-2,y
+                cmp     '.'
+                bne     ++
                 inc     $2006
                 lda     #'V'
                 sta     $2006+1,y
@@ -466,7 +471,7 @@ skipupper
                 sta     $2006,y
                 lda     #'Z'
                 sta     $2006-1,y
-                jsr     hddopendir
+++              jsr     hddopendir
                 jmp     entry
 
 call80          jsr     $c300
