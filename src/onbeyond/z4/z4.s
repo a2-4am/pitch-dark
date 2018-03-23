@@ -402,8 +402,7 @@ skipupper
                 dey
                 bne     -
                 txa
-                clc
-                adc     #$af
+                ora     #$b0
                 sta     callback3+1
                 lda     $da86
                 sta     loadcall1+1
@@ -434,6 +433,12 @@ skipupper
                 ldy     #save_end-saveme
 -               lda     saveme-1, y
                 sta     $2ff, y
+                dey
+                bne     -
+
+                ldy     #slot_end-saveslot
+-               lda     saveslot-1, y
+                sta     $d7e6, y
                 dey
                 bne     -
 
@@ -484,6 +489,16 @@ call80          jsr     $c300
                 lda     #>casemap
                 sta     $37
                 rts
+
+saveslot        lda     #'P'
+                sta     $50
+                lda     #'D'
+                sta     $51
+                lda     $e3
+                ora     #$30
+                sta     $52
+                rts
+slot_end
 
 brand           jsr     $dbda
                 lda     #$da
@@ -543,9 +558,7 @@ hddreaddir1
   } else { ;ver_02 = 0
                 stz     adrlo
   } ;ver_02
-                ldy     #>hdddirbuf
-                sty     adrhi
-                jsr     hddseekrd
+                jsr     hddreaddirsec
 
                 ;include volume directory header in count
 
@@ -626,7 +639,12 @@ hddnextent      ldy     #0
 
                 ldx     hdddirbuf + NEXT_BLOCK_LO
                 lda     hdddirbuf + NEXT_BLOCK_HI
+!if might_exist = 1 {
+                jsr     hddreaddirsec
+                bcc     hddfirstent
+} else { ;might_exist
                 bcs     hddreaddir1
+} ;might_exist
 
 hddfoundname    iny
                 lda     (bloklo), y
@@ -1527,16 +1545,16 @@ hddreaddirsel
                 asl     reqcmd
                 lsr     reqcmd
   } ;allow_multi
+} ;rwts_mode
 
 hddreaddirsec
-  !if allow_trees = 0 {
+!if allow_trees = 0 {
 hddreaddirsect  ldy     #>hdddirbuf
-  } else { ;allow_trees = 1
+} else { ;allow_trees = 1
                 ldy     #>hdddirbuf
 hddreaddirsect
-  } ;allow_trees
+} ;allow_trees
                 sty     adrhi
-} ;rwts_mode
 hddseekrd       ldy     #cmdread
 !if (aligned_read + enable_write) > 1 {
 hddseekrdwr     sty     command
