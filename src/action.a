@@ -17,9 +17,6 @@ kGameRootDirectory                   ; length-prefixed pathname of where game su
 kHintsRootDirectory                  ; length-prefixed pathname of where game subdirectories are stored
          !byte 5
          !raw  "PRIZM/"
-kHintsSuffix
-         !byte 3
-         !raw  ".Z5"
 kArtworkRootDirectory                ; length-prefixed pathname of DHGR box art
          !byte 8
          !raw  "ARTWORK/"
@@ -255,18 +252,11 @@ callback_clues
          jsr   SetPrefix
          !word gPathname
 ; put just the filename at $2006
-         jsr   ResetPath
          lda   gCurrentGame
          asl
          tax
          lda   GAMES,x
          ldy   GAMES+1,x
-         jsr   AddToPath             ; hints filename = game filename + hints suffix
-         lda   #<kHintsSuffix
-         ldy   #>kHintsSuffix
-         jsr   AddToPath
-         lda   #<gPathname
-         ldy   #>gPathname
          jsr   SetStartupPath
 ; shutdown WeeGUI and transfer control to interpreter
          jsr   ExitWeeGUI
