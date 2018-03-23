@@ -134,6 +134,7 @@ HandleKey
          lda   #0
 .xyzzyStoreAndExit
          sta   .xyzzy
+.nope
          jmp   SoftBell
 .xyzzy
          !byte $00
@@ -147,6 +148,7 @@ HandleKey
          jsr   AddToPath
          jsr   SetPrefix
          !word gPathname
+         bcs   .nope
          jsr   ResetPath
          lda   #<.dhrslideFilename
          ldy   #>.dhrslideFilename
@@ -156,6 +158,7 @@ HandleKey
          !word $2000
          !word $2000
          !word kProDOSFileBuffer
+         bcs   .nope
          jsr   ExitWeeGUI
          jmp   $2000
 .dhrslideFilename
@@ -261,8 +264,7 @@ callback_clues
 ; shutdown WeeGUI and transfer control to interpreter
          jsr   ExitWeeGUI
          jmp   $2000
-.nope    sec
-         rts
+.nope    jmp   SoftBell
 
 callback_play
 LaunchInterpreter
