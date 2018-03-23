@@ -369,7 +369,7 @@ c0_parms
         !word    savename
         !byte    %11000011
         !byte    04
-        !word    0
+        !word    $30
 cc_parms
         !byte    1
         !word    0
