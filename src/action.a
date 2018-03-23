@@ -134,7 +134,6 @@ HandleKey
          lda   #0
 .xyzzyStoreAndExit
          sta   .xyzzy
-.nope
          jmp   SoftBell
 .xyzzy
          !byte $00
@@ -148,19 +147,21 @@ HandleKey
          jsr   AddToPath
          jsr   SetPrefix
          !word gPathname
-         bcs   .nope
+         bcs   .xyzzyError
          jsr   ResetPath
          lda   #<.dhrslideFilename
          ldy   #>.dhrslideFilename
          jsr   AddToPath
          jsr   LoadFile
          !word gPathname
-         !word $2000
+         !word kSystemAddress
          !word $2000
          !word kProDOSFileBuffer
-         bcs   .nope
+         bcs   .xyzzyError
          jsr   ExitWeeGUI
-         jmp   $2000
+         jmp   kSystemAddress
+.xyzzyError
+         jmp   MainScreen
 .dhrslideFilename
          !byte 15
          !raw  "DHRSLIDE.SYSTEM"
@@ -220,7 +221,7 @@ callback_boxart
 +        jsr   LoadDHRFile           ; load artwork from file
          !word gPathname
          !word kProDOSFileBuffer
-         bcs   .nope
+         bcs   .boxartError
 
          sta   $C000                 ; display double hi-res page 1
          sta   $C00D
@@ -238,7 +239,7 @@ callback_boxart
          sta   $C001                 ; back to text
          sta   $C051
          rts
-.nope
+.boxartError
          jmp   SoftBell
 }
 
@@ -246,7 +247,7 @@ callback_boxart
 callback_clues
          jsr   SaveGlobalPreferences
          jsr   LoadInterpreter
-         bcs   .nope
+         bcs   .cluesError
 ; change prefix to folder of file we want the interpreter to open
          jsr   ResetPath
          lda   #<kHintsRootDirectory
@@ -254,6 +255,7 @@ callback_clues
          jsr   AddToPath
          jsr   SetPrefix
          !word gPathname
+         bcs   .cluesError
 ; put just the filename at $2006
          lda   gCurrentGame
          asl
@@ -263,14 +265,17 @@ callback_clues
          jsr   SetStartupPath
 ; shutdown WeeGUI and transfer control to interpreter
          jsr   ExitWeeGUI
-         jmp   $2000
-.nope    jmp   SoftBell
+         jmp   kSystemAddress
+.cluesError
+         jmp   SoftBell
+}
 
+!zone {
 callback_play
 LaunchInterpreter
          jsr   SaveGlobalPreferences
          jsr   LoadInterpreter
-         bcs   .nope
+         bcs   .playError
 ; change prefix to folder of file we want the interpreter to open
          jsr   ResetPath
          lda   #<kGameRootDirectory
@@ -284,6 +289,7 @@ LaunchInterpreter
          jsr   AddToPath
          jsr   SetPrefix
          !word gPathname
+         bcs   .playError
 ; put just the filename at $2006
          ldy   #0
          lda   addrVersions
@@ -301,7 +307,9 @@ LaunchInterpreter
          sty   $2006
 ; shut down WeeGUI and transfer control to interpreter
          jsr   ExitWeeGUI
-         jmp   $2000
+         jmp   kSystemAddress
+.playError
+         jmp   SoftBell
 
 LoadInterpreter
          jsr   ResetPath
@@ -310,7 +318,7 @@ LoadInterpreter
          jsr   AddToPath
          jsr   LoadFile              ; load interpreter at $2000
          !word gPathname
-         !word $2000
+         !word kSystemAddress
          !word $2000
          !word kProDOSFileBuffer
          rts
