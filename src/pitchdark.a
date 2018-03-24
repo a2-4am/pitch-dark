@@ -13,6 +13,7 @@
 
          !source "src/WeeGUI_MLI.s"
          !source "src/memory.a"
+         !source "src/okvs.a"
          !source "src/prodos.a"
          !source "src/ramdisk.a"
          !source "src/path.a"

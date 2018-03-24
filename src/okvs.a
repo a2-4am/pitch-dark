@@ -1,0 +1,224 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; Ordered key/value store
+;
+; Public functions
+; - okvs_init(address)
+; - okvs_len(address)
+; - okvs_append(address, key, value, max_len)
+; - okvs_update(address, key, value)
+; - okvs_get(address, key)
+; - okvs_iter(address, callback)
+;
+; Used for global preferences, per-game options, and per-game version lists
+;
+; Call init() once. Call it again to reset the store to 0 keys.
+;
+; Keys are maintained in a singly linked list, so most functions are O(n).
+; len() is O(1) though.
+;
+; Key count is stored as a byte, so a store can hold a maximum of 255 keys.
+;
+; Keys and values are length-prefixed strings (Pascal style), so max length
+; of any single key or value is 255 bytes.
+;
+; Keys are case-sensitive.
+;
+; append() has a max_len argument to reserve more space for the value, in case
+; you want to update it later. max_len is the total space to reserve, not the
+; additional space. One exception: max_len can be 0, and it will be treated as
+; length(value) at append time. update() always modifies the value in place.
+; There is no range checking because this is assembly.
+
+; All functions take the starting address of the store's data buffer in
+; memory, so there can be multiple independent stores at one time. append()
+; will happily extend the store's data buffer without limit. There is no
+; overflow protection because this is assembly.
+;
+; There is no sort() function.
+;
+; There is no delete() function.
+;
+; Keys can be duplicated, but get() will always return the one that was
+; append()ed first.
+;
+; Structures:
+;
+; Store
+;   +0 length (byte)
+;   +1 Record
+;   ...Record...
+;   ...Record...
+;
+; Record
+;   +0 next-record pointer (word)
+;   +2 key length
+;   +3 key
+; +K+2 value length (actual length, not max length)
+; +K+3 value
+;  ... filler bytes up to value max length (set at append() time)
+
+!zone {
+PARAM    =     $00
+PTR      =     $02
+SRC      =     $04
+
+;------------------------------------------------------------------------------
+; okvs_init
+;
+; in:    A = store start address [lo]
+;        Y = store start address [hi]
+; out:   $02/$03 clobbered
+;------------------------------------------------------------------------------
+okvs_init
+         sta   PTR
+         sty   PTR+1
+         lda   #0
+         sta   (PTR)                 ; set number of keys
+         rts
+
+;------------------------------------------------------------------------------
+; okvs_len
+;
+; in:    A = store start address [lo]
+;        Y = store start address [hi]
+; out:   A contains number of keys in this store
+;        $02/$03 clobbered
+;------------------------------------------------------------------------------
+okvs_len
+         sta   PTR
+         sty   PTR+1
+         lda   (PTR)
+         rts
+
+;------------------------------------------------------------------------------
+; okvs_append
+;
+; in:    A = store start address [lo]
+;        Y = store start address [hi]
+;        stack contains 5 bytes of parameters:
+;          +1 [word] address of key
+;          +3 [word] address of value
+;          +5 [byte] maximum length of value (or 0 to fit)
+; out:   all registers clobbered
+;        $00/$01 clobbered
+;        $02/$03 clobbered
+;------------------------------------------------------------------------------
+okvs_append
+         sta   PTR
+         sty   PTR+1
+
+         pla                         ; get parameters address and update stack
+         sta   PARAM
+         plx
+         stx   PARAM+1
+         lda   #$05
+         clc
+         adc   PARAM
+         bcc   +
+         inx
++        phx
+         pha
+
+         lda   (PTR)                 ; increment number of keys
+         inc
+         sta   (PTR)
+         tax
+         jsr   incptr                ; PTR -> first record
+-        dex
+         beq   +
+         jsr   followptr             ; PTR -> next record
+         bra   -
++                                    ; PTR -> start of new record
+         lda   PTR                   ; save PTR on stack
+         pha
+         lda   PTR+1
+         pha
+         jsr   incptr
+         jsr   incptr                ; PTR -> start of new key
+         ldy   #1
+         lda   (PARAM),y             ; get source address of new key to copy
+         sta   SRC
+         iny
+         lda   (PARAM),y
+         sta   SRC+1
+         lda   (SRC)
+         inc
+         sta   .keylen
+         tay
+-        dey                         ; copy key
+         lda   (SRC),y
+         sta   (PTR),y
+         cpy   #$FF
+         bne   -
+
+         lda   PTR                   ; update PTR to byte after copied key
+         clc
+.keylen=*+1
+         adc   #$FD                  ; set at runtime
+         sta   PTR
+         bcc   +
+         inc   PTR+1
++                                    ; PTR -> start of new value
+         ldy   #3
+         lda   (PARAM),y             ; get source address of new value
+         sta   SRC
+         iny
+         lda   (PARAM),y
+         sta   SRC+1
+         iny
+         lda   (PARAM),y             ; get max length of value
+         bne   +
+         lda   (SRC)                 ; no max, use actual length instead
+         inc
++        sta   .valuelen
+         tay
+-        dey
+         lda   (SRC),y
+         sta   (PTR),y
+         cpy   #$FF
+         bne   -
+
+         lda   PTR
+         clc
+.valuelen=*+1
+         adc   #$FD                  ; set at runtime
+         sta   SRC
+         bcc   +
+         inc   PTR+1
++        lda   PTR+1
+         sta   SRC+1                 ; SRC -> byte after this record
+         pla
+         sta   PTR+1
+         pla
+         sta   PTR                   ; PTR -> start of this record
+         lda   SRC                   ; update next-record pointer
+         sta   (PTR)
+         ldy   #1
+         lda   SRC+1
+         sta   (PTR),y
+         rts
+
+incptr
+; preserves all registers
+         phx
+         ldx   PTR
+         inx
+         stx   PTR
+         bne   +
+         inc   PTR+1
++        plx
+         rts
+
+followptr
+; preserves X
+         lda   (PTR)
+         pha
+         ldy   #1
+         lda   (PTR),y
+         sta   PTR+1
+         pla
+         sta   PTR
+         rts
+}

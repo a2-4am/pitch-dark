@@ -47,6 +47,31 @@ LoadGlobalPreferences
          lda   #kDefaultGame
          sta   gCurrentGame
 
+         lda   #<kGlobalPrefsStore
+         ldy   #>kGlobalPrefsStore
+         jsr   okvs_init
+
+         lda   #<kGlobalPrefsStore
+         ldy   #>kGlobalPrefsStore
+         jsr   okvs_append
+         !word .force40
+         !word .debug0
+         !byte 0
+
+         lda   #<kGlobalPrefsStore
+         ldy   #>kGlobalPrefsStore
+         jsr   okvs_append
+         !word .forceupper
+         !word .debug0
+         !byte 0
+
+         lda   #<kGlobalPrefsStore
+         ldy   #>kGlobalPrefsStore
+         jsr   okvs_append
+         !word .sort
+         !word .debugsortvalue
+         !byte 0
+
          bra   .exit
          ; TODO
          jsr   LoadFile              ; load prefs file at $2000
@@ -66,11 +91,6 @@ SaveGlobalPreferences
          !byte 15
          !raw  "PITCH.DARK.CONF"
 
-.globalPrefsKeys
-         !word .force40
-         !word .forceupper
-         !word .sort
-         !word .lastplayed
 .force40
          !byte 14
          !raw  "FORCE40COLUMNS"
@@ -83,4 +103,13 @@ SaveGlobalPreferences
 .lastplayed
          !byte 10
          !raw  "LASTPLAYED"
+
+.debug0
+         !byte 1
+         !raw  "0"
+
+.debugsortvalue
+         !byte 4
+         !raw  "NAME"
+
 }

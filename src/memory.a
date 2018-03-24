@@ -9,3 +9,5 @@
 kProDOSFileBuffer         = $1C00
 kSystemAddress            = $2000
 WGInit                    = $4000
+kGlobalPrefsStore         = $8000
+
