@@ -52,29 +52,19 @@ PRODOSMLI =    $BF00      ; [callable] MLI entry point
 ;-------------------------------
 !zone {
 LoadFile
-         pla
-         sta   $00
-         plx
-         stx   $01
-         lda   #$08
-         clc
-         adc   $00
-         bcc   +
-         inx
-+        phx
-         pha
+         +PARAMS_ON_STACK 8
 
          ldy   #$01
-         lda   ($00),y    ; lo byte of pathname
+         lda   (PARAM),y    ; lo byte of pathname
          sta   mliparam+1
          iny
-         lda   ($00),y    ; hi byte of pathname
+         lda   (PARAM),y    ; hi byte of pathname
          sta   mliparam+2
          ldy   #$07
-         lda   ($00),y    ; lo byte of ProDOS file buffer
+         lda   (PARAM),y    ; lo byte of ProDOS file buffer
          sta   mliparam+3
          iny
-         lda   ($00),y    ; hi byte of ProDOS file buffer
+         lda   (PARAM),y    ; hi byte of ProDOS file buffer
          sta   mliparam+4
 
          jsr   _openfile
@@ -82,16 +72,16 @@ LoadFile
 
          pha              ; push file reference number
          ldy   #$03
-         lda   ($00),y    ; lo address of data buffer
+         lda   (PARAM),y    ; lo address of data buffer
          sta   mliparam+2
          iny
-         lda   ($00),y    ; hi address of data buffer
+         lda   (PARAM),y    ; hi address of data buffer
          sta   mliparam+3
          iny
-         lda   ($00),y    ; lo data length
+         lda   (PARAM),y    ; lo data length
          sta   mliparam+4
          iny
-         lda   ($00),y    ; hi data length
+         lda   (PARAM),y    ; hi data length
          sta   mliparam+5
          pla              ; pull file reference number
          jsr   _readfile
@@ -126,20 +116,10 @@ LoadFile
 ;-------------------------------
 !zone {
 LoadDHRFile
-         pla
-         sta   $00
-         plx
-         stx   $01
-         lda   #$04
-         clc
-         adc   $00
-         bcc   +
-         inx
-+        phx
-         pha
+         +PARAMS_ON_STACK 4
 
          ldy   #$04
--        lda   ($00),y
+-        lda   (PARAM),y
          sta   mliparam,y
          dey
          bne   -
@@ -207,58 +187,48 @@ LoadDHRFile
 ;-------------------------------
 !zone {
 SaveFile
-         pla
-         sta   $00
-         plx
-         stx   $01
-         lda   #$0B
-         clc
-         adc   $00
-         bcc   +
-         inx
-+        phx
-         pha
+         +PARAMS_ON_STACK $0B
 
          ldy   #$01
-         lda   ($00),y    ; lo byte of pathname
+         lda   (PARAM),y    ; lo byte of pathname
          sta   mliparam+1
          iny
-         lda   ($00),y    ; hi byte of pathname
+         lda   (PARAM),y    ; hi byte of pathname
          sta   mliparam+2
          jsr   _deletefile ; don't care if this fails
          ldy   #$03
-         lda   ($00),y    ; file type
+         lda   (PARAM),y    ; file type
          sta   mliparam+4
          iny
-         lda   ($00),y    ; lo byte of aux file type
+         lda   (PARAM),y    ; lo byte of aux file type
          sta   mliparam+5
          iny
-         lda   ($00),y    ; hi byte of aux file type
+         lda   (PARAM),y    ; hi byte of aux file type
          sta   mliparam+6
          jsr   _createfile
          bcs   .exit
 
          ldy   #$0A
-         lda   ($00),y    ; lo byte of ProDOS file buffer
+         lda   (PARAM),y    ; lo byte of ProDOS file buffer
          sta   mliparam+3
          iny
-         lda   ($00),y    ; hi byte of ProDOS file buffer
+         lda   (PARAM),y    ; hi byte of ProDOS file buffer
          sta   mliparam+4
          jsr   _openfile
          bcs   .exit
 
          pha              ; push file reference number
          ldy   #$06
-         lda   ($00),y    ; lo address of data buffer
+         lda   (PARAM),y    ; lo address of data buffer
          sta   mliparam+2
          iny
-         lda   ($00),y    ; hi address of data buffer
+         lda   (PARAM),y    ; hi address of data buffer
          sta   mliparam+3
          iny
-         lda   ($00),y    ; lo data length
+         lda   (PARAM),y    ; lo data length
          sta   mliparam+4
          iny
-         lda   ($00),y    ; hi data length
+         lda   (PARAM),y    ; hi data length
          sta   mliparam+5
          pla              ; pull file reference number
          jsr   _writefile
@@ -287,23 +257,13 @@ SaveFile
 ;-------------------------------
 !zone {
 SetPrefix
-         pla
-         sta   $00
-         plx
-         stx   $01
-         lda   #$02
-         clc
-         adc   $00
-         bcc   +
-         inx
-+        phx
-         pha
+         +PARAMS_ON_STACK 2
 
          ldy   #$01
-         lda   ($00),y    ; lo byte of pathname
+         lda   (PARAM),y    ; lo byte of pathname
          sta   mliparam+1
          iny
-         lda   ($00),y    ; hi byte of pathname
+         lda   (PARAM),y    ; hi byte of pathname
          sta   mliparam+2
 
          jmp   _setprefix

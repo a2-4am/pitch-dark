@@ -1,0 +1,15 @@
+PARAM    =     $00
+
+!macro   PARAMS_ON_STACK .bytes {
+         pla
+         sta   PARAM
+         plx
+         stx   PARAM+1
+         lda   #.bytes
+         clc
+         adc   PARAM
+         bcc   +
+         inx
++        phx
+         pha
+}

@@ -11,6 +11,7 @@
          !byte 10
          !raw  "LIB/WEEGUI"
 
+         !source "src/macros.a"
          !source "src/WeeGUI_MLI.s"
          !source "src/memory.a"
          !source "src/okvs.a"

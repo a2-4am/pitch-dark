@@ -60,20 +60,22 @@
 ;  ... filler bytes up to value max length (set at append() time)
 
 !zone {
-PARAM    =     $00
 PTR      =     $02
 SRC      =     $04
+DEST     =     $06
 
 ;------------------------------------------------------------------------------
 ; okvs_init
 ;
-; in:    A = store start address [lo]
-;        Y = store start address [hi]
-; out:   $02/$03 clobbered
+; in:    stack contains 2 bytes of parameters:
+;          +1 [word] handle to storage space
+; out:   $00/$01 clobbered
+;        $02/$03 clobbered
+;        all registers clobbered
 ;------------------------------------------------------------------------------
 okvs_init
-         sta   PTR
-         sty   PTR+1
+         +PARAMS_ON_STACK 2
+         jsr   SetPTRFromStackParams
          lda   #0
          sta   (PTR)                 ; set number of keys
          rts
@@ -81,63 +83,50 @@ okvs_init
 ;------------------------------------------------------------------------------
 ; okvs_len
 ;
-; in:    A = store start address [lo]
-;        Y = store start address [hi]
+; in:    stack contains 2 bytes of parameters:
+;          +1 [word] handle to storage space
 ; out:   A contains number of keys in this store
+;        $00/$01 clobbered
 ;        $02/$03 clobbered
 ;------------------------------------------------------------------------------
 okvs_len
-         sta   PTR
-         sty   PTR+1
+         +PARAMS_ON_STACK 2
+         jsr   SetPTRFromStackParams
          lda   (PTR)
          rts
 
 ;------------------------------------------------------------------------------
 ; okvs_append
 ;
-; in:    A = store start address [lo]
-;        Y = store start address [hi]
-;        stack contains 5 bytes of parameters:
-;          +1 [word] address of key
-;          +3 [word] address of value
-;          +5 [byte] maximum length of value (or 0 to fit)
+; in:    stack contains 7 bytes of parameters:
+;          +1 [word] handle to storage space
+;          +3 [word] address of key
+;          +5 [word] address of value
+;          +7 [byte] maximum length of value (or 0 to fit)
 ; out:   all registers clobbered
 ;        $00/$01 clobbered
 ;        $02/$03 clobbered
 ;------------------------------------------------------------------------------
 okvs_append
-         sta   PTR
-         sty   PTR+1
-
-         pla                         ; get parameters address and update stack
-         sta   PARAM
-         plx
-         stx   PARAM+1
-         lda   #$05
-         clc
-         adc   PARAM
-         bcc   +
-         inx
-+        phx
-         pha
-
-         lda   (PTR)                 ; increment number of keys
+         +PARAMS_ON_STACK 7
+         jsr   SetPTRFromStackParams
+         lda   (PTR)
          inc
-         sta   (PTR)
+         sta   (PTR)                 ; increment number of keys
          tax
          jsr   incptr                ; PTR -> first record
 -        dex
          beq   +
-         jsr   followptr             ; PTR -> next record
+         jsr   derefptr              ; PTR -> next record
          bra   -
-+                                    ; PTR -> start of new record
++                                    ; PTR -> new record
          lda   PTR                   ; save PTR on stack
          pha
          lda   PTR+1
          pha
          jsr   incptr
-         jsr   incptr                ; PTR -> start of new key
-         ldy   #1
+         jsr   incptr                ; PTR -> space for new key
+         ldy   #3
          lda   (PARAM),y             ; get source address of new key to copy
          sta   SRC
          iny
@@ -147,7 +136,7 @@ okvs_append
          inc
          sta   .keylen
          tay
--        dey                         ; copy key
+-        dey                         ; copy new key
          lda   (SRC),y
          sta   (PTR),y
          cpy   #$FF
@@ -160,8 +149,8 @@ okvs_append
          sta   PTR
          bcc   +
          inc   PTR+1
-+                                    ; PTR -> start of new value
-         ldy   #3
++                                    ; PTR -> space for new value
+         ldy   #5
          lda   (PARAM),y             ; get source address of new value
          sta   SRC
          iny
@@ -192,12 +181,79 @@ okvs_append
          pla
          sta   PTR+1
          pla
-         sta   PTR                   ; PTR -> start of this record
+         sta   PTR                   ; PTR -> this record again
          lda   SRC                   ; update next-record pointer
          sta   (PTR)
          ldy   #1
          lda   SRC+1
          sta   (PTR),y
+         rts
+
+;------------------------------------------------------------------------------
+; okvs_get
+;
+; in:    stack contains 4 bytes of parameters:
+;          +1 [word] handle to storage space
+;          +3 [word] address of key
+; out:   if C clear, key was found and A/Y = lo/hi address of value
+;        if C set, key was not found and all registers are clobbered
+;        all other flags
+;        $00/$01 clobbered
+;        $02/$03 clobbered
+;        $04/$05 clobbered
+;------------------------------------------------------------------------------
+okvs_get
+         +PARAMS_ON_STACK 4
+         jsr   SetPTRFromStackParams
+         lda   (PTR)
+         beq   .fail                 ; no keys, fail immediately
+         tax                         ; X = number of keys
+         inx
+         jsr   incptr                ; PTR -> first record
+
+         ldy   #3
+         lda   (PARAM),y
+         sta   SRC
+         iny
+         lda   (PARAM),y
+         sta   SRC+1                 ; SRC -> key we want to find
+
+         lda   (SRC)
+         inc
+         sta   .matchlen
+
+.matchRecordLoop
+         lda   PTR+1
+         sta   DEST+1
+         lda   PTR
+         clc
+         adc   #2
+         sta   DEST
+         bcc   +
+         inc   DEST+1                ; DEST -> key of this record
++        ldy   #0
+.matchKeyLoop
+         lda   (SRC),y
+         cmp   (DEST),y
+         bne   .goToNextRecord
+         iny
+.matchlen=*+1
+         cpy   #$FD                  ; set at runtime
+         bne   .matchKeyLoop
+         lda   PTR
+         ldy   PTR+1
+         clc
+         adc   .matchlen
+         sta   PTR
+         bcc   +
+         iny
++        clc
+         rts
+.goToNextRecord
+         jsr   derefptr              ; PTR -> next record
+         dex
+         bne   .matchRecordLoop
+.fail    sec
          rts
 
 incptr
@@ -211,7 +267,15 @@ incptr
 +        plx
          rts
 
-followptr
+SetPTRFromStackParams
+         ldy   #1
+         lda   (PARAM),y
+         sta   PTR
+         iny
+         lda   (PARAM),y
+         sta   PTR+1                 ; PTR -> first parameter on stack
+                                     ; execution falls through here
+derefptr
 ; preserves X
          lda   (PTR)
          pha

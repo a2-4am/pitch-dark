@@ -17,6 +17,8 @@
 TRUE                      = 1
 FALSE                     = 0
 kDefaultGame              = 30       ; Zork I
+gPrefsStore
+         !word $8000                 ; address of storage space for prefs
 
 ; global storage for parsed preference values
 gForce40
@@ -47,30 +49,32 @@ LoadGlobalPreferences
          lda   #kDefaultGame
          sta   gCurrentGame
 
-         lda   #<kGlobalPrefsStore
-         ldy   #>kGlobalPrefsStore
          jsr   okvs_init
+         !word gPrefsStore
 
-         lda   #<kGlobalPrefsStore
-         ldy   #>kGlobalPrefsStore
          jsr   okvs_append
+         !word gPrefsStore
          !word .force40
          !word .debug0
          !byte 0
 
-         lda   #<kGlobalPrefsStore
-         ldy   #>kGlobalPrefsStore
          jsr   okvs_append
+         !word gPrefsStore
          !word .forceupper
          !word .debug0
          !byte 0
 
-         lda   #<kGlobalPrefsStore
-         ldy   #>kGlobalPrefsStore
          jsr   okvs_append
+         !word gPrefsStore
          !word .sort
          !word .debugsortvalue
          !byte 0
+
+         jsr   okvs_get
+         !word gPrefsStore
+         !word .sort
+         bcs   .exit
+         ;jmp   $ff59
 
          bra   .exit
          ; TODO
