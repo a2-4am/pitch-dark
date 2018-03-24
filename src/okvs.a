@@ -9,7 +9,7 @@
 ; - okvs_append(address, key, value, max_len)
 ; - okvs_update(address, key, value)
 ; - okvs_get(address, key)
-; - okvs_iter(address, callback)
+; - [TODO] okvs_iter(address, callback)
 ;
 ; Used for global preferences, per-game options, and per-game version lists
 ;
@@ -63,6 +63,7 @@
 PTR      =     $02
 SRC      =     $04
 DEST     =     $06
+SAVE     =     $08
 
 ;------------------------------------------------------------------------------
 ; okvs_init
@@ -197,7 +198,7 @@ okvs_append
 ;          +3 [word] address of key
 ; out:   if C clear, key was found and A/Y = lo/hi address of value
 ;        if C set, key was not found and all registers are clobbered
-;        all other flags
+;        all other flags clobbered
 ;        $00/$01 clobbered
 ;        $02/$03 clobbered
 ;        $04/$05 clobbered
@@ -244,6 +245,7 @@ okvs_get
          ldy   PTR+1
          clc
          adc   .matchlen
+         adc   #2
          sta   PTR
          bcc   +
          iny
@@ -256,25 +258,73 @@ okvs_get
 .fail    sec
          rts
 
+;------------------------------------------------------------------------------
+; okvs_update
+;
+; in:    stack contains 6 bytes of parameters:
+;          +1 [word] handle to storage space
+;          +3 [word] address of key
+;          +5 [word] address of new value
+; out:   if C clear, key was found and value was updated
+;        if C set, key was not found
+;        all registers are clobbered
+;        all other flags clobbered
+;        $00/$01 clobbered
+;        $02/$03 clobbered
+;        $04/$05 clobbered
+;------------------------------------------------------------------------------
+okvs_update
+         +PARAMS_ON_STACK 6
+         ldy   #6
+         lda   (PARAM),y
+         sta   SAVE+1
+         dey
+         lda   (PARAM),y
+         sta   SAVE
+         dey
+-        lda   (PARAM),y
+         sta   .getparams,y
+         dey
+         bne   -
+         jsr   okvs_get
+.getparams=*-1
+         !word $FDFD                 ; set at runtime
+         !word $FDFD                 ; set at runtime
+         bcs   .exit
+         sta   DEST
+         sty   DEST+1
+         lda   (SAVE)
+         tay
+         iny
+-        lda   (SAVE),y
+         sta   (DEST),y
+         dey
+         cpy   #$FF
+         bne   -
+         clc
+.exit    rts
+
+;------------------------------------------------------------------------------
+; internal functions
+
 incptr
-; preserves all registers
-         phx
-         ldx   PTR
-         inx
-         stx   PTR
+; preserves A and X
+         ldy   PTR
+         iny
+         sty   PTR
          bne   +
          inc   PTR+1
-+        plx
-         rts
++        rts
 
 SetPTRFromStackParams
+; preserves X
          ldy   #1
          lda   (PARAM),y
          sta   PTR
          iny
          lda   (PARAM),y
          sta   PTR+1                 ; PTR -> first parameter on stack
-                                     ; execution falls through here
+; execution falls through here
 derefptr
 ; preserves X
          lda   (PTR)

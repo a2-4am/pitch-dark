@@ -6,9 +6,6 @@
 ; Public functions
 ; - LoadGameInfo
 ;
-; Public variables
-; - gCurrentGame
-;
 ; Public constants
 ; - kNumberOfGames
 ; - GAMES

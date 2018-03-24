@@ -5,32 +5,36 @@
 ;
 ; Public functions
 ; - LoadGlobalPreferences
+; - SaveGlobalPreferences
 ;
 ; Public variables
-; - gForce40              byte       0=false, 1=true
-; - gForceUpper           byte       0=false, 1=true
-; - gSort                 byte       0=name, 1=year, 2=genre, 3=difficulty
 ; - gCurrentGame          byte       0..kNumberOfGames-1
-; - gVersions[]           array of fixed length records, each 16 bytes
+;
+; Public constants
+; - kForce40
+; - kForceUpper
+; - kSort
+; - kLastPlayed
 
 !zone {
-TRUE                      = 1
-FALSE                     = 0
 kDefaultGame              = 30       ; Zork I
-gPrefsStore
-         !word $8000                 ; address of storage space for prefs
 
 ; global storage for parsed preference values
-gForce40
-         !byte 0
-gForceUpper
-         !byte 0
-gSort
-         !byte 0
 gCurrentGame
          !byte 0
-gVersions
-         !fill kNumberOfGames*16,0
+
+kForce40
+         !byte 14
+         !raw  "FORCE40COLUMNS"
+kForceUpper
+         !byte 14
+         !raw  "FORCEUPPERCASE"
+kSort
+         !byte 4
+         !raw  "SORT"
+kLastPlayed
+         !byte 10
+         !raw  "LASTPLAYED"
 
 ;------------------------------------------------------------------------------
 ; LoadGlobalPreferences
@@ -39,13 +43,6 @@ gVersions
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 LoadGlobalPreferences
-; set defaults first in case prefs file is missing or incomplete
-         lda   #FALSE
-         sta   gForce40
-         lda   #FALSE
-         sta   gForceUpper
-         lda   #0
-         sta   gSort
          lda   #kDefaultGame
          sta   gCurrentGame
 
@@ -54,25 +51,32 @@ LoadGlobalPreferences
 
          jsr   okvs_append
          !word gPrefsStore
-         !word .force40
+         !word kForce40
          !word .debug0
          !byte 0
 
          jsr   okvs_append
          !word gPrefsStore
-         !word .forceupper
+         !word kForceUpper
          !word .debug0
          !byte 0
 
          jsr   okvs_append
          !word gPrefsStore
-         !word .sort
+         !word kSort
          !word .debugsortvalue
-         !byte 0
+         !byte 11
 
-         jsr   okvs_get
+         jsr   okvs_append
          !word gPrefsStore
-         !word .sort
+         !word kLastPlayed
+         !word .debuglastplayed
+         !byte 16
+
+         jsr   okvs_update
+         !word gPrefsStore
+         !word kSort
+         !word kByDifficulty
          bcs   .exit
          ;jmp   $ff59
 
@@ -95,19 +99,6 @@ SaveGlobalPreferences
          !byte 15
          !raw  "PITCH.DARK.CONF"
 
-.force40
-         !byte 14
-         !raw  "FORCE40COLUMNS"
-.forceupper
-         !byte 14
-         !raw  "FORCEUPPERCASE"
-.sort
-         !byte 4
-         !raw  "SORT"
-.lastplayed
-         !byte 10
-         !raw  "LASTPLAYED"
-
 .debug0
          !byte 1
          !raw  "0"
@@ -116,4 +107,11 @@ SaveGlobalPreferences
          !byte 4
          !raw  "NAME"
 
+.debuglastplayed
+         !byte 6
+         !raw  "ZORK.I"
+
+kByDifficulty
+         !byte 10
+         !raw  "DIFFICULTY"
 }

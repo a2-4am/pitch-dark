@@ -92,3 +92,6 @@ SoftBell
          plx
          plp
          rts
+
+gPrefsStore
+         !word *+2                 ; address of storage space for prefs
