@@ -3,7 +3,7 @@ A san inc hack               2018-02-21
 ---------------------------------------
 
 A ProDOS port of Infocom's Z-Machine
-interpreter for the 8-bit Apple II.
+interpreters for the 8-bit Apple II.
 
                    ~
 
@@ -52,7 +52,34 @@ interpreter|suffix |filetype|auxtype
     Z5     |  .Z5  |  $F5   | $8005
     Z5U    |  .Z5  |  $F5   | $8055
 
-...TODO explain Z5U
+Astute readers will notice that there
+are two interpreters available for Z5
+files. Z5 was an evolving format while
+Infocom was making games. Years later,
+Graham Nelson et. al. would reverse
+engineer the format and write a real
+specification. Modern authoring tools
+targeted this specification, and modern
+authors created an order of magnitude
+more games with these tools than
+Infocom ever published themselves.
+
+We are left in a peculiar state, where
+Infocom's own Z5 interpreters are "non-
+standard," despite them inventing the
+format in the first place. (To be
+precise, the "standard_interpreter"
+library variable returns 0, which may
+cause some games to complain or even
+refuse to run.)
+
+On Beyond Z-Machine! includes two Z5
+interpreters. The first, labeled "Z5",
+is highly compatible with all classic
+Infocom games and many modern games.
+The second, labeled "Z5U", has better
+compatibility with some modern games
+that use advanced Z-Machine features.
 
                    ~
 
