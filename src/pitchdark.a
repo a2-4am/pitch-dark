@@ -7,24 +7,26 @@
 *=$6000
 
          jmp   Start
-.weeguiFilename
-         !byte 10
-         !raw  "LIB/WEEGUI"
 
          !source "src/macros.a"
+         !source "src/memory.a"
          !source "src/gamelist.a"
          !source "src/WeeGUI_MLI.s"
-         !source "src/memory.a"
          !source "src/okvs.a"
          !source "src/prodos.a"
          !source "src/ramdisk.a"
          !source "src/path.a"
-         !source "src/gameinfoparser.a"
+         !source "src/infoparser.a"
          !source "src/prefs.a"
          !source "src/action.a"
          !source "src/paintcommon.a"
          !source "src/paint.a"
          !source "src/paintoptions.a"
+
+.weeguiFilename
+         !byte 10
+         !raw  "LIB/WEEGUI"
+
 Start
          lda   MACHID
          and   #$30
