@@ -10,14 +10,12 @@
 ; View IDs (application-specific, acceptable range 0..15, no duplicates)
 ; ID_TITLE is defined in paintcommon.a
 ID_OPTIONS_FRAME          = 1
-ID_OPTIONS_NAME           = 2
-ID_OPTIONS_YEAR           = 3
-ID_OPTIONS_GENRE          = 4
-ID_OPTIONS_DIFFICULTY     = 5
-ID_OPTIONS_FORCE40        = 6
-ID_OPTIONS_FORCEUPPER     = 7
-ID_OPTIONS_OK             = 8
-ID_OPTIONS_CANCEL         = 9
+ID_OPTIONS_FORCE40        = 2
+ID_OPTIONS_FORCEUPPER     = 3
+ID_OPTIONS_SCRIPTTOFILE   = 4
+ID_OPTIONS_AUTOSCRIPT     = 5
+ID_OPTIONS_OK             = 6
+ID_OPTIONS_CANCEL         = 7
 
 !zone {
 ;------------------------------------------------------------------------------
@@ -53,21 +51,67 @@ OptionsDialog
          !word .viewOK
          jsr   CreateButton
          !word .viewCancel
-         jsr   CreateRadio
-         !word .viewName
-         ldx   #WGSetState           ; TODO: set the appropriate radio button based on preferences
-         lda   #1
-         jsr   WeeGUI
-         jsr   CreateRadio
-         !word .viewYear
-         jsr   CreateRadio
-         !word .viewGenre
-         jsr   CreateRadio
-         !word .viewDifficulty
          jsr   CreateCheckbox
          !word .viewForce40
          jsr   CreateCheckbox
          !word .viewForceUpper
+         jsr   CreateCheckbox
+         !word .viewScriptToFile
+         jsr   CreateCheckbox
+         !word .viewAutoScript
+                                     ; set initial state of checkboxes based on preferences
+         jsr   okvs_get
+         !word gPrefsStore
+         !word kForce40
+         jsr   okvs_as_boolean
+         beq   +
+         ldx   #WGSelectView
+         lda   #ID_OPTIONS_FORCE40
+         jsr   WeeGUI
+         ldx   #WGSetState
+         lda   #1
+         sta   PARAM0
+         jsr   WeeGUI
++
+         jsr   okvs_get
+         !word gPrefsStore
+         !word kForceUpper
+         jsr   okvs_as_boolean
+         beq   +
+         ldx   #WGSelectView
+         lda   #ID_OPTIONS_FORCEUPPER
+         jsr   WeeGUI
+         ldx   #WGSetState
+         lda   #1
+         sta   PARAM0
+         jsr   WeeGUI
++
+         jsr   okvs_get
+         !word gPrefsStore
+         !word kScriptToFile
+         jsr   okvs_as_boolean
+         beq   +
+         ldx   #WGSelectView
+         lda   #ID_OPTIONS_SCRIPTTOFILE
+         jsr   WeeGUI
+         ldx   #WGSetState
+         lda   #1
+         sta   PARAM0
+         jsr   WeeGUI
++
+         jsr   okvs_get
+         !word gPrefsStore
+         !word kAutoScript
+         jsr   okvs_as_boolean
+         beq   +
+         ldx   #WGSelectView
+         lda   #ID_OPTIONS_AUTOSCRIPT
+         jsr   WeeGUI
+         ldx   #WGSetState
+         lda   #1
+         sta   PARAM0
+         jsr   WeeGUI
++
 
          ldx   #WGDesktop            ; paint background
          jsr   WeeGUI
@@ -82,28 +126,54 @@ OptionsDialog
          jsr   WeeGUI
 
          ldx   #WGSetCursor          ; paint static text labels
-         lda   #2
+         lda   #4
          sta   PARAM0
-         lda   #1
+         lda   #3
          sta   PARAM1
          jsr   WeeGUI
          ldx   #WGPrint
-         lda   #<.stringSortBy
+         lda   #<.stringForce40Description
          sta   PARAM0
-         lda   #>.stringSortBy
+         lda   #>.stringForce40Description
          sta   PARAM1
          jsr   WeeGUI
 
          ldx   #WGSetCursor
-         lda   #2
+         lda   #4
          sta   PARAM0
-         lda   #12
+         lda   #8
          sta   PARAM1
          jsr   WeeGUI
          ldx   #WGPrint
-         lda   #<.stringGameplay
+         lda   #<.stringForceUpperDescription
          sta   PARAM0
-         lda   #>.stringGameplay
+         lda   #>.stringForceUpperDescription
+         sta   PARAM1
+         jsr   WeeGUI
+
+         ldx   #WGSetCursor
+         lda   #4
+         sta   PARAM0
+         lda   #13
+         sta   PARAM1
+         jsr   WeeGUI
+         ldx   #WGPrint
+         lda   #<.stringScriptToFileDescription
+         sta   PARAM0
+         lda   #>.stringScriptToFileDescription
+         sta   PARAM1
+         jsr   WeeGUI
+
+         ldx   #WGSetCursor
+         lda   #4
+         sta   PARAM0
+         lda   #18
+         sta   PARAM1
+         jsr   WeeGUI
+         ldx   #WGPrint
+         lda   #<.stringAutoScriptDescription
+         sta   PARAM0
+         lda   #>.stringAutoScriptDescription
          sta   PARAM1
          jsr   WeeGUI
 
@@ -124,17 +194,13 @@ OptionsDialog
          !byte $C3,ID_OPTIONS_CANCEL ; C
          !byte $E3,ID_OPTIONS_CANCEL ; c
          !byte $9B,ID_OPTIONS_CANCEL ; Esc
-         !byte $CE,ID_OPTIONS_NAME   ; N
-         !byte $EE,ID_OPTIONS_NAME   ; n
-         !byte $D9,ID_OPTIONS_YEAR   ; Y
-         !byte $F9,ID_OPTIONS_YEAR   ; y
-         !byte $C7,ID_OPTIONS_GENRE  ; G
-         !byte $E7,ID_OPTIONS_GENRE  ; g
-         !byte $C4,ID_OPTIONS_DIFFICULTY ; D
-         !byte $E4,ID_OPTIONS_DIFFICULTY ; d
          !byte $B4,ID_OPTIONS_FORCE40    ; 4
          !byte $D5,ID_OPTIONS_FORCEUPPER ; U
          !byte $F5,ID_OPTIONS_FORCEUPPER ; u
+         !byte $C6,ID_OPTIONS_SCRIPTTOFILE ; F
+         !byte $E6,ID_OPTIONS_SCRIPTTOFILE ; f
+         !byte $D3,ID_OPTIONS_AUTOSCRIPT ; S
+         !byte $F3,ID_OPTIONS_AUTOSCRIPT ; s
 .endkeys
 
 HandleOptionsKey
@@ -164,18 +230,18 @@ callback_options_cancel
 .viewFrame
          !byte ID_OPTIONS_FRAME      ; view ID
          !byte 2                     ; style (decorated frame)
-         !byte 22                    ; left
+         !byte 12                    ; left
          !byte 3                     ; top
-         !byte 36                    ; visible width
-         !byte 18                    ; visible height
-         !byte 36                    ; width
-         !byte 18                    ; height
+         !byte 56                    ; visible width
+         !byte 19                    ; visible height
+         !byte 56                    ; width
+         !byte 19                    ; height
 .stringFrame
          !text "Settings",0
 
 .viewOK
          !byte ID_OPTIONS_OK         ; view ID
-         !byte 46                    ; left
+         !byte 56                    ; left
          !byte 4                     ; top
          !byte 10                    ; width
          !word callback_options_ok   ; callback
@@ -186,7 +252,7 @@ callback_options_cancel
 
 .viewCancel
          !byte ID_OPTIONS_CANCEL     ; view ID
-         !byte 46                    ; left
+         !byte 56                    ; left
          !byte 6                     ; top
          !byte 10                    ; width
          !word callback_options_cancel ; callback
@@ -195,69 +261,51 @@ callback_options_cancel
          !byte $03                   ; 'C' inverse
          !text "ancel",0
 
-.viewName
-         !byte ID_OPTIONS_NAME       ; view ID
-         !byte 26                    ; left
-         !byte 6                     ; top
-         !word .stringName
-.stringName
-         !text " "
-         !byte $0E                   ; 'N' inverse
-         !text "ame",0
-
-.viewYear
-         !byte ID_OPTIONS_YEAR       ; view ID
-         !byte 26                    ; left
-         !byte 8                     ; top
-         !word .stringYear
-.stringYear
-         !text " "
-         !byte $19                   ; 'Y' inverse
-         !text "ear",0
-
-.viewGenre
-         !byte ID_OPTIONS_GENRE      ; view ID
-         !byte 26                    ; left
-         !byte 10                    ; top
-         !word .stringGenre
-.stringGenre
-         !text " "
-         !byte $07                   ; 'G' inverse
-         !text "enre",0
-
-.viewDifficulty
-         !byte ID_OPTIONS_DIFFICULTY ; view ID
-         !byte 26                    ; left
-         !byte 12                    ; top
-         !word .stringDifficulty
-.stringDifficulty
-         !text " "
-         !byte $04                   ; 'D' inverse
-         !text "ifficulty",0
-
 .viewForce40
          !byte ID_OPTIONS_FORCE40    ; view ID
-         !byte 26                    ; left
-         !byte 17                    ; top
+         !byte 14                    ; left
+         !byte 4                     ; top
          !word .stringForce40        ; caption
 .stringForce40
          !text "Force "
          !byte $34                   ; '4' inverse
          !text "0 column",0
+.stringForce40Description
+         !text "Some games may be glitchy",0
 
 .viewForceUpper
          !byte ID_OPTIONS_FORCEUPPER ; view ID
-         !byte 26                    ; left
-         !byte 19                    ; top
+         !byte 14                    ; left
+         !byte 9                     ; top
          !word .stringForceUpper     ; caption
 .stringForceUpper
          !text "Force "
          !byte $75                   ; 'u' inverse
          !text "ppercase",0
+.stringForceUpperDescription
+         !text "A MATTER OF PREFERENCE",0
 
-.stringSortBy
-         !raw  "Browse games by",0
+.viewScriptToFile
+         !byte ID_OPTIONS_SCRIPTTOFILE ; view ID
+         !byte 14                    ; left
+         !byte 14                    ; top
+         !word .stringScriptToFile   ; caption
+.stringScriptToFile
+         !text "SCRIPT to "
+         !byte $66                   ; 'f' inverse
+         !text "ile",0
+.stringScriptToFileDescription
+         !text "Save transcripts to a file instead of printer",0
 
-.stringGameplay
-         !raw  "During gameplay:",0
+.viewAutoScript
+         !byte ID_OPTIONS_AUTOSCRIPT ; view ID
+         !byte 14                    ; left
+         !byte 19                    ; top
+         !word .stringAutoScript     ; caption
+.stringAutoScript
+         !text "Always "
+         !byte $13                   ; 'S' inverse
+         !text "CRIPT",0
+.stringAutoScriptDescription
+         !text "Turn on SCRIPT mode automatically",0
 }

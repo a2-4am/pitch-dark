@@ -13,8 +13,10 @@
 ; Public constants
 ; - kForce40
 ; - kForceUpper
-; - kSort
+; - kScriptToFile
+; - kAutoScript
 ; - kLastPlayed
+;
 
 !zone {
 kDefaultGame              = 30       ; Zork I

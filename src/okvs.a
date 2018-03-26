@@ -9,6 +9,7 @@
 ; - okvs_append(address, key, value, max_len)
 ; - okvs_update(address, key, value)
 ; - okvs_get(address, key)
+; - okvs_as_boolean(value)
 ; - [TODO] okvs_iter(address, callback)
 ;
 ; Used for global preferences, per-game options, and per-game version lists
@@ -245,6 +246,9 @@ okvs_get
          ldy   PTR+1
          clc
          adc   .matchlen
+         bcc   +
+         iny
++        clc
          adc   #2
          sta   PTR
          bcc   +
@@ -303,6 +307,28 @@ okvs_update
          bne   -
          clc
 .exit    rts
+
+;------------------------------------------------------------------------------
+; okvs_as_boolean
+;
+; in:    A = address of value [lo]
+;        Y = address of value [hi]
+; out:   Z clear if value is a 1-byte string with value #$00 or the digit '0'
+;        Z set otherwise
+;        X preserved, A/Y clobbered
+;------------------------------------------------------------------------------
+okvs_as_boolean
+         sta   PTR
+         sty   PTR+1
+         lda   (PTR)
+         cmp   #1
+         bne   +
+         ldy   #1
+         lda   (PTR),y
+         beq   +
+         ora   #$80
+         cmp   #$B0
++        rts
 
 ;------------------------------------------------------------------------------
 ; internal functions

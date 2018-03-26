@@ -28,26 +28,17 @@ CreateCheckbox
          !byte $2C                   ; hide next 2 bytes
 CreateButton
          ldx   #WGCreateButton
-         stx   .type+1
-         pla
-         sta   $00
-         pla
-         sta   $01
-         tax
-         lda   #$02
-         clc
-         adc   $00
-         bcc   +
-         inx
-+        phx
-         pha
+         stx   .type
+
+         +PARAMS_ON_STACK 2
+
          ldy   #$01
          lda   ($00),y
          sta   PARAM0
          iny
          lda   ($00),y
          sta   PARAM1
-.type
+.type=*+1
          ldx   #$FD                  ; set at runtime
          jsr   WeeGUI
          ldx   #WGViewSetRawTitle
