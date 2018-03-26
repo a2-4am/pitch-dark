@@ -169,12 +169,16 @@ otherwise all options will be ignored.
               Provenance
 
 
-...TODO
+On Beyond Z-Machine! comprises patched
+interpreters from original Infocom
+games.
+
 Z1 - Zork I r5
-Z2 - Zork II r7
-Z3 - Stationfall r107 ("Interpreter M")
+Z2 - Zork II r7 / UG3AU5
+Z3 - Stationfall r107 / 870430
+     (a.k.a. "Interpreter M")
 Z4 - ???
-Z5 - Sherlock?
-Z5U- ???
+Z5 - Sherlock r26 / 880127
+Z5U- Beyond Zork r57 / 871221
 
 ------------------EOF------------------
