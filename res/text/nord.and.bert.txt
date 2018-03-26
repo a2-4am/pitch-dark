@@ -4,7 +4,7 @@
  Copyright 1987 Infocom, Inc.
  Genre: comedy
  Difficulty: ^^^^^
- Release 19 / Serial number 870722 / Interpreter 2 Version H
+ Release 19 / Serial number 870722
 
 [description]
  

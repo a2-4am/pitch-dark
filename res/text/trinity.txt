@@ -4,7 +4,7 @@
  Copyright 1986 Infocom, Inc.
  Genre: fantasy
  Difficulty: ^^^&&
- Release 12 / Serial Number 860926 / Interpreter 2 Version H
+ Release 12 / Serial Number 860926
 
 [description]
  

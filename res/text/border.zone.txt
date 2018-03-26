@@ -4,7 +4,7 @@
  Copyright 1987 Infocom, Inc.
  Genre: espionage
  Difficulty: ^^^^&
- Release 9 / Serial number 871008 / Interpreter 2 Version F
+ Release 9 / Serial number 871008
 
 [description]
  

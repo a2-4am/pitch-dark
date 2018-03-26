@@ -110,7 +110,6 @@ PaintAllViews
 ;
 ; in:    WeeGUI loaded and initialized
 ;        CreateViews has been called
-;        gCurrentGame has new game index
 ;        LoadGameInfo has been called to load new game description text
 ; out:   all registers clobbered
 ;        all flags clobbered

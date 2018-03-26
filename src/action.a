@@ -185,6 +185,16 @@ callback_next
          bcc   +
          lda   #0
 +        sta   gCurrentGame
+         asl
+         tax
+         lda   GAMES,x
+         sta   .gameptr
+         lda   GAMES+1,x
+         sta   .gameptr+1
+         jsr   okvs_update
+         !word gPrefsStore
+         !word kLastPlayed
+.gameptr !word $FDFD                 ; set at runtime
 .loadNewGameInfoAndRepaint
          jsr   LoadGameInfo
          jmp   RepaintSomeViews
@@ -202,11 +212,9 @@ callback_boxart
          lda   #<kArtworkRootDirectory
          ldy   #>kArtworkRootDirectory
          jsr   AddToPath
-         lda   gCurrentGame
-         asl
-         tax
-         lda   GAMES, x
-         ldy   GAMES+1, x
+         jsr   okvs_get
+         !word gPrefsStore
+         !word kLastPlayed
          jsr   AddToPath
 
          lda   #0                    ; set Z flag always
@@ -256,12 +264,11 @@ callback_clues
          jsr   SetPrefix
          !word gPathname
          bcs   .cluesError
+
 ; put just the filename at $2006
-         lda   gCurrentGame
-         asl
-         tax
-         lda   GAMES,x
-         ldy   GAMES+1,x
+         jsr   okvs_get
+         !word gPrefsStore
+         !word kLastPlayed
          jsr   SetStartupPath
 ; shutdown WeeGUI and transfer control to interpreter
          jsr   ExitWeeGUI
@@ -281,15 +288,16 @@ LaunchInterpreter
          lda   #<kGameRootDirectory
          ldy   #>kGameRootDirectory
          jsr   AddToPath
-         lda   gCurrentGame
-         asl
-         tax
-         lda   GAMES,x
-         ldy   GAMES+1,x
+
+         jsr   okvs_get
+         !word gPrefsStore
+         !word kLastPlayed
          jsr   AddToPath
+
          jsr   SetPrefix
          !word gPathname
          bcs   .playError
+
 ; put just the filename at $2006
          ldy   #0
          lda   addrVersions
@@ -305,6 +313,7 @@ LaunchInterpreter
          bra   -
 .doneBuildingFilename
          sty   $2006
+
 ; shut down WeeGUI and transfer control to interpreter
          jsr   ExitWeeGUI
          jmp   kSystemAddress
@@ -316,7 +325,8 @@ LoadInterpreter
          lda   #<.interpreterFilename
          ldy   #>.interpreterFilename
          jsr   AddToPath
-         jsr   LoadFile              ; load interpreter at $2000
+
+         jsr   LoadFile
          !word gPathname
          !word kSystemAddress
          !word $2000

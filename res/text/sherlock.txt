@@ -4,7 +4,7 @@
  Copyright 1987 Infocom, Inc.
  Genre: mystery
  Difficulty: ^^^&&
- Release 26 / Serial Number 880127 / Interpreter 2 Version F
+ Release 26 / Serial Number 880127
 
 [description]
  

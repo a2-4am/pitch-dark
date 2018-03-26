@@ -4,7 +4,7 @@
  Copyright 1987 Infocom, Inc.
  Genre: comedy
  Difficulty: ^^^^&
- Release 116 / Licence Number 870602 / Interpreter 2 Version H
+ Release 116 / Licence Number 870602
 
 [description]
  

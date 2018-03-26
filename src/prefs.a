@@ -19,7 +19,6 @@
 !zone {
 kDefaultGame              = 30       ; Zork I
 
-; global storage for parsed preference values
 gCurrentGame
          !byte 0
 
@@ -29,9 +28,12 @@ kForce40
 kForceUpper
          !byte 14
          !raw  "FORCEUPPERCASE"
-kSort
-         !byte 4
-         !raw  "SORT"
+kScriptToFile
+         !byte 12
+         !raw  "SCRIPTTOFILE"
+kAutoScript
+         !byte 10
+         !raw  "AUTOSCRIPT"
 kLastPlayed
          !byte 10
          !raw  "LASTPLAYED"
@@ -49,6 +51,19 @@ LoadGlobalPreferences
          jsr   okvs_init
          !word gPrefsStore
 
+         lda   gCurrentGame
+         asl
+         tax
+         lda   GAMES,x
+         sta   .gameptr
+         lda   GAMES+1,x
+         sta   .gameptr+1
+         jsr   okvs_append
+         !word gPrefsStore
+         !word kLastPlayed
+.gameptr !word $FDFD                 ; set at runtime
+         !byte 16
+
          jsr   okvs_append
          !word gPrefsStore
          !word kForce40
@@ -63,22 +78,15 @@ LoadGlobalPreferences
 
          jsr   okvs_append
          !word gPrefsStore
-         !word kSort
-         !word .debugsortvalue
-         !byte 11
+         !word kScriptToFile
+         !word .debug1
+         !byte 0
 
          jsr   okvs_append
          !word gPrefsStore
-         !word kLastPlayed
-         !word .debuglastplayed
-         !byte 16
-
-         jsr   okvs_update
-         !word gPrefsStore
-         !word kSort
-         !word kByDifficulty
-         bcs   .exit
-         ;jmp   $ff59
+         !word kAutoScript
+         !word .debug0
+         !byte 0
 
          bra   .exit
          ; TODO
@@ -101,17 +109,8 @@ SaveGlobalPreferences
 
 .debug0
          !byte 1
-         !raw  "0"
-
-.debugsortvalue
-         !byte 4
-         !raw  "NAME"
-
-.debuglastplayed
-         !byte 6
-         !raw  "ZORK.I"
-
-kByDifficulty
-         !byte 10
-         !raw  "DIFFICULTY"
+         !byte 0
+.debug1
+         !byte 1
+         !byte 1
 }
