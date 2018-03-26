@@ -9,7 +9,8 @@
 ; - CreateButton
 ; - CreateTitleView
 ; - PaintTitleView
-; - DeleteAllViews
+; - SetCheckboxByPref
+; - SetPrefByCheckbox
 ;
 
 ; ROM routines
@@ -78,14 +79,44 @@ viewTitle
          !byte 1                     ; height
 .stringTitle
          !raw  "                                   Pitch Dark                                   ",0
+}
 
-DeleteAllViews
-         lda   #15
--        ldx   #WGSelectView
+!zone {
+SetCheckboxByPref
+         +PARAMS_ON_STACK 3
+
+         ldy   #1
+         lda   (PARAM),y
+         sta   .id
+         iny
+         lda   (PARAM),y
+         sta   .key
+         iny
+         lda   (PARAM),y
+         sta   .key+1
+
+         jsr   okvs_get
+         !word gPrefsStore
+.key     !word $FDFD                 ; set at runtime
+         bcs   .exit
+
+         jsr   okvs_as_boolean
+         beq   .exit
+
+         ldx   #WGSelectView
+.id=*+1
+         lda   #$FD                  ; set at runtime
          jsr   WeeGUI
-         ldx   #WGDeleteView
+         ldx   #WGSetState
+         lda   #1
+         sta   PARAM0
          jsr   WeeGUI
-         dec
-         bpl   -
+.exit    rts
+}
+
+!zone {
+SetPrefByCheckbox
+         +PARAMS_ON_STACK 3
+
          rts
 }

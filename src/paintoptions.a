@@ -59,59 +59,19 @@ OptionsDialog
          !word .viewScriptToFile
          jsr   CreateCheckbox
          !word .viewAutoScript
-                                     ; set initial state of checkboxes based on preferences
-         jsr   okvs_get
-         !word gPrefsStore
+
+         jsr   SetCheckboxByPref     ; set initial state of checkboxes based on preferences
+         !byte ID_OPTIONS_FORCE40
          !word kForce40
-         jsr   okvs_as_boolean
-         beq   +
-         ldx   #WGSelectView
-         lda   #ID_OPTIONS_FORCE40
-         jsr   WeeGUI
-         ldx   #WGSetState
-         lda   #1
-         sta   PARAM0
-         jsr   WeeGUI
-+
-         jsr   okvs_get
-         !word gPrefsStore
+         jsr   SetCheckboxByPref
+         !byte ID_OPTIONS_FORCEUPPER
          !word kForceUpper
-         jsr   okvs_as_boolean
-         beq   +
-         ldx   #WGSelectView
-         lda   #ID_OPTIONS_FORCEUPPER
-         jsr   WeeGUI
-         ldx   #WGSetState
-         lda   #1
-         sta   PARAM0
-         jsr   WeeGUI
-+
-         jsr   okvs_get
-         !word gPrefsStore
+         jsr   SetCheckboxByPref
+         !byte ID_OPTIONS_SCRIPTTOFILE
          !word kScriptToFile
-         jsr   okvs_as_boolean
-         beq   +
-         ldx   #WGSelectView
-         lda   #ID_OPTIONS_SCRIPTTOFILE
-         jsr   WeeGUI
-         ldx   #WGSetState
-         lda   #1
-         sta   PARAM0
-         jsr   WeeGUI
-+
-         jsr   okvs_get
-         !word gPrefsStore
+         jsr   SetCheckboxByPref
+         !byte ID_OPTIONS_AUTOSCRIPT
          !word kAutoScript
-         jsr   okvs_as_boolean
-         beq   +
-         ldx   #WGSelectView
-         lda   #ID_OPTIONS_AUTOSCRIPT
-         jsr   WeeGUI
-         ldx   #WGSetState
-         lda   #1
-         sta   PARAM0
-         jsr   WeeGUI
-+
 
          ldx   #WGDesktop            ; paint background
          jsr   WeeGUI
@@ -223,7 +183,19 @@ HandleOptionsKey
          jmp   WeeGUI
 
 callback_options_ok
-; TODO set preferences
+         jsr   SetPrefByCheckbox
+         !byte ID_OPTIONS_FORCE40
+         !word kForce40
+         jsr   SetPrefByCheckbox
+         !byte ID_OPTIONS_FORCEUPPER
+         !word kForceUpper
+         jsr   SetPrefByCheckbox
+         !byte ID_OPTIONS_SCRIPTTOFILE
+         !word kScriptToFile
+         jsr   SetPrefByCheckbox
+         !byte ID_OPTIONS_AUTOSCRIPT
+         !word kAutoScript
+                                     ; execution falls through here
 callback_options_cancel
          jmp   MainScreen
 
