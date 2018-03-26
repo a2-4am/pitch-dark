@@ -20,9 +20,9 @@
          !source "src/infoparser.a"
          !source "src/prefs.a"
          !source "src/action.a"
-         !source "src/paintcommon.a"
-         !source "src/paint.a"
-         !source "src/paintoptions.a"
+         !source "src/uicommon.a"
+         !source "src/mainscreen.a"
+         !source "src/settingsdialog.a"
          !source "src/sound.a"
 
 .weeguiFilename
