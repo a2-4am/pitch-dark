@@ -10,8 +10,9 @@
 
          !source "src/macros.a"
          !source "src/memory.a"
-         !source "src/gamelist.a"
          !source "src/WeeGUI_MLI.s"
+
+         !source "src/gamelist.a"
          !source "src/okvs.a"
          !source "src/prodos.a"
          !source "src/ramdisk.a"
@@ -22,6 +23,7 @@
          !source "src/paintcommon.a"
          !source "src/paint.a"
          !source "src/paintoptions.a"
+         !source "src/sound.a"
 
 .weeguiFilename
          !byte 10
@@ -33,10 +35,12 @@ Start
          cmp   #$30                  ; 128K?
          beq   +                     ; yes, continue
 -        jmp   QuitToProDOS
-+        !byte $1a                   ; 65C02 INC, clear Z flag if supported
-         beq   -                     ; not a 65C02
++        inc                         ; 65C02-only INC instruction will clear Z flag
+         beq   -                     ; if Z flag is still set, this is not a 65C02
+
          jsr   DisconnectRAM32       ; disconnect /RAM in S3,D2 so we can use DHGR
-         bit   $C010
+         bit   $C010                 ; clear keyboard strobe
+
          jsr   LoadFile              ; load WEEGUI binary at $4000
          !word .weeguiFilename
          !word WGInit
@@ -74,27 +78,6 @@ ExitWeeGUI
          jsr   WeeGUI
          ldx   #WGExit               ; clean up WeeGUI
          jmp   WeeGUI
-
-WAIT     = $FCA8
-SPEAKER  = $C030
-
-SoftBell
-         php
-         phx
-         pha
-         ldx   #32
--        lda   #2
-         jsr   WAIT
-         bit   SPEAKER
-         lda   #33
-         jsr   WAIT
-         bit   SPEAKER
-         dex
-         bne   -
-         pla
-         plx
-         plp
-         rts
 
 gPrefsStore
          !word *+2                 ; address of storage space for prefs

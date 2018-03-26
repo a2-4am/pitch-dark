@@ -1,0 +1,29 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; Sound routines
+;
+; Public functions
+; - SoftBell
+;
+
+WAIT     = $FCA8
+SPEAKER  = $C030
+
+SoftBell
+         php
+         phx
+         pha
+         ldx   #32
+-        lda   #2
+         jsr   WAIT
+         bit   SPEAKER
+         lda   #33
+         jsr   WAIT
+         bit   SPEAKER
+         dex
+         bne   -
+         pla
+         plx
+         plp
+         rts
