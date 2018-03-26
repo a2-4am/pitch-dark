@@ -7,18 +7,42 @@ interpreters for the 8-bit Apple II.
 
                    ~
 
-                 Usage
+          System Requirements
 
 
-Pass filename of game file in $2006, as
-per ProDOS startup program protocol:
+On Beyond Z-Machine! requires ProDOS.
+It has been tested with ProDOS 2.4.2,
+but it may work with classic versions.
 
-http://www.easy68k.com/paulrsm/6502/
-PDOS8TRM.HTM#5.1.5.1
+Z1, Z2, and Z3 games require an Apple
+II Plus or later with a minimum of 64K.
 
-The main .SYSTEM file can be anywhere,
-but the other files must be in a LIB/
-subdirectory:
+Z4 and Z5 games require an Apple //e
+or later with a minimum of 128K and an
+80-column card. (An unenhanced //e will
+work, as long as it has 128K.)
+
+On Beyond Z-Machine! is designed to be
+run from a mass storage device like a
+hard drive. In particular, Z4 and Z5
+games WILL NOT RUN from a floppy disk,
+because they use a custom driver to
+read and write files on a ProDOS hard
+drive.
+
+It is compatible with modern devices
+like the CFFA 3000 that provide mass
+storage on real Apple II hardware. It
+should also be compatible with all
+emulators that emulate mass storage
+devices. It is been tested specifically
+on AppleWin, Virtual II, OpenEmulator,
+Sweet16, KEGS, GSPort, and GSPlus.
+
+The main ONBEYOND.SYSTEM file can be
+anywhere on your ProDOS hard drive. The
+other files must be in a LIB/
+subdirectory beneath the main file:
 
   ONBEYOND.SYSTEM
   LIB/ONBEYONDZ1
@@ -27,6 +51,46 @@ subdirectory:
   LIB/ONBEYONDZ4
   LIB/ONBEYONDZ5
   LIB/ONBEYONDZ5U
+
+                   ~
+
+              Basic Usage
+
+
+On Beyond Z-Machine! is an interpreter.
+It has no user interface per se. If you
+launch it directly, it will simply quit
+back to ProDOS. To play a game, you
+need to pass it a filename using the
+ProDOS startup program protocol, as
+documented in the "ProDOS 8 Technical
+Reference Manual."
+
+http://www.easy68k.com/paulrsm/6502/
+PDOS8TRM.HTM#5.1.5.1
+
+Most Apple II program launchers, such
+as ProSel and Bitsy Bye, support this
+protocol.
+
+ProSel users: you can create a ProSel
+item that launches a specific game.
+Assuming ONBEYOND.SYSTEM is located at
+/HD/BIN/ONBEYOND.SYSTEM and your game
+file is /HD/GAMES/ZORKI.Z3, your ProSel
+item would look like this:
+
+Screen title:     Zork I
+Prefix:           ?BIN/
+Application path: ONBEYOND.SYSTEM
+Startup:          ?GAMES/ZORKI.Z3
+
+Bitsy Bye users: rename ONBEYOND.SYSTEM
+to BASIS.SYSTEM and put it in the root
+directory of your startup disk. (Also
+copy the LIB/ directory.) Then you can
+select any supported game file in Bitsy
+Bye to play it in On Beyond Z-Machine!
 
                    ~
 
@@ -41,7 +105,8 @@ chops the suffix off the filename and
 replaces it with various other suffixes
 for things like saved games and script-
 to-file logs. You should set all three
-(filename suffix, filetype, auxtype).
+(filename suffix, filetype, auxtype)
+unless you know what you're doing.
 
 interpreter|suffix |filetype|auxtype
 -----------+-------+--------+-------
@@ -50,9 +115,9 @@ interpreter|suffix |filetype|auxtype
     Z3     |  .Z3  |  $F5   | $8003
     Z4     |  .Z4  |  $F5   | $8004
     Z5     |  .Z5  |  $F5   | $8005
-    Z5U    |  .Z5  |  $F5   | $8055
+    Z5U    |  .Z5  |  $F5   | $8055 (*)
 
-Astute readers will notice that there
+(*) Astute readers will notice there
 are two interpreters available for Z5
 files. Z5 was an evolving format while
 Infocom was making games. Years later,
@@ -150,9 +215,9 @@ $0304 - auto-script
 
   Supported: all
 
-$0305 - warn on missing .sav files
+$0305 - warn on missing .SAV files
   #$00 = do not warn
-  #$01 = warn if .sav file is missing
+  #$01 = warn if .SAV file is missing
 
   Supported: Z4, Z5
 
@@ -207,5 +272,14 @@ Z3 - Stationfall r107 / 870430
 Z4 - ???
 Z5 - Sherlock r26 / 880127
 Z5U- Beyond Zork r57 / 871221
+
+                   ~
+
+                History
+
+
+2018-02-21
+
+- revision 1
 
 ------------------EOF------------------
