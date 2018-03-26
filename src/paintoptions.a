@@ -86,7 +86,7 @@ OptionsDialog
          jsr   WeeGUI
 
          ldx   #WGSetCursor          ; paint static text labels
-         lda   #4
+         lda   #6
          sta   PARAM0
          lda   #3
          sta   PARAM1
@@ -99,7 +99,7 @@ OptionsDialog
          jsr   WeeGUI
 
          ldx   #WGSetCursor
-         lda   #4
+         lda   #6
          sta   PARAM0
          lda   #8
          sta   PARAM1
@@ -112,7 +112,7 @@ OptionsDialog
          jsr   WeeGUI
 
          ldx   #WGSetCursor
-         lda   #4
+         lda   #6
          sta   PARAM0
          lda   #13
          sta   PARAM1
@@ -125,7 +125,7 @@ OptionsDialog
          jsr   WeeGUI
 
          ldx   #WGSetCursor
-         lda   #4
+         lda   #6
          sta   PARAM0
          lda   #18
          sta   PARAM1
@@ -148,19 +148,19 @@ OptionsDialog
 
 ; action keys for options screen
 .keys
-         !byte $CF,ID_OPTIONS_OK     ; O
-         !byte $EF,ID_OPTIONS_OK     ; o
-         !byte $8D,ID_OPTIONS_OK     ; Return
-         !byte $C3,ID_OPTIONS_CANCEL ; C
-         !byte $E3,ID_OPTIONS_CANCEL ; c
-         !byte $9B,ID_OPTIONS_CANCEL ; Esc
-         !byte $B4,ID_OPTIONS_FORCE40    ; 4
-         !byte $D5,ID_OPTIONS_FORCEUPPER ; U
-         !byte $F5,ID_OPTIONS_FORCEUPPER ; u
-         !byte $C6,ID_OPTIONS_SCRIPTTOFILE ; F
-         !byte $E6,ID_OPTIONS_SCRIPTTOFILE ; f
-         !byte $D3,ID_OPTIONS_AUTOSCRIPT ; S
-         !byte $F3,ID_OPTIONS_AUTOSCRIPT ; s
+         !byte $CF,ID_OPTIONS_OK                ; O
+         !byte $EF,ID_OPTIONS_OK                ; o
+         !byte $8D,ID_OPTIONS_OK                ; Return
+         !byte $C3,ID_OPTIONS_CANCEL            ; C
+         !byte $E3,ID_OPTIONS_CANCEL            ; c
+         !byte $9B,ID_OPTIONS_CANCEL            ; Esc
+         !byte $B4,ID_OPTIONS_FORCE40           ; 4
+         !byte $D5,ID_OPTIONS_FORCEUPPER        ; U
+         !byte $F5,ID_OPTIONS_FORCEUPPER        ; u
+         !byte $C6,ID_OPTIONS_SCRIPTTOFILE      ; F
+         !byte $E6,ID_OPTIONS_SCRIPTTOFILE      ; f
+         !byte $D3,ID_OPTIONS_AUTOSCRIPT        ; S
+         !byte $F3,ID_OPTIONS_AUTOSCRIPT        ; s
 .endkeys
 
 HandleOptionsKey
@@ -195,6 +195,7 @@ callback_options_ok
          jsr   SetPrefByCheckbox
          !byte ID_OPTIONS_AUTOSCRIPT
          !word kAutoScript
+         jsr   SaveGlobalPreferences
                                      ; execution falls through here
 callback_options_cancel
          jmp   MainScreen
@@ -255,7 +256,7 @@ callback_options_cancel
          !byte $75                   ; 'u' inverse
          !text "ppercase",0
 .stringForceUpperDescription
-         !text "A MATTER OF PREFERENCE",0
+         !text "A MATTER OF PREFERENCE, I SUPPOSE",0
 
 .viewScriptToFile
          !byte ID_OPTIONS_SCRIPTTOFILE ; view ID

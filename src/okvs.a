@@ -299,7 +299,6 @@ okvs_update
          sty   DEST+1
          lda   (SAVE)
          tay
-         iny
 -        lda   (SAVE),y
          sta   (DEST),y
          dey

@@ -74,4 +74,5 @@ WGSetContentHeight		= 80
 WGStrokeRoundRect		= 82
 WGCreateRadio			= 84
 WGReset					= 86
+WGGetState				= 88
 

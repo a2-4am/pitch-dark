@@ -118,5 +118,32 @@ SetCheckboxByPref
 SetPrefByCheckbox
          +PARAMS_ON_STACK 3
 
+         ldy   #1
+         lda   (PARAM),y
+         sta   .id
+         iny
+         lda   (PARAM),y
+         sta   .key
+         iny
+         lda   (PARAM),y
+         sta   .key+1
+
+         ldx   #WGSelectView
+.id=*+1
+         lda   #$FD                  ; set at runtime
+         jsr   WeeGUI
+         ldx   #WGGetState
+         jsr   WeeGUI
+
+         lda   PARAM0
+         and   #1
+         sta   .value+1
+
+         jsr   okvs_update
+         !word gPrefsStore
+.key     !word $FDFD                 ; set at runtime
+         !word .value
          rts
+.value   !byte 1
+         !byte $FD                   ; set at runtime
 }
