@@ -1,0 +1,180 @@
+----------On Beyond Z-Machine!---------
+A san inc hack               2018-02-21
+---------------------------------------
+
+A ProDOS port of Infocom's Z-Machine
+interpreter for the 8-bit Apple II.
+
+                   ~
+
+                 Usage
+
+
+Pass filename of game file in $2006, as
+per ProDOS startup program protocol:
+
+http://www.easy68k.com/paulrsm/6502/
+PDOS8TRM.HTM#5.1.5.1
+
+The main .SYSTEM file can be anywhere,
+but the other files must be in a LIB/
+subdirectory:
+
+  ONBEYOND.SYSTEM
+  LIB/ONBEYONDZ1
+  LIB/ONBEYONDZ2
+  LIB/ONBEYONDZ3
+  LIB/ONBEYONDZ4
+  LIB/ONBEYONDZ5
+  LIB/ONBEYONDZ5U
+
+                   ~
+
+      Of Suffixes and File Types
+
+
+On Beyond Z-Machine! supports Z1, Z2,
+Z3, Z4, and most Z5 games. It uses
+ProDOS file metadata to determine which
+interpreter to use. Furthermore, it
+chops the suffix off the filename and
+replaces it with various other suffixes
+for things like saved games and script-
+to-file logs. You should set all three
+(filename suffix, filetype, auxtype).
+
+interpreter|suffix |filetype|auxtype
+-----------+-------+--------+-------
+    Z1     |  .Z1  |  $F5   | $8001
+    Z2     |  .Z2  |  $F5   | $8002
+    Z3     |  .Z3  |  $F5   | $8003
+    Z4     |  .Z4  |  $F5   | $8004
+    Z5     |  .Z5  |  $F5   | $8005
+    Z5U    |  .Z5  |  $F5   | $8055
+
+...TODO explain Z5U
+
+                   ~
+
+                Options
+
+
+By default, On Beyond Z-Machine! will
+enter the most advanced mode that your
+machine supports, start the game, and
+do nothing else. This means
+
+  - 80 columns if your machine supports
+    it, or 40 columns otherwise
+  - mixed case on Apple //e or later,
+    or uppercase otherwise
+  - do not auto-restore from any slot
+  - do not change the behavior of the
+    SCRIPT command
+  - do not automatically turn on SCRIPT
+  - warn if required files are missing
+    (Z4 and Z5 games only, see below)
+
+You can change this default behavior by
+putting an options struct at $0300. If
+you want to set any option, you must
+set ALL options. There is a checksum
+byte that must also be set properly,
+otherwise all options will be ignored.
+
+$0300 - 40/80 columns
+  #$CE ("N") = 40 columns
+  #$D9 ("Y") = 80 columns
+
+  Supported: Z3, Z4, Z5
+
+  Z1, Z2 always display in 40 columns
+
+$0301 - case
+  #$00 = uppercase only
+  #$01 = mixed case
+
+  Supported: Z3, Z4, Z5
+
+  Z1, Z2 always display in uppercase
+
+$0302 - auto-restore
+  #$00..#$07 = restore game from slot
+  #$FF = do not auto-restore
+
+  Supported: all
+
+  Z1, Z2: slot 0 only
+  Z3: slots 0-7
+  Z4, Z5: slots 0-2 only
+
+$0303 - script to file
+  #$00 = SCRIPT in-game command prints
+         to printer
+  #$01 = SCRIPT writes to a file in the
+         same directory as the game
+
+  Supported: all
+
+$0304 - auto-script
+  #$00 = do not turn on SCRIPT
+  #$01 = turn on SCRIPT as soon as game
+         starts
+
+  Supported: all
+
+$0305 - warn on missing .sav files
+  #$00 = do not warn
+  #$01 = warn if .sav file is missing
+
+  Supported: Z4, Z5
+
+  SAVE and RESTORE commands put your
+  saved games in a .SAV file in the
+  same directory as the game file. Z1,
+  Z2, and Z3 interpreters will create
+  this .SAV file the first time you
+  SAVE a game. However, due to memory
+  constraints, Z4 and Z5 interpreters
+  can not automatically create the .SAV
+  file; it must already exist.
+
+  On the other hand, if you are opening
+  a Z4 or Z5 file and don't care about
+  SAVE/RESTORE (perhaps because the
+  game itself doesn't support it), you
+  can skip the .SAV file and turn off
+  the warning by setting this to 0.
+
+$0306 - "funny complement" checksum
+  must be $0300 EOR $0301 EOR $0302 EOR
+  $0303 EOR $0304 EOR $0305 EOR #$A5
+
+In other words, after setting all the
+other options, do this:
+
+  LDA #$A5
+  EOR $0300
+  EOR $0301
+  EOR $0302
+  EOR $0303
+  EOR $0304
+  EOR $0305
+  STA $0306
+
+otherwise all options will be ignored.
+
+                   ~
+
+              Provenance
+
+
+...TODO
+Z1 - Zork I r5
+Z2 - Zork II r7
+Z3 - Stationfall r107 ("Interpreter M")
+Z4 - ???
+Z5 - Sherlock?
+Z5U- ???
+
+------------------EOF------------------
