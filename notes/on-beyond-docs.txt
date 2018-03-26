@@ -178,17 +178,19 @@ $0300 - 40/80 columns
   #$CE ("N") = 40 columns
   #$D9 ("Y") = 80 columns
 
-  Supported: Z3, Z4, Z5
+  Supported: Z3, Z4, Z5, Z5U
 
   Z1, Z2 always display in 40 columns
+
+  Z4, Z5 games were originally designed
+  to run in 80 columns. Games may have
+  display glitches in 40 columns.
 
 $0301 - case
   #$00 = uppercase only
   #$01 = mixed case
 
-  Supported: Z3, Z4, Z5
-
-  Z1, Z2 always display in uppercase
+  Supported: all
 
 $0302 - auto-restore
   #$00..#$07 = restore game from slot
@@ -201,17 +203,17 @@ $0302 - auto-restore
   Z4, Z5: slots 0-2 only
 
 $0303 - script to file
-  #$00 = SCRIPT in-game command prints
-         to printer
-  #$01 = SCRIPT writes to a file in the
-         same directory as the game
+  #$00 = "SCRIPT" command outputs to
+         printer
+  #$01 = "SCRIPT" writes to a file in
+         the same directory as the game
 
   Supported: all
 
 $0304 - auto-script
-  #$00 = do not turn on SCRIPT
-  #$01 = turn on SCRIPT as soon as game
-         starts
+  #$00 = do not turn on "SCRIPT"
+  #$01 = turn on "SCRIPT" as soon as
+         the game starts
 
   Supported: all
 
@@ -219,21 +221,21 @@ $0305 - warn on missing .SAV files
   #$00 = do not warn
   #$01 = warn if .SAV file is missing
 
-  Supported: Z4, Z5
+  Supported: Z4, Z5, Z5U
 
   SAVE and RESTORE commands put your
   saved games in a .SAV file in the
   same directory as the game file. Z1,
   Z2, and Z3 interpreters will create
-  this .SAV file the first time you
-  SAVE a game. However, due to memory
-  constraints, Z4 and Z5 interpreters
-  can not automatically create the .SAV
-  file; it must already exist.
+  this file the first time you "SAVE" a
+  game. Due to memory constraints, Z4,
+  Z5, and Z5U interpreters can not
+  automatically create the .SAV file;
+  it must already exist.
 
   On the other hand, if you are opening
   a Z4 or Z5 file and don't care about
-  SAVE/RESTORE (perhaps because the
+  "SAVE"/"RESTORE" (perhaps because the
   game itself doesn't support it), you
   can skip the .SAV file and turn off
   the warning by setting this to 0.
