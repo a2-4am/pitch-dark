@@ -10,7 +10,6 @@
 ; - okvs_update(address, key, value)
 ; - okvs_get(address, key)
 ; - okvs_as_boolean(value)
-; - [TODO] okvs_iter(address, callback)
 ;
 ; Used for global preferences, per-game options, and per-game version lists
 ;
@@ -349,7 +348,7 @@ SetPTRFromStackParams
          iny
          lda   (PARAM),y
          sta   PTR+1                 ; PTR -> first parameter on stack
-; execution falls through here
+                                     ; execution falls through here
 derefptr
 ; preserves X
          lda   (PTR)
