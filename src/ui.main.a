@@ -65,9 +65,9 @@ CreateViews
          sta   PARAM1
          jsr   WeeGUI
          ldx   #WGViewSetAction
-         lda   #<.paintInfoView
+         lda   #<paintInfoView
          sta   PARAM0
-         lda   #>.paintInfoView
+         lda   #>paintInfoView
          sta   PARAM1
          jsr   WeeGUI
 
@@ -78,9 +78,9 @@ CreateViews
          sta   PARAM1
          jsr   WeeGUI
          ldx   #WGViewSetAction
-         lda   #<.paintDescriptionView
+         lda   #<paintDescriptionView
          sta   PARAM0
-         lda   #>.paintDescriptionView
+         lda   #>paintDescriptionView
          sta   PARAM1
          jmp   WeeGUI
 
@@ -97,9 +97,9 @@ PaintAllViews
          ldx   #WGViewPaintAll       ; repaint all views that can be painted automatically
          jsr   WeeGUI
          jsr   PaintTitleView
-         jsr   .paintHRView
-         jsr   .paintInfoView
-         jmp   .paintDescriptionView
+         jsr   paintHRView
+         jsr   paintInfoView
+         jmp   paintDescriptionView
 
 ;------------------------------------------------------------------------------
 ; RepaintSomeViews
@@ -111,14 +111,14 @@ PaintAllViews
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 RepaintSomeViews
-         jsr   .paintInfoView
-         jsr   .resetDescriptionViewScrolling
-         jmp   .paintDescriptionView
+         jsr   paintInfoView
+         jsr   resetDescriptionViewScrolling
+         jmp   paintDescriptionView
 
 ;------------------------------------------------------------------------------
 ; internal functions
 
-.paintHRView
+paintHRView
          ldx   #WGSelectView
          lda   #ID_HR
          jsr   WeeGUI
@@ -134,14 +134,14 @@ RepaintSomeViews
          ldx   #WGFillRect
          jmp   WeeGUI
 
-.paintDescriptionView
+paintDescriptionView
          ldx   #WGSelectView
          lda   #ID_DESCRIPTION
          jsr   WeeGUI
          lda   addrDescription
          ldy   addrDescription+1
          ldx   #78
-         jsr   .multiPrint
+         jsr   multiPrint
          lda   .vtab+1
          cmp   #10
          bcs   +
@@ -149,16 +149,15 @@ RepaintSomeViews
 +        ldx   #WGSetContentHeight
          jmp   WeeGUI
 
-.paintInfoView
+paintInfoView
          ldx   #WGSelectView
          lda   #ID_INFO
          jsr   WeeGUI
          lda   addrInfo
          ldy   addrInfo+1
          ldx   #65
-; note: execution falls through here
-
-.multiPrint
+                                     ; execution falls through here
+multiPrint
          sta   $00
          sty   $01
          stx   .printLineLength+1
@@ -192,7 +191,7 @@ RepaintSomeViews
 .printDone
          rts
 
-.resetDescriptionViewScrolling
+resetDescriptionViewScrolling
          ldx   #WGSelectView
          lda   #ID_DESCRIPTION
          jsr   WeeGUI
