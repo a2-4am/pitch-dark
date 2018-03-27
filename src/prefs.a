@@ -81,7 +81,7 @@ LoadGlobalPreferences
          jsr   okvs_append
          !word gPrefsStore
          !word kScriptToFile
-         !word .debug1
+         !word .debug0
          !byte 0
 
          jsr   okvs_append
@@ -112,7 +112,4 @@ SaveGlobalPreferences
 .debug0
          !byte 1
          !byte 0
-.debug1
-         !byte 1
-         !byte 1
 }
