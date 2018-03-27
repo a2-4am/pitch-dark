@@ -17,7 +17,7 @@ for f in sys.argv[1:]:
                 linelength = 0
             if l and linelength:
                 l = l + ' '*(linelength-len(l))
-            buffer.write(l + "\n")
+            buffer.write(l + "\r")
             if l.startswith("[info]"):
                 linelength = 64
             elif l.startswith("[description]"):

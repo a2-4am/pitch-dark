@@ -43,73 +43,257 @@ kLastPlayed
 ;------------------------------------------------------------------------------
 ; LoadGlobalPreferences
 ;
-; in:    current ProDOS prefix is the same as the PITCH.DARK binary
+; in:    current ProDOS prefix is the same as the PITCH.DARK.CONF file
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 LoadGlobalPreferences
-         lda   #kDefaultGame
-         sta   gCurrentGame
-
          jsr   okvs_init
          !word gPrefsStore
 
-         lda   gCurrentGame
-         asl
-         tax
-         lda   GAMES,x
-         sta   .gameptr
-         lda   GAMES+1,x
-         sta   .gameptr+1
-         jsr   okvs_append
-         !word gPrefsStore
-         !word kLastPlayed
-.gameptr !word $FDFD                 ; set at runtime
-         !byte 16
-
-         jsr   okvs_append
-         !word gPrefsStore
-         !word kForce40
-         !word .debug0
-         !byte 0
-
-         jsr   okvs_append
-         !word gPrefsStore
-         !word kForceUpper
-         !word .debug0
-         !byte 0
-
-         jsr   okvs_append
-         !word gPrefsStore
-         !word kScriptToFile
-         !word .debug0
-         !byte 0
-
-         jsr   okvs_append
-         !word gPrefsStore
-         !word kAutoScript
-         !word .debug0
-         !byte 0
-
-         bra   .exit
-         ; TODO
          jsr   LoadFile              ; load prefs file at $2000
          !word .globalPrefsFilename
          !word $2000
          !word $2000
          !word kProDOSFileBuffer
-         bcs   .exit
-.exit
+
+         lda   #$FF
+         sta   $FE
+         lda   #$1F
+         sta   $FF                   ; ($FE) points to start of data buffer
+         ldy   #$00                  ; index into ($FE) pointing to current character
+.newKey  ldx   #$00                  ; X = index into current key
+.gatherKey
+         stx   .keylen
+         jsr   IncAndGetChar
+         cmp   #$23                  ; '#' is starts a comment (until CR)
+         beq   .skipComment
+         cmp   #$3D                  ; '=' ends the key
+         beq   .endKey
+         cmp   #$0D                  ; found CR before '=', ignore key and start over
+         beq   .newKey
+         sta   .key,x
+         inx
+         bra   .gatherKey
+.endKey  stx   .keylen
+         txa                         ; to set Z flag
+         beq   .doneParsing          ; empty key ends the parsing
+         ldx   #$00                  ; X = index into the current value
+.gatherValue
+         stx   .vallen
+         jsr   IncAndGetChar
+         cmp   #$0D                  ; CR ends the value
+         beq   .endValue
+         sta   .val,x
+         inx
+         bra   .gatherValue
+.endValue
+         stx   .vallen
+         lda   .vallen
+         cmp   #1
+         bne   .use16
+         lda   .val
+         and   #1
+         sta   .val                  ; single-character values get converted to #$00 or #$01 in prefs store
+         lda   #0
+         !byte $2C
+.use16   lda   #16
+         sta   .okvslen              ; all other values get upgraded to 16 bytes so we can update them in place
+         phy                         ; okvs functions clobber everything but we need Y
+         jsr   okvs_append
+         !word gPrefsStore
+         !word .keylen
+         !word .vallen
+.okvslen !byte $FD                   ; set at runtime
+         ply
+         bra   .newKey
+
+.skipComment                         ; skip to CR
+         jsr   IncAndGetChar
+         cmp   #$0D                  ; CR
+         bne   .skipComment
+         bra   .newKey
+
+.doneParsing
+         jsr   okvs_get
+         !word gPrefsStore
+         !word kLastPlayed
+         sta   DEST
+         sty   DEST+1
+         ldx   #$FE
+.findLastPlayed
+         inx
+         inx
+         lda   GAMES,x
+         sta   SRC
+         lda   GAMES+1,x
+         sta   SRC+1
+         lda   (SRC)
+         tay
+         dey
+-        lda   (SRC),y
+         cmp   (DEST),y
+         bne   .findLastPlayed
+         dey
+         bpl   -
+         txa
+         lsr
+         sta   gCurrentGame
          rts
 
+.keylen  !byte 0
+.key     !fill 15
+.vallen  !byte 0
+.val     !fill 15
+
 SaveGlobalPreferences
-         ; TODO
+         lda   #$00
+         sta   $FE
+         sta   .prefslen
+         sta   .prefslen+1
+         lda   #$20
+         sta   $FF
+
+         lda   #<.fluff1
+         ldy   #>.fluff1
+         jsr   addString
+
+         jsr   addBooleanFromStore
+         !word kForce40
+
+         jsr   addBooleanFromStore
+         !word kForceUpper
+
+         jsr   addBooleanFromStore
+         !word kScriptToFile
+
+         jsr   addBooleanFromStore
+         !word kAutoScript
+
+         lda   #<.fluff2
+         ldy   #>.fluff2
+         jsr   addString
+
+         jsr   addStringFromStore
+         !word kLastPlayed
+
+         lda   #<.fluff3
+         ldy   #>.fluff3
+         jsr   addString
+
+         ldx   #0
+.gameLoop
+         phx
+         txa
+         asl
+         tax
+         lda   GAMES,x
+         ldy   GAMES+1,x
+         sta   .gameKey
+         sty   .gameKey+1
+         jsr   addStringFromStore
+.gameKey !word $FDFD                 ; set at runtime
+         plx
+         inx
+         cpx   #kNumberOfGames
+         bne   .gameLoop
+
+         lda   #<.eof
+         ldy   #>.eof
+         jsr   addString
+
+         lda   $FE
+         sta   .prefslen
+         lda   $FF
+         sec
+         sbc   #$20
+         sta   .prefslen+1
+         jsr   SaveFile
+         !word .globalPrefsFilename
+         !byte 4                     ; filetype=TXT
+         !word 0                     ; auxtype=0000
+         !word $2000
+.prefslen
+         !word $FDFD                 ; set at runtime
+         !word kProDOSFileBuffer
+         rts
+
+addBooleanFromStore
+         lda   #$24                  ; BIT opcode
+         !byte $2C
+addStringFromStore
+         lda   #$80                  ; BRA opcode
+         sta   .skipOverBooleanLogic
+         +PARAMS_ON_STACK 2
+         ldy   #1
+         lda   (PARAM),y
+         sta   .storeKey
+         pha
+         iny
+         lda   (PARAM),y
+         sta   .storeKey+1
+         tay
+         pla
+         jsr   addString
+         lda   #<.equals
+         ldy   #>.equals
+         jsr   addString
+         jsr   okvs_get
+         !word gPrefsStore
+.storeKey
+         !word $FDFD                 ; set at runtime
+.skipOverBooleanLogic
+         bra   +                     ; set at runtime (opcode may become BIT)
+         sta   PTR
+         sty   PTR+1
+         ldy   #1
+         lda   (PTR),y
+         ora   #$30
+         sta   (PTR),y
+         lda   PTR
+         ldy   PTR+1
++        jsr   addString
+         lda   #<.lf
+         ldy   #>.lf
+         jmp   addString
+
+addString
+         sta   $00
+         sty   $01
+         lda   ($00)
+         inc
+         sta   .len
+         ldy   #1
+-        lda   ($00),y
+         sta   ($FE)
++        iny
+         inc   $FE
+         bne   +
+         inc   $FF
+.len=*+1
++        cpy   #$FD                  ; set at runtime
+         bne   -
          rts
 
 .globalPrefsFilename
          !byte 15
          !raw  "PITCH.DARK.CONF"
 
-.debug0
-         !byte 1
-         !byte 0
+.equals  !byte 1
+         !raw  "="
+.lf      !byte 1
+         !byte $0D
+.fluff1  !byte 101
+         !raw  "# Pitch Dark preferences file",$0D
+         !raw  "# Do not edit by hand.",$0D
+         !raw  "# Or do. I'm a comment, not a cop.",$0D,$0D
+         !raw  "# value=0|1",$0D
+.fluff2  !byte 24
+         !byte $0D
+         !raw  "# value=game directory",$0D
+.fluff3  !byte 58
+         !byte $0D
+         !raw  "# key=game directory, value=filename of selected version",$0D
+.eof     !byte 6
+         !byte $0D
+         !raw  "=EOF",$0D
 }

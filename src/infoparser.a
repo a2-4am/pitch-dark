@@ -51,10 +51,10 @@ LoadGameInfo
          !word kProDOSFileBuffer
 
          lda   #$FF
-         sta   $00
+         sta   $FE
          lda   #$07
-         sta   $01                   ; ($00) points to start of data buffer
-         ldy   #$00                  ; index into ($00) pointing to current character
+         sta   $FF                   ; ($FE) points to start of data buffer
+         ldy   #$00                  ; index into ($FF) pointing to current character
          ldx   #$08                  ; index into sectionPointers array, stores pointer to start of each section
 
 .convertSectionLoop
@@ -62,7 +62,7 @@ LoadGameInfo
 .convertSectionNoInc
          cmp   #$5B                  ; '[' is the start of a new section
          beq   .skipSectionName
-         cmp   #$0A                  ; LF -> 0x00 (WeeGUI wants null-terminated strings)
+         cmp   #$0D                  ; CR -> 0x00 (WeeGUI wants null-terminated strings)
          beq   .null
          cmp   #$5E                  ; '^' -> closed-apple mousetext
          beq   .ca
@@ -75,13 +75,13 @@ LoadGameInfo
 .ca      lda   #$40
          !byte $2C
 .oa      lda   #$41
-         sta   ($00),y
+         sta   ($FE),y
          bra   .convertSectionLoop
 
 ; We found the start of a new section, so skip to the first character on the next line
 .skipSectionName
          jsr   IncAndGetChar
-         cmp   #$0A                  ; LF
+         cmp   #$0D                  ; CR
          bne   .skipSectionName
          jsr   IncAndGetChar
 
@@ -89,9 +89,9 @@ LoadGameInfo
          pha
          tya
          clc
-         adc   $00
+         adc   $FE
          sta   sectionPointers,x
-         lda   $01
+         lda   $FF
          bcc   +
          inc
 +        sta   sectionPointers+1,x
@@ -103,7 +103,7 @@ LoadGameInfo
 IncAndGetChar
          iny
          bne   +
-         inc   $01
-+        lda   ($00),y
+         inc   $FF
++        lda   ($FE),y
          rts
 }
