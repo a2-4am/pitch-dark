@@ -4,47 +4,22 @@
 ; load and launch the On Beyond Z-Machine! interpreter
 ;
 ; Public functions
+; - ClearInterpreterOptions
+; - SetInterpreterOptions
+; - SetInterpreterOptionsExceptForce40
+; - LoadInterpreter
 ; - LaunchInterpreter
 ;
-.playError
-         jmp   SoftBell
-LaunchInterpreter
-         jsr   SaveGlobalPreferences
-         jsr   LoadInterpreter
-         bcs   .playError
 
-; change prefix to folder of file we want the interpreter to open
-         jsr   ResetPath
-         lda   #<kGameRootDirectory
-         ldy   #>kGameRootDirectory
-         jsr   AddToPath
+ClearInterpreterOptions
+         ldy   #6
+         lda   #0
+-        sta   $0300,y
+         dey
+         bpl   -
+         rts
 
-         jsr   okvs_get
-         !word gPrefsStore
-         !word kLastPlayed
-         jsr   AddToPath
-
-         jsr   SetPrefix
-         !word gPathname
-         bcs   .playError
-
-; put just the filename at $2006
-         ldy   #0
-         lda   addrVersions
-         sta   $00
-         lda   addrVersions+1
-         sta   $01
--        lda   ($00),y
-         cmp   #$BD                  ; '='
-         beq   .doneBuildingFilename
-         iny
-         and   #$7F
-         sta   $2006,y
-         bra   -
-.doneBuildingFilename
-         sty   $2006
-
-; set options struct at $0300
+SetInterpreterOptions
          jsr   okvs_get
          !word gPrefsStore
          !word kForce40
@@ -52,9 +27,10 @@ LaunchInterpreter
          beq   +
          lda   #$CE
          !byte $2C
-+        lda   #$D9
++
+SetInterpreterOptionsExceptForce40
+         lda   #$D9
          sta   $0300                 ; 40/80 columns
-
          jsr   okvs_get
          !word gPrefsStore
          !word kForceUpper
@@ -99,9 +75,49 @@ LaunchInterpreter
          eor   $0304
          eor   $0305
          sta   $0306
+         rts
+
+.playError
+         jmp   SoftBell
+LaunchInterpreter
+         jsr   SaveGlobalPreferences
+         jsr   LoadInterpreter
+         bcs   .playError
+
+; change prefix to folder of file we want the interpreter to open
+         jsr   ResetPath
+         lda   #<kGameRootDirectory
+         ldy   #>kGameRootDirectory
+         jsr   AddToPath
+
+         jsr   okvs_get
+         !word gPrefsStore
+         !word kLastPlayed
+         jsr   AddToPath
+
+         jsr   SetPrefix
+         !word gPathname
+         bcs   .playError
+
+; put just the filename at $2006
+         ldy   #0
+         lda   addrVersions
+         sta   $00
+         lda   addrVersions+1
+         sta   $01
+-        lda   ($00),y
+         cmp   #$BD                  ; '='
+         beq   .doneBuildingFilename
+         iny
+         and   #$7F
+         sta   $2006,y
+         bra   -
+.doneBuildingFilename
+         sty   $2006
 
 ; shut down WeeGUI and transfer control to interpreter
          jsr   ExitWeeGUI
+         jsr   SetInterpreterOptions
          jmp   kSystemAddress
 
 LoadInterpreter

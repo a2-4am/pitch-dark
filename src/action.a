@@ -272,6 +272,7 @@ callback_clues
          jsr   SetStartupPath
 ; shutdown WeeGUI and transfer control to interpreter
          jsr   ExitWeeGUI
+         jsr   SetInterpreterOptionsExceptForce40
          jmp   kSystemAddress
 .cluesError
          jmp   SoftBell
