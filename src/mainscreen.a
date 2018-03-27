@@ -9,7 +9,6 @@
 ; - RepaintSomeViews
 ;
 
-; ROM routines
 MAGICRTS       = $FF58    ; used to set overflow bit
 
 ; View IDs (application-specific, acceptable range 0..15, no duplicates)

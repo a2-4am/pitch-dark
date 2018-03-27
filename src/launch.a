@@ -1,0 +1,121 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; load and launch the On Beyond Z-Machine! interpreter
+;
+; Public functions
+; - LaunchInterpreter
+;
+.playError
+         jmp   SoftBell
+LaunchInterpreter
+         jsr   SaveGlobalPreferences
+         jsr   LoadInterpreter
+         bcs   .playError
+
+; change prefix to folder of file we want the interpreter to open
+         jsr   ResetPath
+         lda   #<kGameRootDirectory
+         ldy   #>kGameRootDirectory
+         jsr   AddToPath
+
+         jsr   okvs_get
+         !word gPrefsStore
+         !word kLastPlayed
+         jsr   AddToPath
+
+         jsr   SetPrefix
+         !word gPathname
+         bcs   .playError
+
+; put just the filename at $2006
+         ldy   #0
+         lda   addrVersions
+         sta   $00
+         lda   addrVersions+1
+         sta   $01
+-        lda   ($00),y
+         cmp   #$BD                  ; '='
+         beq   .doneBuildingFilename
+         iny
+         and   #$7F
+         sta   $2006,y
+         bra   -
+.doneBuildingFilename
+         sty   $2006
+
+; set options struct at $0300
+         jsr   okvs_get
+         !word gPrefsStore
+         !word kForce40
+         jsr   okvs_as_boolean
+         beq   +
+         lda   #$D9
+         !byte $2C
++        lda   #$CE
+         sta   $0300                 ; 40/80 columns
+
+         jsr   okvs_get
+         !word gPrefsStore
+         !word kForceUpper
+         jsr   okvs_as_boolean
+         beq   +
+         lda   #1
+         !byte $2C
++        lda   #0
+         sta   $0301                 ; case
+
+         lda   #$FF
+         sta   $0302                 ; auto-restore
+
+         jsr   okvs_get
+         !word gPrefsStore
+         !word kScriptToFile
+         jsr   okvs_as_boolean
+         beq   +
+         lda   #0
+         !byte $2C
++        lda   #1
+         sta   $0303                 ; script-to-file
+
+         jsr   okvs_get
+         !word gPrefsStore
+         !word kAutoScript
+         jsr   okvs_as_boolean
+         beq   +
+         lda   #0
+         !byte $2C
++        lda   #1
+         sta   $0304                 ; auto-script
+
+         lda   #1
+         sta   $0305                 ; warn on missing .sav files
+
+         lda   #$A5
+         eor   $0300
+         eor   $0301
+         eor   $0302
+         eor   $0303
+         eor   $0304
+         eor   $0305
+         sta   $0306
+
+; shut down WeeGUI and transfer control to interpreter
+         jsr   ExitWeeGUI
+         jmp   kSystemAddress
+
+LoadInterpreter
+         jsr   ResetPath
+         lda   #<.interpreterFilename
+         ldy   #>.interpreterFilename
+         jsr   AddToPath
+
+         jsr   LoadFile
+         !word gPathname
+         !word kSystemAddress
+         !word $2000
+         !word kProDOSFileBuffer
+         rts
+.interpreterFilename
+         !byte 15
+         !raw  "ONBEYOND.SYSTEM"

@@ -24,6 +24,7 @@
          !source "src/mainscreen.a"
          !source "src/settingsdialog.a"
          !source "src/sound.a"
+         !source "src/launch.a"
 
 .weeguiFilename
          !byte 10
