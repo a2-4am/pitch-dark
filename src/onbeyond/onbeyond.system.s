@@ -77,17 +77,19 @@ quit    jsr     $bf00
 
         ;get volume name
 
-        inc     c5_parms+3
+         inc     c5_parms+3
+         lda    #$81
+         sta    c5_parms+2
         jsr     $bf00
         !byte   $c5
         !word   c5_parms
-        ldx     $301
+        ldx     $381
         inx
         txa
         and     #$0f
-        sta     $300
+        sta     $380
         lda     #$2f
-        sta     $301
+        sta     $381
 
         ;use that for intepreter location
 
@@ -132,7 +134,7 @@ c5_parms
 
 c6_parms
         !byte   1
-        !word   $300
+        !word   $380
 
 c4_parms
         !byte   $0a
