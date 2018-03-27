@@ -9,6 +9,7 @@
 ;
 ; Public variables
 ; - gCurrentGame          byte       0..kNumberOfGames-1
+; - gNeedToSavePrefs      byte       0=false, 1=true
 ;
 ; Public constants
 ; - kForce40
@@ -22,6 +23,9 @@
 kDefaultGame              = 30       ; Zork I
 
 gCurrentGame
+         !byte 0
+
+gNeedToSavePrefs
          !byte 0
 
 kForce40
@@ -47,6 +51,8 @@ kLastPlayed
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 LoadGlobalPreferences
+         stz   gNeedToSavePrefs
+
          jsr   okvs_init
          !word gPrefsStore
 
@@ -146,10 +152,11 @@ LoadGlobalPreferences
 .val     !fill 15
 
 SaveGlobalPreferences
-         lda   #$00
-         sta   $FE
-         sta   .prefslen
-         sta   .prefslen+1
+         lda   gNeedToSavePrefs
+         bne   +
+         rts
++
+         stz   $FE
          lda   #$20
          sta   $FF
 
@@ -207,6 +214,7 @@ SaveGlobalPreferences
          sec
          sbc   #$20
          sta   .prefslen+1
+
          jsr   SaveFile
          !word .globalPrefsFilename
          !byte 4                     ; filetype=TXT
@@ -215,6 +223,8 @@ SaveGlobalPreferences
 .prefslen
          !word $FDFD                 ; set at runtime
          !word kProDOSFileBuffer
+         stz   gNeedToSavePrefs
+
          rts
 
 addBooleanFromStore

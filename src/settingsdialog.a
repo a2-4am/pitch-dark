@@ -195,6 +195,8 @@ callback_options_ok
          jsr   SetPrefByCheckbox
          !byte ID_OPTIONS_AUTOSCRIPT
          !word kAutoScript
+         lda   #1
+         sta   gNeedToSavePrefs
          jsr   SaveGlobalPreferences
                                      ; execution falls through here
 callback_options_cancel

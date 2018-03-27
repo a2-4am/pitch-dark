@@ -196,6 +196,8 @@ callback_next
          !word kLastPlayed
 .gameptr !word $FDFD                 ; set at runtime
 .loadNewGameInfoAndRepaint
+         lda   #1
+         sta   gNeedToSavePrefs
          jsr   LoadGameInfo
          jmp   RepaintSomeViews
 }
