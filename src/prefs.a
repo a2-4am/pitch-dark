@@ -1,7 +1,7 @@
 ;license:MIT
 ;(c) 2018 by 4am
 ;
-; Global and per-game preferences
+; Global preferences
 ;
 ; Public functions
 ; - LoadGlobalPreferences

@@ -1,7 +1,7 @@
 ;license:MIT
 ;(c) 2018 by 4am
 ;
-; User interface - views and paint routines
+; User interface - views and paint routines for main screen
 ;
 ; Public functions
 ; - CreateViews

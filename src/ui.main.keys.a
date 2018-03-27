@@ -1,12 +1,12 @@
 ;license:MIT
 ;(c) 2018 by 4am
 ;
-; User interface - click/activation callbacks
+; User interface - click/activation callbacks and key handlers for main screen
 ;
 ; Public functions
 ; - HandleKey
 ;
-; (all callbacks are defined in view configuration blocks in paint.a
+; (all callbacks are defined in view configuration blocks
 ;  and triggered through UI actions or called from HandleKey)
 ;
 
@@ -21,7 +21,14 @@ kArtworkRootDirectory                ; length-prefixed pathname of DHGR box art
          !byte 8
          !raw  "ARTWORK/"
 
-; action keys for main screen (should correspond to button titles in paint.a)
+; IDs of actions that do not correspond to WeeGUI view IDs have high bit set
+ID_SCROLLUP    = $81
+ID_SCROLLDOWN  = $82
+ID_X           = $83
+ID_Y           = $84
+ID_Z           = $85
+
+; action keys for main screen (should correspond to button titles)
 .keys
          !byte $C7,ID_PLAY           ; G
          !byte $E7,ID_PLAY           ; g
@@ -38,12 +45,6 @@ kArtworkRootDirectory                ; length-prefixed pathname of DHGR box art
          !byte $CE,ID_NEXT           ; N
          !byte $EE,ID_NEXT           ; n
          !byte $95,ID_NEXT           ; right arrow
-; IDs of actions that do not correspond to WeeGUI view IDs have high bit set
-ID_SCROLLUP    = $81
-ID_SCROLLDOWN  = $82
-ID_X           = $83
-ID_Y           = $84
-ID_Z           = $85
          !byte $8B,ID_SCROLLUP       ; up arrow
          !byte $8A,ID_SCROLLDOWN     ; down arrow
          !byte $D8,ID_X              ; X
