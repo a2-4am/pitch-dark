@@ -20,8 +20,6 @@
 ;
 
 !zone {
-kDefaultGame              = 30       ; Zork I
-
 gCurrentGame
          !byte 0
 
