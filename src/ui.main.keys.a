@@ -169,8 +169,6 @@ HandleKey
 
 }
 
-;------------------------------------------------------------------------------
-
 !zone {
 callback_previous
          lda   gCurrentGame

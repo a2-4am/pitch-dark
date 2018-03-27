@@ -9,9 +9,11 @@
 ;
 ; Public variables
 ; - gCurrentGame          byte       0..kNumberOfGames-1
+;     populated by LoadGlobalPreferences so other code can index into GAMES array for quick access to game shortnames
 ; - gNeedToSavePrefs      byte       0=false, 1=true
+;     set to 1 if prefs have changed. SaveGlobalPreferences won't write to disk if this is 0.
 ;
-; Public constants
+; Public constants (all length-prefixed strings)
 ; - kForce40
 ; - kForceUpper
 ; - kScriptToFile
@@ -149,6 +151,12 @@ LoadGlobalPreferences
 .vallen  !byte 0
 .val     !fill 15
 
+;------------------------------------------------------------------------------
+; SaveGlobalPreferences
+;
+; in:    current ProDOS prefix is the same as the PITCH.DARK.CONF file
+; out:   all registers and flags clobbered
+;------------------------------------------------------------------------------
 SaveGlobalPreferences
          lda   gNeedToSavePrefs
          bne   +

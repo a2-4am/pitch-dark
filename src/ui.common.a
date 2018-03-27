@@ -9,8 +9,6 @@
 ; - CreateButton
 ; - CreateTitleView
 ; - PaintTitleView
-; - SetCheckboxByPref
-; - SetPrefByCheckbox
 ;
 
 ; ROM routines
@@ -21,6 +19,15 @@ NORMAL         = $FE84
 ID_TITLE       = 0
 
 !zone {
+;------------------------------------------------------------------------------
+; CreateRadio/CreateCheckbox/CreateButton
+; creates a WeeGUI UI control with the 'raw title' option set
+;
+; in:    stack contains 2 bytes of parameters:
+;          +1 [word] pointer to WeeGUI view configuration block
+; out:   $00/$01 clobbered
+;        all registers clobbered
+;------------------------------------------------------------------------------
 CreateRadio
          ldx   #WGCreateRadio
          !byte $2C                   ; hide next 2 bytes
@@ -47,6 +54,14 @@ CreateButton
          sta   PARAM0
          jmp   WeeGUI
 
+;------------------------------------------------------------------------------
+; CreateTitleView
+; creates the standard title bar on top row of screen
+;
+; in:    none
+; out:   A,X clobbered
+;        title view selected
+;------------------------------------------------------------------------------
 CreateTitleView
          ldx   #WGCreateView         ; create title bar on top line
          lda   #<viewTitle
@@ -55,6 +70,14 @@ CreateTitleView
          sta   PARAM1
          jmp   WeeGUI
 
+;------------------------------------------------------------------------------
+; PaintTitleView
+; paints the title bar
+;
+; in:    none
+; out:   all registers clobbered
+;        title view selected
+;------------------------------------------------------------------------------
 PaintTitleView
          ldx   #WGSelectView
          lda   #ID_TITLE
@@ -79,71 +102,4 @@ viewTitle
          !byte 1                     ; height
 .stringTitle
          !raw  "                                   Pitch Dark                                   ",0
-}
-
-!zone {
-SetCheckboxByPref
-         +PARAMS_ON_STACK 3
-
-         ldy   #1
-         lda   (PARAM),y
-         sta   .id
-         iny
-         lda   (PARAM),y
-         sta   .key
-         iny
-         lda   (PARAM),y
-         sta   .key+1
-
-         jsr   okvs_get
-         !word gPrefsStore
-.key     !word $FDFD                 ; set at runtime
-         bcs   .exit
-
-         jsr   okvs_as_boolean
-         beq   .exit
-
-         ldx   #WGSelectView
-.id=*+1
-         lda   #$FD                  ; set at runtime
-         jsr   WeeGUI
-         ldx   #WGSetState
-         lda   #1
-         sta   PARAM0
-         jsr   WeeGUI
-.exit    rts
-}
-
-!zone {
-SetPrefByCheckbox
-         +PARAMS_ON_STACK 3
-
-         ldy   #1
-         lda   (PARAM),y
-         sta   .id
-         iny
-         lda   (PARAM),y
-         sta   .key
-         iny
-         lda   (PARAM),y
-         sta   .key+1
-
-         ldx   #WGSelectView
-.id=*+1
-         lda   #$FD                  ; set at runtime
-         jsr   WeeGUI
-         ldx   #WGGetState
-         jsr   WeeGUI
-
-         lda   PARAM0
-         and   #1
-         sta   .value+1
-
-         jsr   okvs_update
-         !word gPrefsStore
-.key     !word $FDFD                 ; set at runtime
-         !word .value
-         rts
-.value   !byte 1
-         !byte $FD                   ; set at runtime
 }

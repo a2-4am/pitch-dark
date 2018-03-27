@@ -9,10 +9,10 @@
 ; - RepaintSomeViews
 ;
 
-MAGICRTS       = $FF58    ; used to set overflow bit
+MAGICRTS       = $FF58               ; used to set overflow bit
 
 ; View IDs (application-specific, acceptable range 0..15, no duplicates)
-; ID_TITLE is defined in paintcommon.a
+; ID_TITLE is defined in ui.common.a
 ID_PREVIOUS    = 1
 ID_OPTIONS     = 2
 ID_NEXT        = 3
@@ -31,8 +31,7 @@ ID_DESCRIPTION = 13
 ; call WeeGUI to create all application views
 ;
 ; in:    WeeGUI loaded and initialized
-; out:   all registers clobbered
-;        all flags clobbered
+; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 CreateViews
          jsr   CreateTitleView
@@ -91,8 +90,7 @@ CreateViews
 ;
 ; in:    WeeGUI loaded and initialized
 ;        CreateViews has been called
-; out:   all registers clobbered
-;        all flags clobbered
+; out:   all registers and flags clobbered
 ;        $00/$01 clobbered
 ;------------------------------------------------------------------------------
 PaintAllViews
@@ -110,8 +108,7 @@ PaintAllViews
 ; in:    WeeGUI loaded and initialized
 ;        CreateViews has been called
 ;        LoadGameInfo has been called to load new game description text
-; out:   all registers clobbered
-;        all flags clobbered
+; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 RepaintSomeViews
          jsr   .paintInfoView
@@ -119,6 +116,7 @@ RepaintSomeViews
          jmp   .paintDescriptionView
 
 ;------------------------------------------------------------------------------
+; internal functions
 
 .paintHRView
          ldx   #WGSelectView

@@ -7,6 +7,7 @@
 ; - OptionsDialog
 ;
 
+!zone {
 ; View IDs (application-specific, acceptable range 0..15, no duplicates)
 ; ID_TITLE is defined in paintcommon.a
 ID_OPTIONS_FRAME          = 1
@@ -17,13 +18,30 @@ ID_OPTIONS_AUTOSCRIPT     = 5
 ID_OPTIONS_OK             = 6
 ID_OPTIONS_CANCEL         = 7
 
-!zone {
+; action keys for options screen
+.keys
+         !byte $CF,ID_OPTIONS_OK                ; O
+         !byte $EF,ID_OPTIONS_OK                ; o
+         !byte $8D,ID_OPTIONS_OK                ; Return
+         !byte $C3,ID_OPTIONS_CANCEL            ; C
+         !byte $E3,ID_OPTIONS_CANCEL            ; c
+         !byte $9B,ID_OPTIONS_CANCEL            ; Esc
+         !byte $B4,ID_OPTIONS_FORCE40           ; 4
+         !byte $D5,ID_OPTIONS_FORCEUPPER        ; U
+         !byte $F5,ID_OPTIONS_FORCEUPPER        ; u
+         !byte $C6,ID_OPTIONS_SCRIPTTOFILE      ; F
+         !byte $E6,ID_OPTIONS_SCRIPTTOFILE      ; f
+         !byte $D3,ID_OPTIONS_AUTOSCRIPT        ; S
+         !byte $F3,ID_OPTIONS_AUTOSCRIPT        ; s
+.endkeys
+
 ;------------------------------------------------------------------------------
 ; OptionsDialog
-; call WeeGUI to create and paint all option screen views
+; call WeeGUI to create and paint option screen, and run to completion
 ;
 ; in:    WeeGUI loaded and initialized
-; out:   all registers clobbered
+; out:   exits via MainScreen
+;        all registers clobbered
 ;        all flags clobbered
 ;------------------------------------------------------------------------------
 OptionsDialog
@@ -146,22 +164,8 @@ OptionsDialog
          jsr   HandleOptionsKey
          bra   .runLoop
 
-; action keys for options screen
-.keys
-         !byte $CF,ID_OPTIONS_OK                ; O
-         !byte $EF,ID_OPTIONS_OK                ; o
-         !byte $8D,ID_OPTIONS_OK                ; Return
-         !byte $C3,ID_OPTIONS_CANCEL            ; C
-         !byte $E3,ID_OPTIONS_CANCEL            ; c
-         !byte $9B,ID_OPTIONS_CANCEL            ; Esc
-         !byte $B4,ID_OPTIONS_FORCE40           ; 4
-         !byte $D5,ID_OPTIONS_FORCEUPPER        ; U
-         !byte $F5,ID_OPTIONS_FORCEUPPER        ; u
-         !byte $C6,ID_OPTIONS_SCRIPTTOFILE      ; F
-         !byte $E6,ID_OPTIONS_SCRIPTTOFILE      ; f
-         !byte $D3,ID_OPTIONS_AUTOSCRIPT        ; S
-         !byte $F3,ID_OPTIONS_AUTOSCRIPT        ; s
-.endkeys
+;------------------------------------------------------------------------------
+; internal functions
 
 HandleOptionsKey
          ldx   #.endkeys-.keys
@@ -201,6 +205,73 @@ callback_options_ok
                                      ; execution falls through here
 callback_options_cancel
          jmp   MainScreen
+
+!zone {
+SetCheckboxByPref
+         +PARAMS_ON_STACK 3
+
+         ldy   #1
+         lda   (PARAM),y
+         sta   .id
+         iny
+         lda   (PARAM),y
+         sta   .key
+         iny
+         lda   (PARAM),y
+         sta   .key+1
+
+         jsr   okvs_get
+         !word gPrefsStore
+.key     !word $FDFD                 ; set at runtime
+         bcs   .exit
+
+         jsr   okvs_as_boolean
+         beq   .exit
+
+         ldx   #WGSelectView
+.id=*+1
+         lda   #$FD                  ; set at runtime
+         jsr   WeeGUI
+         ldx   #WGSetState
+         lda   #1
+         sta   PARAM0
+         jsr   WeeGUI
+.exit    rts
+}
+
+!zone {
+SetPrefByCheckbox
+         +PARAMS_ON_STACK 3
+
+         ldy   #1
+         lda   (PARAM),y
+         sta   .id
+         iny
+         lda   (PARAM),y
+         sta   .key
+         iny
+         lda   (PARAM),y
+         sta   .key+1
+
+         ldx   #WGSelectView
+.id=*+1
+         lda   #$FD                  ; set at runtime
+         jsr   WeeGUI
+         ldx   #WGGetState
+         jsr   WeeGUI
+
+         lda   PARAM0
+         and   #1
+         sta   .value+1
+
+         jsr   okvs_update
+         !word gPrefsStore
+.key     !word $FDFD                 ; set at runtime
+         !word .value
+         rts
+.value   !byte 1
+         !byte $FD                   ; set at runtime
+}
 
 .viewFrame
          !byte ID_OPTIONS_FRAME      ; view ID
