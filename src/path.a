@@ -46,7 +46,7 @@ AddToPath
          sta   gPathname+1,x
          inx
          iny
-.a       cpy   #$FD                  ; set at runtime
+.a       cpy   #$FD                  ; SMC
          bcc   -
          stx   gPathname
          rts

@@ -1,0 +1,42 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; Parser for game list
+;
+; Public functions
+; - LoadGameList
+;
+
+;------------------------------------------------------------------------------
+; LoadGameList
+; load file with master game list
+;
+; in:    current ProDOS prefix is the same as the GAMES.CONF file
+; out:   gGamesListStore populated
+;        all registers and flags clobbered
+;------------------------------------------------------------------------------
+!zone {
+LoadGameList
+         jsr   LoadFile              ; load prefs file at $2000
+         !word .gamesListFilename
+.listAddress
+         !word $2000
+         !word $2000
+         !word kProDOSFileBuffer
+
+         jsr   ParseKeyValueText     ; parse contents into games list store
+         !word gGamesListStore
+         !word .listAddress
+         !byte 0
+
+         lda   SRC                   ; save pointer to free space for next store
+         sta   gGlobalPrefsStore
+         lda   SRC+1
+         sta   gGlobalPrefsStore+1
+
+         rts
+
+.gamesListFilename
+         !byte 10
+         !raw  "GAMES.CONF"
+}

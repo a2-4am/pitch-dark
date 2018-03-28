@@ -13,9 +13,9 @@ kTextRootDirectory
          !raw "TEXT/"
 
 gVersionsStore
-         !word $FDFD                 ; set at runtime in LoadGlobalPreferences
+         !word $FDFD                 ; set in LoadGlobalPreferences
 gOptionsStore
-         !word $FDFD                 ; set at runtime in LoadGameInfo
+         !word $FDFD                 ; set in LoadGameInfo
 
 sectionPointers                      ; array of pointers to start of each section
 addrEOF
@@ -35,18 +35,20 @@ addrInfo
 ;
 ; in:    gCurrentGame between 0 and (kNumberOfGames-1)
 ; out:   addrInfo, addrDescription, addrVersions, addrOptions populated
+;        gVersionsStore populated with keys/values in [versions] section
+;        gOptionsStore populated with keys/values in [options] section
 ;        all registers and flags clobbered
+;        $00..$05 clobbered
+;        $0800..$1FFF clobbered
 ;------------------------------------------------------------------------------
 LoadGameInfo
          jsr   ResetPath
          lda   #<kTextRootDirectory
          ldy   #>kTextRootDirectory
          jsr   AddToPath
-         lda   gCurrentGame
-         asl
-         tax
-         lda   GAMES,x
-         ldy   GAMES+1,x
+         jsr   okvs_get
+         !word gGlobalPrefsStore
+         !word kLastPlayed
          jsr   AddToPath
 
          jsr   LoadFile

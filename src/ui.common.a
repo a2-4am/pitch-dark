@@ -47,7 +47,7 @@ CreateButton
          lda   ($00),y
          sta   PARAM1
 .type=*+1
-         ldx   #$FD                  ; set at runtime
+         ldx   #$FD                  ; SMC
          jsr   WeeGUI
          ldx   #WGViewSetRawTitle
          lda   #1

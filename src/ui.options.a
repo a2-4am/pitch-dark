@@ -222,7 +222,7 @@ SetCheckboxByPref
 
          jsr   okvs_get
          !word gGlobalPrefsStore
-.key     !word $FDFD                 ; set at runtime
+.key     !word $FDFD                 ; SMC
          bcs   .exit
 
          jsr   okvs_as_boolean
@@ -230,7 +230,7 @@ SetCheckboxByPref
 
          ldx   #WGSelectView
 .id=*+1
-         lda   #$FD                  ; set at runtime
+         lda   #$FD                  ; SMC
          jsr   WeeGUI
          ldx   #WGSetState
          lda   #1
@@ -255,7 +255,7 @@ SetPrefByCheckbox
 
          ldx   #WGSelectView
 .id=*+1
-         lda   #$FD                  ; set at runtime
+         lda   #$FD                  ; SMC
          jsr   WeeGUI
          ldx   #WGGetState
          jsr   WeeGUI
@@ -266,11 +266,11 @@ SetPrefByCheckbox
 
          jsr   okvs_update
          !word gGlobalPrefsStore
-.key     !word $FDFD                 ; set at runtime
+.key     !word $FDFD                 ; SMC
          !word .value
          rts
 .value   !byte 1
-         !byte $FD                   ; set at runtime
+         !byte $FD                   ; SMC
 }
 
 .viewFrame

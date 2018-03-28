@@ -165,21 +165,22 @@ paintInfoView
          bpl   -
          lda   #$00
          sta   $3F65
-         lda   gCurrentGame
-         asl
-         tax
-         lda   GAMES,x
-         sta   .key1
-         lda   GAMES+1,x
-         sta   .key1+1
-         jsr   okvs_get
+
+         jsr   okvs_get              ; get shortname of current game
          !word gGlobalPrefsStore
-.key1    !word $FDFD                 ; set at runtime
+         !word kLastPlayed
+         sta   .key1
+         sty   .key1+1
+
+         jsr   okvs_get              ; get selected version of this game
+         !word gGlobalPrefsStore
+.key1    !word $FDFD                 ; SMC
          sta   .key2
          sty   .key2+1
-         jsr   okvs_get
+
+         jsr   okvs_get              ; get long description of this version
          !word gVersionsStore
-.key2    !word $FDFD                 ; set at runtime
+.key2    !word $FDFD                 ; SMC
          sta   SRC
          sty   SRC+1
          lda   (SRC)
@@ -203,9 +204,9 @@ multiPrint
          lda   ($00)
          beq   .printDone
          ldx   #WGSetCursor
-.htab    lda   #$FD                  ; set at runtime
+.htab    lda   #$FD                  ; SMC
          sta   PARAM0
-.vtab    lda   #$FD                  ; set at runtime
+.vtab    lda   #$FD                  ; SMC
          sta   PARAM1
          jsr   WeeGUI
          ldx   #WGPrint
@@ -218,7 +219,7 @@ multiPrint
          lda   $00
          clc
 .printLineLength
-         adc   #$fd                  ; set at runtime
+         adc   #$fd                  ; SMC
          sta   $00
          bcc   +
          inc   $01

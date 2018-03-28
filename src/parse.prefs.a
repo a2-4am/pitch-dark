@@ -22,6 +22,9 @@
 ;
 
 !zone {
+gGlobalPrefsStore
+         !word 0
+
 gCurrentGame
          !byte 0
 
@@ -70,30 +73,18 @@ LoadGlobalPreferences
          lda   SRC+1
          sta   gVersionsStore+1
 
-         jsr   okvs_get              ; set gCurrentGame
+         jsr   okvs_get              ; get shortname of current game
          !word gGlobalPrefsStore
          !word kLastPlayed
-         sta   DEST
-         sty   DEST+1
-         ldx   #$FE
-.findLastPlayed
-         inx
-         inx
-         lda   GAMES,x
-         sta   SRC
-         lda   GAMES+1,x
-         sta   SRC+1
-         lda   (SRC)
-         tay
-         dey
--        lda   (SRC),y
-         cmp   (DEST),y
-         bne   .findLastPlayed
-         dey
-         bpl   -
-         txa
-         lsr
-         sta   gCurrentGame
+         sta   .gameNamePtr
+         sty   .gameNamePtr+1
+
+         jsr   okvs_get              ; look up game in games list to get numeric index
+         !word gGamesListStore
+.gameNamePtr
+         !word $FDFD                 ; SMC
+         stx   gCurrentGame
+
          rts
 
 ;------------------------------------------------------------------------------
@@ -149,7 +140,7 @@ SaveGlobalPreferences
          sta   .gameKey
          sty   .gameKey+1
          jsr   addStringFromStore
-.gameKey !word $FDFD                 ; set at runtime
+.gameKey !word $FDFD                 ; SMC
          plx
          inx
          cpx   #kNumberOfGames
@@ -172,7 +163,7 @@ SaveGlobalPreferences
          !word 0                     ; auxtype=0000
          !word $2000
 .prefslen
-         !word $FDFD                 ; set at runtime
+         !word $FDFD                 ; SMC
          !word kProDOSFileBuffer
          stz   gNeedToSavePrefs
 
@@ -201,9 +192,9 @@ addStringFromStore
          jsr   okvs_get
          !word gGlobalPrefsStore
 .storeKey
-         !word $FDFD                 ; set at runtime
+         !word $FDFD                 ; SMC
 .skipOverBooleanLogic
-         bra   +                     ; set at runtime (opcode may become BIT)
+         bra   +                     ; SMC (opcode may become BIT)
          sta   PTR
          sty   PTR+1
          ldy   #1
@@ -231,7 +222,7 @@ addString
          bne   +
          inc   $FF
 .len=*+1
-+        cpy   #$FD                  ; set at runtime
++        cpy   #$FD                  ; SMC
          bne   -
          rts
 

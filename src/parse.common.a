@@ -54,7 +54,7 @@ ParseKeyValueText
 +        sty   $FF
          jsr   okvs_init             ; reset key/value store
 .initStore
-         !word $FDFD                 ; set at runtime
+         !word $FDFD                 ; SMC
 
          ldy   #$00                  ; index into ($FE) pointing to current character
 .newKey
@@ -95,16 +95,16 @@ ParseKeyValueText
          lda   #0
          !byte $2C
 .useMaxLength
-         lda   #$FD                  ; set at runtime
+         lda   #$FD                  ; SMC
          sta   .appendMaxLength      ; all other values get upgraded to max_length so we can update them in place
          phy                         ; okvs functions clobber everything but we need Y
          jsr   okvs_append
 .appendStore
-         !word $FDFD                 ; set at runtime
+         !word $FDFD                 ; SMC
          !word gKeyLen
          !word gValLen
 .appendMaxLength
-         !byte $FD                   ; set at runtime
+         !byte $FD                   ; SMC
          ply
          bra   .newKey
 

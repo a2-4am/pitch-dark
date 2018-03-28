@@ -193,7 +193,7 @@ callback_next
          jsr   okvs_update
          !word gGlobalPrefsStore
          !word kLastPlayed
-.gameptr !word $FDFD                 ; set at runtime
+.gameptr !word $FDFD                 ; SMC
 .loadNewGameInfoAndRepaint
          lda   #1
          sta   gNeedToSavePrefs

@@ -20,16 +20,13 @@
          !source "src/sound.a"
          !source "src/launch.a"
          !source "src/parse.common.a"
+         !source "src/parse.gamelist.a"
          !source "src/parse.gameinfo.a"
          !source "src/parse.prefs.a"
          !source "src/ui.common.a"
          !source "src/ui.main.a"
          !source "src/ui.main.keys.a"
          !source "src/ui.options.a"
-
-.weeguiFilename
-         !byte 10
-         !raw  "LIB/WEEGUI"
 
 Start
          lda   MACHID
@@ -49,8 +46,9 @@ Start
          jsr   DisconnectRAM32       ; disconnect /RAM in S3,D2
          jsr   ClearInterpreterOptions ; clear options struct at $300
          jsr   WGInit                ; initialize WeeGUI
-         jsr   LoadGlobalPreferences ; get current game
-         jsr   LoadGameInfo          ; load and parse game description text
+         jsr   LoadGameList          ; get master list of games
+         jsr   LoadGlobalPreferences ; get current game and global options
+         jsr   LoadGameInfo          ; get current game description and game-specific options
          ldx   #WGEnableMouse        ; enable mouse support
          jsr   WeeGUI
 MainScreen
@@ -78,5 +76,9 @@ ExitWeeGUI
          ldx   #WGExit               ; clean up WeeGUI
          jmp   WeeGUI
 
-gGlobalPrefsStore
-         !word *+2                 ; address of storage space for prefs
+.weeguiFilename
+         !byte 10
+         !raw  "LIB/WEEGUI"
+
+gGamesListStore
+         !word *+2                 ; address first okvs store
