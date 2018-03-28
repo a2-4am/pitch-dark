@@ -33,7 +33,7 @@ addrInfo
 ; LoadGameInfo
 ; load file with information about the current game
 ;
-; in:    gCurrentGame between 0 and (kNumberOfGames-1)
+; in:    current ProDOS prefix is the same as the PITCH.DARK binary
 ; out:   addrInfo, addrDescription, addrVersions, addrOptions populated
 ;        gVersionsStore populated with keys/values in [versions] section
 ;        gOptionsStore populated with keys/values in [options] section

@@ -88,6 +88,8 @@ okvs_init
 ; in:    stack contains 2 bytes of parameters:
 ;          +1 [word] handle to storage space
 ; out:   A contains number of keys in this store
+;        X clobbered
+;        Y preserved
 ;        $00/$01 clobbered
 ;        $02/$03 clobbered
 ;------------------------------------------------------------------------------

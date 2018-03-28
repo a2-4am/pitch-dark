@@ -12,7 +12,6 @@
          !source "src/constants.a"
          !source "src/WeeGUI_MLI.s"
 
-         !source "src/games.a"
          !source "src/okvs.a"
          !source "src/prodos.a"
          !source "src/ramdisk.a"

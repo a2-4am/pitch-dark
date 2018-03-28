@@ -8,8 +8,6 @@
 ; - SaveGlobalPreferences
 ;
 ; Public variables
-; - gCurrentGame          byte       0..kNumberOfGames-1
-;     populated by LoadGlobalPreferences so other code can index into GAMES array for quick access to game shortnames
 ; - gNeedToSavePrefs      byte       0=false, 1=true
 ;     set to 1 if prefs have changed. SaveGlobalPreferences won't write to disk if this is 0.
 ;
@@ -24,9 +22,6 @@
 !zone {
 gGlobalPrefsStore
          !word 0
-
-gCurrentGame
-         !byte 0
 
 gNeedToSavePrefs
          !byte 0
@@ -72,19 +67,6 @@ LoadGlobalPreferences
          sta   gVersionsStore
          lda   SRC+1
          sta   gVersionsStore+1
-
-         jsr   okvs_get              ; get shortname of current game
-         !word gGlobalPrefsStore
-         !word kLastPlayed
-         sta   .gameNamePtr
-         sty   .gameNamePtr+1
-
-         jsr   okvs_get              ; look up game in games list to get numeric index
-         !word gGamesListStore
-.gameNamePtr
-         !word $FDFD                 ; SMC
-         stx   gCurrentGame
-
          rts
 
 ;------------------------------------------------------------------------------
@@ -129,21 +111,24 @@ SaveGlobalPreferences
          ldy   #>.fluff3
          jsr   addString
 
+         jsr   okvs_len
+         !word gGamesListStore
+         sta   .numberOfGames
          ldx   #0
 .gameLoop
          phx
-         txa
-         asl
-         tax
-         lda   GAMES,x
-         ldy   GAMES+1,x
+         stx   .n
+         jsr   okvs_nth
+         !word gGamesListStore
+.n       !byte $FD                   ; SMC
          sta   .gameKey
          sty   .gameKey+1
          jsr   addStringFromStore
 .gameKey !word $FDFD                 ; SMC
          plx
          inx
-         cpx   #kNumberOfGames
+.numberOfGames=*+1
+         cpx   #$FD                  ; SMC
          bne   .gameLoop
 
          lda   #<.eof

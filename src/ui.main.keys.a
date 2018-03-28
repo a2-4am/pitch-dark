@@ -170,31 +170,49 @@ HandleKey
 }
 
 !zone {
+GetCurrentGameIndex
+         jsr   okvs_get              ; get shortname of current game
+         !word gGlobalPrefsStore
+         !word kLastPlayed
+         sta   .gameNamePtr
+         sty   .gameNamePtr+1
+         jsr   okvs_get              ; get numeric index
+         !word gGamesListStore
+.gameNamePtr
+         !word $FDFD                 ; SMC
+         rts                         ; X = index of current game
+
 callback_previous
-         lda   gCurrentGame
-         dec
+         jsr   GetCurrentGameIndex
+         dex
          bpl   +
-         lda   #kNumberOfGames-1
-+        sta   gCurrentGame
-         bra   .loadNewGameInfoAndRepaint
-callback_next
-         lda   gCurrentGame
-         inc
-         cmp   #kNumberOfGames
-         bcc   +
-         lda   #0
-+        sta   gCurrentGame
-         asl
+         jsr   okvs_len
+         !word gGamesListStore
          tax
-         lda   GAMES,x
+         dex
++        bra   .loadNewGameInfoAndRepaint
+callback_next
+         jsr   GetCurrentGameIndex
+         inx
+         stx   .n
+         jsr   okvs_len
+         !word gGamesListStore
+         ldx   .n
+.n=*+1
+         cmp   #$FD                  ; SMC
+         bne   .loadNewGameInfoAndRepaint
+         ldx   #0
+.loadNewGameInfoAndRepaint
+         stx   .nth
+         jsr   okvs_nth
+         !word gGamesListStore
+.nth     !byte $FD                   ; SMC
          sta   .gameptr
-         lda   GAMES+1,x
-         sta   .gameptr+1
+         sty   .gameptr+1
          jsr   okvs_update
          !word gGlobalPrefsStore
          !word kLastPlayed
 .gameptr !word $FDFD                 ; SMC
-.loadNewGameInfoAndRepaint
          lda   #1
          sta   gNeedToSavePrefs
          jsr   LoadGameInfo
