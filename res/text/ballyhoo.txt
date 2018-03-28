@@ -4,7 +4,6 @@
  Copyright 1986 Infocom, Inc.
  Genre: mystery
  Difficulty: ^^^&&
- Release 97 / Serial number 851218
 
 [description]
  
@@ -24,7 +23,7 @@
  lot, trying to set you up for a permanent slot in the freak show.
 
 [versions]
-R97.851218.Z3=r97 / 851218
+R97.851218.Z3=Release 97 / Serial number 851218
 
 [options]
 VERSIONS=0

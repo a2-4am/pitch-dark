@@ -4,7 +4,6 @@
  Copyright 1987 Infocom, Inc.
  Genre: comedy
  Difficulty: ^^^^&
- Release 116 / Licence Number 870602
 
 [description]
  
@@ -36,12 +35,13 @@
  runaway success will keep you in stitches as you confront a series of
  bureaucratic puzzles and experience the thrill of outsmarting the powers
  that be.
+ 
+ NOTE: this game is patched to remove the in-game copy protection. When you
+ are asked five questions in the paranoid's house, you may give any answers.
 
 [versions]
-R116.DEPROT.Z4=r116 / cracked
-R116.870602.Z4=r116 / 870602
-R86.DEPROT.Z4=r86 / cracked
-R86.870212.Z4=r86 / 870212
+R116.DEPROT.Z4=Release 116 / Licence Number 870602
+R86.DEPROT.Z4=Release 86 / Licence Number 870212
 
 [options]
 

@@ -4,7 +4,6 @@
  Copyright 1981 Infocom, Inc.
  Genre: fantasy
  Difficulty: ^^^&&
- Release 88 / Serial number 840726
 
 [description]
  
@@ -25,17 +24,14 @@
  you new surprises no matter how many times you explore it.
 
 [versions]
-R88.840726.Z3=r88 / 840726
-R76.840509.Z3=r76 / 840509
-R75.830929.Z3=r75 / 830929
-R30.830330.Z3=r30 / 830330
-R28.821013.Z3=r28 / 821013
-R26.820803.Z3=r26 / 820803
-R25.820515.Z3=r25 / 820515
-R23.820428.Z3=r23 / 820428
-R20.000000.Z3=r20 / 000000
-R15.UG3AU5.Z2=r15 / UG3AU5
-R5.000000.Z1=r5 / 000000
+R88.840726.Z3=Release 88 / Serial number 840726
+R76.840509.Z3=Release 76 / Serial number 840509
+R75.830929.Z3=Release 75 / Serial number 830929
+R30.830330.Z3=Release 30 / Serial number 830330
+R23.820428.Z3=Release 23 / Serial number 820428
+R20.000000.Z3=Release 20 / Serial number 000000
+R15.UG3AU5.Z2=Release 15 / Serial number UG3AU5
+R5.000000.Z1=Release 5 / Serial number 000000
 
 [options]
 

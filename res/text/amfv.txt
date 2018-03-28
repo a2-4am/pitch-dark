@@ -4,7 +4,6 @@
  Copyright 1985 Infocom, Inc.
  Genre: science fiction
  Difficulty: ^^^^^&
- Release 79 / Serial number 851122
 
 [description]
  
@@ -27,12 +26,13 @@
  such classic works of science fiction as Brave New World and 1984. You'll
  spend less time solving puzzles, as you explore realistic worlds of the
  future.
+ 
+ NOTE: This game is patched to remove the in-game copy protection. The code
+ for the "Class One Security Mode Access Decoder" is always 12.
 
 [versions]
-R79.DEPROT.Z4=r79 / cracked
-R79.851122.Z4=r79 / 851122
-R77.DEPROT.Z4=r77 / cracked
-R77.850814.Z4=r77 / 850814
+R79.DEPROT.Z4=Release 79 / Serial number 851122
+R77.DEPROT.Z4=Release 77 / Serial number 850814
 
 [options]
 

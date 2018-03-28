@@ -4,7 +4,6 @@
  Copyright 1982 Infocom, Inc.
  Genre: fantasy
  Difficulty: ^^^^&
- Release 17 / Serial number 840727
 
 [description]
  
@@ -23,12 +22,12 @@
  all.
 
 [versions]
-R17.840727.Z3=r17 / 840727
-R16.830410.Z3=r16 / 830410
-R15B.840518.Z3=r15 / 840518
-R15A.830331.Z3=r15 / 830331
-R12.821025.Z3=r12 / 821025
-R10.820818.Z3=r10 / 820818
+R17.840727.Z3=Release 17 / Serial number 840727
+R16.830410.Z3=Release 16 / Serial number 830410
+R15B.840518.Z3=Release 15 / Serial number 840518
+R15A.830331.Z3=Release 15 / Serial number 830331
+R12.821025.Z3=Release 12 / Serial number 821025
+R10.820818.Z3=Release 10 / Serial number 820818
 
 [options]
 

@@ -4,7 +4,6 @@
  Copyright 1986 Infocom, Inc.
  Genre: mystery
  Difficulty: ^^&&&
- Release number 9 / Serial number 861022
 
 [description]
  
@@ -27,8 +26,8 @@
  soundly. The next victim might be you.
 
 [versions]
-R9.861022.Z3=r9 / 861022
-R4.860918.Z3=r4 / 860918
+R9.861022.Z3=Release 9 / Serial number 861022
+R4.860918.Z3=Release 4 / Serial number 860918
 
 [options]
 

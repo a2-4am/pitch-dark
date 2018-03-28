@@ -4,7 +4,6 @@
  Copyright 1987 Infocom, Inc.
  Genre: mystery
  Difficulty: ^^^&&
- Release 26 / Serial Number 880127
 
 [description]
  
@@ -49,8 +48,8 @@
  And now, come, Watson! The game is afoot...
 
 [versions]
-R26.880127.Z5=r26 / 880127
-R21.871214.Z5=r21 / 871214
+R26.880127.Z5=Release 26 / Serial Number 880127
+R21.871214.Z5=Release 21 / Serial Number 871214
 
 [options]
 

@@ -4,7 +4,6 @@
  Copyright 1986 Infocom, Inc.
  Genre: Comedy
  Difficulty: ^^^&&
- Release 59 / Serial number 860730
 
 [description]
  
@@ -24,8 +23,8 @@
  or Lewd, Leather Goddesses of Phobos can satisfy you!
 
 [versions]
-R59.860730.Z3=r59 / 860730
-R50.860711.Z3=r50 / 860711
+R59.860730.Z3=Release 59 / Serial number 860730
+R50.860711.Z3=Release 50 / Serial number 860711
 
 [options]
 

@@ -4,7 +4,6 @@
  Copyright 1982 Infocom, Inc.
  Genre: mystery
  Difficulty: ^^^^^
- Release 27 / Serial number 831005
 
 [description]
  
@@ -21,12 +20,12 @@
  you in.
 
 [versions]
-R27.831005.Z3=r27 / 831005
-R26.821108.Z3=r26 / 821108
-R22.820809.Z3=r22 / 820809
-R21.820512.Z3=r21 / 820512
-R19.820427.Z3=r19 / 820427
-R18.820311.Z3=r18 / 820311
+R27.831005.Z3=Release 27 / Serial number 831005
+R26.821108.Z3=Release 26 / Serial number 821108
+R22.820809.Z3=Release 22 / Serial number 820809
+R21.820512.Z3=Release 21 / Serial number 820512
+R19.820427.Z3=Release 19 / Serial number 820427
+R18.820311.Z3=Release 18 / Serial number 820311
 
 [options]
 

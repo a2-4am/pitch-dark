@@ -4,7 +4,6 @@
  Copyright 1997 Activision, Inc.
  Genre: fantasy
  Difficulty: ^^^&&
- Release 16 / Serial number 970828 / Inform v6.13 Library 6/2
 
 [description]
  
@@ -42,7 +41,7 @@
  own question. "Me! I am the boss of you! Now begone!"
 
 [versions]
-R16.970828.Z5=r16 / 970828
+R16.970828.Z5=Release 16 / Serial number 970828 / Inform v6.13 Library 6/2
 
 [options]
 ARTWORK=0

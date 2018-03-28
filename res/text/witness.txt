@@ -4,7 +4,6 @@
  Copyright 1983 Infocom, Inc.
  Genre: mystery
  Difficulty: ^^^&&
- Release 22 / Serial number 840924
 
 [description]
  
@@ -24,11 +23,11 @@
  because you are The Witness.
 
 [versions]
-R22.840924.Z3=r22 / 840924
-R21.831208.Z3=r21 / 831208
-R20.831119.Z3=r20 / 831119
-R18.830910.Z3=r18 / 830910
-R13.830524.Z3=r13 / 830524
+R22.840924.Z3=Release 22 / Serial number 840924
+R21.831208.Z3=Release 21 / Serial number 831208
+R20.831119.Z3=Release 20 / Serial number 831119
+R18.830910.Z3=Release 18 / Serial number 830910
+R13.830524.Z3=Release 13 / Serial number 830524
 
 [options]
 

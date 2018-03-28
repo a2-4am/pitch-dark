@@ -4,7 +4,6 @@
  Copyright 1985 Infocom, Inc.
  Genre: fantasy
  Difficulty: ^^^^^
- Release 87 / Serial number 860904
 
 [description]
  
@@ -21,12 +20,14 @@
  And although your triumph over this unknown Evil is uncertain, you must
  embark without hesitation and prove yourself the worthiest mage in the
  land.
+ 
+ NOTE: this game is patched to remove the in-game copy protection. Belboz
+ will always ask you which mage had the motto, "the hardest trick is making
+ it look easy." The answer is Barsap.
 
 [versions]
-R87.DEPROT.Z3=r87 / cracked
-R87.860904.Z3=r87 / 860904
-R63.DEPROT.Z3=r63 / cracked
-R63.850916.Z3=r63 / 850916
+R87.DEPROT.Z3=Release elease 87 / Serial number 860904
+R63.DEPROT.Z3=Release 63 / Serial number 850916
 
 [options]
 

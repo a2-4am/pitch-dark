@@ -4,7 +4,6 @@
  Copyright 1984 Infocom, Inc.
  Genre: science fiction
  Difficulty: ^^^&&
- Release 59 / Serial number 851108
 
 [description]
  
@@ -29,10 +28,10 @@
  certainly end up getting misled.
 
 [versions]
-R59.851108.Z3=r59 / 851108
-R58.851002.Z3=r58 / 851002
-R56.841221.Z3=r56 / 841221
-R47.840914.Z3=r47 / 840914
+R59.851108.Z3=Release 59 / Serial number 851108
+R58.851002.Z3=Release 58 / Serial number 851002
+R56.841221.Z3=Release 56 / Serial number 841221
+R47.840914.Z3=Release 47 / Serial number 840914
 
 [options]
 

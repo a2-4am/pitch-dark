@@ -4,7 +4,6 @@
  Copyright 1986 Infocom, Inc.
  Genre: fantasy
  Difficulty: ^^^&&
- Release 12 / Serial Number 860926
 
 [description]
  
@@ -23,8 +22,8 @@
  puts the course of history in your hands.
 
 [versions]
-R12.860926.Z4=r12 / 860926
-R11.860509.Z4=r11 / 860509
+R12.860926.Z4=Release 12 / Serial Number 860926
+R11.860509.Z4=Release 11 / Serial Number 860509
 
 [options]
 

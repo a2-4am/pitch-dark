@@ -4,7 +4,6 @@
  Copyright 1987 Infocom, Inc.
  Genre: science fiction
  Difficulty: ^^^^&
- Release 107 / Serial number 870430
 
 [description]
  
@@ -37,11 +36,15 @@
  been begging for a sequel. Even if you've never played Planetfall, you will
  enjoy Stationfall: the puzzles will challenge your intellect, the humor
  will keep you laughing, and Floyd will win your heart.
+ 
+ NOTE: this game is patched to remove the in-game copy protection. Instead
+ of entering the number corresponding to the current GST from form QX-17-T,
+ just enter the current GST (displayed at the top of the screen).
 
 [versions]
-R107.DEPROT.Z3=r107 / cracked
-R107.870430.Z3=r107 / 870430
+R107.DEPROT.Z3=Release 107 / Serial number 870430
 
 [options]
+VERSIONS=0
 
 [eof]

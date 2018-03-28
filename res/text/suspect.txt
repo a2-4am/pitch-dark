@@ -4,7 +4,6 @@
  Copyright 1984 Infocom, Inc.
  Genre: mystery
  Difficulty: ^^^^&
- Release 14 / Serial number 841005
 
 [description]
  
@@ -24,7 +23,7 @@
  invitation to the social event of the season. Then spoil it all.
 
 [versions]
-R14.841005.Z3=r14 / 841005
+R14.841005.Z3=Release 14 / Serial number 841005
 
 [options]
 VERSIONS=0

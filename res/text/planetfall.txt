@@ -4,7 +4,6 @@
  Copyright 1983 Infocom, Inc.
  Genre: science fiction
  Difficulty: ^^^&&
- Release 37 / Serial number 851003
 
 [description]
  
@@ -23,10 +22,10 @@
  the cosmic cookie crumbles.
 
 [versions]
-R37.851003.Z3=r37 / 851003
-R29.840118.Z3=r29 / 840118
-R26.831014.Z3=r26 / 831014
-R20.830708.Z3=r20 / 830708
+R37.851003.Z3=Release 37 / Serial number 851003
+R29.840118.Z3=Release 29 / Serial number 840118
+R26.831014.Z3=Release 26 / Serial number 831014
+R20.830708.Z3=Release 20 / Serial number 830708
 
 [options]
 

@@ -4,7 +4,6 @@
  Copyright 1987 Infocom, Inc.
  Genre: horror
  Difficulty: ^^^&&
- Release 221 / Serial number 870918
 
 [description]
  
@@ -38,9 +37,9 @@
  will leave you with images you'll never forget.
 
 [versions]
-R221.870918.Z3=r221 / 870918
-R219.870912.Z3=r219 / 870912
-R203.870506.Z3=r203 / 870506
+R221.870918.Z3=Release 221 / Serial number 870918
+R219.870912.Z3=Release 219 / Serial number 870912
+R203.870506.Z3=Release 203 / Serial number 870506
 
 [options]
 

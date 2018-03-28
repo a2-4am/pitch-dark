@@ -4,7 +4,6 @@
  Copyright 1987 Infocom, Inc.
  Genre: espionage
  Difficulty: ^^^^&
- Release 9 / Serial number 871008
 
 [description]
  
@@ -51,7 +50,7 @@
  to go before you come in from the cold.
 
 [versions]
-R9.871008.Z5=r9 / 871008
+R9.871008.Z5=Release 9 / Serial number 871008
 
 [options]
 VERSIONS=0

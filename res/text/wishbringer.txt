@@ -4,7 +4,6 @@
  Copyright 1985 Infocom, Inc.
  Genre: fantasy
  Difficulty: ^^&&&
- Release 69 / Serial Number 850920
 
 [description]
  
@@ -19,8 +18,8 @@
  Infocom's interactive fiction.
 
 [versions]
-R69.850920.Z3=r69 / 850920
-R68.850501.Z3=r68 / 850501
+R69.850920.Z3=Release 69 / Serial Number 850920
+R68.850501.Z3=Release 68 / Serial Number 850501
 
 [options]
 

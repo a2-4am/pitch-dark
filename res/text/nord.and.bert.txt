@@ -4,7 +4,6 @@
  Copyright 1987 Infocom, Inc.
  Genre: comedy
  Difficulty: ^^^^^
- Release 19 / Serial number 870722
 
 [description]
  
@@ -44,7 +43,7 @@
  mind is constantly working on artful new turns of phrase.
 
 [versions]
-R19.870722.Z4=r19 / 870722
+R19.870722.Z4=Release 19 / Serial number 870722
 
 [options]
 VERSIONS=0

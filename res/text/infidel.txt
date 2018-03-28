@@ -4,7 +4,6 @@
  Copyright 1983 Infocom, Inc.
  Genre: adventure
  Difficulty: ^^^^&
- Release 22 / Serial number 830916
 
 [description]
  
@@ -20,7 +19,7 @@
  all time - the ancient Egyptians.
 
 [versions]
-R22.830916.Z3=r22 / 830916
+R22.830916.Z3=Release 22 / Serial number 830916
 
 [options]
 VERSIONS=0

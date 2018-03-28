@@ -4,7 +4,6 @@
  Copyright 1984 Infocom, Inc.
  Genre: adventure
  Difficulty: ^^^&&
- Release 23 / Serial number 840809
 
 [description]
  
@@ -23,7 +22,7 @@
  with Cutthroats.
 
 [versions]
-R23.840809.Z3=r23 / 840809
+R23.840809.Z3=Release 23 / Serial number 840809
 
 [options]
 VERSIONS=0

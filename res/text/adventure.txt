@@ -4,7 +4,6 @@
  Donald Ekman, David M. Baggett (1993) and Graham Nelson (1994)
  Genre: fantasy
  Difficulty: ^^^&&
- Release 9 / Serial number 060321 / Inform v6.31 Library 6/11 S
 
 [description]
  
@@ -26,7 +25,7 @@
  gnomic remarks).
 
 [versions]
-R9.060321.Z5=r9 / 060321
+R9.060321.Z5=Release 9 / Serial number 060321 / Inform v6.31 Library 6/11 S
 
 [options]
 ARTWORK=0

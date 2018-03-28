@@ -4,7 +4,6 @@
  Copyright 1984 Infocom, Inc.
  Genre: fantasy
  Difficulty: ^^^^&
- Release 18 / Serial number 860904
 
 [description]
  
@@ -17,18 +16,17 @@
  
  To rescue the kingdom and locate your mentor in the treacherous mists of
  time, you must gain the power and cunning of a true Sorcerer.
+ 
+ NOTE: this game is patched to remove the Infotater protection. The current
+ code will always be bloodworm, and the corresponding color sequence is
+ white, gray, black, red, black.
 
 [versions]
-R18.DEPROT.Z3=r18 / cracked
-R18.860904.Z3=r18 / 860904
-R15.DEPROT.Z3=r15 / cracked
-R15.851108.Z3=r15 / 851108
-R13.DEPROT.Z3=r13 / cracked
-R13.851021.Z3=r13 / 851021
-R6.DEPROT.Z3=r6 / cracked
-R6.840508.Z3=r6 / 840508
-R4.DEPROT.Z3=r4 / cracked
-R4.840131.Z3=r4 / 840131
+R18.DEPROT.Z3=Release 18 / Serial number 860904
+R15.DEPROT.Z3=Release 15 / Serial number 851108
+R13.DEPROT.Z3=Release 13 / Serial number 851021
+R6.DEPROT.Z3=Release 6 / Serial number 840508
+R4.DEPROT.Z3=Release 4 / Serial number 840131
 
 [options]
 

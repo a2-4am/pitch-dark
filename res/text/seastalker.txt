@@ -4,7 +4,6 @@
  Copyright 1984 Infocom, Inc.
  Genre: adventure
  Difficulty: ^&&&&
- Release 16 / Serial number 850603
 
 [description]
  
@@ -23,11 +22,11 @@
  shark bait!
 
 [versions]
-R16B.850603.Z3=r16 / 850603
-R16A.850515.Z3=r16 / 850515
-R15B.840522.Z3=r15 / 840522
-R15A.840501.Z3=r15 / 840501
-R86.840320.Z3=r86 / 840320
+R16B.850603.Z3=Release 16 / Serial number 850603
+R16A.850515.Z3=Release 16 / Serial number 850515
+R15B.840522.Z3=Release 15 / Serial number 840522
+R15A.840501.Z3=Release 15 / Serial number 840501
+R86.840320.Z3=Release 86 / Serial number 840320
 
 [options]
 

@@ -4,7 +4,6 @@
  Copyright 1987 Infocom, Inc.
  Genre: romance
  Difficulty: ^^&&&
- Release 26 / Serial number 870730
 
 [description]
  
@@ -35,7 +34,7 @@
  was wooed by a dashing pirate.
 
 [versions]
-R26.870730.Z3=r26 / 870730
+R26.870730.Z3=Release 26 / Serial number 870730
 
 [options]
 VERSIONS=0

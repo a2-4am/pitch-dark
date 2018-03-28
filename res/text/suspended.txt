@@ -4,7 +4,6 @@
  Copyright 1983 Infocom, Inc.
  Genre: science fiction
  Difficulty: ^^^^^
- Release 8 / Serial number 840521
 
 [description]
  
@@ -25,10 +24,10 @@
  Good morning.
 
 [versions]
-R8B.840521.Z3=r8 / 840521
-R8A.830521.Z3=r8 / 830521
-R7.830419.Z3=r7 / 830419
-R5.830222.Z3=r5 / 830222
+R8B.840521.Z3=Release 8 / Serial number 840521
+R8A.830521.Z3=Release 8 / Serial number 830521
+R7.830419.Z3=Release 7 / Seial number 830419
+R5.830222.Z3=Release 5 / Serial number 830222
 
 [options]
 
