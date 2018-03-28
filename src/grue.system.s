@@ -90,7 +90,7 @@ reloc   cld
         jsr     $bf00
         !byte   $cc
         !word   cc_parms
-        jmp     $6000
+        jmp     $3FFD
 
 c7_parms
 c6_parms
@@ -106,7 +106,7 @@ c8_parms
 ca_parms
         !byte   4
         !byte   $d1
-        !word   $6000
+        !word   $3FFD
         !word   $ffff
         !word   $34d1
 

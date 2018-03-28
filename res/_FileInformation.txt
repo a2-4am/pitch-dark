@@ -1,5 +1,5 @@
 GRUE.SYSTEM=Type(FF),AuxType(2000),Access(C3)
-PITCH.DARK=Type(06),AuxType(6000),Access(C3)
+PITCH.DARK=Type(06),AuxType(3FFD),Access(C3)
 PITCH.DARK.CONF=Type(04),AuxType(0000),Access(C3)
 GAMES.CONF=Type(04),AuxType(0000),Access(C3)
 ONBEYOND.SYSTEM=Type(FF),AuxType(2000),Access(C3)

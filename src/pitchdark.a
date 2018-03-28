@@ -4,9 +4,11 @@
 !cpu 65c02
 !ct "src/lcase.ct"
 !to "build/PITCH.DARK",plain
-*=$6000
+*=$3FFD
 
          jmp   Start
+
+         !bin "res/WEEGUI"
 
          !source "src/macros.a"
          !source "src/constants.a"
@@ -35,12 +37,6 @@ Start
 -        jmp   QuitToProDOS
 +        inc                         ; 65C02-only INC instruction will clear Z flag
          beq   -                     ; if Z flag is still set, this is not a 65C02
-
-         jsr   LoadFile              ; load WEEGUI binary at $4000
-         !word .weeguiFilename
-         !word WGInit
-         !word $2000
-         !word kProDOSFileBuffer
 
          jsr   DisconnectRAM32       ; disconnect /RAM in S3,D2
          jsr   ClearInterpreterOptions ; clear options struct at $300
@@ -74,10 +70,6 @@ ExitWeeGUI
          jsr   WeeGUI
          ldx   #WGExit               ; clean up WeeGUI
          jmp   WeeGUI
-
-.weeguiFilename
-         !byte 10
-         !raw  "LIB/WEEGUI"
 
 gGamesListStore
          !word *+2                 ; address first okvs store
