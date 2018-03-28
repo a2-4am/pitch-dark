@@ -185,7 +185,6 @@ paintInfoView
          lda   (SRC)
          tay
 -        lda   (SRC),y
-         ora   #$80
          sta   $3F00,y
          dey
          bne   -

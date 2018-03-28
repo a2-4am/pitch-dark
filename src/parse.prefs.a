@@ -53,78 +53,24 @@ kLastPlayed
 LoadGlobalPreferences
          stz   gNeedToSavePrefs
 
-         jsr   okvs_init
-         !word gGlobalPrefsStore
-
          jsr   LoadFile              ; load prefs file at $2000
          !word .globalPrefsFilename
+.prefsAddress
          !word $2000
          !word $2000
          !word kProDOSFileBuffer
 
-         lda   #$FF
-         sta   $FE
-         lda   #$1F
-         sta   $FF                   ; ($FE) points to start of data buffer
-         ldy   #$00                  ; index into ($FE) pointing to current character
-.newKey  ldx   #$00                  ; X = index into current key
-.gatherKey
-         stx   gKeyLen
-         jsr   IncAndGetChar
-         cmp   #$23                  ; '#' is starts a comment (until CR)
-         beq   .skipComment
-         cmp   #$3D                  ; '=' ends the key
-         beq   .endKey
-         cmp   #$0D                  ; found CR before '=', ignore key and start over
-         beq   .newKey
-         sta   gKey,x
-         inx
-         bra   .gatherKey
-.endKey  stx   gKeyLen
-         txa                         ; to set Z flag
-         beq   .doneParsing          ; empty key ends the parsing
-         ldx   #$00                  ; X = index into the current value
-.gatherValue
-         stx   gValLen
-         jsr   IncAndGetChar
-         cmp   #$0D                  ; CR ends the value
-         beq   .endValue
-         sta   gVal,x
-         inx
-         bra   .gatherValue
-.endValue
-         stx   gValLen
-         lda   gValLen
-         cmp   #1
-         bne   .use16
-         lda   gVal
-         and   #1
-         sta   gVal                  ; single-character values get converted to #$00 or #$01 in prefs store
-         lda   #0
-         !byte $2C
-.use16   lda   #16
-         sta   .okvslen              ; all other values get upgraded to 16 bytes so we can update them in place
-         phy                         ; okvs functions clobber everything but we need Y
-         jsr   okvs_append
+         jsr   ParseKeyValueText     ; parse contents into global prefs store
          !word gGlobalPrefsStore
-         !word gKeyLen
-         !word gValLen
-.okvslen !byte $FD                   ; set at runtime
-         ply
-         bra   .newKey
+         !word .prefsAddress
+         !byte 16
 
-.skipComment                         ; skip to CR
-         jsr   IncAndGetChar
-         cmp   #$0D                  ; CR
-         bne   .skipComment
-         bra   .newKey
-
-.doneParsing
-         lda   SRC
+         lda   SRC                   ; save pointer to free space for next store
          sta   gVersionsStore
          lda   SRC+1
          sta   gVersionsStore+1
-         jsr   okvs_get
+
+         jsr   okvs_get              ; set gCurrentGame
          !word gGlobalPrefsStore
          !word kLastPlayed
          sta   DEST
@@ -308,7 +254,7 @@ addString
 .fluff3  !byte 58
          !byte $0D
          !raw  "# key=game directory, value=filename of selected version",$0D
-.eof     !byte 6
+.eof     !byte 7
          !byte $0D
-         !raw  "=EOF",$0D
+         !raw  "[eof]",$0D
 }
