@@ -105,8 +105,11 @@ LoadGameInfo
          dex
          bpl   .convertSectionNoInc
 
-         jsr   ParseKeyValueText     ; parse [versions] section into versions store
-         !word gVersionsStore
+; We are done converting the game info file.
+; Now handle the individual sections that require further parsing.
+
+         jsr   ParseKeyValueText     ; parse [versions] section into gVersionsStore
+         !word gVersionsStore        ; (this handle was initialized in LoadGlobalPreferences)
          !word addrVersions
          !byte 0
 
@@ -115,7 +118,7 @@ LoadGameInfo
          lda   SRC+1
          sta   gOptionsStore+1
 
-         jsr   ParseKeyValueText     ; parse [options] section into options store
+         jsr   ParseKeyValueText     ; parse [options] section into gOptionsStore
          !word gOptionsStore
          !word addrOptions
          !byte 0
