@@ -156,7 +156,44 @@ paintInfoView
          lda   addrInfo
          ldy   addrInfo+1
          ldx   #65
-                                     ; execution falls through here
+         phx
+         jsr   multiPrint
+         plx
+         lda   #$A0
+-        sta   $3F00,x
+         dex
+         bpl   -
+         lda   #$00
+         sta   $3F65
+         lda   gCurrentGame
+         asl
+         tax
+         lda   GAMES,x
+         sta   .key1
+         lda   GAMES+1,x
+         sta   .key1+1
+         jsr   okvs_get
+         !word gGlobalPrefsStore
+.key1    !word $FDFD                 ; set at runtime
+         sta   .key2
+         sty   .key2+1
+         jsr   okvs_get
+         !word gVersionsStore
+.key2    !word $FDFD                 ; set at runtime
+         sta   SRC
+         sty   SRC+1
+         lda   (SRC)
+         tay
+-        lda   (SRC),y
+         ora   #$80
+         sta   $3F00,y
+         dey
+         bne   -
+         stz   $00
+         lda   #$3F
+         sta   $01
+         jmp   .printLoop
+
 multiPrint
          sta   $00
          sty   $01

@@ -221,7 +221,7 @@ SetCheckboxByPref
          sta   .key+1
 
          jsr   okvs_get
-         !word gPrefsStore
+         !word gGlobalPrefsStore
 .key     !word $FDFD                 ; set at runtime
          bcs   .exit
 
@@ -265,7 +265,7 @@ SetPrefByCheckbox
          sta   .value+1
 
          jsr   okvs_update
-         !word gPrefsStore
+         !word gGlobalPrefsStore
 .key     !word $FDFD                 ; set at runtime
          !word .value
          rts

@@ -12,6 +12,9 @@ kTextRootDirectory
          !byte 5
          !raw "TEXT/"
 
+gVersionsStore
+         !word $FDFD                 ; set at runtime in LoadGlobalPreferences
+
 sectionPointers                      ; array of pointers to start of each section
 addrEOF
          !word 0
@@ -100,10 +103,57 @@ LoadGameInfo
          dex
          bpl   .convertSectionNoInc
 
-IncAndGetChar
-         iny
-         bne   +
-         inc   $FF
-+        lda   ($FE),y
+         jmp   LoadVersions
+         ;jmp   LoadGamePreferences
+}
+
+!zone {
+LoadVersions
+         jsr   okvs_init
+         !word gVersionsStore
+
+         lda   addrVersions+1
+         sta   $FF
+         lda   addrVersions
+         sec
+         sbc   #$01
+         sta   $FE
+         bcs   +
+         dec   $FF
++        ldy   #$00                  ; index into ($FE) pointing to current character
+.newKey  ldx   #$00                  ; X = index into current key
+.gatherKey
+         stx   gKeyLen
+         jsr   IncAndGetChar
+         and   #$7F
+         cmp   #$3D                  ; '=' ends the key
+         beq   .endKey
+         cmp   #$5B                  ; '[' ends the parsing
+         beq   .doneParsing
+         sta   gKey,x
+         inx
+         bra   .gatherKey
+.endKey  stx   gKeyLen
+         ldx   #$00                  ; X = index into the current value
+.gatherValue
+         stx   gValLen
+         jsr   IncAndGetChar
+         cmp   #$00                  ; null ends the value
+         beq   .endValue
+         and   #$7F
+         sta   gVal,x
+         inx
+         bra   .gatherValue
+.endValue
+         stx   gValLen
+         phy                         ; okvs functions clobber everything but we need Y
+         jsr   okvs_append
+         !word gVersionsStore
+         !word gKeyLen
+         !word gValLen
+         !byte 0
+         ply
+         bra   .newKey
+.doneParsing
          rts
 }

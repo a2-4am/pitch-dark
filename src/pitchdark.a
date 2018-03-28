@@ -17,10 +17,11 @@
          !source "src/prodos.a"
          !source "src/ramdisk.a"
          !source "src/path.a"
-         !source "src/gameinfo.a"
-         !source "src/prefs.a"
          !source "src/sound.a"
          !source "src/launch.a"
+         !source "src/parse.common.a"
+         !source "src/parse.gameinfo.a"
+         !source "src/parse.prefs.a"
          !source "src/ui.common.a"
          !source "src/ui.main.a"
          !source "src/ui.main.keys.a"
@@ -77,5 +78,5 @@ ExitWeeGUI
          ldx   #WGExit               ; clean up WeeGUI
          jmp   WeeGUI
 
-gPrefsStore
+gGlobalPrefsStore
          !word *+2                 ; address of storage space for prefs

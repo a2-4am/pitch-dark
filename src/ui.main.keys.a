@@ -191,7 +191,7 @@ callback_next
          lda   GAMES+1,x
          sta   .gameptr+1
          jsr   okvs_update
-         !word gPrefsStore
+         !word gGlobalPrefsStore
          !word kLastPlayed
 .gameptr !word $FDFD                 ; set at runtime
 .loadNewGameInfoAndRepaint
@@ -214,7 +214,7 @@ callback_boxart
          ldy   #>kArtworkRootDirectory
          jsr   AddToPath
          jsr   okvs_get
-         !word gPrefsStore
+         !word gGlobalPrefsStore
          !word kLastPlayed
          jsr   AddToPath
 
@@ -268,7 +268,7 @@ callback_clues
 
 ; put just the filename at $2006
          jsr   okvs_get
-         !word gPrefsStore
+         !word gGlobalPrefsStore
          !word kLastPlayed
          jsr   SetStartupPath
 ; shutdown WeeGUI and transfer control to interpreter

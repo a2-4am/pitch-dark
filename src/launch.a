@@ -21,7 +21,7 @@ ClearInterpreterOptions
 
 SetInterpreterOptions
          jsr   okvs_get
-         !word gPrefsStore
+         !word gGlobalPrefsStore
          !word kForce40
          jsr   okvs_as_boolean
          beq   +
@@ -32,7 +32,7 @@ SetInterpreterOptionsExceptForce40
          lda   #$D9
          sta   $0300                 ; 40/80 columns
          jsr   okvs_get
-         !word gPrefsStore
+         !word gGlobalPrefsStore
          !word kForceUpper
          jsr   okvs_as_boolean
          beq   +
@@ -45,7 +45,7 @@ SetInterpreterOptionsExceptForce40
          sta   $0302                 ; auto-restore
 
          jsr   okvs_get
-         !word gPrefsStore
+         !word gGlobalPrefsStore
          !word kScriptToFile
          jsr   okvs_as_boolean
          beq   +
@@ -55,7 +55,7 @@ SetInterpreterOptionsExceptForce40
          sta   $0303                 ; script-to-file
 
          jsr   okvs_get
-         !word gPrefsStore
+         !word gGlobalPrefsStore
          !word kAutoScript
          jsr   okvs_as_boolean
          beq   +
@@ -91,7 +91,7 @@ LaunchInterpreter
          jsr   AddToPath
 
          jsr   okvs_get
-         !word gPrefsStore
+         !word gGlobalPrefsStore
          !word kLastPlayed
          jsr   AddToPath
 

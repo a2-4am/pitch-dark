@@ -1,0 +1,11 @@
+gKeyLen  = $3F00
+gKey     = $3F01
+gValLen  = $3F10
+gVal     = $3F11
+
+IncAndGetChar
+         iny
+         bne   +
+         inc   $FF
++        lda   ($FE),y
+         rts
