@@ -289,10 +289,10 @@ okvs_nth
          ldy   #3
          lda   (PARAM),y
          tax                         ; X = numeric index of key to get
--        beq   .done
-         jsr   derefptr
+         beq   .done
+-        jsr   derefptr
          dex
-         bra   -
+         bne   -
 .done
          jsr   incptr
          jsr   incptr
