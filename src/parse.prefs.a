@@ -53,21 +53,18 @@ LoadGlobalPreferences
 
          jsr   LoadFile              ; load prefs file at $2000
          !word .globalPrefsFilename
-.prefsAddress
-         !word $2000
+.handle  !word $2000
          !word $2000
          !word kProDOSFileBuffer
 
          jsr   ParseKeyValueText     ; parse contents into global prefs store
          !word gGlobalPrefsStore
-         !word .prefsAddress
+         !word .handle
          !byte 16
 
-         lda   SRC                   ; save pointer to free space for next store
-         sta   gVersionsStore
-         lda   SRC+1
-         sta   gVersionsStore+1
-         rts
+         +LDAY SRC
+         +STAY gVersionsStore        ; save pointer to free space for next store
+.exit    rts
 
 ;------------------------------------------------------------------------------
 ; SaveGlobalPreferences
@@ -77,15 +74,12 @@ LoadGlobalPreferences
 ;------------------------------------------------------------------------------
 SaveGlobalPreferences
          lda   gNeedToSavePrefs
-         bne   +
-         rts
-+
+         beq   .exit
          stz   $FE
          lda   #$20
          sta   $FF
 
-         lda   #<.fluff1
-         ldy   #>.fluff1
+         +LDADDR .fluff1
          jsr   addString
 
          jsr   addBooleanFromStore
@@ -100,15 +94,13 @@ SaveGlobalPreferences
          jsr   addBooleanFromStore
          !word kAutoScript
 
-         lda   #<.fluff2
-         ldy   #>.fluff2
+         +LDADDR .fluff2
          jsr   addString
 
          jsr   addStringFromStore
          !word kLastPlayed
 
-         lda   #<.fluff3
-         ldy   #>.fluff3
+         +LDADDR .fluff3
          jsr   addString
 
          jsr   okvs_len
@@ -117,41 +109,38 @@ SaveGlobalPreferences
          ldx   #0
 .gameLoop
          phx
-         stx   .n
+         stx   +
          jsr   okvs_nth
          !word gGamesListStore
-.n       !byte $FD                   ; SMC
-         sta   .gameKey
-         sty   .gameKey+1
++        !byte $FD                   ; SMC
+         +STAY +
          jsr   addStringFromStore
-.gameKey !word $FDFD                 ; SMC
++        !word $FDFD                 ; SMC
          plx
          inx
 .numberOfGames=*+1
          cpx   #$FD                  ; SMC
          bne   .gameLoop
 
-         lda   #<.eof
-         ldy   #>.eof
+         +LDADDR .eof
          jsr   addString
 
          lda   $FE
-         sta   .prefslen
+         sta   .filelen
          lda   $FF
          sec
          sbc   #$20
-         sta   .prefslen+1
+         sta   .filelen+1
 
          jsr   SaveFile
          !word .globalPrefsFilename
          !byte 4                     ; filetype=TXT
          !word 0                     ; auxtype=0000
          !word $2000
-.prefslen
-         !word $FDFD                 ; SMC
+.filelen !word $FDFD                 ; SMC
          !word kProDOSFileBuffer
-         stz   gNeedToSavePrefs
 
+         stz   gNeedToSavePrefs
          rts
 
 addBooleanFromStore
@@ -163,39 +152,33 @@ addStringFromStore
          +PARAMS_ON_STACK 2
          ldy   #1
          lda   (PARAM),y
-         sta   .storeKey
+         sta   .key
          pha
          iny
          lda   (PARAM),y
-         sta   .storeKey+1
+         sta   .key+1
          tay
          pla
          jsr   addString
-         lda   #<.equals
-         ldy   #>.equals
+         +LDADDR .equals
          jsr   addString
          jsr   okvs_get
          !word gGlobalPrefsStore
-.storeKey
-         !word $FDFD                 ; SMC
+.key     !word $FDFD                 ; SMC
 .skipOverBooleanLogic
          bra   +                     ; SMC (opcode may become BIT)
-         sta   PTR
-         sty   PTR+1
+         +STAY PTR
          ldy   #1
          lda   (PTR),y
          ora   #$30
          sta   (PTR),y
-         lda   PTR
-         ldy   PTR+1
+         +LDAY PTR
 +        jsr   addString
-         lda   #<.lf
-         ldy   #>.lf
+         +LDADDR .lf
          jmp   addString
 
 addString
-         sta   $00
-         sty   $01
+         +STAY $00
          lda   ($00)
          inc
          sta   .len

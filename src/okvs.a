@@ -249,8 +249,7 @@ okvs_get
 .matchlen=*+1
          cpy   #$FD                  ; SMC
          bne   .matchKeyLoop
-         lda   PTR
-         ldy   PTR+1
+         +LDAY PTR
          clc
          adc   .matchlen
          bcc   +
@@ -298,8 +297,7 @@ okvs_nth
 .done
          jsr   incptr
          jsr   incptr
-         lda   PTR
-         ldy   PTR+1
+         +LDAY PTR
          rts
 
 ;------------------------------------------------------------------------------
@@ -335,8 +333,7 @@ okvs_update
          !word $FDFD                 ; SMC
          !word $FDFD                 ; SMC
          bcs   .exit
-         sta   DEST
-         sty   DEST+1
+         +STAY DEST
          lda   (SAVE)
          tay
 -        lda   (SAVE),y
@@ -357,8 +354,7 @@ okvs_update
 ;        X preserved, A/Y clobbered
 ;------------------------------------------------------------------------------
 okvs_as_boolean
-         sta   PTR
-         sty   PTR+1
+         +STAY PTR
          lda   (PTR)
          cmp   #1
          bne   +

@@ -19,14 +19,13 @@
 LoadGameList
          jsr   LoadFile              ; load prefs file at $2000
          !word .gamesListFilename
-.listAddress
-         !word $2000
+.handle  !word $2000
          !word $2000
          !word kProDOSFileBuffer
 
          jsr   ParseKeyValueText     ; parse contents into games list store
          !word gGamesListStore
-         !word .listAddress
+         !word .handle
          !byte 0
 
          lda   SRC                   ; save pointer to free space for next store

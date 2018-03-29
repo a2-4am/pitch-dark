@@ -1,5 +1,12 @@
 ;license:MIT
 ;(c) 2018 by 4am
+;
+; Public entry points
+; - MainScreen
+
+; Public functions
+; - ExitWeeGUI
+;
 
 !cpu 65c02
 !ct "src/lcase.ct"
@@ -42,7 +49,7 @@ Start
          jsr   ClearInterpreterOptions ; clear options struct at $300
          jsr   WGInit                ; initialize WeeGUI
          jsr   LoadGameList          ; get master list of games
-         jsr   LoadGlobalPreferences ; get current game and global options
+         jsr   LoadGlobalPreferences ; get global options, including current game
          jsr   LoadGameInfo          ; get current game description and game-specific options
          ldx   #WGEnableMouse        ; enable mouse support
          jsr   WeeGUI
@@ -58,11 +65,11 @@ MainScreen
          bit   $C010                 ; clear keyboard strobe
 .runLoop
          ldx   #WGPendingViewAction
-         jsr   WeeGUI
+         jsr   WeeGUI                ; handle mouse movement and clicks
          lda   $c000
          bpl   .runLoop
          bit   $c010
-         jsr   HandleKey
+         jsr   HandleKey             ; handle keypresses
          bra   .runLoop
 
 ExitWeeGUI
@@ -72,4 +79,4 @@ ExitWeeGUI
          jmp   WeeGUI
 
 gGamesListStore
-         !word *+2                 ; address first okvs store
+         !word *+2                   ; address of first okvs store

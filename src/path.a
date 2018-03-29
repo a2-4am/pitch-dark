@@ -35,8 +35,7 @@ ResetPath
 ;------------------------------------------------------------------------------
 !zone {
 AddToPath
-         sta   $00
-         sty   $01
+         +STAY $00
          ldx   gPathname             ; current pathname length
          lda   ($00)                 ; length of this segment
          inc
@@ -64,8 +63,7 @@ AddToPath
 ;------------------------------------------------------------------------------
 !zone {
 SetStartupPath
-         sta   $00
-         sty   $01
+         +STAY $00
          lda   ($00)
          tay
 -        lda   ($00),y

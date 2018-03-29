@@ -64,10 +64,8 @@ CreateButton
 ;------------------------------------------------------------------------------
 CreateTitleView
          ldx   #WGCreateView         ; create title bar on top line
-         lda   #<viewTitle
-         sta   PARAM0
-         lda   #>viewTitle
-         sta   PARAM1
+         +LDADDR viewTitle
+         +STAY PARAM0
          jmp   WeeGUI
 
 ;------------------------------------------------------------------------------
@@ -84,10 +82,8 @@ PaintTitleView
          jsr   WeeGUI
          jsr   INVERSE
          ldx   #WGPrint
-         lda   #<.stringTitle
-         sta   PARAM0
-         lda   #>.stringTitle
-         sta   PARAM1
+         +LDADDR .stringTitle
+         +STAY PARAM0
          jsr   WeeGUI
          jmp   NORMAL
 

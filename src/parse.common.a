@@ -24,12 +24,12 @@ ParseKeyValueText
 
          ldy   #1
          lda   (PARAM),y
-         sta   .initStore
-         sta   .appendStore
+         sta   .store1
+         sta   .store2
          iny
          lda   (PARAM),y
-         sta   .initStore+1
-         sta   .appendStore+1
+         sta   .store1+1
+         sta   .store2+1
          iny
          lda   (PARAM),y
          sta   $FE
@@ -53,8 +53,7 @@ ParseKeyValueText
          dey
 +        sty   $FF
          jsr   okvs_init             ; reset key/value store
-.initStore
-         !word $FDFD                 ; SMC
+.store1  !word $FDFD                 ; SMC
 
          ldy   #$00                  ; index into ($FE) pointing to current character
 .newKey
@@ -69,7 +68,7 @@ ParseKeyValueText
          cmp   #$0D                  ; found CR before '=', ignore key and start over (also handles blank lines)
          beq   .newKey
          cmp   #$5B                  ; '[' ends the parsing
-         beq   .exit
+         beq   .done
          sta   gKey,x
          inx
          bpl   .gatherKey
@@ -99,8 +98,7 @@ ParseKeyValueText
          sta   .appendMaxLength      ; all other values get upgraded to max_length so we can update them in place
          phy                         ; okvs functions clobber everything but we need Y
          jsr   okvs_append
-.appendStore
-         !word $FDFD                 ; SMC
+.store2  !word $FDFD                 ; SMC
          !word gKeyLen
          !word gValLen
 .appendMaxLength
@@ -119,5 +117,5 @@ IncAndGetChar
          bne   +
          inc   $FF
 +        lda   ($FE),y
-.exit    rts
+.done    rts
 }

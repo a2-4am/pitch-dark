@@ -53,16 +53,12 @@ OptionsDialog
          jsr   CreateTitleView       ; create title bar (defined in paintcommon.a)
 
          ldx   #WGCreateView         ; create frame
-         lda   #<.viewFrame
-         sta   PARAM0
-         lda   #>.viewFrame
-         sta   PARAM1
+         +LDADDR .viewFrame
+         +STAY PARAM0
          jsr   WeeGUI
          ldx   #WGViewSetTitle
-         lda   #<.stringFrame
-         sta   PARAM0
-         lda   #>.stringFrame
-         sta   PARAM1
+         +LDADDR .stringFrame
+         +STAY PARAM0
          jsr   WeeGUI
 
          jsr   CreateButton          ; create UI controls
@@ -110,10 +106,8 @@ OptionsDialog
          sta   PARAM1
          jsr   WeeGUI
          ldx   #WGPrint
-         lda   #<.stringForce40Description
-         sta   PARAM0
-         lda   #>.stringForce40Description
-         sta   PARAM1
+         +LDADDR .stringForce40Description
+         +STAY PARAM0
          jsr   WeeGUI
 
          ldx   #WGSetCursor
@@ -123,10 +117,8 @@ OptionsDialog
          sta   PARAM1
          jsr   WeeGUI
          ldx   #WGPrint
-         lda   #<.stringForceUpperDescription
-         sta   PARAM0
-         lda   #>.stringForceUpperDescription
-         sta   PARAM1
+         +LDADDR .stringForceUpperDescription
+         +STAY PARAM0
          jsr   WeeGUI
 
          ldx   #WGSetCursor
@@ -136,10 +128,8 @@ OptionsDialog
          sta   PARAM1
          jsr   WeeGUI
          ldx   #WGPrint
-         lda   #<.stringScriptToFileDescription
-         sta   PARAM0
-         lda   #>.stringScriptToFileDescription
-         sta   PARAM1
+         +LDADDR .stringScriptToFileDescription
+         +STAY PARAM0
          jsr   WeeGUI
 
          ldx   #WGSetCursor
@@ -149,10 +139,8 @@ OptionsDialog
          sta   PARAM1
          jsr   WeeGUI
          ldx   #WGPrint
-         lda   #<.stringAutoScriptDescription
-         sta   PARAM0
-         lda   #>.stringAutoScriptDescription
-         sta   PARAM1
+         +LDADDR .stringAutoScriptDescription
+         +STAY PARAM0
          jsr   WeeGUI
 
 .runLoop

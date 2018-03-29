@@ -11,10 +11,10 @@
 ;
 
 !zone {
-kGameRootDirectory                   ; length-prefixed pathname of where game subdirectories are stored
+kGameRootDirectory                   ; length-prefixed pathname of game subdirectories
          !byte 2
          !raw  "Z/"
-kHintsRootDirectory                  ; length-prefixed pathname of where game subdirectories are stored
+kHintsRootDirectory                  ; length-prefixed pathname of hint files
          !byte 5
          !raw  "PRIZM/"
 kArtworkRootDirectory                ; length-prefixed pathname of DHGR box art
@@ -69,17 +69,17 @@ HandleKey
          dex
          dex
          bpl   -
-         jmp   SoftBell
+         jmp   SoftBell              ; unknown key, beep softly
 .foundKey
-         lda   .keys+1,x
-         bpl   .activateView
-         cmp   #ID_X
-         beq   .x
+         lda   .keys+1,x             ; get ID associated with this key
+         bpl   .activateView         ; ID < #$80 is a WeeGUI view, so activate it
+         cmp   #ID_X                 ; X, Y, and Z keys are part of
+         beq   .x                    ; an undocumented feature
          cmp   #ID_Y
          beq   .y
          cmp   #ID_Z
          beq   .z
-         cmp   #ID_SCROLLDOWN
+         cmp   #ID_SCROLLDOWN        ; arrow keys scroll the description box
          beq   .handleScrollDown
 .handleScrollUp
          lda   #$01
@@ -87,7 +87,6 @@ HandleKey
 .handleScrollDown
          lda   #$FF
          pha
-.handleScroll
          ldx   #WGSelectView
          lda   #ID_DESCRIPTION
          jsr   WeeGUI
@@ -143,15 +142,13 @@ HandleKey
          jsr   WeeGUI
          jsr   SaveGlobalPreferences
          jsr   ResetPath
-         lda   #<kArtworkRootDirectory
-         ldy   #>kArtworkRootDirectory
+         +LDADDR kArtworkRootDirectory
          jsr   AddToPath
          jsr   SetPrefix
          !word gPathname
          bcs   .xyzzyError
          jsr   ResetPath
-         lda   #<.dhrslideFilename
-         ldy   #>.dhrslideFilename
+         +LDADDR .dhrslideFilename
          jsr   AddToPath
          jsr   LoadFile
          !word gPathname
@@ -166,7 +163,6 @@ HandleKey
 .dhrslideFilename
          !byte 15
          !raw  "DHRSLIDE.SYSTEM"
-
 }
 
 !zone {
@@ -174,12 +170,10 @@ GetCurrentGameIndex
          jsr   okvs_get              ; get shortname of current game
          !word gGlobalPrefsStore
          !word kLastPlayed
-         sta   .gameNamePtr
-         sty   .gameNamePtr+1
+         +STAY +
          jsr   okvs_get              ; get numeric index
          !word gGamesListStore
-.gameNamePtr
-         !word $FDFD                 ; SMC
++        !word $FDFD                 ; SMC
          rts                         ; X = index of current game
 
 callback_previous
@@ -191,6 +185,7 @@ callback_previous
          tax
          dex
 +        bra   .loadNewGameInfoAndRepaint
+
 callback_next
          jsr   GetCurrentGameIndex
          inx
@@ -203,16 +198,15 @@ callback_next
          bne   .loadNewGameInfoAndRepaint
          ldx   #0
 .loadNewGameInfoAndRepaint
-         stx   .nth
+         stx   +
          jsr   okvs_nth
          !word gGamesListStore
-.nth     !byte $FD                   ; SMC
-         sta   .gameptr
-         sty   .gameptr+1
++        !byte $FD                   ; SMC
+         +STAY +
          jsr   okvs_update
          !word gGlobalPrefsStore
          !word kLastPlayed
-.gameptr !word $FDFD                 ; SMC
++        !word $FDFD                 ; SMC
          lda   #1
          sta   gNeedToSavePrefs
          jsr   LoadGameInfo
@@ -228,8 +222,7 @@ callback_options
 !zone {
 callback_boxart
          jsr   ResetPath
-         lda   #<kArtworkRootDirectory
-         ldy   #>kArtworkRootDirectory
+         +LDADDR kArtworkRootDirectory
          jsr   AddToPath
          jsr   okvs_get
          !word gGlobalPrefsStore
@@ -277,8 +270,7 @@ callback_clues
          bcs   .cluesError
 ; change prefix to folder of file we want the interpreter to open
          jsr   ResetPath
-         lda   #<kHintsRootDirectory
-         ldy   #>kHintsRootDirectory
+         +LDADDR kHintsRootDirectory
          jsr   AddToPath
          jsr   SetPrefix
          !word gPathname

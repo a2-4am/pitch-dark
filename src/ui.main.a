@@ -37,10 +37,8 @@ CreateViews
          jsr   CreateTitleView
 
          ldx   #WGCreateView         ; create horizontal rule
-         lda   #<.viewHR
-         sta   PARAM0
-         lda   #>.viewHR
-         sta   PARAM1
+         +LDADDR .viewHR
+         +STAY PARAM0
          jsr   WeeGUI
 
          jsr   CreateButton          ; create various buttons
@@ -59,29 +57,21 @@ CreateViews
          !word .viewOptions
 
          ldx   #WGCreateView         ; create borderless frame for game title and info
-         lda   #<.viewInfo
-         sta   PARAM0
-         lda   #>.viewInfo
-         sta   PARAM1
+         +LDADDR .viewInfo
+         +STAY PARAM0
          jsr   WeeGUI
          ldx   #WGViewSetAction
-         lda   #<paintInfoView
-         sta   PARAM0
-         lda   #>paintInfoView
-         sta   PARAM1
+         +LDADDR paintInfoView
+         +STAY PARAM0
          jsr   WeeGUI
 
          ldx   #WGCreateView         ; create scrollable frame for game description text
-         lda   #<.viewDescription
-         sta   PARAM0
-         lda   #>.viewDescription
-         sta   PARAM1
+         +LDADDR .viewDescription
+         +STAY PARAM0
          jsr   WeeGUI
          ldx   #WGViewSetAction
-         lda   #<paintDescriptionView
-         sta   PARAM0
-         lda   #>paintDescriptionView
-         sta   PARAM1
+         +LDADDR paintDescriptionView
+         +STAY PARAM0
          jmp   WeeGUI
 
 ;------------------------------------------------------------------------------
@@ -138,8 +128,7 @@ paintDescriptionView
          ldx   #WGSelectView
          lda   #ID_DESCRIPTION
          jsr   WeeGUI
-         lda   addrDescription
-         ldy   addrDescription+1
+         +LDAY addrDescription
          ldx   #78
          jsr   multiPrint
          lda   .vtab+1
@@ -153,8 +142,7 @@ paintInfoView
          ldx   #WGSelectView
          lda   #ID_INFO
          jsr   WeeGUI
-         lda   addrInfo
-         ldy   addrInfo+1
+         +LDAY addrInfo
          ldx   #65
          phx
          jsr   multiPrint
@@ -169,20 +157,15 @@ paintInfoView
          jsr   okvs_get              ; get shortname of current game
          !word gGlobalPrefsStore
          !word kLastPlayed
-         sta   .key1
-         sty   .key1+1
-
+         +STAY +
          jsr   okvs_get              ; get selected version of this game
          !word gGlobalPrefsStore
-.key1    !word $FDFD                 ; SMC
-         sta   .key2
-         sty   .key2+1
-
++        !word $FDFD                 ; SMC
+         +STAY +
          jsr   okvs_get              ; get long description of this version
          !word gVersionsStore
-.key2    !word $FDFD                 ; SMC
-         sta   SRC
-         sty   SRC+1
++        !word $FDFD                 ; SMC
+         +STAY SRC
          lda   (SRC)
          tay
 -        lda   (SRC),y
@@ -195,8 +178,7 @@ paintInfoView
          jmp   .printLoop
 
 multiPrint
-         sta   $00
-         sty   $01
+         +STAY $00
          stx   .printLineLength+1
          stz   .htab+1
          stz   .vtab+1

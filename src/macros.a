@@ -13,3 +13,18 @@ PARAM    =     $00
 +        phx
          pha
 }
+
+!macro   LDADDR .ptr {
+         lda   #<.ptr
+         ldy   #>.ptr
+}
+
+!macro   LDAY .ptr {
+         lda   .ptr
+         ldy   .ptr+1
+}
+
+!macro   STAY .ptr {
+         sta   .ptr
+         sty   .ptr+1
+}

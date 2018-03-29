@@ -43,8 +43,7 @@ addrInfo
 ;------------------------------------------------------------------------------
 LoadGameInfo
          jsr   ResetPath
-         lda   #<kTextRootDirectory
-         ldy   #>kTextRootDirectory
+         +LDADDR kTextRootDirectory
          jsr   AddToPath
          jsr   okvs_get
          !word gGlobalPrefsStore
@@ -115,10 +114,8 @@ LoadGameInfo
          !word addrVersions
          !byte 0
 
-         lda   SRC                   ; save pointer to free space for next store
-         sta   gOptionsStore
-         lda   SRC+1
-         sta   gOptionsStore+1
+         +LDAY SRC
+         +STAY gOptionsStore         ; save pointer to free space for next store
 
          jsr   ParseKeyValueText     ; parse [options] section into gOptionsStore
          !word gOptionsStore

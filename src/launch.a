@@ -86,8 +86,7 @@ LaunchInterpreter
 
 ; change prefix to folder of file we want the interpreter to open
          jsr   ResetPath
-         lda   #<kGameRootDirectory
-         ldy   #>kGameRootDirectory
+         +LDADDR kGameRootDirectory
          jsr   AddToPath
 
          jsr   okvs_get
@@ -122,8 +121,7 @@ LaunchInterpreter
 
 LoadInterpreter
          jsr   ResetPath
-         lda   #<.interpreterFilename
-         ldy   #>.interpreterFilename
+         +LDADDR .interpreterFilename
          jsr   AddToPath
 
          jsr   LoadFile
