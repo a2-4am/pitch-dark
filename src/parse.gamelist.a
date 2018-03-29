@@ -28,11 +28,8 @@ LoadGameList
          !word .handle
          !byte 0
 
-         lda   SRC                   ; save pointer to free space for next store
-         sta   gGlobalPrefsStore
-         lda   SRC+1
-         sta   gGlobalPrefsStore+1
-
+         +LDAY SRC
+         +STAY gGlobalPrefsStore     ; save pointer to free space for next store
          rts
 
 .gamesListFilename
