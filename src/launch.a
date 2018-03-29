@@ -99,11 +99,9 @@ LaunchInterpreter
          bcs   .playError
 
 ; put just the filename at $2006
+         +LDAY addrVersions
+         +STAY $00
          ldy   #0
-         lda   addrVersions
-         sta   $00
-         lda   addrVersions+1
-         sta   $01
 -        lda   ($00),y
          cmp   #$BD                  ; '='
          beq   .doneBuildingFilename

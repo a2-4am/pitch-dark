@@ -39,13 +39,14 @@ AddToPath
          ldx   gPathname             ; current pathname length
          lda   ($00)                 ; length of this segment
          inc
-         sta   .a+1
+         sta   .len
          ldy   #$01
 -        lda   ($00),y
          sta   gPathname+1,x
          inx
          iny
-.a       cpy   #$FD                  ; SMC
+.len=*+1
+         cpy   #$FD                  ; SMC
          bcc   -
          stx   gPathname
          rts

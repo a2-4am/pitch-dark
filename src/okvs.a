@@ -125,10 +125,8 @@ okvs_append
          jsr   derefptr              ; PTR -> next record
          bra   -
 +                                    ; PTR -> new record
-         lda   PTR                   ; save PTR on stack
-         pha
-         lda   PTR+1
-         pha
+         +LDAY PTR
+         +STAY SAVE                  ; save PTR
          jsr   incptr
          jsr   incptr                ; PTR -> space for new key
          ldy   #3
@@ -183,10 +181,8 @@ okvs_append
          inc   PTR+1
 +        lda   PTR+1
          sta   SRC+1                 ; SRC -> byte after this record
-         pla
-         sta   PTR+1
-         pla
-         sta   PTR                   ; PTR -> this record again
+         +LDAY SAVE
+         +STAY PTR                   ; PTR -> this record again
          lda   SRC                   ; update next-record pointer
          sta   (PTR)
          ldy   #1
