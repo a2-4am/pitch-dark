@@ -48,8 +48,8 @@
  And now, come, Watson! The game is afoot...
 
 [versions]
-R26.880127.Z5=Release 26 / Serial Number 880127
-R21.871214.Z5=Release 21 / Serial Number 871214
+R26.880127.Z5=Release 26 / Serial number 880127
+R21.871214.Z5=Release 21 / Serial number 871214
 
 [options]
 

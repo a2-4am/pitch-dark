@@ -40,8 +40,8 @@
  are asked five questions in the paranoid's house, you may give any answers.
 
 [versions]
-R116.DEPROT.Z4=Release 116 / Licence Number 870602
-R86.DEPROT.Z4=Release 86 / Licence Number 870212
+R116.DEPROT.Z4=Release 116 / Licence number 870602
+R86.DEPROT.Z4=Release 86 / Licence number 870212
 
 [options]
 

@@ -32,6 +32,7 @@ R59.851108.Z3=Release 59 / Serial number 851108
 R58.851002.Z3=Release 58 / Serial number 851002
 R56.841221.Z3=Release 56 / Serial number 841221
 R47.840914.Z3=Release 47 / Serial number 840914
+R31.871119.Z5=Release 31 / Serial number 871119 (Solid Gold)
 
 [options]
 

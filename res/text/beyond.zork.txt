@@ -41,10 +41,10 @@
  increases and their character grows in strength and power.
 
 [versions]
-R57.871221.Z5=Release 57 / Serial Number 871221
-R51.870923.Z5=Release 51 / Serial Number 870923
-R49.870917.Z5=Release 49 / Serial Number 870917
-R47.870915.Z5=Release 47 / Serial Number 870915
+R57.871221.Z5=Release 57 / Serial number 871221
+R51.870923.Z5=Release 51 / Serial number 870923
+R49.870917.Z5=Release 49 / Serial number 870917
+R47.870915.Z5=Release 47 / Serial number 870915
 
 [options]
 

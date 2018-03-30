@@ -41,8 +41,8 @@
  both first time and experienced players.
 
 [versions]
-R37.861215.Z3=Release 37 / Serial Number 861215
-R235.861118.Z3=Release 235 / Serial Number 861118
+R37.861215.Z3=Release 37 / Serial number 861215
+R235.861118.Z3=Release 235 / Serial number 861118
 
 [options]
 
