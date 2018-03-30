@@ -52,14 +52,12 @@ LoadGameInfo
 
          jsr   LoadFile
          !word gPathname
-         !word $0800
+         !word kGameInfoBuffer
          !word kProDOSFileBuffer
 
-         lda   #$FF
-         sta   $FE
-         lda   #$07
-         sta   $FF                   ; ($FE) points to start of data buffer
-         ldy   #$00                  ; index into ($FF) pointing to current character
+         +LDADDR (kGameInfoBuffer-1)
+         +STAY $FE                   ; ($FE) points to start of data buffer
+         ldy   #$00                  ; index into ($FE) pointing to current character
          ldx   #$08                  ; index into sectionPointers array, stores pointer to start of each section
 
 .convertSectionLoop

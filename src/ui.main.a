@@ -129,7 +129,7 @@ paintDescriptionView
          lda   #ID_DESCRIPTION
          jsr   WeeGUI
          +LDAY addrDescription
-         ldx   #78
+         ldx   #kDescriptionPaintWidth
          jsr   multiPrint
          lda   .vtab+1
          cmp   #10
@@ -143,16 +143,16 @@ paintInfoView
          lda   #ID_INFO
          jsr   WeeGUI
          +LDAY addrInfo
-         ldx   #65
+         ldx   #kInfoPaintWidth
          phx
          jsr   multiPrint
          plx
          lda   #$A0
--        sta   $3F00,x
+-        sta   kNullTerminatedBuffer,x
          dex
          bpl   -
          lda   #$00
-         sta   $3F65
+         sta   kNullTerminatedBuffer+kInfoPaintWidth
 
          jsr   okvs_get              ; get shortname of current game
          !word gGlobalPrefsStore

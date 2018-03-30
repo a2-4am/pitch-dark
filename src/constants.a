@@ -4,6 +4,17 @@
 ; Memory addresses and constants
 ;
 
-kProDOSFileBuffer         = $1C00
-kSystemAddress            = $2000
-WGInit                    = $4000
+kInfoPaintWidth           = 65       ; used by paintInfoView
+kDescriptionPaintWidth    = 78       ; used by paintDescriptionView
+
+kGameInfoBuffer           = $0800    ; used by LoadGameInfo
+kProDOSFileBuffer         = $1C00    ; 1K buffer for ProDOS MLI calls
+kSystemAddress            = $2000    ; used by LaunchInterpreter
+kGlobalPrefsBuffer        = $2000    ; used by LoadGlobalPreferences/SaveGlobalPreferences
+gPathname                 = $3F00    ; used by ResetPath/AddToPath
+kNullTerminatedBuffer     = $3F00    ; used by paintInfoView
+gKeyLen                   = $3F00    ; used by ParseKeyValueText
+gKey                      = $3F01
+gValLen                   = $3F80
+gVal                      = $3F81
+WGInit                    = $4000    ; WeeGUI file load address and initialization function

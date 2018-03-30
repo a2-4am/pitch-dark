@@ -53,7 +53,7 @@ LoadGlobalPreferences
 
          jsr   LoadFile              ; load prefs file at $2000
          !word .globalPrefsFilename
-.handle  !word $2000
+.handle  !word kGlobalPrefsBuffer
          !word kProDOSFileBuffer
 
          jsr   ParseKeyValueText     ; parse contents into global prefs store
@@ -74,9 +74,8 @@ LoadGlobalPreferences
 SaveGlobalPreferences
          lda   gNeedToSavePrefs
          beq   .exit
-         stz   $FE
-         lda   #$20
-         sta   $FF
+         +LDADDR kGlobalPrefsBuffer
+         +STAY $FE
 
          +LDADDR .fluff1
          jsr   addString
@@ -128,14 +127,14 @@ SaveGlobalPreferences
          sta   .filelen
          lda   $FF
          sec
-         sbc   #$20
+         sbc   #>kGlobalPrefsBuffer
          sta   .filelen+1
 
          jsr   SaveFile
          !word .globalPrefsFilename
          !byte 4                     ; filetype=TXT
          !word 0                     ; auxtype=0000
-         !word $2000
+         !word kGlobalPrefsBuffer
 .filelen !word $FDFD                 ; SMC
          !word kProDOSFileBuffer
 

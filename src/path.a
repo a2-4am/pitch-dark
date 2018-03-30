@@ -8,11 +8,6 @@
 ; - AddToPath
 ; - SetStartupPath
 ;
-; Public variables
-; - gPathname
-;
-
-gPathname = $3F00
 
 ;------------------------------------------------------------------------------
 ; ResetPath
