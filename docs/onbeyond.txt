@@ -271,7 +271,8 @@ Z1 - Zork I r5
 Z2 - Zork II r7 / UG3AU5
 Z3 - Stationfall r107 / 870430
      (a.k.a. "Interpreter M")
-Z4 - ???
+Z4 - Nord & Bert Couldn't Make Head Or
+     Tail Of It r19 / 870722
 Z5 - Sherlock r26 / 880127
 Z5U- Beyond Zork r57 / 871221
 
