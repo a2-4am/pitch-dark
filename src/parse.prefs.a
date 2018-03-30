@@ -54,7 +54,6 @@ LoadGlobalPreferences
          jsr   LoadFile              ; load prefs file at $2000
          !word .globalPrefsFilename
 .handle  !word $2000
-         !word $2000
          !word kProDOSFileBuffer
 
          jsr   ParseKeyValueText     ; parse contents into global prefs store

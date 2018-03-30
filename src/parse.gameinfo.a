@@ -53,7 +53,6 @@ LoadGameInfo
          jsr   LoadFile
          !word gPathname
          !word $0800
-         !word $1400
          !word kProDOSFileBuffer
 
          lda   #$FF

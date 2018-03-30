@@ -20,7 +20,6 @@ LoadGameList
          jsr   LoadFile              ; load prefs file at $2000
          !word .gamesListFilename
 .handle  !word $2000
-         !word $2000
          !word kProDOSFileBuffer
 
          jsr   ParseKeyValueText     ; parse contents into games list store

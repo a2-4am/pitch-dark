@@ -37,11 +37,10 @@ PRODOSMLI =    $BF00      ; [callable] MLI entry point
 ; LoadFile
 ; load a file into memory all at once, using ProDOS MLI calls
 ;
-; in:  stack contains 8 bytes of parameters:
+; in:  stack contains 6 bytes of parameters:
 ;      +1 address of pathname
 ;      +3 address of data buffer (to receive file contents)
-;      +5 [word] maximum length of data to read
-;      +7 address of ProDOS file buffer
+;      +5 address of ProDOS file buffer
 ; out: if C set, load failed and A contains error code
 ;        from open or read
 ;      if C clear, load succeeded and ($02) contains
@@ -52,7 +51,7 @@ PRODOSMLI =    $BF00      ; [callable] MLI entry point
 ;-------------------------------
 !zone {
 LoadFile
-         +PARAMS_ON_STACK 8
+         +PARAMS_ON_STACK 6
 
          ldy   #$01
          lda   (PARAM),y    ; lo byte of pathname
@@ -60,7 +59,7 @@ LoadFile
          iny
          lda   (PARAM),y    ; hi byte of pathname
          sta   mliparam+2
-         ldy   #$07
+         ldy   #$05
          lda   (PARAM),y    ; lo byte of ProDOS file buffer
          sta   mliparam+3
          iny
@@ -77,11 +76,8 @@ LoadFile
          iny
          lda   (PARAM),y    ; hi address of data buffer
          sta   mliparam+3
-         iny
-         lda   (PARAM),y    ; lo data length
-         sta   mliparam+4
-         iny
-         lda   (PARAM),y    ; hi data length
+         lda   #$FF
+         sta   mliparam+4 ; max data length (unlimited, YOLO)
          sta   mliparam+5
          pla              ; pull file reference number
          jsr   _readfile

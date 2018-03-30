@@ -12,6 +12,8 @@
 ; - gPathname
 ;
 
+gPathname = $3F00
+
 ;------------------------------------------------------------------------------
 ; ResetPath
 ; reset gPathname to length 0
@@ -74,6 +76,3 @@ SetStartupPath
          bpl   -
          rts
 }
-
-gPathname
-         !fill 65                    ; enough zeroes for any ProDOS pathname

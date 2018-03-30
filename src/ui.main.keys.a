@@ -153,7 +153,6 @@ HandleKey
          jsr   LoadFile
          !word gPathname
          !word kSystemAddress
-         !word $2000
          !word kProDOSFileBuffer
          bcs   .xyzzyError
          jsr   ExitWeeGUI

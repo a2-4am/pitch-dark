@@ -84,7 +84,6 @@ LaunchInterpreter
          jsr   LoadInterpreter
          bcs   .playError
 
-; change prefix to folder of file we want the interpreter to open
          jsr   ResetPath
          +LDADDR kGameRootDirectory
          jsr   AddToPath
@@ -92,30 +91,21 @@ LaunchInterpreter
          jsr   okvs_get
          !word gGlobalPrefsStore
          !word kLastPlayed
+         +STAY +
          jsr   AddToPath
 
-         jsr   SetPrefix
+         jsr   SetPrefix             ; set ProDOS prefix to game directory
          !word gPathname
          bcs   .playError
 
-; put just the filename at $2006
-         +LDAY addrVersions
-         +STAY $00
-         ldy   #0
--        lda   ($00),y
-         cmp   #$BD                  ; '='
-         beq   .doneBuildingFilename
-         iny
-         and   #$7F
-         sta   $2006,y
-         bra   -
-.doneBuildingFilename
-         sty   $2006
+         jsr   okvs_get
+         !word gGlobalPrefsStore
++        !word $FDFD                 ; SMC
+         jsr   SetStartupPath        ; store game filename at $2006
 
-; shut down WeeGUI and transfer control to interpreter
-         jsr   ExitWeeGUI
-         jsr   SetInterpreterOptions
-         jmp   kSystemAddress
+         jsr   ExitWeeGUI            ; shut down WeeGUI
+         jsr   SetInterpreterOptions ; set options struct at $300
+         jmp   kSystemAddress        ; exit via interpreter
 
 LoadInterpreter
          jsr   ResetPath
@@ -125,7 +115,6 @@ LoadInterpreter
          jsr   LoadFile
          !word gPathname
          !word kSystemAddress
-         !word $2000
          !word kProDOSFileBuffer
          rts
 .interpreterFilename
