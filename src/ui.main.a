@@ -144,44 +144,34 @@ paintInfoView
          jsr   WeeGUI
          +LDAY addrInfo
          ldx   #kInfoPaintWidth
-         phx
          jsr   multiPrint
-         plx
-         lda   #$A0
--        sta   kNullTerminatedBuffer,x
-         dex
-         bpl   -
-         lda   #$00
-         sta   kNullTerminatedBuffer+kInfoPaintWidth
 
          jsr   okvs_get              ; get shortname of current game
          !word gGlobalPrefsStore
          !word kLastPlayed
-         +STAY +
+         +STAY +                     ; A/Y contains address
+
          jsr   okvs_get              ; get selected version of this game
          !word gGlobalPrefsStore
 +        !word $FDFD                 ; SMC
-         +STAY +
+         +STAY +                     ; A/Y contains address
+
          jsr   okvs_get              ; get long description of this version
          !word gVersionsStore
 +        !word $FDFD                 ; SMC
-         +STAY SRC
-         lda   (SRC)
-         tay
--        lda   (SRC),y
-         sta   $3F00,y
-         dey
-         bne   -
-         stz   $00
-         lda   #$3F
-         sta   $01
-         jmp   .printLoop
+                                     ; A/Y contains address
+         ldx   #kInfoPaintWidth
+         jsr   CreateNullTerminatedString
+
+         +LDADDR kNullTerminatedBuffer
+         bra   multiPrintWhereYouAre
 
 multiPrint
-         +STAY $00
          stx   .printLineLength+1
          stz   .htab+1
          stz   .vtab+1
+multiPrintWhereYouAre
+         +STAY $00
 .printLoop
          lda   ($00)
          beq   .printDone
