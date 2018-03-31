@@ -63,14 +63,14 @@ MainScreen
          jsr   WeeGUI
          jsr   PaintAllViews         ; draw all UI elements
          bit   $C010                 ; clear keyboard strobe
-.runLoop
+.mainRunLoop
          ldx   #WGPendingViewAction
          jsr   WeeGUI                ; handle mouse movement and clicks
          lda   $c000
-         bpl   .runLoop
+         bpl   .mainRunLoop
          bit   $c010
          jsr   HandleKey             ; handle keypresses
-         bra   .runLoop
+         bra   .mainRunLoop
 
 ExitWeeGUI
          ldx   #WGDisableMouse       ; disable mouse support before quitting
