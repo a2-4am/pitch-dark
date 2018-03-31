@@ -127,7 +127,31 @@ LoadGameInfo
          jsr   okvs_get              ; get selected version of this game
          !word gGlobalPrefsStore
 +        !word $FDFD                 ; SMC
-;         +STAY +                     ; A/Y contains address
+         +STAY SRC                   ; A/Y contains address
+
+         lda   (SRC)
+         dec
+         dec                         ; chop off filename suffix ('Z3' or similar)
+         tay
+         phy
+-        lda   (SRC),y
+         sta   gVal,y
+         dey
+         bpl   -
+         ply
+         lda   #'S'                  ; add new suffix ('SAV')
+         sta   gVal,y
+         iny
+         lda   #'A'
+         sta   gVal,y
+         iny
+         lda   #'V'
+         sta   gVal,y
+         inc   gVal                  ; fix string length
+         jsr   ResetPath
+         +LDADDR gVal
+         jsr   AddToPath
+         
 
          rts
 }
