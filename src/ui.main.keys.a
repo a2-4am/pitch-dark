@@ -249,9 +249,18 @@ callback_boxart
          sta   $C054
          sta   $C050
          bit   $C010
--        lda   $C000
+         ldx   #WGClearPendingClick
+         jsr   WeeGUI
+-
+         ldx   #WGPendingClick
+         jsr   WeeGUI
+         cpx   #$FF
+         bne   +
+         lda   $C000
          bpl   -
 +        bit   $C010
+         ldx   #WGClearPendingClick
+         jsr   WeeGUI
          sta   $C051                 ; back to text
          rts
 .boxartError

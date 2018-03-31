@@ -76,4 +76,5 @@ WGCreateRadio			= 84
 WGReset					= 86
 WGGetState				= 88
 WGPendingClick			= 90
+WGClearPendingClick		= 92
 
