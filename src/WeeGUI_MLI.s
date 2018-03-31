@@ -75,4 +75,5 @@ WGStrokeRoundRect		= 82
 WGCreateRadio			= 84
 WGReset					= 86
 WGGetState				= 88
+WGPendingClick			= 90
 

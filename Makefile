@@ -18,12 +18,6 @@ ACME=acme
 # https://github.com/mach-kernel/cadius
 CADIUS=cadius
 
-md:
-	mkdir -p build
-
-clean:
-	rm -rf build/
-
 asm: md
 	$(ACME) -r build/grue.system.lst src/grue.system.s
 	$(ACME) -r build/pitchdark.lst src/pitchdark.a
@@ -62,5 +56,11 @@ artwork: dsk
 
 mount: dsk
 	osascript bin/V2Make.scpt "`pwd`" bin/pitchdark.vii build/"$(DISK)"
+
+md:
+	mkdir -p build
+
+clean:
+	rm -rf build/
 
 all: clean asm dsk txt artwork mount

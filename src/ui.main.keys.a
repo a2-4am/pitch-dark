@@ -215,19 +215,8 @@ callback_next
 callback_versions
          rts
 
-callback_options
-         jmp   OptionsDialog
-
 !zone {
 callback_boxart
-         jsr   ResetPath
-         +LDADDR kArtworkRootDirectory
-         jsr   AddToPath
-         jsr   okvs_get
-         !word gGlobalPrefsStore
-         !word kLastPlayed
-         jsr   AddToPath
-
          lda   #0                    ; set Z flag always
 !cpu 65816
          rep   #2                    ; clear Z flag on 65816 only
@@ -236,6 +225,15 @@ callback_boxart
          lda   $C029
          and   #$1F
          sta   $C029                 ; set GS NEWVIDEO mode to turn off linearize
++
+         jsr   ResetPath
+         +LDADDR kArtworkRootDirectory
+         jsr   AddToPath
+
+         jsr   okvs_get
+         !word gGlobalPrefsStore
+         !word kLastPlayed
+         jsr   AddToPath             ; gPathname = 'ARTWORK/<game shortname>'
 
 +        jsr   LoadDHRFile           ; load artwork from file
          !word gPathname
@@ -245,25 +243,21 @@ callback_boxart
          sta   $C000                 ; display double hi-res page 1
          sta   $C00D
          sta   $C05E
+         sta   $C001
          sta   $C057
          sta   $C052
          sta   $C054
          sta   $C050
-
-         bit   $c010
--        lda   $c000
+         bit   $C010
+-        lda   $C000
          bpl   -
-         bit   $c010
-
-         sta   $C001                 ; back to text
-         sta   $C051
++        bit   $C010
+         sta   $C051                 ; back to text
          rts
 .boxartError
          jmp   SoftBell
 }
 
-callback_clues
-         jmp   LaunchInterpreterWithHints
-
-callback_play
-         jmp   LaunchInterpreterWithGame
+callback_options = OptionsDialog
+callback_clues = LaunchInterpreterWithHints
+callback_play  = LaunchInterpreterWithGame
