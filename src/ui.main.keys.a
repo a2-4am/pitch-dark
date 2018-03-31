@@ -262,31 +262,8 @@ callback_boxart
          jmp   SoftBell
 }
 
-!zone {
 callback_clues
-         jsr   SaveGlobalPreferences
-         jsr   LoadInterpreter
-         bcs   .cluesError
-; change prefix to folder of file we want the interpreter to open
-         jsr   ResetPath
-         +LDADDR kHintsRootDirectory
-         jsr   AddToPath
-         jsr   SetPrefix
-         !word gPathname
-         bcs   .cluesError
-
-; put just the filename at $2006
-         jsr   okvs_get
-         !word gGlobalPrefsStore
-         !word kLastPlayed
-         jsr   SetStartupPath
-; shutdown WeeGUI and transfer control to interpreter
-         jsr   ExitWeeGUI
-         jsr   SetInterpreterOptionsExceptForce40
-         jmp   kSystemAddress
-.cluesError
-         jmp   SoftBell
-}
+         jmp   LaunchInterpreterWithHints
 
 callback_play
-         jmp   LaunchInterpreter
+         jmp   LaunchInterpreterWithGame

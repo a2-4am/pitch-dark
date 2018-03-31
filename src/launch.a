@@ -7,30 +7,65 @@
 ; - ClearInterpreterOptions
 ; - SetInterpreterOptions
 ; - SetInterpreterOptionsExceptForce40
-; - LoadInterpreter
-; - LaunchInterpreter
+; - LaunchInterpreterWithGame
+; - LaunchInterpreterWithHints
 ;
 
+kOnBeyondOptionsStruct    = $0300
+kOnBeyondColumns          = $0300
+kOnBeyondCase             = $0301
+kOnBeyondAutoRestore      = $0302
+kOnBeyondScriptToFile     = $0303
+kOnBeyondAutoScript       = $0304
+kOnBeyondWarnMissing      = $0305
+kOnBeyondChecksum         = $0306
+
+;------------------------------------------------------------------------------
+; ClearInterpreterOptions
+; clear options script and make checksum invalid
+;
+; in:    none
+; out:   A/Y clobbered
+;        X preserved
+;        all flags clobbered
+;------------------------------------------------------------------------------
 ClearInterpreterOptions
          ldy   #6
          lda   #0
--        sta   $0300,y
+-        sta   kOnBeyondOptionsStruct,y
          dey
          bpl   -
          rts
 
+;------------------------------------------------------------------------------
+; SetInterpreterOptions
+; set options struct based on global preferences store
+;
+; in:    none
+; out:   all registers and flags clobbered
+;------------------------------------------------------------------------------
 SetInterpreterOptions
          jsr   okvs_get
          !word gGlobalPrefsStore
          !word kForce40
          jsr   okvs_as_boolean
-         beq   +
+         beq   SetInterpreterOptionsExceptForce40
          lda   #$CE
          !byte $2C
-+
+; execution falls through here
+
+;------------------------------------------------------------------------------
+; SetInterpreterOptionsExceptForce40
+; set options struct based on global preferences store, except always specify
+; 80-column mode (used to launch PRIZM hint files)
+;
+; in:    none
+; out:   all registers and flags clobbered
+;------------------------------------------------------------------------------
 SetInterpreterOptionsExceptForce40
          lda   #$D9
-         sta   $0300                 ; 40/80 columns
+         sta   kOnBeyondColumns
+
          jsr   okvs_get
          !word gGlobalPrefsStore
          !word kForceUpper
@@ -39,10 +74,10 @@ SetInterpreterOptionsExceptForce40
          lda   #0
          !byte $2C
 +        lda   #1
-         sta   $0301                 ; case
+         sta   kOnBeyondCase
 
-         lda   #$FF
-         sta   $0302                 ; auto-restore
+         lda   #$FF                  ; TODO this will eventually be set based on 'Resume Game' screen
+         sta   kOnBeyondAutoRestore
 
          jsr   okvs_get
          !word gGlobalPrefsStore
@@ -52,7 +87,7 @@ SetInterpreterOptionsExceptForce40
          lda   #1
          !byte $2C
 +        lda   #0
-         sta   $0303                 ; script-to-file
+         sta   kOnBeyondScriptToFile
 
          jsr   okvs_get
          !word gGlobalPrefsStore
@@ -62,27 +97,35 @@ SetInterpreterOptionsExceptForce40
          lda   #1
          !byte $2C
 +        lda   #0
-         sta   $0304                 ; auto-script
+         sta   kOnBeyondAutoScript
 
-         lda   #1
-         sta   $0305                 ; warn on missing .sav files
+         lda   #0                    ; never warn, YOLO
+         sta   kOnBeyondWarnMissing
 
          lda   #$A5
-         eor   $0300
-         eor   $0301
-         eor   $0302
-         eor   $0303
-         eor   $0304
-         eor   $0305
-         sta   $0306
+         eor   kOnBeyondColumns
+         eor   kOnBeyondCase
+         eor   kOnBeyondAutoRestore
+         eor   kOnBeyondScriptToFile
+         eor   kOnBeyondAutoScript
+         eor   kOnBeyondWarnMissing
+         sta   kOnBeyondChecksum
          rts
 
-.playError
-         jmp   SoftBell
-LaunchInterpreter
+;------------------------------------------------------------------------------
+; LaunchInterpreterWithGame
+; load interpreter and launch it with a game based on global preferences store
+;
+; in:    current ProDOS prefix is the same as the PITCH.DARK file
+; out:   returns with C set if interpreter could not be loaded or game
+;          directory could not be found
+;        otherwise does not return (calls ExitWeeGUI and jumps to interpreter)
+;        gPathname clobbered
+;------------------------------------------------------------------------------
+LaunchInterpreterWithGame
          jsr   SaveGlobalPreferences
          jsr   LoadInterpreter
-         bcs   .playError
+         bcs   .launchError
 
          jsr   ResetPath
          +LDADDR kGameRootDirectory
@@ -91,12 +134,12 @@ LaunchInterpreter
          jsr   okvs_get
          !word gGlobalPrefsStore
          !word kLastPlayed
-         +STAY +
+         +STAY +                     ; A/Y contains address
          jsr   AddToPath
 
          jsr   SetPrefix             ; set ProDOS prefix to game directory
          !word gPathname
-         bcs   .playError
+         bcs   .launchError
 
          jsr   okvs_get
          !word gGlobalPrefsStore
@@ -106,7 +149,51 @@ LaunchInterpreter
          jsr   ExitWeeGUI            ; shut down WeeGUI
          jsr   SetInterpreterOptions ; set options struct at $300
          jmp   kSystemAddress        ; exit via interpreter
+.launchError
+         jmp   SoftBell
 
+;------------------------------------------------------------------------------
+; LaunchInterpreterWithHints
+; load interpreter and launch it with the hints file for the current game
+;
+; in:    current ProDOS prefix is the same as the PITCH.DARK file
+; out:   returns with C set if interpreter could not be loaded or hints
+;          directory could not be found
+;        otherwise does not return (calls ExitWeeGUI and jumps to interpreter)
+;        gPathname clobbered
+;------------------------------------------------------------------------------
+LaunchInterpreterWithHints
+         jsr   SaveGlobalPreferences
+         jsr   LoadInterpreter
+         bcs   .launchError
+
+         jsr   ResetPath
+         +LDADDR kHintsRootDirectory
+         jsr   AddToPath
+
+         jsr   SetPrefix
+         !word gPathname
+         bcs   .launchError
+
+         jsr   okvs_get
+         !word gGlobalPrefsStore
+         !word kLastPlayed
+         jsr   SetStartupPath        ; store hints filename at $2006
+
+         jsr   ExitWeeGUI
+         jsr   SetInterpreterOptionsExceptForce40
+         jmp   kSystemAddress
+
+;------------------------------------------------------------------------------
+; LoadInterpreter
+; load interpreter and launch it with the hints file for the current game
+;
+; in:    current ProDOS prefix is the same as the ONBEYOND.SYSTEM file
+; out:   C clear if success
+;        C set if interpreter could not be loaded
+;        all other registers and flags clobbered
+;        gPathname clobbered
+;------------------------------------------------------------------------------
 LoadInterpreter
          jsr   ResetPath
          +LDADDR .interpreterFilename
@@ -117,6 +204,7 @@ LoadInterpreter
          !word kSystemAddress
          !word kProDOSFileBuffer
          rts
+
 .interpreterFilename
          !byte 15
          !raw  "ONBEYOND.SYSTEM"

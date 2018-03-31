@@ -119,5 +119,15 @@ LoadGameInfo
          !word addrOptions
          !byte 0
 
+         jsr   okvs_get              ; get shortname of current game
+         !word gGlobalPrefsStore
+         !word kLastPlayed
+         +STAY +                     ; A/Y contains address
+
+         jsr   okvs_get              ; get selected version of this game
+         !word gGlobalPrefsStore
++        !word $FDFD                 ; SMC
+;         +STAY +                     ; A/Y contains address
+
          rts
 }
