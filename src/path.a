@@ -81,7 +81,8 @@ SetStartupPath
 ; in:    A/Y contains address of length-prefixed string to copy
 ;        X contains length of null-terminated string -- if > length of source,
 ;          remaining buffer will be padded with spaces (#$A0)
-; out:   all registers and flags clobbered
+; out:   X preserved
+;        all other registers and flags clobbered
 ;        $00/$01 clobbered
 ;------------------------------------------------------------------------------
 !zone {

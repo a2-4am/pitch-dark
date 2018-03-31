@@ -167,10 +167,10 @@ paintInfoView
          bra   multiPrintWhereYouAre
 
 multiPrint
-         stx   .printLineLength+1
          stz   .htab+1
          stz   .vtab+1
 multiPrintWhereYouAre
+         stx   .printLineLength+1
          +STAY $00
 .printLoop
          lda   ($00)
