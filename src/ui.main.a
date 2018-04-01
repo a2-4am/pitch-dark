@@ -12,8 +12,6 @@
 ; - gViewInUse
 ;
 
-MAGICRTS       = $FF58               ; used to set overflow bit
-
 ; View IDs (application-specific, acceptable range 0..15, no duplicates)
 ID_PREVIOUS    = 1
 ID_OPTIONS     = 2

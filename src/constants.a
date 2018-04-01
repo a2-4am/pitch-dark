@@ -18,6 +18,8 @@ gKey                      = $3F01
 gValLen                   = $3F80
 gVal                      = $3F81
 WGInit                    = $4000    ; WeeGUI file load address and initialization function
+MAGICRTS                  = $FF58    ; used to set overflow bit
+
 
 ; zero page
 PTR                       = $02
