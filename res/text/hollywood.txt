@@ -45,5 +45,8 @@ R37.861215.Z3=Release 37 / Serial number 861215
 R235.861118.Z3=Release 235 / Serial number 861118
 
 [options]
+ARTWORK=1
+CLUES=1
+VERSIONS=1
 
 [eof]

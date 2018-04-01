@@ -22,6 +22,8 @@
 R22.830916.Z3=Release 22 / Serial number 830916
 
 [options]
+ARTWORK=1
+CLUES=1
 VERSIONS=0
 
 [eof]

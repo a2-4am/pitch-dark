@@ -30,5 +30,8 @@ R12.821025.Z3=Release 12 / Serial number 821025
 R10.820818.Z3=Release 10 / Serial number 820818
 
 [options]
+ARTWORK=1
+CLUES=1
+VERSIONS=1
 
 [eof]

@@ -34,5 +34,8 @@ R15.820308.Z3=Release 15 / Serial number 820308
 R7.UG3AU5.Z2=Release 7 / Serial number UG3AU5
 
 [options]
+ARTWORK=1
+CLUES=1
+VERSIONS=1
 
 [eof]

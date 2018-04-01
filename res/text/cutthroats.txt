@@ -25,6 +25,8 @@
 R23.840809.Z3=Release 23 / Serial number 840809
 
 [options]
+ARTWORK=1
+CLUES=1
 VERSIONS=0
 
 [eof]

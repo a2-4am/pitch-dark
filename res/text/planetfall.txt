@@ -29,5 +29,8 @@ R20.830708.Z3=Release 20 / Serial number 830708
 R10.880531.Z5=Release 10 / Serial number 880531 (Solid Gold)
 
 [options]
+ARTWORK=1
+CLUES=1
+VERSIONS=1
 
 [eof]

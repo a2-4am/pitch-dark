@@ -47,5 +47,8 @@ R49.870917.Z5=Release 49 / Serial number 870917
 R47.870915.Z5=Release 47 / Serial number 870915
 
 [options]
+ARTWORK=1
+CLUES=1
+VERSIONS=1
 
 [eof]

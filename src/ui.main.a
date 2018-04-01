@@ -7,6 +7,10 @@
 ; - PaintMain
 ; - RepaintMainIfDirty
 ;
+; Public variables
+; - gMainScreenPaintDirty
+; - gViewInUse
+;
 
 MAGICRTS       = $FF58               ; used to set overflow bit
 
@@ -23,7 +27,7 @@ ID_DESCRIPTION = 9
 
 gMainScreenPaintDirty
          !byte 0                     ; 0=false, 1=true
-gViewHasActiveHotkey
+gViewInUse
          !byte 0,1,1,1,1,0,0,0,0,0,0,0,0,0,0
 
 ;------------------------------------------------------------------------------
@@ -40,9 +44,9 @@ gViewHasActiveHotkey
 PaintMain
          ldx   #WGReset
          jsr   WeeGUI
-         stz   gViewHasActiveHotkey+ID_BOXART
-         stz   gViewHasActiveHotkey+ID_HINTS
-         stz   gViewHasActiveHotkey+ID_VERSIONS
+         stz   gViewInUse+ID_BOXART
+         stz   gViewInUse+ID_HINTS
+         stz   gViewInUse+ID_VERSIONS
          ldx   #1                    ; flag - clear screen before painting
          stx   gMainScreenPaintDirty
          !byte $2C
@@ -73,17 +77,17 @@ RepaintMainIfDirty
          !word kViewPlay
 .donePlayOrResume
 
-         jsr   CreateConditionalButton ; create or destroy 'artwork' button
+         jsr   CreateOrDestroyButton ; create or destroy 'artwork' button
          !byte ID_BOXART
          !word kViewBoxArt
          !word kHasArtwork
 
-         jsr   CreateConditionalButton ; create or destroy 'hints' button
+         jsr   CreateOrDestroyButton ; create or destroy 'hints' button
          !byte ID_HINTS
          !word kViewHints
          !word kHasHints
 
-         jsr   CreateConditionalButton ; create or destroy 'revisions' button
+         jsr   CreateOrDestroyButton ; create or destroy 'revisions' button
          !byte ID_VERSIONS
          !word kViewVersions
          !word kHasVersions
@@ -140,8 +144,9 @@ RepaintMainIfDirty
 }
 
 ;------------------------------------------------------------------------------
-; CreateConditionalButton
-; conditionally create a WeeGUI Button, based on per-game options
+; CreateOrDestroyButton
+; create or destroy a WeeGUI Button view, based on per-game options
+;   and whether the button already exists
 ;
 ; in:    WeeGUI loaded and initialized
 ;        gOptionsStore populated
@@ -152,7 +157,7 @@ RepaintMainIfDirty
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 !zone {
-CreateConditionalButton
+CreateOrDestroyButton
          +PARAMS_ON_STACK 5
 
          ldy   #1
@@ -180,20 +185,21 @@ CreateConditionalButton
 .viewID=*+1
          ldx   #$FD                  ; SMC (X = WeeGUI view ID)
          jsr   okvs_as_boolean
-         beq   .no
-         lda   gViewHasActiveHotkey,x
-         bne   .done
+         beq   .destroy
+
+         lda   gViewInUse,x          ; create button if it doesn't exist
+         bne   .done                 ; oh it does exist, so we're done
          lda   #1
-         sta   gViewHasActiveHotkey,x
+         sta   gViewInUse,x
          jsr   CreateButton
 .viewConfigurationRecord
          !word $FDFD                 ; SMC
          bra   .done
 
-.no      lda   gViewHasActiveHotkey,x
-         beq   .done
+.destroy lda   gViewInUse,x          ; destroy button if it exists
+         beq   .done                 ; oh it doesn't exist, so we're done
          lda   #0
-         sta   gViewHasActiveHotkey,x
+         sta   gViewInUse,x
          txa                         ; A = WeeGUI view ID
          ldx   #WGSelectView
          jsr   WeeGUI

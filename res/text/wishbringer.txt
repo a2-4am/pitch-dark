@@ -23,5 +23,8 @@ R68.850501.Z3=Release 68 / Serial number 850501
 R23.880706.Z5=Release 23 / Serial number 880706 (Solid Gold)
 
 [options]
+ARTWORK=1
+CLUES=1
+VERSIONS=1
 
 [eof]

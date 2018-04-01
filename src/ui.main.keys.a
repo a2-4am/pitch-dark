@@ -97,7 +97,7 @@ HandleKey
          bra   .focusAndDoAction
 .activateView
          tax
-         ldy   gViewHasActiveHotkey,x
+         ldy   gViewInUse,x
          beq   .notFound
          ldx   #WGSelectView
          jsr   WeeGUI

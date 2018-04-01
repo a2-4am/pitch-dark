@@ -45,6 +45,8 @@
 R107.DEPROT.Z3=Release 107 / Serial number 870430
 
 [options]
+ARTWORK=1
+CLUES=1
 VERSIONS=0
 
 [eof]

@@ -28,5 +28,8 @@ R50.860711.Z3=Release 50 / Serial number 860711
 R4.880405.Z5=Release 4 / Serial number 880405 (Solid Gold)
 
 [options]
+ARTWORK=1
+CLUES=1
+VERSIONS=1
 
 [eof]

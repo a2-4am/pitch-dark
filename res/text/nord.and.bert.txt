@@ -46,6 +46,8 @@
 R19.870722.Z4=Release 19 / Serial number 870722
 
 [options]
+ARTWORK=1
+CLUES=1
 VERSIONS=0
 
 [eof]

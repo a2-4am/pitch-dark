@@ -30,5 +30,8 @@ R18.830910.Z3=Release 18 / Serial number 830910
 R13.830524.Z3=Release 13 / Serial number 830524
 
 [options]
+ARTWORK=1
+CLUES=1
+VERSIONS=1
 
 [eof]

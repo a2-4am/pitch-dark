@@ -30,5 +30,8 @@ R7.830419.Z3=Release 7 / Seial number 830419
 R5.830222.Z3=Release 5 / Serial number 830222
 
 [options]
+ARTWORK=1
+CLUES=1
+VERSIONS=1
 
 [eof]

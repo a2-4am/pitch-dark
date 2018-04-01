@@ -29,5 +29,8 @@ R6.DEPROT.Z3=Release 6 / Serial number 840508
 R4.DEPROT.Z3=Release 4 / Serial number 840131
 
 [options]
+ARTWORK=1
+CLUES=1
+VERSIONS=1
 
 [eof]

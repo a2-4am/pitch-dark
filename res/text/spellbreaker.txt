@@ -30,5 +30,8 @@ R87.DEPROT.Z3=Release 87 / Serial number 860904
 R63.DEPROT.Z3=Release 63 / Serial number 850916
 
 [options]
+ARTWORK=1
+CLUES=1
+VERSIONS=1
 
 [eof]

@@ -53,6 +53,8 @@
 R9.871008.Z5=Release 9 / Serial number 871008
 
 [options]
+ARTWORK=1
+CLUES=1
 VERSIONS=0
 
 [eof]

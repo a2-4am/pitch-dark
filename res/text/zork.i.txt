@@ -35,5 +35,8 @@ R15.UG3AU5.Z2=Release 15 / Serial number UG3AU5
 R5.000000.Z1=Release 5 / Serial number 000000
 
 [options]
+ARTWORK=1
+CLUES=1
+VERSIONS=1
 
 [eof]

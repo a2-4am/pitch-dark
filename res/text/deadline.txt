@@ -28,5 +28,8 @@ R19.820427.Z3=Release 19 / Serial number 820427
 R18.820311.Z3=Release 18 / Serial number 820311
 
 [options]
+ARTWORK=1
+CLUES=1
+VERSIONS=1
 
 [eof]

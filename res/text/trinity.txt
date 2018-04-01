@@ -26,5 +26,8 @@ R12.860926.Z4=Release 12 / Serial number 860926
 R11.860509.Z4=Release 11 / Serial number 860509
 
 [options]
+ARTWORK=1
+CLUES=1
+VERSIONS=1
 
 [eof]

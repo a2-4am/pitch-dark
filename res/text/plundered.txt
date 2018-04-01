@@ -37,6 +37,8 @@
 R26.870730.Z3=Release 26 / Serial number 870730
 
 [options]
+ARTWORK=1
+CLUES=1
 VERSIONS=0
 
 [eof]

@@ -26,6 +26,8 @@
 R97.851218.Z3=Release 97 / Serial number 851218
 
 [options]
+ARTWORK=1
+CLUES=1
 VERSIONS=0
 
 [eof]

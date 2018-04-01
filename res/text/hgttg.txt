@@ -35,5 +35,8 @@ R47.840914.Z3=Release 47 / Serial number 840914
 R31.871119.Z5=Release 31 / Serial number 871119 (Solid Gold)
 
 [options]
+ARTWORK=1
+CLUES=1
+VERSIONS=1
 
 [eof]

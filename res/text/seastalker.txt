@@ -29,5 +29,8 @@ R15A.840501.Z3=Release 15 / Serial number 840501
 R86.840320.Z3=Release 86 / Serial number 840320
 
 [options]
+ARTWORK=1
+CLUES=1
+VERSIONS=1
 
 [eof]

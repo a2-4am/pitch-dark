@@ -30,5 +30,8 @@ R9.861022.Z3=Release 9 / Serial number 861022
 R4.860918.Z3=Release 4 / Serial number 860918
 
 [options]
+ARTWORK=1
+CLUES=1
+VERSIONS=1
 
 [eof]

@@ -28,5 +28,8 @@ R15.831107.Z3=Release 15 / Serial number 831107
 R10.830810.Z3=Release 10 / Serial number 830810
 
 [options]
+ARTWORK=1
+CLUES=1
+VERSIONS=1
 
 [eof]
