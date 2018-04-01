@@ -432,7 +432,7 @@ _setprefix
 ;-------------------------------
 _getfileinfo
          lda   #CMD_GETFILEINFO  ; MLI command
-         ldy   #CMD_GETFILEINFO   ; number of parameters for 'getfileinfo' command
+         ldy   #PC_GETFILEINFO   ; number of parameters for 'getfileinfo' command
          jmp   mli
 
 ;-------------------------------

@@ -12,17 +12,21 @@
 MAGICRTS       = $FF58               ; used to set overflow bit
 
 ; View IDs (application-specific, acceptable range 0..15, no duplicates)
-; ID_TITLE is defined in ui.common.a
 ID_PREVIOUS    = 1
 ID_OPTIONS     = 2
 ID_NEXT        = 3
-ID_HR          = 4
-ID_PLAY        = 5
-ID_VERSIONS    = 6
-ID_BOXART      = 7
-ID_CLUES       = 8
-ID_INFO        = 9
-ID_DESCRIPTION = 13
+ID_PLAY        = 4
+ID_BOXART      = 5
+ID_HINTS       = 6
+ID_VERSIONS    = 7
+ID_INFO        = 8
+ID_DESCRIPTION = 9
+
+gViewInUse
+gShowingArtworkButton=*+ID_BOXART
+gShowingHintsButton=*+ID_HINTS
+gShowingVersionButton=*+ID_VERSIONS
+         !byte 0,1,1,1,1,0,0,0,1,1,0,0,0,0,0
 
 !zone {
 
@@ -34,27 +38,37 @@ ID_DESCRIPTION = 13
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 CreateViews
-         jsr   CreateTitleView
-
-         ldx   #WGCreateView         ; create horizontal rule
-         +LDADDR .viewHR
-         +STAY PARAM0
-         jsr   WeeGUI
-
          jsr   CreateButton          ; create various buttons
          !word .viewPrevious
          jsr   CreateButton
+         !word .viewOptions
+         jsr   CreateButton
          !word .viewNext
+
+         lda   gHasSavedGames
+         beq   .wantPlayButton
+         jsr   CreateButton
+         !word .viewResume
+         bra   .donePlayOrResume
+.wantPlayButton
          jsr   CreateButton
          !word .viewPlay
-         jsr   CreateButton
-         !word .viewVersions
-         jsr   CreateButton
+.donePlayOrResume
+
+         jsr   CreateConditionalButton
+         !byte ID_BOXART
          !word .viewBoxArt
-         jsr   CreateButton
-         !word .viewClues
-         jsr   CreateButton
-         !word .viewOptions
+         !word kHasArtwork
+
+         jsr   CreateConditionalButton
+         !byte ID_HINTS
+         !word .viewHints
+         !word kHasHints
+
+         jsr   CreateConditionalButton
+         !byte ID_VERSIONS
+         !word .viewVersions
+         !word kHasVersions
 
          ldx   #WGCreateView         ; create borderless frame for game title and info
          +LDADDR .viewInfo
@@ -86,13 +100,13 @@ CreateViews
 PaintAllViews
          ldx   #WGViewPaintAll       ; repaint all views that can be painted automatically
          jsr   WeeGUI
-         jsr   PaintTitleView
-         jsr   paintHRView
+         jsr   PaintTitleBar
+         jsr   paintHR
          jsr   paintInfoView
          jmp   paintDescriptionView
 
 ;------------------------------------------------------------------------------
-; RepaintSomeViews
+; RepaintIfDirty
 ; call WeeGUI to repaint UI elements after changing the current game
 ;
 ; in:    WeeGUI loaded and initialized
@@ -100,28 +114,36 @@ PaintAllViews
 ;        LoadGameInfo has been called to load new game description text
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
-RepaintSomeViews
+RepaintIfDirty
+         lda   gMainScreenPaintDirty
+         beq   +
+         jsr   CreateViews
+         ldx   #WGViewPaintAll
+         jsr   WeeGUI
          jsr   paintInfoView
          jsr   resetDescriptionViewScrolling
-         jmp   paintDescriptionView
+         jsr   paintDescriptionView
+         stz   gMainScreenPaintDirty
++        rts
+gMainScreenPaintDirty
+         !byte 0
 
 ;------------------------------------------------------------------------------
 ; internal functions
 
-paintHRView
-         ldx   #WGSelectView
-         lda   #ID_HR
-         jsr   WeeGUI
-         lda   #1
-         sta   PARAM0
-         lda   #5
+paintHR
+         lda   #4
          sta   PARAM1
-         lda   #78
-         sta   PARAM2
-         lda   #0
-         sta   PARAM3
-         ldy   #83
-         ldx   #WGFillRect
+         ldy   #78
+         lda   #83
+-        sty   PARAM0
+         ldx   #WGSetGlobalCursor
+         jsr   WeeGUI
+         ldx   #WGPlot
+         jsr   WeeGUI
+         dey
+         bne   -
+         ldx   #WGSyncGlobalCursor
          jmp   WeeGUI
 
 paintDescriptionView
@@ -215,13 +237,13 @@ resetDescriptionViewScrolling
          !byte ID_PREVIOUS           ; view ID
          !byte 1                     ; left
          !byte 2                     ; top
-         !byte 17                    ; width
+         !byte 13                    ; width
          !word callback_previous     ; callback
          !word .stringPrevious       ; caption
 .stringPrevious
          !text "< "
          !byte $10                   ; 'P' inverse
-         !text "revious game",0
+         !text "revious",0
 
 .viewNext
          !byte ID_NEXT               ; view ID
@@ -245,16 +267,6 @@ resetDescriptionViewScrolling
          !byte $13                   ; 'S' inverse
          !text "ettings",0
 
-.viewHR
-         !byte ID_HR                 ; view ID
-         !byte 0                     ; style
-         !byte 1                     ; left
-         !byte 4                     ; top
-         !byte 78                    ; visible width
-         !byte 1                     ; visible height
-         !byte 78                    ; width
-         !byte 1                     ; height
-
 .viewPlay
          !byte ID_PLAY               ; view ID
          !byte 66                    ; left
@@ -265,6 +277,19 @@ resetDescriptionViewScrolling
 .stringPlay
          !byte 144
          !text "lay "
+         !byte $67                   ; 'g' inverse
+         !text "ame",0
+
+.viewResume
+         !byte ID_PLAY               ; view ID
+         !byte 66                    ; left
+         !byte 6                     ; top
+         !byte 13                    ; width
+         !word callback_resume       ; callback
+         !word .stringResume         ; caption
+.stringResume
+         !byte 146
+         !text "esume "
          !byte $67                   ; 'g' inverse
          !text "ame",0
 
@@ -279,14 +304,14 @@ resetDescriptionViewScrolling
          !byte $01                   ; 'A' inverse
          !text "rtwork",0
 
-.viewClues
-         !byte ID_CLUES              ; view ID
+.viewHints
+         !byte ID_HINTS              ; view ID
          !byte 66                    ; left
          !byte 10                    ; top
          !byte 13                    ; width
          !word callback_clues        ; callback
-         !word .stringClues          ; caption
-.stringClues
+         !word .stringHints          ; caption
+.stringHints
          !byte $08                   ; 'H' inverse
          !text "ints",0
 

@@ -9,7 +9,6 @@
 
 !zone {
 ; View IDs (application-specific, acceptable range 0..15, no duplicates)
-; ID_TITLE is defined in paintcommon.a
 ID_OPTIONS_FRAME          = 1
 ID_OPTIONS_FORCE40        = 2
 ID_OPTIONS_FORCEUPPER     = 3
@@ -49,8 +48,6 @@ OptionsDialog
          txs
          ldx   #WGReset              ; reset WeeGUI
          jsr   WeeGUI
-
-         jsr   CreateTitleView       ; create title bar (defined in paintcommon.a)
 
          ldx   #WGCreateView         ; create frame
          +LDADDR .viewFrame
@@ -93,7 +90,7 @@ OptionsDialog
          ldx   #WGViewPaintAll       ; paint UI controls (window frame, buttons, checkboxes, radio buttons)
          jsr   WeeGUI
 
-         jsr   PaintTitleView        ; paint top title bar
+         jsr   PaintTitleBar         ; paint top title bar
 
          ldx   #WGSelectView
          lda   #ID_OPTIONS_FRAME

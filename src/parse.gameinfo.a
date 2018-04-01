@@ -6,8 +6,14 @@
 ; Public functions
 ; - LoadGameInfo
 ;
+; Public variables
+; - gHasSavedGames        0=false, 1=true
+;
+; Public constants (keys in gOptionsStore)
+; - kHasArtwork
+; - kHasHints
+; - kHasVersions
 
-!zone {
 kTextRootDirectory
          !byte 5
          !raw "TEXT/"
@@ -16,6 +22,17 @@ gVersionsStore
          !word $FDFD                 ; set in LoadGlobalPreferences
 gOptionsStore
          !word $FDFD                 ; set in LoadGameInfo
+gHasSavedGames
+         !byte 0
+kHasArtwork
+         !byte 7
+         !raw  "ARTWORK"
+kHasHints
+         !byte 5
+         !raw  "CLUES"
+kHasVersions
+         !byte 8
+         !raw  "VERSIONS"
 
 sectionPointers                      ; array of pointers to start of each section
 addrEOF
@@ -41,6 +58,7 @@ addrInfo
 ;        $00..$05 clobbered
 ;        $0800..$1FFF clobbered
 ;------------------------------------------------------------------------------
+!zone {
 LoadGameInfo
          jsr   ResetPath
          +LDADDR kTextRootDirectory
@@ -131,7 +149,6 @@ LoadGameInfo
 
          lda   (SRC)
          dec
-         dec                         ; chop off filename suffix ('Z3' or similar)
          tay
          phy
 -        lda   (SRC),y
@@ -139,19 +156,38 @@ LoadGameInfo
          dey
          bpl   -
          ply
-         lda   #'S'                  ; add new suffix ('SAV')
+         lda   #$53                  ; add new suffix ('SAV')
          sta   gVal,y
          iny
-         lda   #'A'
+         lda   #$41
          sta   gVal,y
          iny
-         lda   #'V'
+         lda   #$56
          sta   gVal,y
          inc   gVal                  ; fix string length
+
          jsr   ResetPath
+         +LDADDR kGameRootDirectory
+         jsr   AddToPath
+         jsr   okvs_get
+         !word gGlobalPrefsStore
+         !word kLastPlayed
+         jsr   AddToPath
+         +LDADDR kPathSeparator
+         jsr   AddToPath
          +LDADDR gVal
          jsr   AddToPath
-         
-
+         jsr   GetFileInfo
+         !word gPathname
+         bcs   .no                   ; no file -> no saved games
+         lda   blocks+1
+         bne   .yes                  ; file exists and is quite large -> assume saved games
+         lda   blocks
+         cmp   #$06                  ; file exists but is small -> no saved games (.Z4/.Z5 files have a 5 block 'empty' .sav file)
+         bcc   .no
+.yes     lda   #1
+         !byte $2C
+.no      lda   #0
+         sta   gHasSavedGames
          rts
 }

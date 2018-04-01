@@ -56,7 +56,7 @@ Start
 MainScreen
          ldx   #$FF
          txs
-         ldx   #WGReset              ; reset WeeGUI views
+         ldx   #WGReset
          jsr   WeeGUI
          jsr   CreateViews           ; create all WeeGUI views (UI elements)
          ldx   #WGClearScreen        ; clear screen
@@ -64,6 +64,7 @@ MainScreen
          jsr   PaintAllViews         ; draw all UI elements
          bit   $C010                 ; clear keyboard strobe
 .mainRunLoop
+         jsr   RepaintIfDirty
          ldx   #WGPendingViewAction
          jsr   WeeGUI                ; handle mouse movement and clicks
          lda   $c000
@@ -74,6 +75,8 @@ MainScreen
 
 ExitWeeGUI
          ldx   #WGDisableMouse       ; disable mouse support before quitting
+         jsr   WeeGUI
+         ldx   #WGClearScreen        ; clear screen (HOME)
          jsr   WeeGUI
          ldx   #WGExit               ; clean up WeeGUI
          jmp   WeeGUI

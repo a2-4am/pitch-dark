@@ -7,18 +7,9 @@
 ; - CreateRadio
 ; - CreateCheckbox
 ; - CreateButton
-; - CreateTitleView
-; - PaintTitleView
+; - PaintTitleBar
 ;
 
-; ROM routines
-INVERSE        = $FE80
-NORMAL         = $FE84
-
-; View IDs (application-specific, acceptable range 0..15, no duplicates)
-ID_TITLE       = 0
-
-!zone {
 ;------------------------------------------------------------------------------
 ; CreateRadio/CreateCheckbox/CreateButton
 ; creates a WeeGUI UI control with the 'raw title' option set
@@ -28,6 +19,7 @@ ID_TITLE       = 0
 ; out:   $00/$01 clobbered
 ;        all registers clobbered
 ;------------------------------------------------------------------------------
+!zone {
 CreateRadio
          ldx   #WGCreateRadio
          !byte $2C                   ; hide next 2 bytes
@@ -41,10 +33,10 @@ CreateButton
          +PARAMS_ON_STACK 2
 
          ldy   #$01
-         lda   ($00),y
+         lda   (PARAM),y
          sta   PARAM0
          iny
-         lda   ($00),y
+         lda   (PARAM),y
          sta   PARAM1
 .type=*+1
          ldx   #$FD                  ; SMC
@@ -53,49 +45,87 @@ CreateButton
          lda   #1
          sta   PARAM0
          jmp   WeeGUI
+}
+
+!zone {
+CreateConditionalButton
+         +PARAMS_ON_STACK 5
+
+         ldy   #1
+         lda   (PARAM),y
+         sta   .viewID
+         ldy   #3
+         lda   (PARAM),y
+         pha
+         dey
+         lda   (PARAM),y
+         ply
+         +STAY .viewConfigurationRecord
+         ldy   #5
+         lda   (PARAM),y
+         pha
+         dey
+         lda   (PARAM),y
+         ply
+         +STAY .optionsStoreKey
+
+         jsr   okvs_get
+         !word gOptionsStore
+.optionsStoreKey
+         !word $FDFD                 ; SMC
+.viewID=*+1
+         ldx   #$FD                  ; SMC (X = WeeGUI view ID)
+         jsr   okvs_as_boolean
+         beq   .no
+         lda   gViewInUse,x
+         bne   .done
+         lda   #1
+         sta   gViewInUse,x
+         jsr   CreateButton
+.viewConfigurationRecord
+         !word $FDFD                 ; SMC
+         bra   .done
+
+.no      lda   gViewInUse,x
+         beq   .done
+         lda   #0
+         sta   gViewInUse,x
+         txa                         ; A = WeeGUI view ID
+         ldx   #WGSelectView
+         jsr   WeeGUI
+         ldx   #WGDeleteView
+         jsr   WeeGUI
+
+.done    rts
+}
+
 
 ;------------------------------------------------------------------------------
-; CreateTitleView
-; creates the standard title bar on top row of screen
-;
-; in:    none
-; out:   A,X clobbered
-;        title view selected
-;------------------------------------------------------------------------------
-CreateTitleView
-         ldx   #WGCreateView         ; create title bar on top line
-         +LDADDR viewTitle
-         +STAY PARAM0
-         jmp   WeeGUI
-
-;------------------------------------------------------------------------------
-; PaintTitleView
+; PaintTitleBar
 ; paints the title bar
 ;
 ; in:    none
-; out:   all registers clobbered
-;        title view selected
+; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
-PaintTitleView
-         ldx   #WGSelectView
-         lda   #ID_TITLE
+!zone {
+PaintTitleBar
+         ldy   #79
+-        sty   PARAM0
+         stz   PARAM1
+         ldx   #WGSetGlobalCursor
          jsr   WeeGUI
-         jsr   INVERSE
-         ldx   #WGPrint
-         +LDADDR .stringTitle
-         +STAY PARAM0
+         ldx   #WGPlot
+         lda   .stringTitle,y
          jsr   WeeGUI
-         jmp   NORMAL
+         dey
+         bpl   -
+         ldx   #WGSyncGlobalCursor
+         jmp   WeeGUI
 
-viewTitle
-         !byte ID_TITLE              ; view ID
-         !byte 0                     ; style
-         !byte 0                     ; left
-         !byte 0                     ; top
-         !byte 80                    ; visible width
-         !byte 1                     ; visible height
-         !byte 80                    ; width
-         !byte 1                     ; height
 .stringTitle
-         !raw  "                                   Pitch Dark                                   ",0
+         !raw  "                                   "
+         !byte 16
+         !raw  "itch "
+         !byte 4
+         !raw  "ark                                   ",0
 }
