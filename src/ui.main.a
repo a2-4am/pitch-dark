@@ -25,8 +25,6 @@ ID_DESCRIPTION = 9
 gViewInUse
          !byte 0,1,1,1,1,0,0,0,1,1,0,0,0,0,0
 
-!zone {
-
 ;------------------------------------------------------------------------------
 ; CreateViews
 ; call WeeGUI to create all application views
@@ -34,41 +32,42 @@ gViewInUse
 ; in:    WeeGUI loaded and initialized
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
+!zone {
 CreateViews
          jsr   CreateButton          ; create various buttons
-         !word .viewPrevious
+         !word kViewPrevious
          jsr   CreateButton
-         !word .viewOptions
+         !word kViewOptions
          jsr   CreateButton
-         !word .viewNext
+         !word kViewNext
 
          lda   gHasSavedGames
          beq   .wantPlayButton
          jsr   CreateButton
-         !word .viewResume
+         !word kViewResume
          bra   .donePlayOrResume
 .wantPlayButton
          jsr   CreateButton
-         !word .viewPlay
+         !word kViewPlay
 .donePlayOrResume
 
          jsr   CreateConditionalButton
          !byte ID_BOXART
-         !word .viewBoxArt
+         !word kViewBoxArt
          !word kHasArtwork
 
          jsr   CreateConditionalButton
          !byte ID_HINTS
-         !word .viewHints
+         !word kViewHints
          !word kHasHints
 
          jsr   CreateConditionalButton
          !byte ID_VERSIONS
-         !word .viewVersions
+         !word kViewVersions
          !word kHasVersions
 
          ldx   #WGCreateView         ; create borderless frame for game title and info
-         +LDADDR .viewInfo
+         +LDADDR kViewInfo
          +STAY PARAM0
          jsr   WeeGUI
          ldx   #WGViewSetAction
@@ -77,13 +76,14 @@ CreateViews
          jsr   WeeGUI
 
          ldx   #WGCreateView         ; create scrollable frame for game description text
-         +LDADDR .viewDescription
+         +LDADDR kViewDescription
          +STAY PARAM0
          jsr   WeeGUI
          ldx   #WGViewSetAction
          +LDADDR paintDescriptionView
          +STAY PARAM0
          jmp   WeeGUI
+}
 
 ;------------------------------------------------------------------------------
 ; PaintAllViews
@@ -94,6 +94,7 @@ CreateViews
 ; out:   all registers and flags clobbered
 ;        $00/$01 clobbered
 ;------------------------------------------------------------------------------
+!zone {
 PaintAllViews
          ldx   #WGViewPaintAll       ; repaint all views that can be painted automatically
          jsr   WeeGUI
@@ -101,6 +102,7 @@ PaintAllViews
          jsr   paintHR
          jsr   paintInfoView
          jmp   paintDescriptionView
+}
 
 ;------------------------------------------------------------------------------
 ; RepaintIfDirty
@@ -111,6 +113,7 @@ PaintAllViews
 ;        LoadGameInfo has been called to load new game description text
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
+!zone {
 RepaintIfDirty
          lda   gMainScreenPaintDirty
          beq   +
@@ -124,10 +127,12 @@ RepaintIfDirty
 +        rts
 gMainScreenPaintDirty
          !byte 0
+}
 
 ;------------------------------------------------------------------------------
 ; internal functions
 
+!zone {
 paintHR
          lda   #4
          sta   PARAM1
@@ -230,100 +235,100 @@ resetDescriptionViewScrolling
          lda   #0
          jmp   WeeGUI
 
-.viewPrevious
+kViewPrevious
          !byte ID_PREVIOUS           ; view ID
          !byte 1                     ; left
          !byte 2                     ; top
          !byte 13                    ; width
          !word callback_previous     ; callback
-         !word .stringPrevious       ; caption
-.stringPrevious
+         !word kStringPrevious       ; caption
+kStringPrevious
          !text "< "
          !byte $10                   ; 'P' inverse
          !text "revious",0
 
-.viewNext
+kViewNext
          !byte ID_NEXT               ; view ID
          !byte 66                    ; left
          !byte 2                     ; top
          !byte 13                    ; width
          !word callback_next         ; callback
-         !word .stringNext           ; caption
-.stringNext
+         !word kStringNext           ; caption
+kStringNext
          !byte $0E                   ; 'N' inverse
          !text "ext game >",0
 
-.viewOptions
+kViewOptions
          !byte ID_OPTIONS            ; view ID
          !byte 34                    ; left
          !byte 2                     ; top
          !byte 12                    ; width
          !word callback_options      ; callback
-         !word .stringOptions
-.stringOptions
+         !word kStringOptions
+kStringOptions
          !byte $13                   ; 'S' inverse
          !text "ettings",0
 
-.viewPlay
+kViewPlay
          !byte ID_PLAY               ; view ID
          !byte 66                    ; left
          !byte 6                     ; top
          !byte 13                    ; width
          !word callback_play         ; callback
-         !word .stringPlay           ; caption
-.stringPlay
+         !word kStringPlay           ; caption
+kStringPlay
          !byte 144
          !text "lay "
          !byte $67                   ; 'g' inverse
          !text "ame",0
 
-.viewResume
+kViewResume
          !byte ID_PLAY               ; view ID
          !byte 66                    ; left
          !byte 6                     ; top
          !byte 13                    ; width
          !word callback_resume       ; callback
-         !word .stringResume         ; caption
-.stringResume
+         !word kStringResume         ; caption
+kStringResume
          !byte 146
          !text "esume "
          !byte $67                   ; 'g' inverse
          !text "ame",0
 
-.viewBoxArt
+kViewBoxArt
          !byte ID_BOXART             ; view ID
          !byte 66                    ; left
          !byte 8                     ; top
          !byte 13                    ; width
          !word callback_boxart       ; callback
-         !word .stringBoxArt         ; caption
-.stringBoxArt
+         !word kStringBoxArt         ; caption
+kStringBoxArt
          !byte $01                   ; 'A' inverse
          !text "rtwork",0
 
-.viewHints
+kViewHints
          !byte ID_HINTS              ; view ID
          !byte 66                    ; left
          !byte 10                    ; top
          !byte 13                    ; width
          !word callback_clues        ; callback
-         !word .stringHints          ; caption
-.stringHints
+         !word kStringHints          ; caption
+kStringHints
          !byte $08                   ; 'H' inverse
          !text "ints",0
 
-.viewVersions
+kViewVersions
          !byte ID_VERSIONS           ; view ID
          !byte 66                    ; left
          !byte 12                    ; top
          !byte 13                    ; width
          !word callback_versions     ; callback
-         !word .stringVersions       ; caption
-.stringVersions
+         !word kStringVersions       ; caption
+kStringVersions
          !byte $12                   ; 'R' inverse
          !text "evisions",0
 
-.viewInfo
+kViewInfo
          !byte ID_INFO               ; view ID
          !byte 0                     ; style
          !byte 0                     ; left
@@ -333,7 +338,7 @@ resetDescriptionViewScrolling
          !byte 65                    ; width
          !byte 6                     ; height
 
-.viewDescription
+kViewDescription
          !byte ID_DESCRIPTION        ; view ID
          !byte 2                     ; style
          !byte 1                     ; left
