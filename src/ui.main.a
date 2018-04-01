@@ -233,6 +233,7 @@ PaintInfoView
 
          +LDAY addrInfo
          ldx   #kInfoPaintWidth
+         phx
          jsr   MultiPrint
 
          jsr   okvs_get              ; get shortname of current game
@@ -249,14 +250,14 @@ PaintInfoView
          !word gVersionsStore
 +        !word $FDFD                 ; SMC
                                      ; A/Y contains address
-         ldx   #kInfoPaintWidth      ; where to put the null (rest is padded with spaces)
+         plx                         ; X = width a.k.a. where to put the null (rest is padded with spaces)
          jsr   CreateNullTerminatedString ; copies string to kNullTerminatedBuffer
 
          +LDADDR kNullTerminatedBuffer ; now use that as the buffer to print the last line
          !byte $2C
                                      ; execution falls through here
 MultiPrint
-         stz   SAVE
+         stz   SAVE                  ; VTAB, but 0-indexed
          stx   .printLineLength+1
          +STAY SRC
 .printLoop
@@ -281,6 +282,9 @@ MultiPrint
          lda   (SRC)
          bne   .printLoop
          rts
+}
+
+;------------------------------------------------------------------------------
 
 kViewPrevious
          !byte ID_PREVIOUS           ; view ID
@@ -394,4 +398,3 @@ kViewDescription
          !byte 8                     ; visible height
          !byte 77                    ; width
          !byte 39                    ; height
-}
