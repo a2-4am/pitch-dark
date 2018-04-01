@@ -58,6 +58,9 @@ MainScreen
          txs
          ldx   #WGReset
          jsr   WeeGUI
+         stz   gViewInUse+ID_BOXART
+         stz   gViewInUse+ID_HINTS
+         stz   gViewInUse+ID_VERSIONS
          jsr   CreateViews           ; create all WeeGUI views (UI elements)
          ldx   #WGClearScreen        ; clear screen
          jsr   WeeGUI

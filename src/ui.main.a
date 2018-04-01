@@ -23,9 +23,6 @@ ID_INFO        = 8
 ID_DESCRIPTION = 9
 
 gViewInUse
-gShowingArtworkButton=*+ID_BOXART
-gShowingHintsButton=*+ID_HINTS
-gShowingVersionButton=*+ID_VERSIONS
          !byte 0,1,1,1,1,0,0,0,1,1,0,0,0,0,0
 
 !zone {
