@@ -61,11 +61,6 @@
 ;  ... filler bytes up to value max length (set at append() time)
 
 !zone {
-PTR      =     $02
-SRC      =     $04
-DEST     =     $06
-SAVE     =     $08
-
 ;------------------------------------------------------------------------------
 ; okvs_init
 ;

@@ -18,3 +18,9 @@ gKey                      = $3F01
 gValLen                   = $3F80
 gVal                      = $3F81
 WGInit                    = $4000    ; WeeGUI file load address and initialization function
+
+; zero page
+PTR                       = $02
+SRC                       = $04
+DEST                      = $06
+SAVE                      = $08

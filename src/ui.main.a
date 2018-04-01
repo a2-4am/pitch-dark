@@ -214,20 +214,23 @@ PaintDescriptionView
          ldx   #WGSelectView
          lda   #ID_DESCRIPTION
          jsr   WeeGUI
+
          +LDAY addrDescription
          ldx   #kDescriptionPaintWidth
          jsr   MultiPrint
-         lda   .vtab+1
-         cmp   #10
+
+         lda   SAVE
+         cmp   #10                   ; minimum content height
          bcs   +
          lda   #10
-+        ldx   #WGSetContentHeight
++        ldx   #WGSetContentHeight   ; set content height so we stop scrolling on the last line of text
          jmp   WeeGUI
 
 PaintInfoView
          ldx   #WGSelectView
          lda   #ID_INFO
          jsr   WeeGUI
+
          +LDAY addrInfo
          ldx   #kInfoPaintWidth
          jsr   MultiPrint
@@ -246,44 +249,37 @@ PaintInfoView
          !word gVersionsStore
 +        !word $FDFD                 ; SMC
                                      ; A/Y contains address
-         ldx   #kInfoPaintWidth
-         jsr   CreateNullTerminatedString
+         ldx   #kInfoPaintWidth      ; where to put the null (rest is padded with spaces)
+         jsr   CreateNullTerminatedString ; copies string to kNullTerminatedBuffer
 
-         +LDADDR kNullTerminatedBuffer
-         bra   MultiPrintWhereYouAre
-
+         +LDADDR kNullTerminatedBuffer ; now use that as the buffer to print the last line
+         !byte $2C
+                                     ; execution falls through here
 MultiPrint
-         stz   .htab+1
-         stz   .vtab+1
-MultiPrintWhereYouAre
+         stz   SAVE
          stx   .printLineLength+1
-         +STAY $00
+         +STAY SRC
 .printLoop
-         lda   ($00)
-         beq   .printDone
+         stz   PARAM0
+         lda   SAVE
+         sta   PARAM1
          ldx   #WGSetCursor
-.htab    lda   #$FD                  ; SMC
-         sta   PARAM0
-.vtab    lda   #$FD                  ; SMC
-         sta   PARAM1
          jsr   WeeGUI
+         +LDAY SRC
+         +STAY PARAM0
+         bit   MAGICRTS              ; set overflow bit to trigger raw printing (with mousetext)
          ldx   #WGPrint
-         lda   $00
-         sta   PARAM0
-         lda   $01
-         sta   PARAM1
-         bit   MAGICRTS              ; set overflow bit
          jsr   WeeGUI
-         lda   $00
+         lda   SRC
          clc
 .printLineLength
-         adc   #$fd                  ; SMC
-         sta   $00
+         adc   #$FD                  ; SMC
+         sta   SRC
          bcc   +
-         inc   $01
-+        inc   .vtab+1
+         inc   SRC+1
++        inc   SAVE
+         lda   (SRC)
          bne   .printLoop
-.printDone
          rts
 
 kViewPrevious
