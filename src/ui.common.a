@@ -47,59 +47,6 @@ CreateButton
          jmp   WeeGUI
 }
 
-!zone {
-CreateConditionalButton
-         +PARAMS_ON_STACK 5
-
-         ldy   #1
-         lda   (PARAM),y
-         sta   .viewID
-         ldy   #3
-         lda   (PARAM),y
-         pha
-         dey
-         lda   (PARAM),y
-         ply
-         +STAY .viewConfigurationRecord
-         ldy   #5
-         lda   (PARAM),y
-         pha
-         dey
-         lda   (PARAM),y
-         ply
-         +STAY .optionsStoreKey
-
-         jsr   okvs_get
-         !word gOptionsStore
-.optionsStoreKey
-         !word $FDFD                 ; SMC
-.viewID=*+1
-         ldx   #$FD                  ; SMC (X = WeeGUI view ID)
-         jsr   okvs_as_boolean
-         beq   .no
-         lda   gViewInUse,x
-         bne   .done
-         lda   #1
-         sta   gViewInUse,x
-         jsr   CreateButton
-.viewConfigurationRecord
-         !word $FDFD                 ; SMC
-         bra   .done
-
-.no      lda   gViewInUse,x
-         beq   .done
-         lda   #0
-         sta   gViewInUse,x
-         txa                         ; A = WeeGUI view ID
-         ldx   #WGSelectView
-         jsr   WeeGUI
-         ldx   #WGDeleteView
-         jsr   WeeGUI
-
-.done    rts
-}
-
-
 ;------------------------------------------------------------------------------
 ; PaintTitleBar
 ; paints the title bar

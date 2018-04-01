@@ -50,26 +50,26 @@ OptionsDialog
          jsr   WeeGUI
 
          ldx   #WGCreateView         ; create frame
-         +LDADDR .viewFrame
+         +LDADDR kViewFrame
          +STAY PARAM0
          jsr   WeeGUI
          ldx   #WGViewSetTitle
-         +LDADDR .stringFrame
+         +LDADDR kStringFrame
          +STAY PARAM0
          jsr   WeeGUI
 
          jsr   CreateButton          ; create UI controls
-         !word .viewOK
+         !word kViewOK
          jsr   CreateButton
-         !word .viewCancel
+         !word kViewCancel
          jsr   CreateCheckbox
-         !word .viewForce40
+         !word kViewForce40
          jsr   CreateCheckbox
-         !word .viewForceUpper
+         !word kViewForceUpper
          jsr   CreateCheckbox
-         !word .viewScriptToFile
+         !word kViewScriptToFile
          jsr   CreateCheckbox
-         !word .viewAutoScript
+         !word kViewAutoScript
 
          jsr   SetCheckboxByPref     ; set initial state of checkboxes based on preferences
          !byte ID_OPTIONS_FORCE40
@@ -103,7 +103,7 @@ OptionsDialog
          sta   PARAM1
          jsr   WeeGUI
          ldx   #WGPrint
-         +LDADDR .stringForce40Description
+         +LDADDR kStringForce40Description
          +STAY PARAM0
          jsr   WeeGUI
 
@@ -114,7 +114,7 @@ OptionsDialog
          sta   PARAM1
          jsr   WeeGUI
          ldx   #WGPrint
-         +LDADDR .stringForceUpperDescription
+         +LDADDR kStringForceUpperDescription
          +STAY PARAM0
          jsr   WeeGUI
 
@@ -125,7 +125,7 @@ OptionsDialog
          sta   PARAM1
          jsr   WeeGUI
          ldx   #WGPrint
-         +LDADDR .stringScriptToFileDescription
+         +LDADDR kStringScriptToFileDescription
          +STAY PARAM0
          jsr   WeeGUI
 
@@ -136,16 +136,16 @@ OptionsDialog
          sta   PARAM1
          jsr   WeeGUI
          ldx   #WGPrint
-         +LDADDR .stringAutoScriptDescription
+         +LDADDR kStringAutoScriptDescription
          +STAY PARAM0
          jsr   WeeGUI
 
 .runLoop
          ldx   #WGPendingViewAction
          jsr   WeeGUI
-         lda   $c000
+         lda   $C000
          bpl   .runLoop
-         bit   $c010
+         bit   $C010
          jsr   HandleOptionsKey
          bra   .runLoop
 
@@ -185,8 +185,8 @@ callback_options_ok
          !byte ID_OPTIONS_AUTOSCRIPT
          !word kAutoScript
          lda   #1
-         sta   gNeedToSavePrefs
-         jsr   SaveGlobalPreferences
+         sta   gGlobalPrefsDirty     ; must set, otherwise SaveGlobalPreferences does nothing
+         jsr   SaveGlobalPreferences ; immediately write new preferences to disk
                                      ; execution falls through here
 callback_options_cancel
          jmp   MainScreen
@@ -258,7 +258,7 @@ SetPrefByCheckbox
          !byte $FD                   ; SMC
 }
 
-.viewFrame
+kViewFrame
          !byte ID_OPTIONS_FRAME      ; view ID
          !byte 2                     ; style (decorated frame)
          !byte 12                    ; left
@@ -267,76 +267,76 @@ SetPrefByCheckbox
          !byte 19                    ; visible height
          !byte 56                    ; width
          !byte 19                    ; height
-.stringFrame
+kStringFrame
          !text "Settings",0
 
-.viewOK
+kViewOK
          !byte ID_OPTIONS_OK         ; view ID
          !byte 56                    ; left
          !byte 4                     ; top
          !byte 10                    ; width
          !word callback_options_ok   ; callback
-         !word .stringOK             ; caption
-.stringOK
+         !word kStringOK             ; caption
+kStringOK
          !byte $0F                   ; 'P' inverse
          !byte 139,0
 
-.viewCancel
+kViewCancel
          !byte ID_OPTIONS_CANCEL     ; view ID
          !byte 56                    ; left
          !byte 6                     ; top
          !byte 10                    ; width
          !word callback_options_cancel ; callback
-         !word .stringCancel         ; caption
-.stringCancel
+         !word kStringCancel         ; caption
+kStringCancel
          !byte $03                   ; 'C' inverse
          !text "ancel",0
 
-.viewForce40
+kViewForce40
          !byte ID_OPTIONS_FORCE40    ; view ID
          !byte 14                    ; left
          !byte 4                     ; top
-         !word .stringForce40        ; caption
-.stringForce40
+         !word kStringForce40        ; caption
+kStringForce40
          !text "Force "
          !byte $34                   ; '4' inverse
          !text "0 column",0
-.stringForce40Description
+kStringForce40Description
          !text "Some games may be glitchy",0
 
-.viewForceUpper
+kViewForceUpper
          !byte ID_OPTIONS_FORCEUPPER ; view ID
          !byte 14                    ; left
          !byte 9                     ; top
-         !word .stringForceUpper     ; caption
-.stringForceUpper
+         !word kStringForceUpper     ; caption
+kStringForceUpper
          !text "Force "
          !byte $75                   ; 'u' inverse
          !text "ppercase",0
-.stringForceUpperDescription
+kStringForceUpperDescription
          !text "A MATTER OF PREFERENCE, I SUPPOSE",0
 
-.viewScriptToFile
+kViewScriptToFile
          !byte ID_OPTIONS_SCRIPTTOFILE ; view ID
          !byte 14                    ; left
          !byte 14                    ; top
-         !word .stringScriptToFile   ; caption
-.stringScriptToFile
+         !word kStringScriptToFile   ; caption
+kStringScriptToFile
          !text "SCRIPT to "
          !byte $66                   ; 'f' inverse
          !text "ile",0
-.stringScriptToFileDescription
+kStringScriptToFileDescription
          !text "Save transcripts to a file instead of printer",0
 
-.viewAutoScript
+kViewAutoScript
          !byte ID_OPTIONS_AUTOSCRIPT ; view ID
          !byte 14                    ; left
          !byte 19                    ; top
-         !word .stringAutoScript     ; caption
-.stringAutoScript
+         !word kStringAutoScript     ; caption
+kStringAutoScript
          !text "Always "
          !byte $13                   ; 'S' inverse
          !text "CRIPT",0
-.stringAutoScriptDescription
+kStringAutoScriptDescription
          !text "Turn on SCRIPT mode automatically",0
 }

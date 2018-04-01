@@ -97,7 +97,7 @@ HandleKey
          bra   .focusAndDoAction
 .activateView
          tax
-         ldy   gViewInUse,x
+         ldy   gViewHasActiveHotkey,x
          beq   .notFound
          ldx   #WGSelectView
          jsr   WeeGUI
@@ -209,9 +209,9 @@ callback_next
          !word kLastPlayed
 +        !word $FDFD                 ; SMC
          lda   #1
-         sta   gNeedToSavePrefs
-         sta   gMainScreenPaintDirty
-         jmp   LoadGameInfo
+         sta   gGlobalPrefsDirty     ; will trigger a file write later
+         sta   gMainScreenPaintDirty ; will trigger a repaint later, in main run loop
+         jmp   LoadGameInfo          ; load new game info first
 }
 
 callback_versions

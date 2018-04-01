@@ -4,9 +4,8 @@
 ; User interface - views and paint routines for main screen
 ;
 ; Public functions
-; - CreateViews
-; - PaintAllViews
-; - RepaintSomeViews
+; - PaintMain
+; - RepaintMainIfDirty
 ;
 
 MAGICRTS       = $FF58               ; used to set overflow bit
@@ -22,26 +21,49 @@ ID_VERSIONS    = 7
 ID_INFO        = 8
 ID_DESCRIPTION = 9
 
-gViewInUse
-         !byte 0,1,1,1,1,0,0,0,1,1,0,0,0,0,0
+gMainScreenPaintDirty
+         !byte 0                     ; 0=false, 1=true
+gViewHasActiveHotkey
+         !byte 0,1,1,1,1,0,0,0,0,0,0,0,0,0,0
 
 ;------------------------------------------------------------------------------
-; CreateViews
-; call WeeGUI to create all application views
+; PaintMain/RepaintMainIfDirty
+; call WeeGUI to create all application views and paint them
+; PaintMain entry point will clear the screen and unconditionally paint everything
+; RepaintMainIfDirty will only repaint certain views that vary between games,
+;   and only if gMainScreenPaintDirty=1
 ;
 ; in:    WeeGUI loaded and initialized
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 !zone {
-CreateViews
-         jsr   CreateButton          ; create various buttons
+PaintMain
+         ldx   #WGReset
+         jsr   WeeGUI
+         stz   gViewHasActiveHotkey+ID_BOXART
+         stz   gViewHasActiveHotkey+ID_HINTS
+         stz   gViewHasActiveHotkey+ID_VERSIONS
+         ldx   #1                    ; flag - clear screen before painting
+         stx   gMainScreenPaintDirty
+         !byte $2C
+RepaintMainIfDirty
+         ldx   #0                    ; flag - do not clear screen before painting
+         lda   gMainScreenPaintDirty
+         bne   +
+         rts
++        stz   gMainScreenPaintDirty ; clear dirty flag
+         phx                         ; push 'clear screen' flag (will pop at end of procedure)
+
+         jsr   CreateButton          ; create 'previous' button
          !word kViewPrevious
-         jsr   CreateButton
+
+         jsr   CreateButton          ; create 'settings' button
          !word kViewOptions
-         jsr   CreateButton
+
+         jsr   CreateButton          ; create 'next game' button
          !word kViewNext
 
-         lda   gHasSavedGames
+         lda   gHasSavedGames        ; create 'play game' or 'resume game' button
          beq   .wantPlayButton
          jsr   CreateButton
          !word kViewResume
@@ -51,17 +73,17 @@ CreateViews
          !word kViewPlay
 .donePlayOrResume
 
-         jsr   CreateConditionalButton
+         jsr   CreateConditionalButton ; create or destroy 'artwork' button
          !byte ID_BOXART
          !word kViewBoxArt
          !word kHasArtwork
 
-         jsr   CreateConditionalButton
+         jsr   CreateConditionalButton ; create or destroy 'hints' button
          !byte ID_HINTS
          !word kViewHints
          !word kHasHints
 
-         jsr   CreateConditionalButton
+         jsr   CreateConditionalButton ; create or destroy 'revisions' button
          !byte ID_VERSIONS
          !word kViewVersions
          !word kHasVersions
@@ -70,71 +92,23 @@ CreateViews
          +LDADDR kViewInfo
          +STAY PARAM0
          jsr   WeeGUI
-         ldx   #WGViewSetAction
-         +LDADDR paintInfoView
-         +STAY PARAM0
-         jsr   WeeGUI
 
          ldx   #WGCreateView         ; create scrollable frame for game description text
          +LDADDR kViewDescription
          +STAY PARAM0
          jsr   WeeGUI
-         ldx   #WGViewSetAction
-         +LDADDR paintDescriptionView
+         ldx   #WGViewSetAction      ; set view action (called automatically after scrolling)
+         +LDADDR PaintDescriptionView
          +STAY PARAM0
-         jmp   WeeGUI
-}
-
-;------------------------------------------------------------------------------
-; PaintAllViews
-; call WeeGUI to paint all UI elements
-;
-; in:    WeeGUI loaded and initialized
-;        CreateViews has been called
-; out:   all registers and flags clobbered
-;        $00/$01 clobbered
-;------------------------------------------------------------------------------
-!zone {
-PaintAllViews
-         ldx   #WGViewPaintAll       ; repaint all views that can be painted automatically
          jsr   WeeGUI
-         jsr   PaintTitleBar
-         jsr   paintHR
-         jsr   paintInfoView
-         jmp   paintDescriptionView
-}
 
-;------------------------------------------------------------------------------
-; RepaintIfDirty
-; call WeeGUI to repaint UI elements after changing the current game
-;
-; in:    WeeGUI loaded and initialized
-;        CreateViews has been called
-;        LoadGameInfo has been called to load new game description text
-; out:   all registers and flags clobbered
-;------------------------------------------------------------------------------
-!zone {
-RepaintIfDirty
-         lda   gMainScreenPaintDirty
-         beq   +
-         jsr   CreateViews
-         ldx   #WGViewPaintAll
+         pla                         ; clear screen before repainting?
+         beq   .nohome               ; no -> repaint over existing screen, YOLO
+         ldx   #WGClearScreen        ; clear screen
          jsr   WeeGUI
-         jsr   paintInfoView
-         jsr   resetDescriptionViewScrolling
-         jsr   paintDescriptionView
-         stz   gMainScreenPaintDirty
-+        rts
-gMainScreenPaintDirty
-         !byte 0
-}
+         jsr   PaintTitleBar         ; paint top bar
 
-;------------------------------------------------------------------------------
-; internal functions
-
-!zone {
-paintHR
-         lda   #4
+         lda   #4                    ; paint horizontal separator bar
          sta   PARAM1
          ldy   #78
          lda   #83
@@ -146,15 +120,97 @@ paintHR
          dey
          bne   -
          ldx   #WGSyncGlobalCursor
-         jmp   WeeGUI
+         jsr   WeeGUI
 
-paintDescriptionView
+.nohome  ldx   #WGViewPaintAll
+         jsr   WeeGUI                ; tell everything that can paint itself, to paint itself
+         jsr   PaintInfoView         ; paint info box manually
+
+         ldx   #WGSelectView         ; reset scrolling of description box
+         lda   #ID_DESCRIPTION
+         jsr   WeeGUI
+         ldx   #WGScrollX
+         lda   #0
+         jsr   WeeGUI
+         ldx   #WGScrollY
+         lda   #0
+         jsr   WeeGUI
+
+         jmp   PaintDescriptionView  ; paint description box manually
+}
+
+;------------------------------------------------------------------------------
+; CreateConditionalButton
+; conditionally create a WeeGUI Button, based on per-game options
+;
+; in:    WeeGUI loaded and initialized
+;        gOptionsStore populated
+;        stack contains 5 bytes of parameters:
+;          +1 [byte] WeeGUI view ID
+;          +2 [word] address of WeeGUI view configuration record
+;          +4 [word] address of length-prefixed key into gOptionsStore
+; out:   all registers and flags clobbered
+;------------------------------------------------------------------------------
+!zone {
+CreateConditionalButton
+         +PARAMS_ON_STACK 5
+
+         ldy   #1
+         lda   (PARAM),y
+         sta   .viewID
+         ldy   #3
+         lda   (PARAM),y
+         pha
+         dey
+         lda   (PARAM),y
+         ply
+         +STAY .viewConfigurationRecord
+         ldy   #5
+         lda   (PARAM),y
+         pha
+         dey
+         lda   (PARAM),y
+         ply
+         +STAY .optionsStoreKey
+
+         jsr   okvs_get
+         !word gOptionsStore
+.optionsStoreKey
+         !word $FDFD                 ; SMC
+.viewID=*+1
+         ldx   #$FD                  ; SMC (X = WeeGUI view ID)
+         jsr   okvs_as_boolean
+         beq   .no
+         lda   gViewHasActiveHotkey,x
+         bne   .done
+         lda   #1
+         sta   gViewHasActiveHotkey,x
+         jsr   CreateButton
+.viewConfigurationRecord
+         !word $FDFD                 ; SMC
+         bra   .done
+
+.no      lda   gViewHasActiveHotkey,x
+         beq   .done
+         lda   #0
+         sta   gViewHasActiveHotkey,x
+         txa                         ; A = WeeGUI view ID
+         ldx   #WGSelectView
+         jsr   WeeGUI
+         ldx   #WGDeleteView
+         jsr   WeeGUI
+
+.done    rts
+}
+
+!zone {
+PaintDescriptionView
          ldx   #WGSelectView
          lda   #ID_DESCRIPTION
          jsr   WeeGUI
          +LDAY addrDescription
          ldx   #kDescriptionPaintWidth
-         jsr   multiPrint
+         jsr   MultiPrint
          lda   .vtab+1
          cmp   #10
          bcs   +
@@ -162,13 +218,13 @@ paintDescriptionView
 +        ldx   #WGSetContentHeight
          jmp   WeeGUI
 
-paintInfoView
+PaintInfoView
          ldx   #WGSelectView
          lda   #ID_INFO
          jsr   WeeGUI
          +LDAY addrInfo
          ldx   #kInfoPaintWidth
-         jsr   multiPrint
+         jsr   MultiPrint
 
          jsr   okvs_get              ; get shortname of current game
          !word gGlobalPrefsStore
@@ -188,12 +244,12 @@ paintInfoView
          jsr   CreateNullTerminatedString
 
          +LDADDR kNullTerminatedBuffer
-         bra   multiPrintWhereYouAre
+         bra   MultiPrintWhereYouAre
 
-multiPrint
+MultiPrint
          stz   .htab+1
          stz   .vtab+1
-multiPrintWhereYouAre
+MultiPrintWhereYouAre
          stx   .printLineLength+1
          +STAY $00
 .printLoop
@@ -223,17 +279,6 @@ multiPrintWhereYouAre
          bne   .printLoop
 .printDone
          rts
-
-resetDescriptionViewScrolling
-         ldx   #WGSelectView
-         lda   #ID_DESCRIPTION
-         jsr   WeeGUI
-         ldx   #WGScrollX
-         lda   #0
-         jsr   WeeGUI
-         ldx   #WGScrollY
-         lda   #0
-         jmp   WeeGUI
 
 kViewPrevious
          !byte ID_PREVIOUS           ; view ID

@@ -56,18 +56,10 @@ Start
 MainScreen
          ldx   #$FF
          txs
-         ldx   #WGReset
-         jsr   WeeGUI
-         stz   gViewInUse+ID_BOXART
-         stz   gViewInUse+ID_HINTS
-         stz   gViewInUse+ID_VERSIONS
-         jsr   CreateViews           ; create all WeeGUI views (UI elements)
-         ldx   #WGClearScreen        ; clear screen
-         jsr   WeeGUI
-         jsr   PaintAllViews         ; draw all UI elements
+         jsr   PaintMain             ; create all WeeGUI views (UI elements) and paint them
          bit   $C010                 ; clear keyboard strobe
 .mainRunLoop
-         jsr   RepaintIfDirty
+         jsr   RepaintMainIfDirty
          ldx   #WGPendingViewAction
          jsr   WeeGUI                ; handle mouse movement and clicks
          lda   $c000
