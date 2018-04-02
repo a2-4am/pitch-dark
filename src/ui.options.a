@@ -127,14 +127,7 @@ HandleOptionsKey
          jmp   SoftBell
 .foundKey
          lda   .keys+1,x
-         ldx   #WGSelectView
-         jsr   WeeGUI
-         ldx   #WGViewFocus
-         jsr   WeeGUI
-         ldx   #WGViewFocusAction
-         jsr   WeeGUI
-         ldx   #WGViewUnfocus
-         jmp   WeeGUI
+         jmp   SimulateClick
 
 callback_options_ok
          jsr   SetPrefByCheckbox

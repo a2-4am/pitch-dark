@@ -99,15 +99,8 @@ HandleKey
          tax
          ldy   gViewInUse,x
          beq   .notFound
-         ldx   #WGSelectView
-         jsr   WeeGUI
 .focusAndDoAction
-         ldx   #WGViewFocus
-         jsr   WeeGUI
-         ldx   #WGViewFocusAction
-         jsr   WeeGUI
-         ldx   #WGViewUnfocus
-         jmp   WeeGUI
+         jmp   SimulateClick
 .y
          lda   .xyzzy
          cmp   #1

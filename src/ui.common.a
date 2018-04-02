@@ -9,6 +9,7 @@
 ; - CreateButton
 ; - PaintTitleBar
 ; - PrintAt
+; - SimulateClick
 ;
 ; Public constants
 ; - kStringOK
@@ -95,18 +96,18 @@ PaintTitleBar
          ldx   #WGSetGlobalCursor
          jsr   WeeGUI
          ldx   #WGPlot
-         lda   .stringTitle,y
+         lda   kStringGlobalTitle,y
          jsr   WeeGUI
          dey
          bpl   -
          ldx   #WGSyncGlobalCursor
          jmp   WeeGUI
 
-.stringTitle
+kStringGlobalTitle
          !raw  "                                   "
-         !byte 16
+         !byte 16                    ; inverse P
          !raw  "itch "
-         !byte 4
+         !byte 4                     ; inverse D
          !raw  "ark                                   ",0
 }
 
@@ -133,5 +134,25 @@ PrintAt
          +LDPARAM 3
          +STAY PARAM0
          ldx   #WGPrint
+         jmp   WeeGUI
+}
+
+;------------------------------------------------------------------------------
+; SimulateClick
+; select, focus, activate, and unfocus a WeeGUI view
+;
+; in:    WeeGUI loaded and initialized
+;        A contains WeeGUI view ID
+; out:   X clobbered
+;------------------------------------------------------------------------------
+!zone {
+SimulateClick
+         ldx   #WGSelectView
+         jsr   WeeGUI
+         ldx   #WGViewFocus
+         jsr   WeeGUI
+         ldx   #WGViewFocusAction
+         jsr   WeeGUI
+         ldx   #WGViewUnfocus
          jmp   WeeGUI
 }
