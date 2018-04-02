@@ -1,0 +1,70 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; User interface - functions to load and display double hi-res artwork
+;
+; Public functions
+; - DisplayArtwork
+;
+kArtworkRootDirectory                ; length-prefixed pathname of DHGR graphic files
+         !byte 8
+         !raw  "ARTWORK/"
+
+!zone {
+;------------------------------------------------------------------------------
+; DisplayArtwork
+; load and display double hi-res artwork, then wait for key or mouse click
+;
+; in:    WeeGUI initialized
+; out:   all registers and flags clobbered
+;------------------------------------------------------------------------------
+DisplayArtwork
+         lda   #0                    ; set Z flag always
+!cpu 65816
+         rep   #2                    ; clear Z flag on 65816 only
+!cpu 65c02
+         beq   +                     ; skip GS-specific code on non-GS machines (required, will crash on //c, grr)
+         lda   $C029
+         and   #$1F
+         sta   $C029                 ; set GS NEWVIDEO mode to turn off linearize
++
+         jsr   ResetPath
+         +LDADDR kArtworkRootDirectory
+         jsr   AddToPath
+
+         jsr   okvs_get
+         !word gGlobalPrefsStore
+         !word kLastPlayed
+         jsr   AddToPath             ; gPathname = 'ARTWORK/<game shortname>'
+
++        jsr   LoadDHRFile           ; load artwork from file
+         !word gPathname
+         !word kProDOSFileBuffer
+         bcs   .error
+
+         sta   $C000                 ; display double hi-res page 1
+         sta   $C00D
+         sta   $C05E
+         sta   $C001
+         sta   $C057
+         sta   $C052
+         sta   $C054
+         sta   $C050
+         bit   $C010                 ; clear keyboard strobe
+         ldx   #WGClearPendingClick  ; clear WeeGUI mouse strobe
+         jsr   WeeGUI
+.artworkRunLoop
+         ldx   #WGPendingClick
+         jsr   WeeGUI
+         cpx   #$FF
+         bne   +                     ; X != #$FF -> user clicked mouse
+         lda   $C000
+         bpl   .artworkRunLoop
++        bit   $C010                 ; clear keyboard strobe
+         ldx   #WGClearPendingClick  ; clear WeeGUI mouse strobe
+         jsr   WeeGUI
+         sta   $C051                 ; back to text
+         rts
+.error
+         jmp   SoftBell
+}

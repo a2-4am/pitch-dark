@@ -1,0 +1,273 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; User interface - views and paint routines for 'resume game' screen
+;
+; Public functions
+; - ResumeGameDialog
+;
+
+!zone {
+; View IDs (application-specific, acceptable range 0..15, no duplicates)
+ID_RESUME_FRAME          = 0
+ID_RESUME_SLOT0          = 1
+ID_RESUME_SLOT1          = 2
+ID_RESUME_SLOT2          = 3
+ID_RESUME_SLOT3          = 4
+ID_RESUME_SLOT4          = 5
+ID_RESUME_SLOT5          = 6
+ID_RESUME_SLOT6          = 7
+ID_RESUME_SLOT7          = 8
+ID_RESUME_NEWGAME        = 9
+ID_RESUME_OK             = 10
+ID_RESUME_CANCEL         = 11
+
+gResumeViewInUse
+         !byte 1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0
+
+; action keys for options screen
+.keys
+         !byte $CF,ID_RESUME_OK      ; O
+         !byte $EF,ID_RESUME_OK      ; o
+         !byte $8D,ID_RESUME_OK      ; Return
+         !byte $C3,ID_RESUME_CANCEL  ; C
+         !byte $E3,ID_RESUME_CANCEL  ; c
+         !byte $9B,ID_RESUME_CANCEL  ; Esc
+         !byte $B0,ID_RESUME_SLOT0   ; 0
+         !byte $B1,ID_RESUME_SLOT1   ; 1
+         !byte $B2,ID_RESUME_SLOT2   ; 2
+         !byte $B3,ID_RESUME_SLOT3   ; 3
+         !byte $B4,ID_RESUME_SLOT4   ; 4
+         !byte $B5,ID_RESUME_SLOT5   ; 5
+         !byte $B6,ID_RESUME_SLOT6   ; 6
+         !byte $B7,ID_RESUME_SLOT7   ; 7
+         !byte $CE,ID_RESUME_NEWGAME ; N
+         !byte $EE,ID_RESUME_NEWGAME ; n
+         !byte $88,ID_RESUME_PREVIOUS; left arrow
+         !byte $95,ID_RESUME_NEXT    ; right arrow
+         !byte $8B,ID_RESUME_PREVIOUS; up arrow
+         !byte $8A,ID_RESUME_NEXT    ; down arrow
+.endkeys
+
+; IDs of actions that do not correspond to WeeGUI view IDs have high bit set
+ID_RESUME_PREVIOUS    = $81
+ID_RESUME_NEXT        = $82
+
+;------------------------------------------------------------------------------
+; ResumeDialog
+; call WeeGUI to create and paint 'resume game' screen, and run to completion
+;
+; in:    WeeGUI initialized
+; out:   exits via MainScreen or LaunchInterpreterWithGame
+;        all registers and flags clobbered
+;------------------------------------------------------------------------------
+ResumeDialog
+         ldx   #$FF
+         txs
+         ldx   #WGResetAll           ; reset WeeGUI
+         jsr   WeeGUI
+
+         ldx   #WGCreateView         ; create frame
+         +LDADDR kViewResumeFrame
+         +STAY PARAM0
+         jsr   WeeGUI
+         ldx   #WGViewSetTitle
+         +LDADDR kStringResumeFrame
+         +STAY PARAM0
+         jsr   WeeGUI
+
+         jsr   CreateButton          ; create UI controls
+         !word kViewOK
+         jsr   CreateButton
+         !word kViewCancel
+         jsr   CreateCheckbox
+         !word kViewForce40
+         jsr   CreateCheckbox
+         !word kViewForceUpper
+         jsr   CreateCheckbox
+         !word kViewScriptToFile
+         jsr   CreateCheckbox
+         !word kViewAutoScript
+
+         jsr   SetCheckboxByPref     ; set initial state of checkboxes based on preferences
+         !byte ID_RESUME_FORCE40
+         !word kForce40
+         jsr   SetCheckboxByPref
+         !byte ID_RESUME_FORCEUPPER
+         !word kForceUpper
+         jsr   SetCheckboxByPref
+         !byte ID_RESUME_SCRIPTTOFILE
+         !word kScriptToFile
+         jsr   SetCheckboxByPref
+         !byte ID_RESUME_AUTOSCRIPT
+         !word kAutoScript
+
+         ldx   #WGDesktop            ; paint background
+         jsr   WeeGUI
+
+         ldx   #WGViewPaintAll       ; paint UI controls (window frame, buttons, checkboxes, radio buttons)
+         jsr   WeeGUI
+
+         jsr   PaintTitleBar         ; paint top title bar
+
+         ldx   #WGSelectView
+         lda   #ID_RESUME_FRAME
+         jsr   WeeGUI
+
+         ldx   #WGSetCursor          ; paint static text labels
+         lda   #6
+         sta   PARAM0
+         lda   #3
+         sta   PARAM1
+         jsr   WeeGUI
+         ldx   #WGPrint
+         +LDADDR kStringForce40Description
+         +STAY PARAM0
+         jsr   WeeGUI
+
+         ldx   #WGSetCursor
+         lda   #6
+         sta   PARAM0
+         lda   #8
+         sta   PARAM1
+         jsr   WeeGUI
+         ldx   #WGPrint
+         +LDADDR kStringForceUpperDescription
+         +STAY PARAM0
+         jsr   WeeGUI
+
+         ldx   #WGSetCursor
+         lda   #6
+         sta   PARAM0
+         lda   #13
+         sta   PARAM1
+         jsr   WeeGUI
+         ldx   #WGPrint
+         +LDADDR kStringScriptToFileDescription
+         +STAY PARAM0
+         jsr   WeeGUI
+
+         ldx   #WGSetCursor
+         lda   #6
+         sta   PARAM0
+         lda   #18
+         sta   PARAM1
+         jsr   WeeGUI
+         ldx   #WGPrint
+         +LDADDR kStringAutoScriptDescription
+         +STAY PARAM0
+         jsr   WeeGUI
+
+.runLoop
+         ldx   #WGPendingViewAction
+         jsr   WeeGUI
+         lda   $c000
+         bpl   .runLoop
+         bit   $c010
+         jsr   HandleOptionsKey
+         bra   .runLoop
+
+;------------------------------------------------------------------------------
+; internal functions
+
+HandleOptionsKey
+         ldx   #.endkeys-.keys
+-        cmp   .keys,x
+         beq   .foundKey
+         dex
+         dex
+         bpl   -
+         jmp   SoftBell
+.foundKey
+         lda   .keys+1,x
+         ldx   #WGSelectView
+         jsr   WeeGUI
+         ldx   #WGViewFocus
+         jsr   WeeGUI
+         ldx   #WGViewFocusAction
+         jsr   WeeGUI
+         ldx   #WGViewUnfocus
+         jmp   WeeGUI
+
+callback_resume_ok
+callback_resume_cancel
+         jmp   MainScreen
+
+
+
+kViewResumeFrame
+         !byte ID_RESUME_FRAME       ; view ID
+         !byte 2                     ; style (decorated frame)
+         !byte $FD                   ; left
+         !byte $FD                   ; top
+         !byte $FD                   ; visible width
+         !byte $FD                   ; visible height
+         !byte 56                    ; width
+         !byte 19                    ; height
+kStringResumeFrame
+         !text "Resume Game",0
+
+kViewOK
+         !byte ID_RESUME_OK          ; view ID
+         !byte $FD                   ; left
+         !byte $FD                   ; top
+         !byte 10                    ; width
+         !word callback_resume_ok   ; callback
+         !word kStringOK             ; caption
+
+kViewCancel
+         !byte ID_RESUME_CANCEL     ; view ID
+         !byte 56                    ; left
+         !byte 6                     ; top
+         !byte 10                    ; width
+         !word callback_resume_cancel ; callback
+         !word kStringCancel         ; caption
+
+kViewForce40
+         !byte ID_RESUME_FORCE40    ; view ID
+         !byte 14                    ; left
+         !byte 4                     ; top
+         !word kStringForce40        ; caption
+kStringForce40
+         !text "Force "
+         !byte $34                   ; '4' inverse
+         !text "0 column",0
+kStringForce40Description
+         !text "Some games may be glitchy",0
+
+kViewForceUpper
+         !byte ID_RESUME_FORCEUPPER ; view ID
+         !byte 14                    ; left
+         !byte 9                     ; top
+         !word kStringForceUpper     ; caption
+kStringForceUpper
+         !text "Force "
+         !byte $75                   ; 'u' inverse
+         !text "ppercase",0
+kStringForceUpperDescription
+         !text "A MATTER OF PREFERENCE, I SUPPOSE",0
+
+kViewScriptToFile
+         !byte ID_RESUME_SCRIPTTOFILE ; view ID
+         !byte 14                    ; left
+         !byte 14                    ; top
+         !word kStringScriptToFile   ; caption
+kStringScriptToFile
+         !text "SCRIPT to "
+         !byte $66                   ; 'f' inverse
+         !text "ile",0
+kStringScriptToFileDescription
+         !text "Save transcripts to a file instead of printer",0
+
+kViewAutoScript
+         !byte ID_RESUME_AUTOSCRIPT ; view ID
+         !byte 14                    ; left
+         !byte 19                    ; top
+         !word kStringAutoScript     ; caption
+kStringAutoScript
+         !text "Always "
+         !byte $13                   ; 'S' inverse
+         !text "CRIPT",0
+kStringAutoScriptDescription
+         !text "Turn on SCRIPT mode automatically",0
+}

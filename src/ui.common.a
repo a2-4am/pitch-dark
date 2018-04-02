@@ -27,7 +27,7 @@ kStringCancel
 ; CreateRadio/CreateCheckbox/CreateButton
 ; creates a WeeGUI UI control with the 'raw title' option set
 ;
-; in:    WeeGUI loaded and initialized
+; in:    WeeGUI initialized
 ;        stack contains 2 bytes of parameters:
 ;          +1 [word] pointer to WeeGUI view configuration block
 ; out:   $00/$01 clobbered
@@ -60,7 +60,7 @@ CreateButton
 ; CreateDialog
 ; creates a WeeGUI decorated frame view
 ;
-; in:    WeeGUI loaded and initialized
+; in:    WeeGUI initialized
 ;        stack contains 8 bytes of parameters:
 ;          +1 [word] address of WeeGUI view configuration block for frame
 ;          +3 [word] address of null-terminated string for frame title
@@ -85,7 +85,7 @@ CreateDialog
 ; PaintTitleBar
 ; paints the title bar on the top line
 ;
-; in:    WeeGUI loaded and initialized
+; in:    WeeGUI initialized
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 !zone {
@@ -115,7 +115,7 @@ kStringGlobalTitle
 ; PrintAt
 ; print a null-terminated string at a specified position
 ;
-; in:    WeeGUI loaded and initialized
+; in:    WeeGUI initialized
 ;        stack contains 4 bytes of parameters:
 ;          +1 [byte] X coordinate (relative to selected view)
 ;          +2 [byte] Y coordinate (relative to selected view)
@@ -141,7 +141,7 @@ PrintAt
 ; SimulateClick
 ; select, focus, activate, and unfocus a WeeGUI view
 ;
-; in:    WeeGUI loaded and initialized
+; in:    WeeGUI initialized
 ;        A contains WeeGUI view ID
 ; out:   X clobbered
 ;------------------------------------------------------------------------------

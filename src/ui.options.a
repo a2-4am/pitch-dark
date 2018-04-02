@@ -38,7 +38,7 @@ ID_OPTIONS_CANCEL         = 7
 ; OptionsDialog
 ; call WeeGUI to create and paint option screen, and run to completion
 ;
-; in:    WeeGUI loaded and initialized
+; in:    WeeGUI initialized
 ; out:   exits via MainScreen
 ;        all registers and flags clobbered
 ;------------------------------------------------------------------------------

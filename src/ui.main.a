@@ -35,7 +35,7 @@ gViewInUse
 ; RepaintMainIfDirty will only repaint certain views that vary between games,
 ;   and only if gMainScreenPaintDirty=1
 ;
-; in:    WeeGUI loaded and initialized
+; in:    WeeGUI initialized
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 !zone {
@@ -155,7 +155,7 @@ RepaintMainIfDirty
 ; create or destroy a WeeGUI Button view, based on per-game options
 ;   and whether the button already exists
 ;
-; in:    WeeGUI loaded and initialized
+; in:    WeeGUI initialized
 ;        gOptionsStore populated
 ;        stack contains 5 bytes of parameters:
 ;          +1 [byte] WeeGUI view ID

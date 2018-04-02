@@ -11,6 +11,13 @@
 ; - LaunchInterpreterWithHints
 ;
 
+kGameRootDirectory                   ; length-prefixed pathname of game subdirectories
+         !byte 2
+         !raw  "Z/"
+kHintsRootDirectory                  ; length-prefixed pathname of hint files
+         !byte 5
+         !raw  "PRIZM/"
+
 kOnBeyondOptionsStruct    = $0300
 kOnBeyondColumns          = $0300
 kOnBeyondCase             = $0301

@@ -35,6 +35,7 @@
          !source "src/ui.main.a"
          !source "src/ui.main.keys.a"
          !source "src/ui.options.a"
+         !source "src/ui.artwork.a"
 
 Start
          lda   MACHID
