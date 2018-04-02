@@ -90,22 +90,9 @@ RepaintMainIfDirty
          !word kViewVersions
          !word kHasVersions
 
-         ldx   #WGCreateView         ; create borderless frame for game title and info
-         +LDADDR kViewInfo
-         +STAY PARAM0
-         jsr   WeeGUI
-
-         ldx   #WGCreateView         ; create scrollable frame for game description text
-         +LDADDR kViewDescription
-         +STAY PARAM0
-         jsr   WeeGUI
-         ldx   #WGViewSetAction      ; set view action (called automatically after scrolling)
-         +LDADDR PaintDescriptionView
-         +STAY PARAM0
-         jsr   WeeGUI
-
          pla                         ; clear screen before repainting?
          beq   .nohome               ; no -> repaint over existing screen, YOLO
+
          ldx   #WGClearScreen        ; clear screen
          jsr   WeeGUI
          jsr   PaintTitleBar         ; paint top bar
@@ -124,9 +111,31 @@ RepaintMainIfDirty
          ldx   #WGSyncGlobalCursor
          jsr   WeeGUI
 
-.nohome  ldx   #WGViewPaintAll
-         jsr   WeeGUI                ; tell everything that can paint itself, to paint itself
+.nohome
+         lda   #ID_INFO
+         jsr   WGResetView
+
+         lda   #ID_DESCRIPTION
+         jsr   WGResetView
+
+         ldx   #WGViewPaintAll       ; repaint all WeeGUI-controlled UI elements
+         jsr   WeeGUI
+
+         ldx   #WGCreateView         ; create borderless frame for game title and info
+         +LDADDR kViewInfo
+         +STAY PARAM0
+         jsr   WeeGUI
+
          jsr   PaintInfoView         ; paint info box manually
+
+         ldx   #WGCreateView         ; create scrollable frame for game description text
+         +LDADDR kViewDescription
+         +STAY PARAM0
+         jsr   WeeGUI
+         ldx   #WGViewSetAction      ; set view action (called automatically after scrolling)
+         +LDADDR PaintDescriptionView
+         +STAY PARAM0
+         jsr   WeeGUI
 
          ldx   #WGSelectView         ; reset scrolling of description box
          lda   #ID_DESCRIPTION
@@ -137,9 +146,21 @@ RepaintMainIfDirty
          ldx   #WGScrollY
          lda   #0
          jsr   WeeGUI
-
+         ldx   #WGPaintView
+         jsr   WeeGUI
          jmp   PaintDescriptionView  ; paint description box manually
 }
+
+WGResetView
+WG_VIEWRECORDS=$59B5
+         asl
+         asl
+         asl
+         asl
+         tay
+         lda   #0
+         sta   WG_VIEWRECORDS+2,y
+         rts
 
 ;------------------------------------------------------------------------------
 ; CreateOrDestroyButton
@@ -201,8 +222,10 @@ CreateOrDestroyButton
          txa                         ; A = WeeGUI view ID
          ldx   #WGSelectView
          jsr   WeeGUI
-         ldx   #WGDeleteView
+         ldx   #WGEraseView
          jsr   WeeGUI
+         lda   .viewID
+         jsr   WGResetView
 
 .done    rts
 }
