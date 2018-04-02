@@ -40,7 +40,7 @@ gViewInUse
 ;------------------------------------------------------------------------------
 !zone {
 PaintMain
-         ldx   #WGReset
+         ldx   #WGResetAll
          jsr   WeeGUI
          stz   gViewInUse+ID_BOXART
          stz   gViewInUse+ID_HINTS
@@ -95,6 +95,7 @@ RepaintMainIfDirty
 
          ldx   #WGClearScreen        ; clear screen
          jsr   WeeGUI
+
          jsr   PaintTitleBar         ; paint top bar
 
          lda   #4                    ; paint horizontal separator bar
@@ -110,25 +111,33 @@ RepaintMainIfDirty
          bne   -
          ldx   #WGSyncGlobalCursor
          jsr   WeeGUI
-
 .nohome
-         lda   #ID_INFO
-         jsr   WGResetView
+         ldx   #WGSelectView         ; delete info box but leave its contents on screen
+         lda   #ID_INFO              ; (harmless if it doesn't exist yet)
+         jsr   WeeGUI
+         ldx   #WGResetView
+         jsr   WeeGUI
 
-         lda   #ID_DESCRIPTION
-         jsr   WGResetView
+         ldx   #WGSelectView         ; delete description box but leave its contents on screen
+         lda   #ID_DESCRIPTION       ; (harmless if it doesn't exist yet)
+         jsr   WeeGUI
+         ldx   #WGResetView
+         jsr   WeeGUI
+
+         ldx   #WGSelectView         ; WeeGUI does NOT like repainting if the selected view does not exist
+         lda   #ID_PREVIOUS
+         jsr   WeeGUI
 
          ldx   #WGViewPaintAll       ; repaint all WeeGUI-controlled UI elements
          jsr   WeeGUI
 
-         ldx   #WGCreateView         ; create borderless frame for game title and info
-         +LDADDR kViewInfo
+         ldx   #WGCreateView         ; (re)create borderless frame for game title and info
+         +LDADDR kViewInfo           ; (has the nice side effect of resetting the scroll)
          +STAY PARAM0
          jsr   WeeGUI
+         jsr   PaintInfoView         ; paint contents of info box
 
-         jsr   PaintInfoView         ; paint info box manually
-
-         ldx   #WGCreateView         ; create scrollable frame for game description text
+         ldx   #WGCreateView         ; (re)create scrollable frame for game description text
          +LDADDR kViewDescription
          +STAY PARAM0
          jsr   WeeGUI
@@ -136,31 +145,10 @@ RepaintMainIfDirty
          +LDADDR PaintDescriptionView
          +STAY PARAM0
          jsr   WeeGUI
-
-         ldx   #WGSelectView         ; reset scrolling of description box
-         lda   #ID_DESCRIPTION
+         ldx   #WGPaintView          ; paint frame of description box
          jsr   WeeGUI
-         ldx   #WGScrollX
-         lda   #0
-         jsr   WeeGUI
-         ldx   #WGScrollY
-         lda   #0
-         jsr   WeeGUI
-         ldx   #WGPaintView
-         jsr   WeeGUI
-         jmp   PaintDescriptionView  ; paint description box manually
+         jmp   PaintDescriptionView  ; paint contents of description box
 }
-
-WGResetView
-WG_VIEWRECORDS=$59B5
-         asl
-         asl
-         asl
-         asl
-         tay
-         lda   #0
-         sta   WG_VIEWRECORDS+2,y
-         rts
 
 ;------------------------------------------------------------------------------
 ; CreateOrDestroyButton
@@ -224,8 +212,8 @@ CreateOrDestroyButton
          jsr   WeeGUI
          ldx   #WGEraseView
          jsr   WeeGUI
-         lda   .viewID
-         jsr   WGResetView
+         ldx   #WGResetView
+         jsr   WeeGUI
 
 .done    rts
 }

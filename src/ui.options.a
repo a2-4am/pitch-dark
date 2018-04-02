@@ -46,7 +46,7 @@ ID_OPTIONS_CANCEL         = 7
 OptionsDialog
          ldx   #$FF
          txs
-         ldx   #WGReset              ; reset WeeGUI
+         ldx   #WGResetAll           ; reset WeeGUI, destroy all views
          jsr   WeeGUI
 
          ldx   #WGCreateView         ; create frame
