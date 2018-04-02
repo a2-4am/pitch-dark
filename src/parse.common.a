@@ -12,26 +12,20 @@
 ;        $00/$01 clobbered
 ;        $02/$03 clobbered
 ;        $04/$05 has the address of the next available byte after the okvs
+;        $FE/$FF clobbered
 ;------------------------------------------------------------------------------
 !zone {
 ParseKeyValueText
          +PARAMS_ON_STACK 5
 
-         ldy   #1
-         lda   (PARAM),y
-         sta   .store1
-         sta   .store2
-         iny
-         lda   (PARAM),y
-         sta   .store1+1
-         sta   .store2+1
-         iny
-         lda   (PARAM),y
-         sta   $FE
-         iny
-         lda   (PARAM),y
-         sta   $FF
-         iny
+         +LDPARAM 1
+         +STAY .store1
+         +STAY .store2
+
+         +LDPARAM 3
+         +STAY $FE
+
+         ldy   #5
          lda   (PARAM),y
          sta   .useMaxLength+1
 

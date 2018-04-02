@@ -148,15 +148,8 @@ addStringFromStore
          lda   #$80                  ; BRA opcode
          sta   .skipOverBooleanLogic
          +PARAMS_ON_STACK 2
-         ldy   #1
-         lda   (PARAM),y
-         sta   .key
-         pha
-         iny
-         lda   (PARAM),y
-         sta   .key+1
-         tay
-         pla
+         +LDPARAM 1
+         +STAY .key
          jsr   addString
          +LDADDR .equals
          jsr   addString

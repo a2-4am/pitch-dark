@@ -40,8 +40,7 @@ ID_OPTIONS_CANCEL         = 7
 ;
 ; in:    WeeGUI loaded and initialized
 ; out:   exits via MainScreen
-;        all registers clobbered
-;        all flags clobbered
+;        all registers and flags clobbered
 ;------------------------------------------------------------------------------
 OptionsDialog
          ldx   #$FF
@@ -49,20 +48,17 @@ OptionsDialog
          ldx   #WGResetAll           ; reset WeeGUI, destroy all views
          jsr   WeeGUI
 
-         ldx   #WGCreateView         ; create frame
-         +LDADDR kViewFrame
-         +STAY PARAM0
-         jsr   WeeGUI
-         ldx   #WGViewSetTitle
-         +LDADDR kStringFrame
-         +STAY PARAM0
-         jsr   WeeGUI
+         jsr   CreateDialog          ; create frame and OK/Cancel buttons
+         !word kViewOptionsFrame
+         !word kStringOptionsFrame
 
-         jsr   CreateButton          ; create UI controls
-         !word kViewOK
-         jsr   CreateButton
-         !word kViewCancel
-         jsr   CreateCheckbox
+         jsr   CreateButton          ; create OK button
+         !word kViewOptionsOK
+
+         jsr   CreateButton          ; create Cancel button
+         !word kViewOptionsCancel
+
+         jsr   CreateCheckbox        ; create other UI controls
          !word kViewForce40
          jsr   CreateCheckbox
          !word kViewForceUpper
@@ -92,53 +88,22 @@ OptionsDialog
 
          jsr   PaintTitleBar         ; paint top title bar
 
-         ldx   #WGSelectView
+         ldx   #WGSelectView         ; select frame (required for print routines that follow)
          lda   #ID_OPTIONS_FRAME
          jsr   WeeGUI
 
-         ldx   #WGSetCursor          ; paint static text labels
-         lda   #6
-         sta   PARAM0
-         lda   #3
-         sta   PARAM1
-         jsr   WeeGUI
-         ldx   #WGPrint
-         +LDADDR kStringForce40Description
-         +STAY PARAM0
-         jsr   WeeGUI
-
-         ldx   #WGSetCursor
-         lda   #6
-         sta   PARAM0
-         lda   #8
-         sta   PARAM1
-         jsr   WeeGUI
-         ldx   #WGPrint
-         +LDADDR kStringForceUpperDescription
-         +STAY PARAM0
-         jsr   WeeGUI
-
-         ldx   #WGSetCursor
-         lda   #6
-         sta   PARAM0
-         lda   #13
-         sta   PARAM1
-         jsr   WeeGUI
-         ldx   #WGPrint
-         +LDADDR kStringScriptToFileDescription
-         +STAY PARAM0
-         jsr   WeeGUI
-
-         ldx   #WGSetCursor
-         lda   #6
-         sta   PARAM0
-         lda   #18
-         sta   PARAM1
-         jsr   WeeGUI
-         ldx   #WGPrint
-         +LDADDR kStringAutoScriptDescription
-         +STAY PARAM0
-         jsr   WeeGUI
+         jsr   PrintAt               ; paint static text labels
+         !byte 6,3
+         !word kStringForce40Description
+         jsr   PrintAt
+         !byte 6,8
+         !word kStringForceUpperDescription
+         jsr   PrintAt
+         !byte 6,13
+         !word kStringScriptToFileDescription
+         jsr   PrintAt
+         !byte 6,18
+         !word kStringAutoScriptDescription
 
 .runLoop
          ldx   #WGPendingViewAction
@@ -198,12 +163,8 @@ SetCheckboxByPref
          ldy   #1
          lda   (PARAM),y
          sta   .id
-         iny
-         lda   (PARAM),y
-         sta   .key
-         iny
-         lda   (PARAM),y
-         sta   .key+1
+         +LDPARAM 2
+         +STAY .key
 
          jsr   okvs_get
          !word gGlobalPrefsStore
@@ -231,12 +192,8 @@ SetPrefByCheckbox
          ldy   #1
          lda   (PARAM),y
          sta   .id
-         iny
-         lda   (PARAM),y
-         sta   .key
-         iny
-         lda   (PARAM),y
-         sta   .key+1
+         +LDPARAM 2
+         +STAY .key
 
          ldx   #WGSelectView
 .id=*+1
@@ -258,7 +215,7 @@ SetPrefByCheckbox
          !byte $FD                   ; SMC
 }
 
-kViewFrame
+kViewOptionsFrame
          !byte ID_OPTIONS_FRAME      ; view ID
          !byte 2                     ; style (decorated frame)
          !byte 12                    ; left
@@ -267,30 +224,24 @@ kViewFrame
          !byte 19                    ; visible height
          !byte 56                    ; width
          !byte 19                    ; height
-kStringFrame
+kStringOptionsFrame
          !text "Settings",0
 
-kViewOK
+kViewOptionsOK
          !byte ID_OPTIONS_OK         ; view ID
          !byte 56                    ; left
          !byte 4                     ; top
          !byte 10                    ; width
          !word callback_options_ok   ; callback
          !word kStringOK             ; caption
-kStringOK
-         !byte $0F                   ; 'P' inverse
-         !byte 139,0
 
-kViewCancel
+kViewOptionsCancel
          !byte ID_OPTIONS_CANCEL     ; view ID
          !byte 56                    ; left
          !byte 6                     ; top
          !byte 10                    ; width
          !word callback_options_cancel ; callback
          !word kStringCancel         ; caption
-kStringCancel
-         !byte $03                   ; 'C' inverse
-         !text "ancel",0
 
 kViewForce40
          !byte ID_OPTIONS_FORCE40    ; view ID

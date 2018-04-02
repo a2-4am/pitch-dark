@@ -28,3 +28,12 @@ PARAM    =     $00
          sta   .ptr
          sty   .ptr+1
 }
+
+!macro   LDPARAM .offset {
+         ldy   #.offset+1
+         lda   (PARAM),y
+         pha
+         dey
+         lda   (PARAM),y
+         ply
+}

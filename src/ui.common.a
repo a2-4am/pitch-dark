@@ -8,13 +8,26 @@
 ; - CreateCheckbox
 ; - CreateButton
 ; - PaintTitleBar
+; - PrintAt
 ;
+; Public constants
+; - kStringOK
+; - kStringCancel
+;
+
+kStringOK
+         !byte $0F                   ; 'O' inverse
+         !byte 139,0
+kStringCancel
+         !byte $03                   ; 'C' inverse
+         !text "ancel",0
 
 ;------------------------------------------------------------------------------
 ; CreateRadio/CreateCheckbox/CreateButton
 ; creates a WeeGUI UI control with the 'raw title' option set
 ;
-; in:    stack contains 2 bytes of parameters:
+; in:    WeeGUI loaded and initialized
+;        stack contains 2 bytes of parameters:
 ;          +1 [word] pointer to WeeGUI view configuration block
 ; out:   $00/$01 clobbered
 ;        all registers clobbered
@@ -31,13 +44,8 @@ CreateButton
          stx   .type
 
          +PARAMS_ON_STACK 2
-
-         ldy   #$01
-         lda   (PARAM),y
-         sta   PARAM0
-         iny
-         lda   (PARAM),y
-         sta   PARAM1
+         +LDPARAM 1
+         +STAY PARAM0
 .type=*+1
          ldx   #$FD                  ; SMC
          jsr   WeeGUI
@@ -48,10 +56,35 @@ CreateButton
 }
 
 ;------------------------------------------------------------------------------
-; PaintTitleBar
-; paints the title bar
+; CreateDialog
+; creates a WeeGUI decorated frame view
 ;
-; in:    none
+; in:    WeeGUI loaded and initialized
+;        stack contains 8 bytes of parameters:
+;          +1 [word] address of WeeGUI view configuration block for frame
+;          +3 [word] address of null-terminated string for frame title
+; out:   $00/$01 clobbered
+;        all registers clobbered
+;------------------------------------------------------------------------------
+!zone {
+CreateDialog
+         +PARAMS_ON_STACK 4
+         +LDPARAM 1
+         +STAY PARAM0
+         ldx   #WGCreateView         ; create frame
+         jsr   WeeGUI
+
+         +LDPARAM 3
+         +STAY PARAM0
+         ldx   #WGViewSetTitle       ; set frame title
+         jmp   WeeGUI
+}
+
+;------------------------------------------------------------------------------
+; PaintTitleBar
+; paints the title bar on the top line
+;
+; in:    WeeGUI loaded and initialized
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 !zone {
@@ -75,4 +108,30 @@ PaintTitleBar
          !raw  "itch "
          !byte 4
          !raw  "ark                                   ",0
+}
+
+;------------------------------------------------------------------------------
+; PrintAt
+; print a null-terminated string at a specified position
+;
+; in:    WeeGUI loaded and initialized
+;        stack contains 4 bytes of parameters:
+;          +1 [byte] X coordinate (relative to selected view)
+;          +2 [byte] Y coordinate (relative to selected view)
+;          +3 [word] address of null-terminated string
+; out:   WeeGUI local cursor positioned after string
+;        $00/$01 clobbered
+;        all registers and flags clobbered
+;------------------------------------------------------------------------------
+!zone {
+PrintAt
+         +PARAMS_ON_STACK 4
+         +LDPARAM 1
+         +STAY PARAM0
+         ldx   #WGSetCursor
+         jsr   WeeGUI
+         +LDPARAM 3
+         +STAY PARAM0
+         ldx   #WGPrint
+         jmp   WeeGUI
 }

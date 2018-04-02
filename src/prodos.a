@@ -55,43 +55,30 @@ PRODOSMLI =    $BF00      ; [callable] MLI entry point
 LoadFile
          +PARAMS_ON_STACK 6
 
-         ldy   #$01
-         lda   (PARAM),y    ; lo byte of pathname
-         sta   mliparam+1
-         iny
-         lda   (PARAM),y    ; hi byte of pathname
-         sta   mliparam+2
-         ldy   #$05
-         lda   (PARAM),y    ; lo byte of ProDOS file buffer
-         sta   mliparam+3
-         iny
-         lda   (PARAM),y    ; hi byte of ProDOS file buffer
-         sta   mliparam+4
+         +LDPARAM 1
+         +STAY mliparam+1            ; pathname
+         +LDPARAM 5
+         +STAY mliparam+3            ; ProDOS file buffer
 
          jsr   _openfile
-         bcs   .exit      ; C set on error
+         bcs   .exit                 ; C set on error
 
-         pha              ; push file reference number
-         ldy   #$03
-         lda   (PARAM),y    ; lo address of data buffer
-         sta   mliparam+2
-         iny
-         lda   (PARAM),y    ; hi address of data buffer
-         sta   mliparam+3
+         pha                         ; push file reference number
+         +LDPARAM 3
+         +STAY mliparam+2            ; data buffer
          lda   #$FF
-         sta   mliparam+4 ; max data length (unlimited, YOLO)
+         sta   mliparam+4            ; max data length (unlimited, YOLO)
          sta   mliparam+5
-         pla              ; pull file reference number
+         pla                         ; pull file reference number
          jsr   _readfile
-         php              ; save flags from readfile
+         php                         ; save flags from readfile
          pha
-         jsr   _closefile  ; always close whether read worked or not
+         jsr   _closefile            ; always close whether read worked or not
          pla
-         plp              ; restore flags from readfile
-                          ; (so caller gets codes from read attempt,
-                          ; not close)
-.exit
-         rts
+         plp                         ; restore flags from readfile
+                                     ; (so caller gets codes from read attempt,
+                          ;           not close)
+.exit    rts
 }
 
 ;-------------------------------
@@ -186,59 +173,37 @@ LoadDHRFile
 !zone {
 SaveFile
          +PARAMS_ON_STACK $0B
-
-         ldy   #$01
-         lda   (PARAM),y    ; lo byte of pathname
-         sta   mliparam+1
-         iny
-         lda   (PARAM),y    ; hi byte of pathname
-         sta   mliparam+2
-         jsr   _deletefile ; don't care if this fails
+         +LDPARAM 1
+         +STAY mliparam+1            ; pathname
+         jsr   _deletefile           ; don't care if this fails
          ldy   #$03
-         lda   (PARAM),y    ; file type
+         lda   (PARAM),y             ; file type
          sta   mliparam+4
-         iny
-         lda   (PARAM),y    ; lo byte of aux file type
-         sta   mliparam+5
-         iny
-         lda   (PARAM),y    ; hi byte of aux file type
-         sta   mliparam+6
+         +LDPARAM 4
+         +STAY mliparam+5            ; aux file type
          jsr   _createfile
          bcs   .exit
 
-         ldy   #$0A
-         lda   (PARAM),y    ; lo byte of ProDOS file buffer
-         sta   mliparam+3
-         iny
-         lda   (PARAM),y    ; hi byte of ProDOS file buffer
-         sta   mliparam+4
+         +LDPARAM 10
+         +STAY mliparam+3            ; PrODOS file buffer
          jsr   _openfile
          bcs   .exit
 
-         pha              ; push file reference number
-         ldy   #$06
-         lda   (PARAM),y    ; lo address of data buffer
-         sta   mliparam+2
-         iny
-         lda   (PARAM),y    ; hi address of data buffer
-         sta   mliparam+3
-         iny
-         lda   (PARAM),y    ; lo data length
-         sta   mliparam+4
-         iny
-         lda   (PARAM),y    ; hi data length
-         sta   mliparam+5
-         pla              ; pull file reference number
+         pha                         ; push file reference number
+         +LDPARAM 6
+         +STAY mliparam+2            ; data buffer
+         +LDPARAM 8
+         +STAY mliparam+4            ; data length
+         pla                         ; pull file reference number
          jsr   _writefile
-         php              ; save flags from writefile
+         php                         ; save flags from writefile
          pha
-         jsr   _closefile ; always close whether write worked or not
+         jsr   _closefile            ; always close whether write worked or not
          pla
-         plp              ; restore flags from write
-                          ; (so caller gets codes from write attempt,
-                          ; not close)
-.exit
-         rts
+         plp                         ; restore flags from write
+                                     ; (so caller gets codes from write attempt,
+                                     ; not close)
+.exit    rts
 }
 
 ;-------------------------------
@@ -256,14 +221,8 @@ SaveFile
 !zone {
 SetPrefix
          +PARAMS_ON_STACK 2
-
-         ldy   #$01
-         lda   (PARAM),y    ; lo byte of pathname
-         sta   mliparam+1
-         iny
-         lda   (PARAM),y    ; hi byte of pathname
-         sta   mliparam+2
-
+         +LDPARAM 1
+         +STAY mliparam+1            ; pathname
          jmp   _setprefix
 }
 
@@ -284,14 +243,8 @@ SetPrefix
 !zone {
 GetFileInfo
          +PARAMS_ON_STACK 2
-
-         ldy   #$01
-         lda   (PARAM),y    ; lo byte of pathname
-         sta   mliparam+1
-         iny
-         lda   (PARAM),y    ; hi byte of pathname
-         sta   mliparam+2
-
+         +LDPARAM 1
+         +STAY mliparam+1            ; pathname
          jmp   _getfileinfo
 }
 

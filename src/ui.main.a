@@ -170,19 +170,11 @@ CreateOrDestroyButton
          ldy   #1
          lda   (PARAM),y
          sta   .viewID
-         ldy   #3
-         lda   (PARAM),y
-         pha
-         dey
-         lda   (PARAM),y
-         ply
+
+         +LDPARAM 2
          +STAY .viewConfigurationRecord
-         ldy   #5
-         lda   (PARAM),y
-         pha
-         dey
-         lda   (PARAM),y
-         ply
+
+         +LDPARAM 4
          +STAY .optionsStoreKey
 
          jsr   okvs_get
