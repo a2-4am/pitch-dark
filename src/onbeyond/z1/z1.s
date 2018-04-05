@@ -82,6 +82,7 @@ op_c7
         eor     #$a5
         beq     +
         ldx     #0
+        stx     $301        ;uppercase
         stx     $303        ;no script
         stx     $304
         dex
@@ -131,6 +132,18 @@ op_c7
         lda     #$28
         sta     $1e38
         sta     $1e5e
+
+        lda     $301
+        beq     +
+        lda     $bf98
+        bpl     +
+        lda     #0
+        sta     $1bfb
+        lda     #<casemap
+        sta     $1c7c
+        lda     #>casemap
+        sta     $1c7d
++
 
         lda     $303
         beq     +
@@ -357,6 +370,16 @@ xopen
         sta     ca_parms+1
         sta     cb_parms+1
         rts
+
+casemap
+        ldy     $32
+        bmi     +
+        cmp     #$e1
+        bcc     +
+        cmp     #$fb
+        bcs     +
+        and     #$df
++       jmp     $fdf0
 
 c8_parms
         !byte    3
