@@ -127,6 +127,8 @@ HandleOptionsKey
          jmp   SoftBell
 .foundKey
          lda   .keys+1,x
+         ldx   #WGSelectView
+         jsr   WeeGUI
          jmp   SimulateClick
 
 callback_options_ok

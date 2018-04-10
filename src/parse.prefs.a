@@ -44,6 +44,8 @@ kLastPlayed
 
 ;------------------------------------------------------------------------------
 ; LoadGlobalPreferences
+; load global options and state (including current game) from file and populate
+; global prefs store
 ;
 ; in:    current ProDOS prefix is the same as the PITCH.DARK.CONF file
 ; out:   all registers and flags clobbered
@@ -67,6 +69,9 @@ LoadGlobalPreferences
 
 ;------------------------------------------------------------------------------
 ; SaveGlobalPreferences
+; save global options and state to file
+; note: this function is inefficient because I want the preferences file to
+; look a certain way at all times
 ;
 ; in:    current ProDOS prefix is the same as the PITCH.DARK.CONF file
 ; out:   all registers and flags clobbered

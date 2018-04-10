@@ -89,6 +89,8 @@ HandleKey
          tax
          ldy   gViewInUse,x
          beq   .notFound
+         ldx   #WGSelectView
+         jsr   WeeGUI
 .focusAndDoAction
          jmp   SimulateClick
 
@@ -211,4 +213,4 @@ callback_boxart = DisplayArtwork
 callback_options = OptionsDialog
 callback_clues = LaunchInterpreterWithHints
 callback_play  = LaunchInterpreterWithGame
-callback_resume = LaunchInterpreterWithGame
+callback_resume = ResumeDialog

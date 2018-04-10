@@ -139,7 +139,7 @@ PrintAt
 
 ;------------------------------------------------------------------------------
 ; SimulateClick
-; select, focus, activate, and unfocus a WeeGUI view
+; focus, activate, and unfocus a WeeGUI view
 ;
 ; in:    WeeGUI initialized
 ;        A contains WeeGUI view ID
@@ -147,8 +147,6 @@ PrintAt
 ;------------------------------------------------------------------------------
 !zone {
 SimulateClick
-         ldx   #WGSelectView
-         jsr   WeeGUI
          ldx   #WGViewFocus
          jsr   WeeGUI
          ldx   #WGViewFocusAction
