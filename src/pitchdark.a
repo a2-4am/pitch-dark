@@ -35,6 +35,8 @@
          !source "src/ui.main.a"
          !source "src/ui.main.keys.a"
          !source "src/ui.options.a"
+;         !source "src/ui.resume.a"
+         !source "src/ui.versions.a"
          !source "src/ui.artwork.a"
 
 Start
@@ -59,13 +61,15 @@ MainScreen
          txs
          jsr   PaintMain             ; create all WeeGUI views (UI elements) and paint them
          bit   $C010                 ; clear keyboard strobe
+         ldx   #WGClearPendingClick  ; clear WeeGUI mouse strobe
+         jsr   WeeGUI
 .mainRunLoop
          jsr   RepaintMainIfDirty
          ldx   #WGPendingViewAction
          jsr   WeeGUI                ; handle mouse movement and clicks
-         lda   $c000
+         lda   $C000
          bpl   .mainRunLoop
-         bit   $c010
+         bit   $C010
          jsr   HandleKey             ; handle keypresses
          bra   .mainRunLoop
 

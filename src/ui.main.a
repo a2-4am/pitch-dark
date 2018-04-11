@@ -363,7 +363,7 @@ kViewHints
          !byte 66                    ; left
          !byte 10                    ; top
          !byte 13                    ; width
-         !word callback_clues        ; callback
+         !word callback_hints        ; callback
          !word kStringHints          ; caption
 kStringHints
          !byte $08                   ; 'H' inverse
@@ -377,8 +377,8 @@ kViewVersions
          !word callback_versions     ; callback
          !word kStringVersions       ; caption
 kStringVersions
-         !byte $12                   ; 'R' inverse
-         !text "evisions",0
+         !byte $16                   ; 'V' inverse
+         !text "ersion",0
 
 kViewInfo
          !byte ID_INFO               ; view ID

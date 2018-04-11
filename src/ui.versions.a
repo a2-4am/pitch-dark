@@ -1,0 +1,412 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; User interface - views and paint routines for versions screen
+;
+; Public functions
+; - VersionsDialog
+;
+
+!zone {
+; View IDs (application-specific, acceptable range 0..15, no duplicates)
+ID_VERSIONS_FRAME         = 0
+ID_VERSIONS_1             = 1        ; WARNING lots of logic in this screen assumes that the radio
+ID_VERSIONS_2             = 2        ; buttons for each version are sequentially numbered starting at 1
+ID_VERSIONS_3             = 3        ; and it would be very difficult to untangle if that suddenly
+ID_VERSIONS_4             = 4        ; stopped being true
+ID_VERSIONS_5             = 5
+ID_VERSIONS_6             = 6
+ID_VERSIONS_7             = 7
+ID_VERSIONS_8             = 8
+ID_VERSIONS_9             = 9
+ID_VERSIONS_OK            = 10
+ID_VERSIONS_CANCEL        = 11
+
+gVersionsViewInUse
+         !byte 1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0
+
+; action keys for options screen
+.keys
+         !byte $CF,ID_VERSIONS_OK    ; O
+         !byte $EF,ID_VERSIONS_OK    ; o
+         !byte $8D,ID_VERSIONS_OK    ; Return
+         !byte $C3,ID_VERSIONS_CANCEL; C
+         !byte $E3,ID_VERSIONS_CANCEL; c
+         !byte $9B,ID_VERSIONS_CANCEL; Esc
+         !byte $B1,ID_VERSIONS_1     ; 1
+         !byte $B2,ID_VERSIONS_2     ; 2
+         !byte $B3,ID_VERSIONS_3     ; 3
+         !byte $B4,ID_VERSIONS_4     ; 4
+         !byte $B5,ID_VERSIONS_5     ; 5
+         !byte $B6,ID_VERSIONS_6     ; 6
+         !byte $B7,ID_VERSIONS_7     ; 7
+         !byte $B8,ID_VERSIONS_8     ; 8
+         !byte $B9,ID_VERSIONS_9     ; 9
+         !byte $88,ID_VERSIONS_PREVIOUS ; left arrow
+         !byte $95,ID_VERSIONS_NEXT  ; right arrow
+         !byte $8B,ID_VERSIONS_PREVIOUS ; up arrow
+         !byte $8A,ID_VERSIONS_NEXT  ; down arrow
+.endkeys
+
+; IDs of actions that do not correspond to WeeGUI view IDs have high bit set
+ID_VERSIONS_PREVIOUS      = $81
+ID_VERSIONS_NEXT          = $82
+
+;------------------------------------------------------------------------------
+; VersionsDialog
+; call WeeGUI to create and paint 'select version' dialog, and run to completion
+;
+; in:    WeeGUI initialized
+; out:   exits via MainScreen
+;        all registers and flags clobbered
+;------------------------------------------------------------------------------
+VersionsDialog
+         ldx   #$FF
+         txs
+         ldx   #WGResetAll           ; reset WeeGUI
+         jsr   WeeGUI
+
+         ldx   #9
+-        stz   gVersionsViewInUse,x  ; reset flags for which radio buttons are in use (1-9)
+         dex
+         bne   -
+
+         jsr   okvs_len
+         !word gVersionsStore
+         sta   .numVersions
+
+         ; TODO calculate proper height based on number of available versions
+         ldy   #3
+         sty   kViewVersionsFrame+3  ; frame top
+         iny
+         sty   kViewVersionsOK+2     ; OK top
+         iny
+         iny
+         sty   kViewVersionsCancel+2 ; Cancel top
+         ldy   #19
+         sty   kViewVersionsFrame+5  ; frame visible height
+         sty   kViewVersionsFrame+7  ; frame height
+
+         jsr   CreateDialog
+         !word kViewVersionsFrame
+         !word kStringVersionsFrame
+
+         jsr   CreateButton          ; create UI controls
+         !word kViewVersionsOK
+         jsr   CreateButton
+         !word kViewVersionsCancel
+
+         ldx   #0
+.createRadioLoop
+         phx
+         lda   #1
+         sta   gVersionsViewInUse+1,x ; mark this view as in use so hotkeys will activate
+         txa
+         asl
+         tax
+         lda   kVersions,x
+         ldy   kVersions+1,x
+         +STAY +
+         jsr   CreateRadio           ; create radio button for this version (will print label later)
++        !word $FDFD                 ; SMC
+         plx
+         inx
+.numVersions=*+1
+         cpx   #$FD                  ; SMC
+         bne   .createRadioLoop
+
+         jsr   okvs_get              ; get current version of current game and check appropriate radio button
+         !word gGlobalPrefsStore
+         !word kLastPlayed
+         +STAY +
+         jsr   okvs_get
+         !word gGlobalPrefsStore
++        !word $FDFD                 ; SMC
+         +STAY +
+         jsr   okvs_get
+         !word gVersionsStore
++        !word $FDFD                 ; SMC
+                                     ; X = 0-based index of current version in the list of versions for this game
+         inx                         ; X = 1-based index of current version, which is the WeeGUI view ID
+         txa
+         ldx   #WGSelectView
+         jsr   WeeGUI
+         lda   #1
+         sta   PARAM0
+         ldx   #WGSetState
+         jsr   WeeGUI
+
+         ldx   #WGDesktop            ; paint background
+         jsr   WeeGUI
+
+         jsr   PaintTitleBar         ; paint top title bar
+
+         ldx   #WGViewPaintAll       ; paint UI controls (window frame, buttons, checkboxes, radio buttons)
+         jsr   WeeGUI
+
+         ldx   #WGSelectView         ; select frame (required for print routines that follow)
+         lda   #ID_VERSIONS_FRAME
+         jsr   WeeGUI
+
+         lda   #1
+         sta   .vtab
+         ldx   #0
+.printLabelsLoop
+         phx
+         stx   +
+         jsr   okvs_nth
+         !word gVersionsStore
++        !byte $FD                   ; SMC
+         +STAY +
+         jsr   okvs_get
+         !word gVersionsStore
++        !word $FDFD                 ; SMC
+         ldx   #50
+         jsr   CreateNullTerminatedString
+         jsr   PrintAt
+         !byte 7
+.vtab    !byte $FD                   ; SMC
+         !word kNullTerminatedBuffer
+         inc   .vtab
+         inc   .vtab
+         plx
+         inx
+         cpx   .numVersions
+         bne   .printLabelsLoop
+
+         bit   $C010                 ; clear keyboard strobe
+         ldx   #WGClearPendingClick  ; clear WeeGUI mouse strobe
+         jsr   WeeGUI
+.runLoop
+         ldx   #WGPendingViewAction
+         jsr   WeeGUI                ; handle mouse movement and clicks
+         lda   $C000
+         bpl   .runLoop
+         bit   $C010
+         jsr   HandleVersionsKey     ; handle keypresses
+         bra   .runLoop
+
+;------------------------------------------------------------------------------
+; internal functions
+
+HandleVersionsKey
+         ldx   #.endkeys-.keys
+-        cmp   .keys,x
+         beq   .foundKey
+         dex
+         dex
+         bpl   -
+.notFound
+         jmp   SoftBell
+.foundKey
+         lda   .keys+1,x             ; get ID associated with this key
+         bpl   .activateView         ; ID < #$80 is a WeeGUI view, so activate it
+         sta   .keyID                ; ID >= #$80 is a screen-specific action, so stash it for now
+
+         jsr   GetCheckedVersion     ; figure out which radio button is checked
+         ldx   #WGSelectView         ; uncheck it and repaint it
+         jsr   WeeGUI
+         stz   PARAM0
+         ldx   #WGSetState
+         jsr   WeeGUI
+         ldx   #WGPaintView
+         jsr   WeeGUI
+         tax                         ; X = WeeGUI view ID of previously checked radio button
+.keyID=*+1
+         lda   #$FD                  ; SMC
+         cmp   #ID_VERSIONS_PREVIOUS
+         beq   .previous
+         cpx   .numVersions          ; find 'next' view ID (wrapping around to 1)
+         bcs   +
+         inx
+         !byte $2C
++        ldx   #1
+         bra   .gotNewID
+.previous
+         dex
+         bne   .gotNewID
+         ldx   .numVersions
+.gotNewID
+         txa
+         ldx   #WGSelectView         ; check new radio button and repaint it
+         jsr   WeeGUI
+         ldx   #WGViewFocus
+         jsr   WeeGUI
+         ldx   #WGSetState
+         lda   #1
+         sta   PARAM0
+         jsr   WeeGUI
+         ldx   #WGPaintView
+         jmp   WeeGUI
+
+.activateView
+         tax
+         ldy   gVersionsViewInUse,x
+         beq   .notFound
+         ldx   #WGSelectView
+         jsr   WeeGUI
+         jmp   SimulateClick
+
+GetCheckedVersion
+         lda   #ID_VERSIONS_1
+         pha
+         clc
+         adc   .numVersions          ; .numVersions was populated during VersionsDialog and hasn't changed since
+         tay
+         pla
+         jmp   GetCheckedRadioButton
+
+callback_versions_ok
+         jsr   GetCheckedVersion
+         dec
+         sta   .n
+         jsr   okvs_nth
+         !word gVersionsStore
+.n       !byte $FD                   ; SMC
+         +STAY .val
+         jsr   okvs_get
+         !word gGlobalPrefsStore
+         !word kLastPlayed
+         +STAY .key
+         jsr   okvs_update
+         !word gGlobalPrefsStore
+.key     !word $FDFD                 ; SMC
+.val     !word $FDFD                 ; SMC
+
+         lda   #1
+         sta   gGlobalPrefsDirty     ; must set, otherwise SaveGlobalPreferences does nothing
+         jsr   SaveGlobalPreferences ; immediately write new preferences to disk
+         jsr   CheckForSavedGames    ; recheck whether the (newly selected) version has saved games (affects painting in main screen)
+                                     ; execution falls through here
+callback_versions_cancel
+         jmp   MainScreen
+
+kViewVersionsFrame
+         !byte ID_VERSIONS_FRAME       ; view ID
+         !byte 2                     ; style (decorated frame)
+         !byte 5                     ; left
+         !byte $FD                   ; top
+         !byte 70                    ; visible width
+         !byte $FD                   ; visible height
+         !byte 70                    ; width
+         !byte $FD                   ; height
+kStringVersionsFrame
+         !text "Select Version",0
+
+kViewVersionsOK
+         !byte ID_VERSIONS_OK        ; view ID
+         !byte 63                    ; left
+         !byte $FD                   ; top
+         !byte 10                    ; width
+         !word callback_versions_ok    ; callback
+         !word kStringOK             ; caption
+
+kViewVersionsCancel
+         !byte ID_VERSIONS_CANCEL    ; view ID
+         !byte 63                    ; left
+         !byte $FD                   ; top
+         !byte 10                    ; width
+         !word callback_versions_cancel ; callback
+         !word kStringCancel         ; caption
+
+kVersions
+         !word kViewVersions1
+         !word kViewVersions2
+         !word kViewVersions3
+         !word kViewVersions4
+         !word kViewVersions5
+         !word kViewVersions6
+         !word kViewVersions7
+         !word kViewVersions8
+         !word kViewVersions9
+
+kViewVersions1
+         !byte ID_VERSIONS_1         ; view ID
+         !byte 8                     ; left
+         !byte 4                     ; top
+         !word kString1              ; caption
+
+kString1
+         !text " "
+         !byte $31,0                 ; '1' inverse
+
+kViewVersions2
+         !byte ID_VERSIONS_2         ; view ID
+         !byte 8                     ; left
+         !byte 6                     ; top
+         !word kString2              ; caption
+
+kString2
+         !text " "
+         !byte $32,0                 ; '2' inverse
+
+kViewVersions3
+         !byte ID_VERSIONS_3         ; view ID
+         !byte 8                     ; left
+         !byte 8                     ; top
+         !word kString3              ; caption
+
+kString3
+         !text " "
+         !byte $33,0                 ; '3' inverse
+
+kViewVersions4
+         !byte ID_VERSIONS_4         ; view ID
+         !byte 8                     ; left
+         !byte 10                    ; top
+         !word kString4              ; caption
+
+kString4
+         !text " "
+         !byte $34,0                 ; '4' inverse
+
+kViewVersions5
+         !byte ID_VERSIONS_5         ; view ID
+         !byte 8                     ; left
+         !byte 12                    ; top
+         !word kString5              ; caption
+
+kString5
+         !text " "
+         !byte $35,0                 ; '5' inverse
+
+kViewVersions6
+         !byte ID_VERSIONS_6         ; view ID
+         !byte 8                     ; left
+         !byte 14                    ; top
+         !word kString6              ; caption
+
+kString6
+         !text " "
+         !byte $36,0                 ; '6' inverse
+
+kViewVersions7
+         !byte ID_VERSIONS_7         ; view ID
+         !byte 8                     ; left
+         !byte 16                    ; top
+         !word kString7              ; caption
+
+kString7
+         !text " "
+         !byte $37,0                 ; '7' inverse
+
+kViewVersions8
+         !byte ID_VERSIONS_8         ; view ID
+         !byte 8                     ; left
+         !byte 18                    ; top
+         !word kString8              ; caption
+
+kString8
+         !text " "
+         !byte $38,0                 ; '8' inverse
+
+kViewVersions9
+         !byte ID_VERSIONS_9         ; view ID
+         !byte 8                     ; left
+         !byte 20                    ; top
+         !word kString9              ; caption
+
+kString9
+         !text " "
+         !byte $39,0                 ; '9' inverse
+}

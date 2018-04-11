@@ -27,6 +27,8 @@ ID_Z           = $85
          !byte $E8,ID_HINTS          ; h
          !byte $C1,ID_BOXART         ; A
          !byte $E1,ID_BOXART         ; a
+         !byte $D6,ID_VERSIONS       ; V
+         !byte $F6,ID_VERSIONS       ; v
          !byte $D3,ID_OPTIONS        ; S
          !byte $F3,ID_OPTIONS        ; s
          !byte $D0,ID_PREVIOUS       ; P
@@ -206,11 +208,9 @@ callback_next
          jmp   LoadGameInfo          ; load new game info first
 }
 
-callback_versions
-         rts
-
-callback_boxart = DisplayArtwork
 callback_options = OptionsDialog
-callback_clues = LaunchInterpreterWithHints
 callback_play  = LaunchInterpreterWithGame
-callback_resume = ResumeDialog
+callback_resume = LaunchInterpreterWithGame
+callback_boxart = DisplayArtwork
+callback_hints = LaunchInterpreterWithHints
+callback_versions = VersionsDialog

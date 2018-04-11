@@ -67,40 +67,43 @@ ResumeDialog
          ldx   #WGResetAll           ; reset WeeGUI
          jsr   WeeGUI
 
-         ldx   #WGCreateView         ; create frame
-         +LDADDR kViewResumeFrame
-         +STAY PARAM0
-         jsr   WeeGUI
-         ldx   #WGViewSetTitle
-         +LDADDR kStringResumeFrame
-         +STAY PARAM0
-         jsr   WeeGUI
+         ; TODO call ZINFO and calculate proper height
+         ldy   #3
+         sty   kViewResumeFrame+3    ; frame top
+         iny
+         sty   kViewResumeOK+2       ; OK top
+         iny
+         iny
+         sty   kViewResumeCancel+2   ; Cancel top
+         ldy   #19
+         sty   kViewResumeFrame+5    ; frame visible height
+         sty   kViewResumeFrame+7    ; frame height
+
+         jsr   CreateDialog
+         !word kViewResumeFrame
+         !word kStringResumeFrame
 
          jsr   CreateButton          ; create UI controls
-         !word kViewOK
+         !word kViewResumeOK
          jsr   CreateButton
-         !word kViewCancel
-         jsr   CreateCheckbox
-         !word kViewForce40
-         jsr   CreateCheckbox
-         !word kViewForceUpper
-         jsr   CreateCheckbox
-         !word kViewScriptToFile
-         jsr   CreateCheckbox
-         !word kViewAutoScript
+         !word kViewResumeCancel
 
-         jsr   SetCheckboxByPref     ; set initial state of checkboxes based on preferences
-         !byte ID_RESUME_FORCE40
-         !word kForce40
-         jsr   SetCheckboxByPref
-         !byte ID_RESUME_FORCEUPPER
-         !word kForceUpper
-         jsr   SetCheckboxByPref
-         !byte ID_RESUME_SCRIPTTOFILE
-         !word kScriptToFile
-         jsr   SetCheckboxByPref
-         !byte ID_RESUME_AUTOSCRIPT
-         !word kAutoScript
+         jsr   CreateRadio
+         !word kViewResumeSlot0
+         jsr   CreateRadio
+         !word kViewResumeSlot1
+         jsr   CreateRadio
+         !word kViewResumeSlot2
+         jsr   CreateRadio
+         !word kViewResumeSlot3
+         jsr   CreateRadio
+         !word kViewResumeSlot4
+         jsr   CreateRadio
+         !word kViewResumeSlot5
+         jsr   CreateRadio
+         !word kViewResumeSlot6
+         jsr   CreateRadio
+         !word kViewResumeSlot7
 
          ldx   #WGDesktop            ; paint background
          jsr   WeeGUI
@@ -114,63 +117,19 @@ ResumeDialog
          lda   #ID_RESUME_FRAME
          jsr   WeeGUI
 
-         ldx   #WGSetCursor          ; paint static text labels
-         lda   #6
-         sta   PARAM0
-         lda   #3
-         sta   PARAM1
-         jsr   WeeGUI
-         ldx   #WGPrint
-         +LDADDR kStringForce40Description
-         +STAY PARAM0
-         jsr   WeeGUI
-
-         ldx   #WGSetCursor
-         lda   #6
-         sta   PARAM0
-         lda   #8
-         sta   PARAM1
-         jsr   WeeGUI
-         ldx   #WGPrint
-         +LDADDR kStringForceUpperDescription
-         +STAY PARAM0
-         jsr   WeeGUI
-
-         ldx   #WGSetCursor
-         lda   #6
-         sta   PARAM0
-         lda   #13
-         sta   PARAM1
-         jsr   WeeGUI
-         ldx   #WGPrint
-         +LDADDR kStringScriptToFileDescription
-         +STAY PARAM0
-         jsr   WeeGUI
-
-         ldx   #WGSetCursor
-         lda   #6
-         sta   PARAM0
-         lda   #18
-         sta   PARAM1
-         jsr   WeeGUI
-         ldx   #WGPrint
-         +LDADDR kStringAutoScriptDescription
-         +STAY PARAM0
-         jsr   WeeGUI
-
 .runLoop
          ldx   #WGPendingViewAction
          jsr   WeeGUI
          lda   $c000
          bpl   .runLoop
          bit   $c010
-         jsr   HandleOptionsKey
+         jsr   HandleResumeKey
          bra   .runLoop
 
 ;------------------------------------------------------------------------------
 ; internal functions
 
-HandleOptionsKey
+HandleResumeKey
          ldx   #.endkeys-.keys
 -        cmp   .keys,x
          beq   .foundKey
@@ -182,92 +141,124 @@ HandleOptionsKey
          lda   .keys+1,x
          ldx   #WGSelectView
          jsr   WeeGUI
-         ldx   #WGViewFocus
-         jsr   WeeGUI
-         ldx   #WGViewFocusAction
-         jsr   WeeGUI
-         ldx   #WGViewUnfocus
-         jmp   WeeGUI
+         jmp   SimulateClick
 
-callback_resume_ok
-callback_resume_cancel
-         jmp   MainScreen
-
-
+callback_resume_ok = LaunchInterpreterWithGame
+callback_resume_cancel = MainScreen
 
 kViewResumeFrame
          !byte ID_RESUME_FRAME       ; view ID
          !byte 2                     ; style (decorated frame)
-         !byte $FD                   ; left
+         !byte 5                     ; left
          !byte $FD                   ; top
-         !byte $FD                   ; visible width
+         !byte 70                    ; visible width
          !byte $FD                   ; visible height
-         !byte 56                    ; width
-         !byte 19                    ; height
+         !byte 70                    ; width
+         !byte $FD                   ; height
 kStringResumeFrame
          !text "Resume Game",0
 
-kViewOK
+kViewResumeOK
          !byte ID_RESUME_OK          ; view ID
-         !byte $FD                   ; left
+         !byte 63                    ; left
          !byte $FD                   ; top
          !byte 10                    ; width
-         !word callback_resume_ok   ; callback
+         !word callback_resume_ok    ; callback
          !word kStringOK             ; caption
 
-kViewCancel
-         !byte ID_RESUME_CANCEL     ; view ID
-         !byte 56                    ; left
-         !byte 6                     ; top
+kViewResumeCancel
+         !byte ID_RESUME_CANCEL      ; view ID
+         !byte 63                    ; left
+         !byte $FD                   ; top
          !byte 10                    ; width
          !word callback_resume_cancel ; callback
          !word kStringCancel         ; caption
 
-kViewForce40
-         !byte ID_RESUME_FORCE40    ; view ID
-         !byte 14                    ; left
+kViewResumeSlot0
+         !byte ID_RESUME_SLOT0       ; view ID
+         !byte 8                     ; left
          !byte 4                     ; top
-         !word kStringForce40        ; caption
-kStringForce40
-         !text "Force "
+         !word kStringSlot0          ; caption
+
+kStringSlot0
+         !text " Slot "
+         !byte $30                   ; '0' inverse
+         !text ":",0
+
+kViewResumeSlot1
+         !byte ID_RESUME_SLOT1       ; view ID
+         !byte 8                     ; left
+         !byte 6                     ; top
+         !word kStringSlot1          ; caption
+
+kStringSlot1
+         !text " Slot "
+         !byte $31                   ; '1' inverse
+         !text ":",0
+
+kViewResumeSlot2
+         !byte ID_RESUME_SLOT2       ; view ID
+         !byte 8                     ; left
+         !byte 8                     ; top
+         !word kStringSlot2          ; caption
+
+kStringSlot2
+         !text " Slot "
+         !byte $32                   ; '2' inverse
+         !text ":",0
+
+kViewResumeSlot3
+         !byte ID_RESUME_SLOT3       ; view ID
+         !byte 8                     ; left
+         !byte 10                    ; top
+         !word kStringSlot3          ; caption
+
+kStringSlot3
+         !text " Slot "
+         !byte $33                   ; '3' inverse
+         !text ":",0
+
+kViewResumeSlot4
+         !byte ID_RESUME_SLOT4       ; view ID
+         !byte 8                     ; left
+         !byte 12                    ; top
+         !word kStringSlot4          ; caption
+
+kStringSlot4
+         !text " Slot "
          !byte $34                   ; '4' inverse
-         !text "0 column",0
-kStringForce40Description
-         !text "Some games may be glitchy",0
+         !text ":",0
 
-kViewForceUpper
-         !byte ID_RESUME_FORCEUPPER ; view ID
-         !byte 14                    ; left
-         !byte 9                     ; top
-         !word kStringForceUpper     ; caption
-kStringForceUpper
-         !text "Force "
-         !byte $75                   ; 'u' inverse
-         !text "ppercase",0
-kStringForceUpperDescription
-         !text "A MATTER OF PREFERENCE, I SUPPOSE",0
-
-kViewScriptToFile
-         !byte ID_RESUME_SCRIPTTOFILE ; view ID
-         !byte 14                    ; left
+kViewResumeSlot5
+         !byte ID_RESUME_SLOT5       ; view ID
+         !byte 8                     ; left
          !byte 14                    ; top
-         !word kStringScriptToFile   ; caption
-kStringScriptToFile
-         !text "SCRIPT to "
-         !byte $66                   ; 'f' inverse
-         !text "ile",0
-kStringScriptToFileDescription
-         !text "Save transcripts to a file instead of printer",0
+         !word kStringSlot5          ; caption
 
-kViewAutoScript
-         !byte ID_RESUME_AUTOSCRIPT ; view ID
-         !byte 14                    ; left
-         !byte 19                    ; top
-         !word kStringAutoScript     ; caption
-kStringAutoScript
-         !text "Always "
-         !byte $13                   ; 'S' inverse
-         !text "CRIPT",0
-kStringAutoScriptDescription
-         !text "Turn on SCRIPT mode automatically",0
+kStringSlot5
+         !text " Slot "
+         !byte $35                   ; '5' inverse
+         !text ":",0
+
+kViewResumeSlot6
+         !byte ID_RESUME_SLOT6       ; view ID
+         !byte 8                     ; left
+         !byte 16                    ; top
+         !word kStringSlot6          ; caption
+
+kStringSlot6
+         !text " Slot "
+         !byte $36                   ; '6' inverse
+         !text ":",0
+
+kViewResumeSlot7
+         !byte ID_RESUME_SLOT7       ; view ID
+         !byte 8                     ; left
+         !byte 18                     ; top
+         !word kStringSlot7          ; caption
+
+kStringSlot7
+         !text " Slot "
+         !byte $37                   ; '7' inverse
+         !text ":",0
 }

@@ -10,6 +10,7 @@
 ; - PaintTitleBar
 ; - PrintAt
 ; - SimulateClick
+; - GetCheckedRadioButton
 ;
 ; Public constants
 ; - kStringOK
@@ -140,6 +141,8 @@ PrintAt
 ;------------------------------------------------------------------------------
 ; SimulateClick
 ; focus, activate, and unfocus a WeeGUI view
+; note: does *not* select the view first, which you may or may not wish to do
+; before calling
 ;
 ; in:    WeeGUI initialized
 ;        A contains WeeGUI view ID
@@ -153,4 +156,44 @@ SimulateClick
          jsr   WeeGUI
          ldx   #WGViewUnfocus
          jmp   WeeGUI
+}
+
+;------------------------------------------------------------------------------
+; GetCheckedRadioButton
+; determine which radio button on screen is visually checked
+; WeeGUI only supports a single radio group, so there is only ever one
+; selected radio button.
+; WeeGUI has no way to query the type of a view, so this function takes the
+; lower and upper IDs and all views within that range are presumed to be
+; radio buttons.
+; WeeGUI has no way to query if a view is in use, so all views within the
+; given range are presumed to exist and be initialized properly.
+;
+; in:    WeeGUI initialized
+;        A contains WeeGUI view ID of first radio button
+;        Y contains 1 greater than the WeeGUI view ID of last radio button
+; out:   C clear -> A contains WeeGUI view ID of selected radio button
+;        C set -> error, there is no selected radio button
+;        all other registers and flags clobbered
+;------------------------------------------------------------------------------
+!zone {
+GetCheckedRadioButton
+         sty   .max
+-        pha
+         ldx   #WGSelectView
+         jsr   WeeGUI
+         ldx   #WGGetState
+         jsr   WeeGUI
+         lda   PARAM0
+         and   #1
+         bne   .found
+         pla
+         inc
+.max=*+1
+         cmp   #$FD                  ; SMC
+         bcc   -
+         !byte $2C
+.found   pla
+         clc
+         rts
 }

@@ -5,9 +5,10 @@
 ;
 ; Public functions
 ; - LoadGameInfo
+; - CheckForSavedGames
 ;
 ; Public variables
-; - gHasSavedGames        0=false, 1=true
+; - gHasSavedGames        0=false, 1=true (set in CheckForSavedGames)
 ;
 ; Public constants (keys in gOptionsStore)
 ; - kHasArtwork
@@ -136,7 +137,8 @@ LoadGameInfo
          !word gOptionsStore
          !word addrOptions
          !byte 0
-
+                                     ; execution falls through here
+CheckForSavedGames
          jsr   okvs_get              ; get shortname of current game
          !word gGlobalPrefsStore
          !word kLastPlayed

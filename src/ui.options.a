@@ -83,10 +83,10 @@ OptionsDialog
          ldx   #WGDesktop            ; paint background
          jsr   WeeGUI
 
+         jsr   PaintTitleBar         ; paint top title bar
+
          ldx   #WGViewPaintAll       ; paint UI controls (window frame, buttons, checkboxes, radio buttons)
          jsr   WeeGUI
-
-         jsr   PaintTitleBar         ; paint top title bar
 
          ldx   #WGSelectView         ; select frame (required for print routines that follow)
          lda   #ID_OPTIONS_FRAME
@@ -105,13 +105,16 @@ OptionsDialog
          !byte 6,18
          !word kStringAutoScriptDescription
 
+         bit   $C010                 ; clear keyboard strobe
+         ldx   #WGClearPendingClick  ; clear WeeGUI mouse strobe
+         jsr   WeeGUI
 .runLoop
          ldx   #WGPendingViewAction
-         jsr   WeeGUI
+         jsr   WeeGUI                ; handle mouse movement and clicks
          lda   $C000
          bpl   .runLoop
          bit   $C010
-         jsr   HandleOptionsKey
+         jsr   HandleOptionsKey      ; handle keypresses
          bra   .runLoop
 
 ;------------------------------------------------------------------------------
