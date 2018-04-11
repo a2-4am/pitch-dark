@@ -31,8 +31,8 @@
  for the "Class One Security Mode Access Decoder" is always 12.
 
 [versions]
-R79.DEPROT.Z4=Release 79 / Serial number 851122
-R77.DEPROT.Z4=Release 77 / Serial number 850814
+R79.DEPROT.Z4=Release 79 / Serial number 851122 (patched)
+R77.DEPROT.Z4=Release 77 / Serial number 850814 (patched)
 
 [options]
 ARTWORK=1

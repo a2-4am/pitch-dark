@@ -22,11 +22,11 @@
  white, gray, black, red, black.
 
 [versions]
-R18.DEPROT.Z3=Release 18 / Serial number 860904
-R15.DEPROT.Z3=Release 15 / Serial number 851108
-R13.DEPROT.Z3=Release 13 / Serial number 851021
-R6.DEPROT.Z3=Release 6 / Serial number 840508
-R4.DEPROT.Z3=Release 4 / Serial number 840131
+R18.DEPROT.Z3=Release 18 / Serial number 860904 (patched)
+R15.DEPROT.Z3=Release 15 / Serial number 851108 (patched)
+R13.DEPROT.Z3=Release 13 / Serial number 851021 (patched)
+R6.DEPROT.Z3=Release 6 / Serial number 840508 (patched)
+R4.DEPROT.Z3=Release 4 / Serial number 840131 (patched)
 
 [options]
 ARTWORK=1

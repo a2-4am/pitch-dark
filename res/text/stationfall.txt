@@ -42,7 +42,7 @@
  just enter the current GST (displayed at the top of the screen).
 
 [versions]
-R107.DEPROT.Z3=Release 107 / Serial number 870430
+R107.DEPROT.Z3=Release 107 / Serial number 870430 (patched)
 
 [options]
 ARTWORK=1

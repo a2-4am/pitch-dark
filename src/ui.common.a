@@ -62,7 +62,7 @@ CreateButton
 ; creates a WeeGUI decorated frame view
 ;
 ; in:    WeeGUI initialized
-;        stack contains 8 bytes of parameters:
+;        stack contains 4 bytes of parameters:
 ;          +1 [word] address of WeeGUI view configuration block for frame
 ;          +3 [word] address of null-terminated string for frame title
 ; out:   $00/$01 clobbered

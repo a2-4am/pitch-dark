@@ -75,17 +75,19 @@ VersionsDialog
          !word gVersionsStore
          sta   .numVersions
 
-         ; TODO calculate proper height based on number of available versions
-         ldy   #3
-         sty   kViewVersionsFrame+3  ; frame top
-         iny
-         sty   kViewVersionsOK+2     ; OK top
-         iny
-         iny
-         sty   kViewVersionsCancel+2 ; Cancel top
-         ldy   #19
-         sty   kViewVersionsFrame+5  ; frame visible height
-         sty   kViewVersionsFrame+7  ; frame height
+         asl
+         inc
+         sta   kViewVersionsFrame+5  ; frame visible height = 1 + (2 * numVersions)
+         sta   kViewVersionsFrame+7  ; frame height
+         lda   #12
+         sec
+         sbc   .numVersions
+         sta   kViewVersionsFrame+3  ; frame top = 12 - numVersions
+         inc
+         sta   kViewVersionsOK+2     ; OK top = frame top + 1
+         inc
+         inc
+         sta   kViewVersionsCancel+2 ; Cancel top = OK top + 2
 
          jsr   CreateDialog
          !word kViewVersionsFrame
@@ -96,7 +98,7 @@ VersionsDialog
          jsr   CreateButton
          !word kViewVersionsCancel
 
-         ldx   #0
+         ldx   #0                    ; X = index of radio button (0-based)
 .createRadioLoop
          phx
          lda   #1
@@ -107,6 +109,13 @@ VersionsDialog
          lda   kVersions,x
          ldy   kVersions+1,x
          +STAY +
+         +STAY SRC
+         txa
+         inc
+         clc
+         adc   kViewVersionsFrame+3
+         ldy   #2
+         sta   (SRC),y               ; radio button top = frame top + 1 + (2 * X)
          jsr   CreateRadio           ; create radio button for this version (will print label later)
 +        !word $FDFD                 ; SMC
          plx
