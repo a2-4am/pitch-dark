@@ -25,7 +25,7 @@ ID_VERSIONS_CANCEL        = 11
 gVersionsViewInUse
          !byte 1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0
 
-; action keys for options screen
+; action keys for versions screen
 .keys
          !byte $CF,ID_VERSIONS_OK    ; O
          !byte $EF,ID_VERSIONS_OK    ; o
@@ -106,8 +106,8 @@ VersionsDialog
          txa
          asl
          tax
-         lda   kVersions,x
-         ldy   kVersions+1,x
+         lda   kViewVersionsArray,x
+         ldy   kViewVersionsArray+1,x
          +STAY +
          +STAY SRC
          txa
@@ -124,7 +124,7 @@ VersionsDialog
          cpx   #$FD                  ; SMC
          bne   .createRadioLoop
 
-         jsr   okvs_get              ; get current version of current game and check appropriate radio button
+         jsr   okvs_get              ; get current version and check appropriate radio button
          !word gGlobalPrefsStore
          !word kLastPlayed
          +STAY +
@@ -157,11 +157,11 @@ VersionsDialog
          lda   #ID_VERSIONS_FRAME
          jsr   WeeGUI
 
-         lda   #1
-         sta   .vtab
-         ldx   #0
+         lda   #1                    ; WeeGUI radio button labels are limited to 15 characters, so we have
+         sta   .vtab                 ; just the hotkeys (1-9) in the radio button label then print the
+         ldx   #0                    ; longer version string separately
 .printLabelsLoop
-         phx
+         phx                         ; X = index of radio button (0-based)
          stx   +
          jsr   okvs_nth
          !word gVersionsStore
@@ -173,7 +173,7 @@ VersionsDialog
          ldx   #50
          jsr   CreateNullTerminatedString
          jsr   PrintAt
-         !byte 7
+         !byte 7                     ; htab (constant)
 .vtab    !byte $FD                   ; SMC
          !word kNullTerminatedBuffer
          inc   .vtab
@@ -181,7 +181,7 @@ VersionsDialog
          plx
          inx
          cpx   .numVersions
-         bne   .printLabelsLoop
+         bcc   .printLabelsLoop
 
          bit   $C010                 ; clear keyboard strobe
          ldx   #WGClearPendingClick  ; clear WeeGUI mouse strobe
@@ -291,7 +291,7 @@ callback_versions_cancel
          jmp   MainScreen
 
 kViewVersionsFrame
-         !byte ID_VERSIONS_FRAME       ; view ID
+         !byte ID_VERSIONS_FRAME     ; view ID
          !byte 2                     ; style (decorated frame)
          !byte 5                     ; left
          !byte $FD                   ; top
@@ -307,7 +307,7 @@ kViewVersionsOK
          !byte 63                    ; left
          !byte $FD                   ; top
          !byte 10                    ; width
-         !word callback_versions_ok    ; callback
+         !word callback_versions_ok  ; callback
          !word kStringOK             ; caption
 
 kViewVersionsCancel
@@ -318,7 +318,7 @@ kViewVersionsCancel
          !word callback_versions_cancel ; callback
          !word kStringCancel         ; caption
 
-kVersions
+kViewVersionsArray
          !word kViewVersions1
          !word kViewVersions2
          !word kViewVersions3
