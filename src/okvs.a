@@ -10,7 +10,8 @@
 ; - okvs_update(address, key, value)            update key/value pair
 ; - okvs_get(address, key)                      get value by key lookup
 ; - okvs_nth(address, n)                        get key by numeric index
-; - okvs_iter_values(address, callback)         iterate through records
+; - okvs_iter(address, callback)                iterate through keys
+; - okvs_iter_values(address, callback)         iterate through values
 ; - okvs_as_boolean(value)                      set Z flag based on value
 ;
 ; Used for global preferences, per-game options, and per-game version lists
@@ -321,6 +322,52 @@ okvs_update
 .exit    rts
 
 ;------------------------------------------------------------------------------
+; okvs_iter
+;
+; in:    stack contains 4 bytes of parameters:
+;          +1 [word] handle to storage space
+;          +3 [word] address of callback
+; out:   <callback> will be called for each record in the store with
+;          X = numeric index of record
+;          A/Y = address of key
+;        all registers are clobbered
+;        all flags clobbered
+;        $00/$01 clobbered
+;------------------------------------------------------------------------------
+okvs_iter
+         +PARAMS_ON_STACK 4
+         jsr   SetPTRFromStackParams
+         lda   (PTR)
+         beq   .iterDone             ; no keys, exit immediately
+         sta   .iterMax
+         +LDPARAM 3
+         +STAY .iterCallback
+         jsr   incptr                ; PTR -> first record
+         ldx   #0
+.iterLoop
+         +LDAY PTR
+         pha                         ; save PTR on stack (in case callback clobbers it)
+         phy
+         clc
+         adc   #$02
+         bcc   +
+         iny                         ; A/Y -> key
++        phx
+.iterCallback=*+1
+         jsr   $FDFD                 ; SMC
+         plx
+         ply
+         pla
+         +STAY PTR                   ; restore PTR from stack
+         jsr   derefptr              ; PTR -> next record
+         inx
+.iterMax=*+1
+         cpx   #$FD                  ; SMC
+         bne   .iterLoop
+.iterDone
+         rts
+
+;------------------------------------------------------------------------------
 ; okvs_iter_values
 ;
 ; in:    stack contains 4 bytes of parameters:
@@ -329,7 +376,6 @@ okvs_update
 ; out:   <callback> will be called for each record in the store with
 ;          X = numeric index of record
 ;          A/Y = address of value
-;          callback must not clobber PTR
 ;        all registers are clobbered
 ;        all flags clobbered
 ;        $00/$01 clobbered
@@ -338,35 +384,39 @@ okvs_iter_values
          +PARAMS_ON_STACK 4
          jsr   SetPTRFromStackParams
          lda   (PTR)
-         beq   .iterDone             ; no keys, exit immediately
-         inc
-         sta   .iterMax
+         beq   .iterValuesDone       ; no keys, exit immediately
+         sta   .iterValuesMax
          +LDPARAM 3
-         +STAY .iterCallback
+         +STAY .iterValuesCallback
          jsr   incptr                ; PTR -> first record
          ldx   #0
-.iterLoop
+.iterValuesLoop
          ldy   #2
          lda   (PTR),y               ; A = length of key
          clc
          adc   #3                    ; skip over pointer to next record (2 bytes) + key length (1 byte)
-         sta   .iterSkipLen
+         sta   .iterValuesSkipLen
          +LDAY PTR
+         pha                         ; save PTR on stack (in case callback clobbers it)
+         phy
          clc
-.iterSkipLen=*+1                     ; skip over key
+.iterValuesSkipLen=*+1               ; skip over key
          adc   #$FD                  ; SMC
          bcc   +
          iny                         ; A/Y -> value
 +        phx
-.iterCallback=*+1
+.iterValuesCallback=*+1
          jsr   $FDFD                 ; SMC
          plx
+         ply
+         pla
+         +STAY PTR                   ; restore PTR from stack
          jsr   derefptr              ; PTR -> next record
          inx
-.iterMax=*+1
+.iterValuesMax=*+1
          cpx   #$FD                  ; SMC
-         bne   .iterLoop
-.iterDone
+         bne   .iterValuesLoop
+.iterValuesDone
          rts
 
 ;------------------------------------------------------------------------------

@@ -106,24 +106,9 @@ SaveGlobalPreferences
          +LDADDR .fluff3
          jsr   addString
 
-         jsr   okvs_len
+         jsr   okvs_iter
          !word gGamesListStore
-         sta   .numberOfGames
-         ldx   #0
-.gameLoop
-         phx
-         stx   +
-         jsr   okvs_nth
-         !word gGamesListStore
-+        !byte $FD                   ; SMC
-         +STAY +
-         jsr   addStringFromStore
-+        !word $FDFD                 ; SMC
-         plx
-         inx
-.numberOfGames=*+1
-         cpx   #$FD                  ; SMC
-         bne   .gameLoop
+         !word addGameToPrefs
 
          +LDADDR .eof
          jsr   addString
@@ -144,6 +129,12 @@ SaveGlobalPreferences
          !word kProDOSFileBuffer
 
          stz   gGlobalPrefsDirty
+         rts
+
+addGameToPrefs
+         +STAY +
+         jsr   addStringFromStore
++        !word $FDFD                 ; SMC
          rts
 
 addBooleanFromStore
