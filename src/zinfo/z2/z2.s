@@ -2,7 +2,7 @@
 ;(c) 2018 by qkumba
 
 !cpu 6502
-!to "build/zinfo1#063000",plain
+!to "build/zinfo2#063000",plain
 *=$3000
 
 save_name      =    $2006
@@ -28,20 +28,22 @@ zp_95    =    $95
 zp_96    =    $96
 zp_98    =    $98
 zp_99    =    $99
-zp_BA    =    $BA
-zp_BB    =    $BB
-zp_C0    =    $C0
-zp_CE    =    $CE
-zp_CF    =    $CF
-zp_D0    =    $D0
-zp_D1    =    $D1
-zp_D2    =    $D2
-zp_E2    =    $E2
-zp_E3    =    $E3
-zp_E4    =    $E4
-zp_E5    =    $E5
-zp_E6    =    $E6
-zp_E7    =    $E7
+zp_BA    =    $ba
+zp_BB    =    $bb
+zp_C0    =    $c0
+zp_CE    =    $ce
+zp_CF    =    $cf
+zp_D0    =    $d0
+zp_D1    =    $d1
+zp_D2    =    $d2
+zp_E2    =    $e2
+zp_E3    =    $e3
+zp_E4    =    $e4
+zp_E5    =    $e5
+zp_E6    =    $e6
+zp_E7    =    $e7
+zp_E8    =    $e8
+zp_E9    =    $e9
 
     jsr    $bf00
     !byte  $c8       ;open file
@@ -94,7 +96,7 @@ fetch_info
     !word  cc_parms
 
 exchange
-    ldx    #(zp_E7-zp_91)
+    ldx    #(zp_E9-zp_91)
 -   ldy    zpage_old-1,x
     lda    zp_91-1,x
     sty    zp_91-1,x
@@ -173,13 +175,17 @@ dump_info
 
     lda    #0
     sta    zp_C0
-    lda    #$3c ;read_buffer+$0d
+    lda    #$ca ;read_buffer+$19
+    sta    zp_E2
+    lda    #$00 ;read_buffer+$18
+    sta    zp_E3
+    lda    #$de ;read_buffer+$0d
     sta    zp_98
     lda    #$20 ;read_buffer+$0c
     sta    zp_99
-    lda    #$40 ;read_buffer+$0b
+    lda    #$0a ;read_buffer+$0b
     sta    zp_BA
-    lda    #$00 ;read_buffer+$0a
+    lda    #$01 ;read_buffer+$0a
     sta    zp_BB
 
     ;dump info, actual Infocom code in upper-case
@@ -188,7 +194,7 @@ dump_info
     sta    max_chars
     LDA    #$10          ; location
     JSR    fetch_obj
-    LDA    zp_E4
+    LDA    zp_E6
     JSR    decompress
 
     lda    zpage_ptr
@@ -209,7 +215,7 @@ dump_info
 
     ldy    #score_offset
     sty    zpage_ptr
-    JSR    sub_1521
+    JSR    sub_1506
 
     sec
     lda    zpage_ptr
@@ -223,7 +229,7 @@ dump_info
     ldy    #moves_offset
     sty    zpage_ptr
 
-    JSR    sub_1521
+    JSR    sub_1506
 
     sec
     lda    zpage_ptr
@@ -236,219 +242,231 @@ fetch_obj:
                 SEC
                 SBC     #$10
                 ASL
-                STA     zp_E2
+                STA     zp_E4
                 LDA     #0
                 ROL
-                STA     zp_E3
+                STA     zp_E5
                 CLC
                 LDA     zp_98
-                ADC     zp_E2
-                STA     zp_E2
-                LDA     zp_99
-                ADC     zp_E3
-                STA     zp_E3
-                LDY     #0
-    lda    zp_E3
-    pha
-    jsr    load_page
-    lda    #>read_buffer
-    sta    zp_E3
-                LDA     (zp_E2),Y
-                STA     zp_E5
-                INY
-                LDA     (zp_E2),Y
+                ADC     zp_E4
                 STA     zp_E4
-    pla
-    sta    zp_E3
-                RTS
-
-decompress:
-                JSR     sub_170D
-                LDY     #7
+                LDA     zp_99
+                ADC     zp_E5
+                STA     zp_E5
+                LDY     #0
+    lda    zp_E5
+    pha
     jsr    load_page
     lda    #>read_buffer
     sta    zp_E5
                 LDA     (zp_E4),Y
-                STA     zp_E3
+                STA     zp_E7
                 INY
                 LDA     (zp_E4),Y
-                STA     zp_E2
-                LDA     zp_E2
-                STA     zp_E4
-                LDA     zp_E3
-                STA     zp_E5
-                INC     zp_E4
-                BNE     loc_E01
-                INC     zp_E5
-
-loc_E01:
-                JSR     sub_1823
-                JMP     loc_1948
-
-sub_1521:
-                LDA     zp_E5
-                BPL     loc_1528
-                JSR     sub_155A
-
-loc_1528:
-                LDA     #0
                 STA     zp_E6
+    pla
+    sta    zp_E5
+                RTS
 
-loc_152C:
+decompress:
+                JSR     sub_16BB
+                LDY     #7
+    jsr    load_page
+    lda    #>read_buffer
+    sta    zp_E7
+                LDA     (zp_E6),Y
+                STA     zp_E5
+                INY
+                LDA     (zp_E6),Y
+                STA     zp_E4
+                LDA     zp_E4
+                STA     zp_E6
                 LDA     zp_E5
-                ORA     zp_E4
-                BEQ     loc_1545
-                LDA     #$A
-                STA     zp_E2
-                LDA     #0
-                STA     zp_E3
-                JSR     sub_1613
-                LDA     zp_E2
-                PHA
+                STA     zp_E7
                 INC     zp_E6
-                JMP     loc_152C
+                BNE     loc_DF9
+                INC     zp_E7
 
-loc_1545:
-                LDA     zp_E6
-                BEQ     loc_1555
+loc_DF9:
+                JSR     sub_17D1
+                JMP     sub_18D2
 
-loc_1549:
+sub_1506:
+                LDA     zp_E7
+                BPL     loc_150D
+                JSR     sub_153F
+
+loc_150D:
+                LDA     #0
+                STA     zp_E8
+
+loc_1511:
+                LDA     zp_E7
+                ORA     zp_E6
+                BEQ     loc_152A
+                LDA     #$A
+                STA     zp_E4
+                LDA     #0
+                STA     zp_E5
+                JSR     loc_15C1
+                LDA     zp_E4
+                PHA
+                INC     zp_E8
+                JMP     loc_1511
+
+loc_152A:
+                LDA     zp_E8
+                BEQ     loc_153A
+
+loc_152E:
                 PLA
                 CLC
                 ADC     #$30
                 JSR     emit_char
-                DEC     zp_E6
-                BNE     loc_1549
+                DEC     zp_E8
+                BNE     loc_152E
                 RTS
 
-loc_1555:
+loc_153A:
                 LDA     #$30
                 JMP     emit_char
 
-sub_155A:
+sub_153F:
                 LDA     #$2D
                 JSR     emit_char
-                JMP     loc_1677
+                JMP     loc_1625
 
-sub_1613:
+loc_15C1:
+                LDA     zp_E8
+                PHA
+                LDA     zp_E9
+                PHA
                 LDA     zp_E6
-                PHA
+                STA     zp_E8
                 LDA     zp_E7
-                PHA
-                LDA     zp_E4
+                STA     zp_E9
+                LDA     #0
                 STA     zp_E6
-                LDA     zp_E5
+                LDA     #0
                 STA     zp_E7
-                LDA     #0
-                STA     zp_E4
-                LDA     #0
-                STA     zp_E5
                 LDX     #$11
 
-loc_162B:
+loc_15D9:
                 SEC
-                LDA     zp_E4
-                SBC     zp_E2
+                LDA     zp_E6
+                SBC     zp_E4
                 TAY
-                LDA     zp_E5
-                SBC     zp_E3
-                BCC     loc_163C
-                STA     zp_E5
+                LDA     zp_E7
+                SBC     zp_E5
+                BCC     loc_15EA
+                STA     zp_E7
                 TYA
-                STA     zp_E4
+                STA     zp_E6
 
-loc_163C:
+loc_15EA:
+                ROL     zp_E8
+                ROL     zp_E9
                 ROL     zp_E6
                 ROL     zp_E7
-                ROL     zp_E4
-                ROL     zp_E5
                 DEX
-                BNE     loc_162B
+                BNE     loc_15D9
                 CLC
-                LDA     zp_E5
-                ROR
-                STA     zp_E3
-                LDA     zp_E4
-                ROR
-                STA     zp_E2
-                LDA     zp_E6
-                STA     zp_E4
                 LDA     zp_E7
+                ROR
                 STA     zp_E5
-                PLA
+                LDA     zp_E6
+                ROR
+                STA     zp_E4
+                LDA     zp_E8
+                STA     zp_E6
+                LDA     zp_E9
                 STA     zp_E7
                 PLA
-                STA     zp_E6
+                STA     zp_E9
+                PLA
+                STA     zp_E8
                 RTS
 
-loc_1677:
+loc_1625:
                 SEC
                 LDA     #0
-                SBC     zp_E4
-                STA     zp_E4
+                SBC     zp_E6
+                STA     zp_E6
                 LDA     #0
-                SBC     zp_E5
-                STA     zp_E5
+                SBC     zp_E7
+                STA     zp_E7
                 RTS
 
-sub_170D:
-                STA     zp_E4
+sub_16BB:
+                STA     zp_E6
                 LDA     #0
-                STA     zp_E5
-                LDA     zp_E4
-                ASL     zp_E4
-                ROL     zp_E5
-                ASL     zp_E4
-                ROL     zp_E5
-                ASL     zp_E4
-                ROL     zp_E5
+                STA     zp_E7
+                LDA     zp_E6
+                ASL     zp_E6
+                ROL     zp_E7
+                ASL     zp_E6
+                ROL     zp_E7
+                ASL     zp_E6
+                ROL     zp_E7
                 CLC
-                ADC     zp_E4
-                BCC     loc_1729
-                INC     zp_E5
+                ADC     zp_E6
+                BCC     loc_16D7
+                INC     zp_E7
                 CLC
 
-loc_1729:
+loc_16D7:
                 ADC     #$35
-                STA     zp_E4
-                BCC     loc_1731
-                INC     zp_E5
+                STA     zp_E6
+                BCC     loc_16DF
+                INC     zp_E7
 
-loc_1731:
+loc_16DF:
     lda    zp_BA
                 CLC
-                ADC     zp_E4
-                STA     zp_E4
+                ADC     zp_E6
+                STA     zp_E6
     lda    zp_BB
-                ADC     zp_E5
-                STA     zp_E5
+                ADC     zp_E7
+                STA     zp_E7
                 RTS
 
-sub_1823:
-                LDA     zp_E4
+sub_17D1:
+                LDA     zp_E6
                 STA     zp_93
-                LDA     zp_E5
+                LDA     zp_E7
                 STA     zp_91
                 LDA     #0
                 STA     zp_92
 
-loc_182F:
+loc_17DD:
                 LDA     #0
                 STA     zp_96
                 RTS
 
-sub_1863:
-                JSR     sub_1870
+sub_17E2:
+                LDA     zp_E6
+                ASL
+                STA     zp_93
+                LDA     zp_E7
+                ROL
+                STA     zp_91
+                LDA     #0
+                ROL
+                STA     zp_92
+                JMP     loc_17DD
+
+sub_17F4:
+                JSR     sub_1801
                 PHA
-                JSR     sub_1870
-                STA     zp_E4
+                JSR     sub_1801
+                STA     zp_E6
                 PLA
-                STA     zp_E5
+                STA     zp_E7
                 RTS
 
-sub_1870:
+sub_1801:
                 LDA     zp_96
-                BEQ     loc_1889
+                BEQ     loc_181A
                 LDY     zp_93
     lda    zp_95
     pha
@@ -462,159 +480,211 @@ sub_1870:
     sta    zp_95
     tya
     inc    zp_93
-                BEQ     loc_187E
+                BEQ     loc_180F
                 RTS
 
-loc_187E:
+loc_180F:
                 LDY     #0
                 STY     zp_96
                 INC     zp_91
-                BNE     locret_1888
+                BNE     locret_1819
                 INC     zp_92
 
-locret_1888:
+locret_1819:
                 RTS
 
-loc_1889:
+loc_181A:
                 LDA     zp_91
                 STA     zp_95
                 LDA     #0
                 STA     zp_94
                 LDA     #$FF
                 STA     zp_96
-                JMP     sub_1870
+                JMP     sub_1801
 
-loc_1948:
+sub_18D2:
                 LDA     #0
                 STA     zp_CF
                 STA     zp_D0
                 LDA     #$FF
                 STA     zp_CE
 
-loc_1952:
-                JSR     sub_1A08
-                BCC     loc_1958
+loc_18DC:
+                JSR     loc_19D9
+                BCC     loc_18E2
                 RTS
 
-loc_1958:
-                STA     zp_E6
-                BEQ     loc_19AB
+loc_18E2:
+                STA     zp_E8
+                BEQ     loc_1932
                 CMP     #1
-                BEQ     loc_19B0
+                BEQ     loc_195F
                 CMP     #4
-                BCC     loc_19BA
+                BCC     loc_1941
                 CMP     #6
-                BCC     loc_19CA
-                JSR     sub_19FC
+                BCC     loc_1951
+                JSR     sub_19CD
                 ORA     #0
-                BNE     loc_197A
+                BNE     loc_1904
                 LDA     #$5B
 
-loc_1971:
+loc_18FB:
                 CLC
-                ADC     zp_E6
+                ADC     zp_E8
 
-loc_1974:
+loc_18FE:
                 JSR     emit_char
-                JMP     loc_1952
+                JMP     loc_18DC
 
-loc_197A:
+loc_1904:
                 CMP     #1
-                BNE     loc_1983
+                BNE     loc_190D
                 LDA     #$3B
-                JMP     loc_1971
+                JMP     loc_18FB
 
-loc_1983:
-                LDA     zp_E6
+loc_190D:
+                LDA     zp_E8
                 SEC
                 SBC     #7
-                BCC     loc_1991
+                BCC     loc_191E
+                BEQ     loc_1937
                 TAY
-                LDA     byte_19E3,Y
-                JMP     loc_1974
+                DEY
+                LDA     byte_19B5,Y
+                JMP     loc_18FE
 
-loc_1991:
-                JSR     sub_1A08
+loc_191E:
+                JSR     loc_19D9
                 ASL
                 ASL
                 ASL
                 ASL
                 ASL
                 PHA
-                JSR     sub_1A08
-                STA     zp_E6
+                JSR     loc_19D9
+                STA     zp_E8
                 PLA
-                ORA     zp_E6
-                CMP     #9
-                BNE     loc_1974
-                LDA     #$20
-                JMP     loc_1974
+                ORA     zp_E8
+                JMP     loc_18FE
 
-loc_19AB:
+loc_1932:
                 LDA     #$20
-                JMP     loc_1974
+                JMP     loc_18FE
 
-loc_19B0:
+loc_1937:
                 LDA     #$D
                 JSR     emit_char
                 LDA     #$A
-                JMP     loc_1974
+                JMP     loc_18FE
 
-loc_19BA:
-                JSR     sub_19FC
+loc_1941:
+                JSR     sub_19CD
                 CLC
                 ADC     #2
-                ADC     zp_E6
-                JSR     sub_19D8
-                STA     zp_CE
-                JMP     loc_1952
+                ADC     $E8
+                JSR     sub_19AA
+                STA     $CE
+                JMP     loc_18DC
 
-loc_19CA:
-                JSR     sub_19FC
+loc_1951:
+                JSR     sub_19CD
                 CLC
-                ADC     zp_E6
-                JSR     sub_19D8
-                STA     zp_CF
-                JMP     loc_1952
+                ADC     $E8
+                JSR     sub_19AA
+                STA     $CF
+                JMP     loc_18DC
 
-sub_19D8:
+loc_195F:
+                JSR     loc_19D9
+                ASL
+                ADC     #1
+                TAY
+    lda    zp_E3
+    pha
+    jsr    load_page
+    lda    #>read_buffer
+    sta    zp_E3
+                LDA     (zp_E2),Y
+                STA     zp_E6
+                DEY
+                LDA     (zp_E2),Y
+                STA     zp_E7
+    pla
+    sta    zp_E3
+                LDA     zp_CF
+                PHA
+                LDA     zp_D0
+                PHA
+                LDA     zp_D1
+                PHA
+                LDA     zp_D2
+                PHA
+                LDA     zp_93
+                PHA
+                LDA     zp_91
+                PHA
+                LDA     zp_92
+                PHA
+                JSR     sub_17E2
+                JSR     sub_18D2
+                PLA
+                STA     zp_92
+                PLA
+                STA     zp_91
+                PLA
+                STA     zp_93
+                LDA     #0
+                STA     zp_96
+                PLA
+                STA     zp_D2
+                PLA
+                STA     zp_D1
+                PLA
+                STA     zp_D0
+                PLA
+                STA     zp_CF
+                LDA     #$FF
+                STA     zp_CE
+                JMP     loc_18DC
+
+sub_19AA:
                 CMP     #3
-                BCC     locret_19E2
+                BCC     locret_19B4
                 SEC
                 SBC     #3
-                JMP     sub_19D8
+                JMP     sub_19AA
 
-locret_19E2:
+locret_19B4:
                 RTS
 
-byte_19E3:
+byte_19B5:
       !BYTE '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ',', '!', '?', '_', '#'
-      !BYTE $27, '"', '/', $5C, '|', '-', ':', '(', ')'
+      !BYTE $27, '"', '/', $5C, '-', ':', '(', ')'
 
-sub_19FC:
+sub_19CD:
                 LDA     zp_CE
-                BPL     loc_1A03
+                BPL     loc_19D4
                 LDA     zp_CF
                 RTS
 
-loc_1A03:
+loc_19D4:
                 LDY     #$FF
                 STY     zp_CE
                 RTS
 
-sub_1A08:
+loc_19D9:
                 LDA     zp_D0
-                BPL     loc_1A0E
+                BPL     loc_19DF
                 SEC
                 RTS
 
-loc_1A0E:
-                BNE     loc_1A25
+loc_19DF:
+                BNE     loc_19F6
                 INC     zp_D0
-                JSR     sub_1863
-                LDA     zp_E4
+                JSR     sub_17F4
+                LDA     zp_E6
                 STA     zp_D1
-                LDA     zp_E5
+                LDA     zp_E7
                 STA     zp_D2
                 LDA     zp_D2
                 LSR
@@ -623,10 +693,10 @@ loc_1A0E:
                 CLC
                 RTS
 
-loc_1A25:
+loc_19F6:
                 SEC
                 SBC     #1
-                BNE     loc_1A42
+                BNE     loc_1A13
                 LDA     #2
                 STA     zp_D0
                 LDA     zp_D2
@@ -646,15 +716,15 @@ loc_1A25:
                 CLC
                 RTS
 
-loc_1A42:
+loc_1A13:
                 LDA     #0
                 STA     zp_D0
                 LDA     zp_D2
-                BPL     loc_1A4E
+                BPL     loc_1A1F
                 LDA     #$FF
                 STA     zp_D0
 
-loc_1A4E:
+loc_1A1F:
                 LDA     zp_D1
                 AND     #$1F
                 CLC
@@ -680,6 +750,6 @@ stack_pointer
 max_chars  !byte 0
 
 zpage_old
-!if *+(zp_E7-zp_91)>=read_buffer {
+!if *+(zp_E9-zp_91)>=read_buffer {
   !error "Code is too large"
 }

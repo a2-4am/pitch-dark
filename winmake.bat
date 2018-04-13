@@ -20,6 +20,7 @@ acme -r build\z5.lst src\onbeyond\z5\z5.s
 acme -r build\z5u.lst src\onbeyond\z5u\z5u.s
 acme -r build\zinfo.system.lst src\zinfo\zinfo.system.s
 acme -r build\zinfo1.lst src\zinfo\z1\z1.s
+acme -r build\zinfo2.lst src\zinfo\z2\z2.s
 goto :EOF
 )
 
@@ -44,6 +45,7 @@ cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ4"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ5"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ5U"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ZINFO1"
+cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ZINFO2"
 if not "%1" equ "" set DISK=
 goto :EOF
 )
