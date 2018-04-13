@@ -28,12 +28,15 @@ asm: md
 	$(ACME) -r build/z4.lst src/onbeyond/z4/z4.s
 	$(ACME) -r build/z5.lst src/onbeyond/z5/z5.s
 	$(ACME) -r build/z5u.lst src/onbeyond/z5u/z5u.s
+	$(ACME) -r build/zinfo.system.lst src/zinfo/zinfo.system.s
+	$(ACME) -r build/zinfo1.lst src/zinfo/z1/z1.s
 
 dsk: md asm
 	cp res/"Pitch Dark.master games collection.do.not.edit.2mg" build/"$(DISK)"
 	cp res/_FileInformation.txt build/
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/GRUE.SYSTEM"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/ONBEYOND.SYSTEM"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/ZINFO.SYSTEM"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/PITCH.DARK"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "res/PITCH.DARK.CONF"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "res/GAMES.CONF"
@@ -44,6 +47,7 @@ dsk: md asm
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ4"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ5"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ5U"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ZINFO1"
 	# TODO remove these save game files, just here for development
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/Z/WISHBRINGER/" "res/R69.850920.SAV"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/Z/ZORK.I/" "res/R88.840726.SAV"

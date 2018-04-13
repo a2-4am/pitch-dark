@@ -1,7 +1,7 @@
 ;license:MIT 
 ;(c) 2018 by qkumba 
 
-!to "ZINFO.SYSTEM",plain
+!to "build/ZINFO.SYSTEM",plain
 *=$2000
 
 jmp init

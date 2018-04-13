@@ -18,6 +18,8 @@ acme -r build\z3.lst src\onbeyond\z3\z3.s
 acme -r build\z4.lst src\onbeyond\z4\z4.s
 acme -r build\z5.lst src\onbeyond\z5\z5.s
 acme -r build\z5u.lst src\onbeyond\z5u\z5u.s
+acme -r build\zinfo.system.lst src\zinfo\zinfo.system.s
+acme -r build\zinfo1.lst src\zinfo\z1\z1.s
 goto :EOF
 )
 
@@ -30,6 +32,7 @@ call :asm
 1>nul copy /y res\_FileInformation.txt build\
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\GRUE.SYSTEM"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\ONBEYOND.SYSTEM"
+cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\ZINFO.SYSTEM"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\PITCH.DARK"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "res\PITCH.DARK.CONF"
 cadius CREATEFOLDER "build\%DISK%" "/PITCH.DARK/LIB/"
@@ -40,6 +43,7 @@ cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ3"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ4"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ5"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ5U"
+cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ZINFO1"
 if not "%1" equ "" set DISK=
 goto :EOF
 )
