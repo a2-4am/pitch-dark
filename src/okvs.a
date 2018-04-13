@@ -329,6 +329,7 @@ okvs_update
 ; out:   <callback> will be called for each record in the store with
 ;          X = numeric index of record
 ;          A/Y = address of value
+;          callback must not clobber PTR
 ;        all registers are clobbered
 ;        all flags clobbered
 ;        $00/$01 clobbered
@@ -336,7 +337,36 @@ okvs_update
 okvs_iter_values
          +PARAMS_ON_STACK 4
          jsr   SetPTRFromStackParams
-         ; TODO
+         lda   (PTR)
+         beq   .iterDone             ; no keys, exit immediately
+         inc
+         sta   .iterMax
+         +LDPARAM 3
+         +STAY .iterCallback
+         jsr   incptr                ; PTR -> first record
+         ldx   #0
+.iterLoop
+         ldy   #2
+         lda   (PTR),y               ; A = length of key
+         clc
+         adc   #3                    ; skip over pointer to next record (2 bytes) + key length (1 byte)
+         sta   .iterSkipLen
+         +LDAY PTR
+         clc
+.iterSkipLen=*+1                     ; skip over key
+         adc   #$FD                  ; SMC
+         bcc   +
+         iny                         ; A/Y -> value
++        phx
+.iterCallback=*+1
+         jsr   $FDFD                 ; SMC
+         plx
+         jsr   derefptr              ; PTR -> next record
+         inx
+.iterMax=*+1
+         cpx   #$FD                  ; SMC
+         bne   .iterLoop
+.iterDone
          rts
 
 ;------------------------------------------------------------------------------

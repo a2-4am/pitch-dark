@@ -159,29 +159,9 @@ VersionsDialog
 
          lda   #1                    ; WeeGUI radio button labels are limited to 15 characters, so we have
          sta   .vtab                 ; just the hotkeys (1-9) in the radio button label then print the
-         ldx   #0                    ; longer version string separately
-.printLabelsLoop
-         phx                         ; X = index of radio button (0-based)
-         stx   +
-         jsr   okvs_nth
+         jsr   okvs_iter_values
          !word gVersionsStore
-+        !byte $FD                   ; SMC
-         +STAY +
-         jsr   okvs_get
-         !word gVersionsStore
-+        !word $FDFD                 ; SMC
-         ldx   #50
-         jsr   CreateNullTerminatedString
-         jsr   PrintAt
-         !byte 7                     ; htab (constant)
-.vtab    !byte $FD                   ; SMC
-         !word kNullTerminatedBuffer
-         inc   .vtab
-         inc   .vtab
-         plx
-         inx
-         cpx   .numVersions
-         bcc   .printLabelsLoop
+         !word PrintVersionLabelCallback
 
          bit   $C010                 ; clear keyboard strobe
          ldx   #WGClearPendingClick  ; clear WeeGUI mouse strobe
@@ -197,6 +177,17 @@ VersionsDialog
 
 ;------------------------------------------------------------------------------
 ; internal functions
+
+PrintVersionLabelCallback
+         ldx   #50
+         jsr   CreateNullTerminatedString
+         jsr   PrintAt
+         !byte 7                     ; htab (constant)
+.vtab    !byte $FD                   ; SMC
+         !word kNullTerminatedBuffer
+         inc   .vtab
+         inc   .vtab
+         rts
 
 HandleVersionsKey
          ldx   #.endkeys-.keys
