@@ -1,3 +1,11 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; Common functions across parsers
+;
+; Public functions:
+; - ParseKeyValueText
+;
 ;------------------------------------------------------------------------------
 ; ParseKeyValueText
 ; parse buffer with KEY=VALUE lines of text into an okvs

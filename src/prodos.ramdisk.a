@@ -8,7 +8,7 @@
 ; Public functions
 ; - DisconnectRAM32
 ;
-; TODO reconnect on exit
+; does not reconnect /RAM on exit, which is rude
 ;
 MLI            = $BF00    ; ProDOS MLI entry point
 NODEV          = $BF10    ; means 'no device connected'

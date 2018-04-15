@@ -1,7 +1,7 @@
 ;license:MIT
 ;(c) 2018 by 4am
 ;
-; Parser for game list
+; Parser for game list file
 ;
 ; Public functions
 ; - LoadGameList

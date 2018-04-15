@@ -1,13 +1,14 @@
 ;license:MIT
 ;(c) 2017-8 by 4am
 ;
-; ProDOS and file routines
+; ProDOS - file and other MLI routines
 ;
 ; Public functions
 ; - LoadFile
 ; - LoadDHRFile
 ; - SaveFile
 ; - SetPrefix
+; - GetFileInfo
 ; - QuitToProDOS
 ;
 
@@ -247,6 +248,8 @@ GetFileInfo
          +STAY mliparam+1            ; pathname
          jmp   _getfileinfo
 }
+
+;------------------------------------------------------------------------------
 
 ;-------------------------------
 ; open file via ProDOS MLI

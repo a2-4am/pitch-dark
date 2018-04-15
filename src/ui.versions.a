@@ -157,8 +157,8 @@ VersionsDialog
          lda   #ID_VERSIONS_FRAME
          jsr   WeeGUI
 
-         lda   #1                    ; WeeGUI radio button labels are limited to 15 characters, so we have
-         sta   .vtab                 ; just the hotkeys (1-9) in the radio button label then print the
+         lda   #1                    ; WeeGUI radio buttons are limited to 15 characters, so we have just the
+         sta   .vtab                 ; hotkeys (1-9) 'in' the radio button then print the labels separately
          jsr   okvs_iter_values
          !word gVersionsStore
          !word PrintVersionLabelCallback

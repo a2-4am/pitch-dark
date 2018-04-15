@@ -1,7 +1,7 @@
 ;license:MIT
 ;(c) 2018 by 4am
 ;
-; Functions to build a ProDOS pathname from length-prefixed strings
+; ProDOS - functions for constructing and passing around ProDOS pathnames
 ;
 ; Public functions
 ; - ResetPath
@@ -75,40 +75,5 @@ SetStartupPath
          sta   $2006,y
          dey
          bpl   -
-         rts
-}
-
-;------------------------------------------------------------------------------
-; CreateNullTerminatedString
-; Copy a length-prefixed string to kNullTerminatedBuffer and null-terminate it.
-; Destination string is left-padded with a single space because reasons.
-; Maximum length is 127 bytes.
-;
-; in:    A/Y contains address of length-prefixed string to copy
-;        X contains length of null-terminated string -- if > length of source,
-;          remaining buffer will be padded with spaces (#$A0)
-; out:   X preserved
-;        all other registers and flags clobbered
-;        $00/$01 clobbered
-;------------------------------------------------------------------------------
-!zone {
-CreateNullTerminatedString
-         +STAY $00
-
-         phx
-         lda   #$A0
--        dex
-         sta   kNullTerminatedBuffer,x
-         bpl   -
-         plx
-         lda   #$00
-         sta   kNullTerminatedBuffer,x
-
-         lda   ($00)
-         tay
--        lda   ($00),y
-         sta   kNullTerminatedBuffer,y
-         dey
-         bne   -
          rts
 }

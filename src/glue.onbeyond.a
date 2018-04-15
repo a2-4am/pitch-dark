@@ -1,7 +1,7 @@
 ;license:MIT
 ;(c) 2018 by 4am
 ;
-; load and launch the On Beyond Z-Machine! interpreter
+; glue code to load, set up, and launch the On Beyond Z-Machine! interpreter
 ;
 ; Public functions
 ; - ClearInterpreterOptions

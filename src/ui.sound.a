@@ -14,8 +14,7 @@ SPEAKER  = $C030
 ; SoftBell
 ;
 ; in:    none
-; out:   all registers preserved
-;        all flags clobbered
+; out:   all registers and flags preserved
 ;------------------------------------------------------------------------------
 SoftBell
          php

@@ -1,3 +1,9 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; common assembler macros
+;
+
 PARAM    =     $00
 
 !macro   PARAMS_ON_STACK .bytes {
