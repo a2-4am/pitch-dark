@@ -19,7 +19,7 @@ ACME=acme
 CADIUS=cadius
 
 asm: md
-	$(ACME) -r build/grue.system.lst src/grue.system.s
+	$(ACME) -r build/grue.system.lst src/loader/grue.system.s
 	$(ACME) -r build/pitchdark.lst src/pitchdark.a
 	$(ACME) -r build/onbeyond.system.lst src/onbeyond/onbeyond.system.s
 	$(ACME) -r build/z1.lst src/onbeyond/z1/z1.s

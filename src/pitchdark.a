@@ -7,6 +7,9 @@
 ; Public functions
 ; - ExitWeeGUI
 ;
+; Public variables
+; - gGamesListStore
+;
 
 !cpu 65c02
 !ct "src/lcase.ct"
@@ -22,16 +25,16 @@
          !source "src/WeeGUI_MLI.s"
 
          !source "src/okvs.a"
-         !source "src/prodos.a"
-         !source "src/ramdisk.a"
-         !source "src/path.a"
-         !source "src/sound.a"
-         !source "src/launch.a"
+         !source "src/prodos.mli.a"
+         !source "src/prodos.ramdisk.a"
+         !source "src/prodos.path.a"
+         !source "src/glue.onbeyond.a"
          !source "src/parse.common.a"
          !source "src/parse.gamelist.a"
          !source "src/parse.gameinfo.a"
          !source "src/parse.prefs.a"
          !source "src/ui.common.a"
+         !source "src/ui.sound.a"
          !source "src/ui.main.a"
          !source "src/ui.main.keys.a"
          !source "src/ui.options.a"
