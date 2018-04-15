@@ -17,9 +17,8 @@
  To rescue the kingdom and locate your mentor in the treacherous mists of
  time, you must gain the power and cunning of a true Sorcerer.
  
- NOTE: this game is patched to remove the Infotater protection. The current
- code will always be bloodworm, and the corresponding color sequence is
- white, gray, black, red, black.
+ NOTE: this game is patched to remove the in-game ("Infotater") protection.
+ Just press the white button to open the trunk.
 
 [versions]
 R18.DEPROT.Z3=Release 18 / Serial number 860904 (patched)

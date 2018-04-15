@@ -22,8 +22,7 @@
  land.
  
  NOTE: this game is patched to remove the in-game copy protection. Belboz
- will always ask you which mage had the motto, "the hardest trick is making
- it look easy." The answer is Barsap.
+ will accept anyone's name (including "Belboz") and give you a proper key.
 
 [versions]
 R87.DEPROT.Z3=Release 87 / Serial number 860904 (patched)

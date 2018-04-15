@@ -16,10 +16,13 @@
  But the great starship serves a far larger purpose than mere cultural
  exchange. It bears a challenge that was issued eons ago, from light
  years away - and only you can meet it.
+ 
+ NOTE: this game is patched to remove the in-game copy protection. To set
+ course for a UM, you may enter any coordinates for R, THETA, and PHI.
 
 [versions]
-R17.821021.Z3=Release 17 / Serial number 821021
-R15.820901.Z3=Release 15 / Serial number 820901
+R17.DEPROT.Z3=Release 17 / Serial number 821021 (patched)
+R15.DEPROT.Z3=Release 15 / Serial number 820901 (patched)
 
 [options]
 ARTWORK=1

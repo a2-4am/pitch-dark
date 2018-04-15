@@ -38,8 +38,7 @@
  will keep you laughing, and Floyd will win your heart.
  
  NOTE: this game is patched to remove the in-game copy protection. Instead
- of entering the number corresponding to the current GST from form QX-17-T,
- just enter the current GST (displayed at the top of the screen).
+ of using form QX-17-T, you may enter any coordinates.
 
 [versions]
 R107.DEPROT.Z3=Release 107 / Serial number 870430 (patched)

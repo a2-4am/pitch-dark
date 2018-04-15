@@ -27,8 +27,9 @@
  spend less time solving puzzles, as you explore realistic worlds of the
  future.
  
- NOTE: This game is patched to remove the in-game copy protection. The code
- for the "Class One Security Mode Access Decoder" is always 12.
+ NOTE: This game is patched to remove the in-game copy protection. It no
+ longer requires a "Class One Security Mode Access Decoder" code to enter a
+ simulation.
 
 [versions]
 R79.DEPROT.Z4=Release 79 / Serial number 851122 (patched)

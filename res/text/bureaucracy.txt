@@ -37,7 +37,7 @@
  that be.
  
  NOTE: this game is patched to remove the in-game copy protection. When you
- are asked five questions in the paranoid's house, you may give any answers.
+ are in the paranoid's house, he will not ask you any questions.
 
 [versions]
 R116.DEPROT.Z4=Release 116 / Licence number 870602 (patched)

@@ -1,7 +1,20 @@
 ;license:MIT
 ;(c) 2018 by 4am
 ;
-; Memory addresses and constants
+; YE OLDE GRAND UNIFIED MEMORY MAP
+;
+; 0800..1BFF - game description file (read)
+; 1C00..1FFF - ProDOS 1K file buffer
+; 2000..3FFF - DHGR artwork (read)
+;              ONBEYOND.SYSTEM (read + execute)
+;              ZINFO.SYSTEM (read + execute)
+;              global preferences file (read + write)
+; 3F00..3FFF - gPathname
+;              kNullTerminatedBuffer
+;              gKey/gVal
+; 4000.~5BFF - WeeGUI (approximate end)
+;~5C00.~71FF - program code (approximate start and end)
+;~7200.~7FFF - program data (approximate start and end)
 ;
 
 kInfoPaintWidth           = 65       ; used by paintInfoView
@@ -19,7 +32,6 @@ gValLen                   = $3F80
 gVal                      = $3F81
 WGInit                    = $4000    ; WeeGUI file load address and initialization function
 MAGICRTS                  = $FF58    ; used to set overflow bit
-
 
 ; zero page
 PTR                       = $02
