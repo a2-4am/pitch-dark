@@ -2,7 +2,7 @@
 ;(c) 2018 by qkumba
 
 !cpu 6502
-!to "build/zinfo3#063000",plain
+!to "build/zinfo3",plain
 *=$3000
 
 save_name      =    $2006
