@@ -153,7 +153,7 @@ c4_parms
 c8_parms
         !byte   3
         !word   filename
-        !word   $800
+        !word   $1C00
         !byte   0
 
 quit_parms
