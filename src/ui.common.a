@@ -4,6 +4,7 @@
 ; User interface - common views and paint routines across screens
 ;
 ; Public functions
+; - HardResetWeeGUI
 ; - CreateRadio
 ; - CreateCheckbox
 ; - CreateButton
@@ -24,6 +25,30 @@ kStringOK
 kStringCancel
          !byte $03                   ; 'C' inverse
          !text "ancel",0
+
+;------------------------------------------------------------------------------
+; HardResetWeeGUI
+; super-resets all WeeGUI views by creating 16 dummy views (which clears their
+; internal state and callbacks and so on) then calling WeeGUI WGResetAll method
+;
+; in:    WeeGUI initialized
+; out:   $00/$01 clobbered
+;        all registers clobbered
+;------------------------------------------------------------------------------
+HardResetWeeGUI
+         lda   #15                   ; highest possible WeeGUI view ID
+         sta   kHardResetDummyView
+.hardResetLoop
+         +LDAY kHardResetDummyView
+         +STAY PARAM0
+         ldx   #WGCreateView
+         jsr   WeeGUI                ; create dummy views to reset state on all views
+         dec   kHardResetDummyView
+         bpl   .hardResetLoop
+         ldx   #WGResetAll           ; reset WeeGUI (destroys everything we just created)
+         jmp   WeeGUI
+kHardResetDummyView
+         !byte 0,0,0,0,0,0,0,0
 
 ;------------------------------------------------------------------------------
 ; CreateRadio/CreateCheckbox/CreateButton

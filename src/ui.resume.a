@@ -63,21 +63,11 @@ ID_RESUME_NEXT        = $82
 ResumeDialog
          ldx   #$FF
          txs
-         lda   #15
-         sta   kDummyView
-.hardReset
-         +LDAY kDummyView
-         +STAY PARAM0
-         ldx   #WGCreateView
-         jsr   WeeGUI                ; create dummy views to reset state on all views
-         dec   kDummyView
-         bpl   .hardReset
-         ldx   #WGResetAll           ; reset WeeGUI (destroys everything we just created)
-         jsr   WeeGUI
+         jsr   HardResetWeeGUI
 
-         jsr   LoadSavedGameInfo
+         jsr   LoadSavedGameInfo     ; call ZINFO to get the information we need for this dialog
 
-         lda   gSavedGamesSlotsInUse
+         lda   gSavedGamesSlotsInUse ; populated by LoadSavedGameInfo
          asl
          clc
          adc   #3
@@ -277,7 +267,4 @@ kViewResumeNewGameTop
 
 kStringNewGame
          !text " Start ",110,"ew game",0
-
-kDummyView
-         !byte 0,0,0,0,0,0,0,0
 }

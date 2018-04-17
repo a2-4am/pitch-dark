@@ -36,16 +36,13 @@ kOnBeyondChecksum         = $0306
 ;        all flags clobbered
 ;------------------------------------------------------------------------------
 ClearInterpreterOptions
-         ldy   #6
+         ldy   #(kOnBeyondChecksum-kOnBeyondOptionsStruct)
          lda   #0
 -        sta   kOnBeyondOptionsStruct,y
          dey
          bpl   -
          rts
 
-LaunchInterpreterWithNewGame
-         lda   #$FF
-                                     ; execution falls through here
 ;------------------------------------------------------------------------------
 ; LaunchInterpreterWithGame
 ; load interpreter and launch it with a game based on global preferences store,
@@ -57,6 +54,9 @@ LaunchInterpreterWithNewGame
 ;        otherwise does not return (calls ExitWeeGUI and jumps to interpreter)
 ;        gPathname clobbered
 ;------------------------------------------------------------------------------
+LaunchInterpreterWithNewGame
+         lda   #$FF
+                                     ; execution falls through here
 LaunchInterpreterWithGame
          sta   kOnBeyondAutoRestore
          jsr   SaveGlobalPreferences

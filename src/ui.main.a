@@ -40,8 +40,7 @@ gViewInUse
 ;------------------------------------------------------------------------------
 !zone {
 PaintMain
-         ldx   #WGResetAll
-         jsr   WeeGUI
+         jsr   HardResetWeeGUI
          stz   gViewInUse+ID_BOXART
          stz   gViewInUse+ID_HINTS
          stz   gViewInUse+ID_VERSIONS

@@ -45,8 +45,7 @@ ID_OPTIONS_CANCEL         = 7
 OptionsDialog
          ldx   #$FF
          txs
-         ldx   #WGResetAll           ; reset WeeGUI, destroy all views
-         jsr   WeeGUI
+         jsr   HardResetWeeGUI
 
          jsr   CreateDialog          ; create frame and OK/Cancel buttons
          !word kViewOptionsFrame

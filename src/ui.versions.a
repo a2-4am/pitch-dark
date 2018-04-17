@@ -63,8 +63,7 @@ ID_VERSIONS_NEXT          = $82
 VersionsDialog
          ldx   #$FF
          txs
-         ldx   #WGResetAll           ; reset WeeGUI
-         jsr   WeeGUI
+         jsr   HardResetWeeGUI
 
          ldx   #9
 -        stz   gVersionsViewInUse,x  ; reset flags for which radio buttons are in use (1-9)
