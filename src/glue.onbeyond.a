@@ -5,8 +5,6 @@
 ;
 ; Public functions
 ; - ClearInterpreterOptions
-; - SetInterpreterOptions
-; - SetInterpreterOptionsExceptForce40
 ; - LaunchInterpreterWithGame
 ; - LaunchInterpreterWithHints
 ;
@@ -44,6 +42,74 @@ ClearInterpreterOptions
          dey
          bpl   -
          rts
+
+;------------------------------------------------------------------------------
+; LaunchInterpreterWithNewGame
+; load interpreter and launch it with a game based on global preferences store
+;
+; in:    current ProDOS prefix is the same as the PITCH.DARK file
+; out:   returns with C set if interpreter could not be loaded or game
+;          directory could not be found
+;        otherwise does not return (calls ExitWeeGUI and jumps to interpreter)
+;        gPathname clobbered
+;------------------------------------------------------------------------------
+LaunchInterpreterWithNewGame
+         lda   #$FF
+                                     ; execution falls through here
+;------------------------------------------------------------------------------
+; LaunchInterpreterWithSavedGame
+; load interpreter and launch it with a game based on global preferences store,
+; and tell it to restore from a specific saved game slot
+; in:    A = saved game slot, or #$FF for none
+LaunchInterpreterWithSavedGame
+         sta   iRestoreSlot
+         jsr   SaveGlobalPreferences
+         jsr   LoadInterpreter
+         bcs   .launchError
+         jsr   SetStartupPathToCurrentVersionOfCurrentGame
+         jsr   ExitWeeGUI            ; shut down WeeGUI
+         jsr   SetInterpreterOptions ; set options struct at $300
+         jmp   kSystemAddress        ; exit via interpreter
+.launchError
+         jmp   SoftBell
+
+;------------------------------------------------------------------------------
+; LaunchInterpreterWithHints
+; load interpreter and launch it with the hints file for the current game
+;
+; in:    current ProDOS prefix is the same as the PITCH.DARK file
+; out:   returns with C set if interpreter could not be loaded or hints
+;          directory could not be found
+;        otherwise does not return (calls ExitWeeGUI and jumps to interpreter)
+;        gPathname clobbered
+;------------------------------------------------------------------------------
+LaunchInterpreterWithHints
+         lda   #$FF
+         sta   iRestoreSlot          ; no saved game to restore
+         jsr   SaveGlobalPreferences
+         jsr   LoadInterpreter
+         bcs   .launchError
+
+         jsr   ResetPath
+
+         +LDADDR kHintsRootDirectory
+         jsr   AddToPath
+
+         jsr   SetPrefix
+         !word gPathname
+         bcs   .launchError
+
+         jsr   okvs_get
+         !word gGlobalPrefsStore
+         !word kLastPlayed
+         jsr   SetStartupPath        ; store hints filename at $2006
+
+         jsr   ExitWeeGUI
+         jsr   SetInterpreterOptionsExceptForce40
+         jmp   kSystemAddress
+
+;------------------------------------------------------------------------------
+; internal functions
 
 ;------------------------------------------------------------------------------
 ; SetInterpreterOptions
@@ -84,7 +150,8 @@ SetInterpreterOptionsExceptForce40
 +        lda   #1
          sta   kOnBeyondCase
 
-         lda   #$FF                  ; TODO this will eventually be set based on 'Resume Game' screen
+iRestoreSlot=*+1
+         lda   #$FD                  ; SMC
          sta   kOnBeyondAutoRestore
 
          jsr   okvs_get
@@ -119,60 +186,6 @@ SetInterpreterOptionsExceptForce40
          eor   kOnBeyondWarnMissing
          sta   kOnBeyondChecksum
          rts
-
-;------------------------------------------------------------------------------
-; LaunchInterpreterWithGame
-; load interpreter and launch it with a game based on global preferences store
-;
-; in:    current ProDOS prefix is the same as the PITCH.DARK file
-; out:   returns with C set if interpreter could not be loaded or game
-;          directory could not be found
-;        otherwise does not return (calls ExitWeeGUI and jumps to interpreter)
-;        gPathname clobbered
-;------------------------------------------------------------------------------
-LaunchInterpreterWithGame
-         jsr   SaveGlobalPreferences
-         jsr   LoadInterpreter
-         bcs   .launchError
-         jsr   SetStartupPathToCurrentVersionOfCurrentGame
-         jsr   ExitWeeGUI            ; shut down WeeGUI
-         jsr   SetInterpreterOptions ; set options struct at $300
-         jmp   kSystemAddress        ; exit via interpreter
-.launchError
-         jmp   SoftBell
-
-;------------------------------------------------------------------------------
-; LaunchInterpreterWithHints
-; load interpreter and launch it with the hints file for the current game
-;
-; in:    current ProDOS prefix is the same as the PITCH.DARK file
-; out:   returns with C set if interpreter could not be loaded or hints
-;          directory could not be found
-;        otherwise does not return (calls ExitWeeGUI and jumps to interpreter)
-;        gPathname clobbered
-;------------------------------------------------------------------------------
-LaunchInterpreterWithHints
-         jsr   SaveGlobalPreferences
-         jsr   LoadInterpreter
-         bcs   .launchError
-
-         jsr   ResetPath
-
-         +LDADDR kHintsRootDirectory
-         jsr   AddToPath
-
-         jsr   SetPrefix
-         !word gPathname
-         bcs   .launchError
-
-         jsr   okvs_get
-         !word gGlobalPrefsStore
-         !word kLastPlayed
-         jsr   SetStartupPath        ; store hints filename at $2006
-
-         jsr   ExitWeeGUI
-         jsr   SetInterpreterOptionsExceptForce40
-         jmp   kSystemAddress
 
 ;------------------------------------------------------------------------------
 ; LoadInterpreter

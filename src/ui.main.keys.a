@@ -209,7 +209,7 @@ callback_next
 }
 
 callback_options = OptionsDialog
-callback_play  = LaunchInterpreterWithGame
+callback_play  = LaunchInterpreterWithNewGame
 callback_resume = ResumeDialog
 callback_boxart = DisplayArtwork
 callback_hints = LaunchInterpreterWithHints

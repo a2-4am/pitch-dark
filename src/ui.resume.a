@@ -58,13 +58,21 @@ ID_RESUME_NEXT        = $82
 ; call WeeGUI to create and paint 'resume game' screen, and run to completion
 ;
 ; in:    WeeGUI initialized
-; out:   exits via MainScreen or LaunchInterpreterWithGame
-;        all registers and flags clobbered
+; out:   exits via MainScreen, LaunchInterpreterWithSavedGame, or LaunchInterpreterWithNewGame
 ;------------------------------------------------------------------------------
 ResumeDialog
          ldx   #$FF
          txs
-         ldx   #WGResetAll           ; reset WeeGUI
+         lda   #15
+         sta   kDummyView
+.hardReset
+         +LDAY kDummyView
+         +STAY PARAM0
+         ldx   #WGCreateView
+         jsr   WeeGUI                ; create dummy views to reset state on all views
+         dec   kDummyView
+         bpl   .hardReset
+         ldx   #WGResetAll           ; reset WeeGUI (destroys everything we just created)
          jsr   WeeGUI
 
          jsr   LoadSavedGameInfo
@@ -211,7 +219,16 @@ HandleResumeKey
          jsr   WeeGUI
          jmp   SimulateClick
 
-callback_resume_ok = LaunchInterpreterWithGame
+callback_resume_ok
+         lda   #ID_RESUME_SLOT0
+         ldy   #ID_RESUME_NEWGAME+1
+         jsr   GetCheckedRadioButton ; returns A = WeeGUI view ID
+         cmp   #ID_RESUME_NEWGAME
+         bne   +
+         lda   #0
++        dec                         ; A = saved game slot (which is WeeGUI view ID - 1) or #$FF
+         jmp   LaunchInterpreterWithSavedGame
+
 callback_resume_cancel = MainScreen
 
 kViewResumeFrame
@@ -260,4 +277,7 @@ kViewResumeNewGameTop
 
 kStringNewGame
          !text " Start ",110,"ew game",0
+
+kDummyView
+         !byte 0,0,0,0,0,0,0,0
 }
