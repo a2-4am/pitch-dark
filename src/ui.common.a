@@ -6,6 +6,7 @@
 ; Public functions
 ; - HardResetWeeGUI
 ; - ExitWeeGUI
+; - ClearPendingInput
 ; - CreateRadio
 ; - CreateCheckbox
 ; - CreateButton
@@ -68,6 +69,21 @@ ExitWeeGUI
          ldx   #WGClearScreen        ; clear screen (HOME)
          jsr   WeeGUI
          ldx   #WGExit               ; clean up WeeGUI
+         jmp   WeeGUI
+}
+
+;------------------------------------------------------------------------------
+; ClearPendingInput
+; clears keyboard strobe and WeeGUI mouse click queue
+;
+; in:    WeeGUI initialized
+; out:   A,Y preserved
+;        X clobbered
+;------------------------------------------------------------------------------
+!zone {
+ClearPendingInput
+         bit   $C010                 ; clear keyboard strobe
+         ldx   #WGClearPendingClick  ; clear WeeGUI mouse strobe
          jmp   WeeGUI
 }
 

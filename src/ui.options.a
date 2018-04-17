@@ -104,15 +104,13 @@ OptionsDialog
          !byte 6,18
          !word kStringAutoScriptDescription
 
-         bit   $C010                 ; clear keyboard strobe
-         ldx   #WGClearPendingClick  ; clear WeeGUI mouse strobe
-         jsr   WeeGUI
+         jsr   ClearPendingInput
 .runLoop
          ldx   #WGPendingViewAction
          jsr   WeeGUI                ; handle mouse movement and clicks
          lda   $C000
          bpl   .runLoop
-         bit   $C010
+         jsr   ClearPendingInput
          jsr   HandleOptionsKey      ; handle keypresses
          bra   .runLoop
 

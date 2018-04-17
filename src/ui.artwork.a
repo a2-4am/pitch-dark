@@ -51,9 +51,7 @@ DisplayArtwork
          sta   $C054
          sta   $C050
 
-         bit   $C010                 ; clear keyboard strobe
-         ldx   #WGClearPendingClick  ; clear WeeGUI mouse strobe
-         jsr   WeeGUI
+         jsr   ClearPendingInput
 .runLoop
          ldx   #WGPendingClick
          jsr   WeeGUI
@@ -62,7 +60,7 @@ DisplayArtwork
          lda   $C000
          bpl   .runLoop
 +        sta   $C051                 ; back to text
-         rts
+         jmp   ClearPendingInput
 .error
          jmp   SoftBell
 }

@@ -64,16 +64,14 @@ MainScreen
          ldx   #$FF
          txs
          jsr   PaintMain             ; create all WeeGUI views (UI elements) and paint them
-         bit   $C010                 ; clear keyboard strobe
-         ldx   #WGClearPendingClick  ; clear WeeGUI mouse strobe
-         jsr   WeeGUI
+         jsr   ClearPendingInput
 .mainRunLoop
          jsr   RepaintMainIfDirty
          ldx   #WGPendingViewAction
          jsr   WeeGUI                ; handle mouse movement and clicks
          lda   $C000
          bpl   .mainRunLoop
-         bit   $C010
+         jsr   ClearPendingInput
          jsr   HandleKey             ; handle keypresses
          bra   .mainRunLoop
 
