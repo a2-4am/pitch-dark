@@ -43,26 +43,22 @@ ClearInterpreterOptions
          bpl   -
          rts
 
+LaunchInterpreterWithNewGame
+         lda   #$FF
+                                     ; execution falls through here
 ;------------------------------------------------------------------------------
-; LaunchInterpreterWithNewGame
-; load interpreter and launch it with a game based on global preferences store
-;
+; LaunchInterpreterWithGame
+; load interpreter and launch it with a game based on global preferences store,
+; and tell it to restore from a specific saved game slot
+; in:    A = saved game slot, or #$FF for none
 ; in:    current ProDOS prefix is the same as the PITCH.DARK file
 ; out:   returns with C set if interpreter could not be loaded or game
 ;          directory could not be found
 ;        otherwise does not return (calls ExitWeeGUI and jumps to interpreter)
 ;        gPathname clobbered
 ;------------------------------------------------------------------------------
-LaunchInterpreterWithNewGame
-         lda   #$FF
-                                     ; execution falls through here
-;------------------------------------------------------------------------------
-; LaunchInterpreterWithSavedGame
-; load interpreter and launch it with a game based on global preferences store,
-; and tell it to restore from a specific saved game slot
-; in:    A = saved game slot, or #$FF for none
-LaunchInterpreterWithSavedGame
-         sta   iRestoreSlot
+LaunchInterpreterWithGame
+         sta   kOnBeyondAutoRestore
          jsr   SaveGlobalPreferences
          jsr   LoadInterpreter
          bcs   .launchError
@@ -85,7 +81,7 @@ LaunchInterpreterWithSavedGame
 ;------------------------------------------------------------------------------
 LaunchInterpreterWithHints
          lda   #$FF
-         sta   iRestoreSlot          ; no saved game to restore
+         sta   kOnBeyondAutoRestore  ; no saved game to restore
          jsr   SaveGlobalPreferences
          jsr   LoadInterpreter
          bcs   .launchError
@@ -115,7 +111,7 @@ LaunchInterpreterWithHints
 ; SetInterpreterOptions
 ; set options struct based on global preferences store
 ;
-; in:    none
+; in:    kOnBeyondAutoRestore already set (save slot 0-7, or #$FF if none)
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 SetInterpreterOptions
@@ -150,10 +146,6 @@ SetInterpreterOptionsExceptForce40
 +        lda   #1
          sta   kOnBeyondCase
 
-iRestoreSlot=*+1
-         lda   #$FD                  ; SMC
-         sta   kOnBeyondAutoRestore
-
          jsr   okvs_get
          !word gGlobalPrefsStore
          !word kScriptToFile
@@ -180,7 +172,7 @@ iRestoreSlot=*+1
          lda   #$A5
          eor   kOnBeyondColumns
          eor   kOnBeyondCase
-         eor   kOnBeyondAutoRestore
+         eor   kOnBeyondAutoRestore  ; caller must have set this already
          eor   kOnBeyondScriptToFile
          eor   kOnBeyondAutoScript
          eor   kOnBeyondWarnMissing

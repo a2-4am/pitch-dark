@@ -227,7 +227,7 @@ callback_resume_ok
          bne   +
          lda   #0
 +        dec                         ; A = saved game slot (which is WeeGUI view ID - 1) or #$FF
-         jmp   LaunchInterpreterWithSavedGame
+         jmp   LaunchInterpreterWithGame
 
 callback_resume_cancel = MainScreen
 
