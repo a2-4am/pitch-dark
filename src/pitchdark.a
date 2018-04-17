@@ -5,9 +5,6 @@
 ;
 ; Public entry points
 ; - MainScreen
-
-; Public functions
-; - ExitWeeGUI
 ;
 ; Public variables
 ; - gGamesListStore
