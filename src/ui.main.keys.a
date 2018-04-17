@@ -210,7 +210,7 @@ callback_next
 
 callback_options = OptionsDialog
 callback_play  = LaunchInterpreterWithGame
-callback_resume = LaunchInterpreterWithGame
+callback_resume = ResumeDialog
 callback_boxart = DisplayArtwork
 callback_hints = LaunchInterpreterWithHints
 callback_versions = VersionsDialog

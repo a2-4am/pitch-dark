@@ -137,6 +137,10 @@ LoadGameInfo
          !word gOptionsStore
          !word addrOptions
          !byte 0
+
+         +LDAY SRC
+         +STAY gSavedGamesStore      ; save pointer to free space for next store
+
                                      ; execution falls through here
 CheckForSavedGames
          jsr   okvs_get              ; get shortname of current game

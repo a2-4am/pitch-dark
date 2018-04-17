@@ -37,4 +37,5 @@ MAGICRTS                  = $FF58    ; used to set overflow bit
 PTR                       = $02
 SRC                       = $04
 DEST                      = $06
+ZPTR                      = $06      ; used by glue.zinfo because it's unused by okvs_append
 SAVE                      = $08

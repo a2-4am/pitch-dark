@@ -1,0 +1,30 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; Common functions across glue code
+;
+; Public functions
+; - SetStartupPathToCurrentVersionOfCurrentGame
+
+SetStartupPathToCurrentVersionOfCurrentGame
+         jsr   ResetPath             ; gPathname = ''
+
+         +LDADDR kGameRootDirectory  ; gPathname = game root directory + '/'
+         jsr   AddToPath
+
+         jsr   okvs_get
+         !word gGlobalPrefsStore
+         !word kLastPlayed
+         +STAY +                     ; A/Y contains address
+         jsr   AddToPath             ; gPathname = root + '/' + game shortname
+
+         +LDADDR kPathSeparator
+         jsr   AddToPath             ; gPathname = root + '/' + game shortname + '/'
+
+         jsr   okvs_get
+         !word gGlobalPrefsStore
++        !word $FDFD                 ; SMC
+         jsr   AddToPath             ; gPathname = root + '/' + game shortname + '/' + game filename
+
+         +LDADDR gPathname
+         jmp   SetStartupPath        ; store gPathname at $2006 to pass it to interpreter

@@ -37,7 +37,12 @@ ResetPath
 ;        gPathname updated with concatenated length-prefixed string
 ;------------------------------------------------------------------------------
 !zone {
+AddToPathWithHighBit
+         ldx   #$80
+         !byte $2C
 AddToPath
+         ldx   #0
+         stx   .mask
          +STAY $00
          ldx   gPathname             ; current pathname length
          lda   ($00)                 ; length of this segment
@@ -45,6 +50,8 @@ AddToPath
          sta   .len
          ldy   #$01
 -        lda   ($00),y
+.mask=*+1
+         ora   #$FD                  ; SMC
          sta   gPathname+1,x
          inx
          iny

@@ -108,6 +108,7 @@ okvs_len
 ;        $00/$01 clobbered
 ;        $02/$03 clobbered
 ;        $04/$05 has the address of the next available byte after the new record
+;        $08/$09 clobbered
 ;------------------------------------------------------------------------------
 okvs_append
          +PARAMS_ON_STACK 7

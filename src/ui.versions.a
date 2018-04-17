@@ -326,19 +326,11 @@ kViewVersions1
          !byte 4                     ; top
          !word kString1              ; caption
 
-kString1
-         !text " "
-         !byte $31,0                 ; '1' inverse
-
 kViewVersions2
          !byte ID_VERSIONS_2         ; view ID
          !byte 8                     ; left
          !byte 6                     ; top
          !word kString2              ; caption
-
-kString2
-         !text " "
-         !byte $32,0                 ; '2' inverse
 
 kViewVersions3
          !byte ID_VERSIONS_3         ; view ID
@@ -346,19 +338,11 @@ kViewVersions3
          !byte 8                     ; top
          !word kString3              ; caption
 
-kString3
-         !text " "
-         !byte $33,0                 ; '3' inverse
-
 kViewVersions4
          !byte ID_VERSIONS_4         ; view ID
          !byte 8                     ; left
          !byte 10                    ; top
          !word kString4              ; caption
-
-kString4
-         !text " "
-         !byte $34,0                 ; '4' inverse
 
 kViewVersions5
          !byte ID_VERSIONS_5         ; view ID
@@ -366,19 +350,11 @@ kViewVersions5
          !byte 12                    ; top
          !word kString5              ; caption
 
-kString5
-         !text " "
-         !byte $35,0                 ; '5' inverse
-
 kViewVersions6
          !byte ID_VERSIONS_6         ; view ID
          !byte 8                     ; left
          !byte 14                    ; top
          !word kString6              ; caption
-
-kString6
-         !text " "
-         !byte $36,0                 ; '6' inverse
 
 kViewVersions7
          !byte ID_VERSIONS_7         ; view ID
@@ -386,19 +362,11 @@ kViewVersions7
          !byte 16                    ; top
          !word kString7              ; caption
 
-kString7
-         !text " "
-         !byte $37,0                 ; '7' inverse
-
 kViewVersions8
          !byte ID_VERSIONS_8         ; view ID
          !byte 8                     ; left
          !byte 18                    ; top
          !word kString8              ; caption
-
-kString8
-         !text " "
-         !byte $38,0                 ; '8' inverse
 
 kViewVersions9
          !byte ID_VERSIONS_9         ; view ID
@@ -406,7 +374,30 @@ kViewVersions9
          !byte 20                    ; top
          !word kString9              ; caption
 
+kString1
+         !text " ",$31,0
+
+kString2
+         !text " ",$32,0
+
+kString3
+         !text " ",$33,0
+
+kString4
+         !text " ",$34,0
+
+kString5
+         !text " ",$35,0
+
+kString6
+         !text " ",$36,0
+
+kString7
+         !text " ",$37,0
+
+kString8
+         !text " ",$38,0
+
 kString9
-         !text " "
-         !byte $39,0                 ; '9' inverse
+         !text " ",$39,0
 }

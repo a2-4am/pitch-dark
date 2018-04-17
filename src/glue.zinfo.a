@@ -1,0 +1,155 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; glue code to load and call ZINFO, the Z-Machine saved game parser
+;
+; Public functions
+; - LoadSavedGameInfo
+;
+; Public variables
+; - gSavedGamesStore
+;
+
+; TODO move these to a ZINFO_MLI kind of separate file
+zinfo_base     =    $2000
+zinfo_recordlen=    64
+zinfo_maxslots =    8
+name_offset    =    0  ;1+37 bytes
+time_offset    =    42 ;1+8 bytes ("12:01 pm")
+score_offset   =    51 ;1+6 bytes (-12345)
+moves_offset   =    58 ;1+5 bytes (12345)
+
+!zone {
+gSavedGamesStore
+         !word $FDFD                 ; set in LoadGameInfo
+gSavedGamesSlotsInUse
+         !byte $FD                   ; set in LoadSavedGameInfo
+
+;------------------------------------------------------------------------------
+; LoadSavedGameInfo
+; load ZINFO, call it with the current game, and parse the results
+;
+; in:    current ProDOS prefix is the same as the PITCH.DARK file
+; out:   C set if something went wrong
+;        C clear otherwise
+;------------------------------------------------------------------------------
+LoadSavedGameInfo
+         jsr   okvs_init
+         !word gSavedGamesStore
+         stz   gSavedGamesSlotsInUse
+
+         jsr   LoadFile              ; load ZINFO.SYSTEM at $2000
+         !word kZINFOFilename
+         !word kSystemAddress
+         !word kProDOSFileBuffer
+         bcs   .error
+
+         jsr   SetStartupPathToCurrentVersionOfCurrentGame
+         jsr   kSystemAddress
+         jsr   zparse
+         clc
+         rts
+.error
+         jmp   SoftBell
+
+zparse
+         +LDADDR zinfo_base
+         +STAY ZPTR
+         ldx   #0
+.zParseLoop
+         +LDAY ZPTR
+         pha
+         phy
+         phx
+         jsr   ResetPath
+         lda   (ZPTR)
+         beq   .saveAndMoveToNextSlot; no saved game in this slot
+         inc   gSavedGamesSlotsInUse ; update number of slots in use (separate from length of store)
+         +LDAY ZPTR
+         jsr   AddToPathWithHighBit  ; add location information
+         lda   ZPTR
+         clc
+         adc   #time_offset
+         sta   ZPTR
+         bcc   +
+         inc   ZPTR+1
++                                    ; ZPTR -> ZINFO time field (length-prefixed string, may be empty string if no time)
+         +LDADDR kLeftParen
+         jsr   AddToPathWithHighBit  ; add ' ('
+         lda   (ZPTR)
+         bne   .justTime
+         lda   ZPTR
+         clc
+         adc   #(score_offset-time_offset)
+         sta   ZPTR
+         bcc   +
+         inc   ZPTR+1
++                                    ; ZPTR -> ZINFO score field (length-prefixed string, guaranteed non-empty if no time)
+         ldy   ZPTR+1
+         jsr   AddToPathWithHighBit  ; add score information
+         +LDADDR kSlash
+         jsr   AddToPathWithHighBit  ; add '/'
+         lda   ZPTR
+         clc
+         adc   #(moves_offset-score_offset)
+         sta   ZPTR
+         bcc   +
+         inc   ZPTR+1
++                                    ; A/Y -> ZINFO moves field (length-prefixed string, guaranteed non-empty)
+                                     ; execution falls through here
+.justTime
+         +LDAY ZPTR
+         jsr   AddToPathWithHighBit  ; add final piece of information (moves or time, depending on how we got here)
+         +LDADDR kRightParen
+         jsr   AddToPathWithHighBit  ; add ')'
+                                     ; execution falls through here
+.saveAndMoveToNextSlot
+         plx
+         phx
+         lda   gPathname
+         beq   +
+         lda   #1
++        sta   kSlotName             ; set length of key (0 if value is empty, otherwise 8)
+
+         jsr   okvs_append           ; add this key/value to saved games store (used by ResumeDialog)
+         !word gSavedGamesStore
+         !word kSlotName             ; key = printable short label, or empty string if slot is unused
+         !word gPathname             ; value = printable long label, or empty string if slot is unused
+         !byte 0
+
+         plx
+         ply
+         pla
+         clc
+         adc   #zinfo_recordlen
+         bcc   +
+         iny
++
+         +STAY ZPTR                  ; ZPTR -> start of next ZINFO record
+
+         inx
+         cpx   #zinfo_maxslots
+         bcs   +
+         jmp   .zParseLoop
++        rts
+
+kZINFOFilename
+         !byte 12
+         !raw  "ZINFO.SYSTEM"
+
+kSlotName
+         !byte 1
+         !text " "
+
+kLeftParen
+         !byte 2
+         !text " ("
+
+kRightParen
+         !byte 1
+         !text ")"
+
+kSlash
+         !byte 1
+         !text "/"
+}

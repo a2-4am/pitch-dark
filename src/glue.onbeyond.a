@@ -11,11 +11,12 @@
 ; - LaunchInterpreterWithHints
 ;
 
+!zone {
 kGameRootDirectory                   ; length-prefixed pathname of game subdirectories
          !byte 2
          !raw  "Z/"
 kHintsRootDirectory                  ; length-prefixed pathname of hint files
-         !byte 5
+         !byte 6
          !raw  "PRIZM/"
 
 kOnBeyondOptionsStruct    = $0300
@@ -133,26 +134,7 @@ LaunchInterpreterWithGame
          jsr   SaveGlobalPreferences
          jsr   LoadInterpreter
          bcs   .launchError
-
-         jsr   ResetPath
-         +LDADDR kGameRootDirectory
-         jsr   AddToPath
-
-         jsr   okvs_get
-         !word gGlobalPrefsStore
-         !word kLastPlayed
-         +STAY +                     ; A/Y contains address
-         jsr   AddToPath
-
-         jsr   SetPrefix             ; set ProDOS prefix to game directory
-         !word gPathname
-         bcs   .launchError
-
-         jsr   okvs_get
-         !word gGlobalPrefsStore
-+        !word $FDFD                 ; SMC
-         jsr   SetStartupPath        ; store game filename at $2006
-
+         jsr   SetStartupPathToCurrentVersionOfCurrentGame
          jsr   ExitWeeGUI            ; shut down WeeGUI
          jsr   SetInterpreterOptions ; set options struct at $300
          jmp   kSystemAddress        ; exit via interpreter
@@ -175,6 +157,7 @@ LaunchInterpreterWithHints
          bcs   .launchError
 
          jsr   ResetPath
+
          +LDADDR kHintsRootDirectory
          jsr   AddToPath
 
@@ -199,19 +182,15 @@ LaunchInterpreterWithHints
 ; out:   C clear if success
 ;        C set if interpreter could not be loaded
 ;        all other registers and flags clobbered
-;        gPathname clobbered
 ;------------------------------------------------------------------------------
 LoadInterpreter
-         jsr   ResetPath
-         +LDADDR .interpreterFilename
-         jsr   AddToPath
-
          jsr   LoadFile
-         !word gPathname
+         !word kInterpreterFilename
          !word kSystemAddress
          !word kProDOSFileBuffer
          rts
 
-.interpreterFilename
+kInterpreterFilename
          !byte 15
          !raw  "ONBEYOND.SYSTEM"
+}
