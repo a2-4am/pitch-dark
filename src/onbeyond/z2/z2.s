@@ -21,29 +21,6 @@ ecx        =        $4
 last       =        $6
 tmp        =        $8
 
--       jsr     $bf00
-op_c7
-
-        !byte   $c7
-        !word   c7_parms
-        ldx     $200
-        bne     +
-        lda     $bf30
-        sta     c5_parms+1
-        jsr     $bf00
-        !byte   $c5
-        !word   c5_parms
-        ldx     $201
-        inx
-        txa
-        and     #$0f
-        sta     $200
-        lda     #$2f
-        sta     $201
-        dec     op_c7
-        bne     -
-+
-
         ldy     $2006
         lda     #'2'
         sta     gamename,y

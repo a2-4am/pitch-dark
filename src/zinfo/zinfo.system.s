@@ -42,8 +42,45 @@ op_c7
 +       lda     #$2f
         cmp     $200,x
         beq     +
-        inc     $200
-        sta     $201,x
+        inx
+        stx     $200
+        sta     $200,x
+
+        ;form absolute path
+
++       ldy     $2006
+-       dey
+        beq     +
+        lda     $2006,y
+        cmp     #$2f
+        bne     -
+        tya
+        pha
+        clc
+        adc     $200
+        sta     $200
+        tax
+-       lda     $2006,y
+        sta     $200,x
+        dex
+        dey
+        bne     -
+        pla
+        tay
+        ldx     #0
+-       iny
+        lda     $2006,y
+        sta     $2007,x
+        inx
+        cpy     $2006
+        bne     -
+        stx     $2006
+
+        ;set that as prefix
+
+        jsr     $bf00
+        !byte   $c6
+        !word   c7_parms
 
         ;get attributes for passed file
 
