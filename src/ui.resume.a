@@ -69,18 +69,22 @@ ResumeDialog
 
          jsr   LoadSavedGameInfo
 
-         ; TODO call ZINFO and calculate proper height
-         ldy   #3
-         sty   kViewResumeFrame+3    ; frame top
-         iny
-         sty   .resumeVTAB           ; top of first radio button
-         sty   kViewResumeOK+2       ; OK top
-         iny
-         iny
-         sty   kViewResumeCancel+2   ; Cancel top
-         ldy   #19
-         sty   kViewResumeFrame+5    ; frame visible height
-         sty   kViewResumeFrame+7    ; frame height
+         lda   gSavedGamesSlotsInUse
+         asl
+         clc
+         adc   #3
+         sta   kViewResumeFrame+5    ; frame visible height = 3 + (2 * usedSlots)
+         sta   kViewResumeFrame+7    ; frame height
+         lda   #11
+         sec
+         sbc   gSavedGamesSlotsInUse
+         sta   kViewResumeFrame+3    ; frame top = 11 - usedSlots
+         inc
+         sta   iResumeVTAB           ; top of first radio button
+         sta   kViewResumeOK+2       ; OK top
+         inc
+         inc
+         sta   kViewResumeCancel+2   ; Cancel top
 
          jsr   CreateDialog
          !word kViewResumeFrame
@@ -95,6 +99,8 @@ ResumeDialog
          !word gSavedGamesStore
          !word CreateResumeRadioCallback
 
+         lda   iResumeVTAB
+         sta   kViewResumeNewGameTop
          jsr   CreateRadio
          !word kViewResumeNewGame
 
@@ -120,7 +126,7 @@ ResumeDialog
          jsr   WeeGUI
 
          lda   #1                    ; WeeGUI radio buttons are limited to 15 characters, so we
-         sta   .resumeVTAB           ; print the longer labels separately
+         sta   iResumeVTAB           ; print the longer labels separately
          jsr   okvs_iter_values
          !word gSavedGamesStore
          !word PrintResumeLabelCallback
@@ -138,45 +144,57 @@ ResumeDialog
 ; internal functions
 
 CreateResumeRadioCallback
+; called via okvs_iter
 ; X = index (0-based) into gSavedGamesStore, which is also the slot number
-; A/Y points to caption (length-prefixed, 0 if slot is unused and should be skipped)
+; A/Y points to okvs record key, which we use as the radio button caption
+;   (length-prefixed and null-terminated, length=0 if slot is unused and should be skipped)
 ;
-         +STAY SAVE
-         lda   (SAVE)
+         +STAY PTR
+         lda   (PTR)
          sta   gResumeViewInUse+1,x  ; mark whether this view is in use (hotkeys activate based on this array)
-         beq   .createResumeRadioDone; 0-length key means this slot is unused, so we're done
-         txa
-         asl
-         tax
-         lda   kViewResumeArray,x
-         ldy   kViewResumeArray+1,x
-         +STAY +
-         +STAY SRC
-         ldy   #2
-         lda   .resumeVTAB
-         sta   (SRC),y               ; radio button top = frame top + 1 + (2 * X)
+         beq   .createResumeRadioDone; length=0 means this slot is unused, so we're done
+
+         lda   PTR
+         inc                         ; skip over length byte
+         bne   +
+         iny
++
+         +STAY kViewResumeRadioCaption ; A/Y -> null-terminated string, which is what WeeGUI wants
+         inx
+         stx   kViewResumeRadioSlot  ; WeeGUI view ID = X + 1
+         lda   iResumeVTAB
+         sta   kViewResumeRadioTop   ; radio button top = frame top + 1 + (2 * X)
          jsr   CreateRadio           ; create radio button for this version (will print label later)
-+        !word $FDFD                 ; SMC
-         inc   .resumeVTAB
-         inc   .resumeVTAB
+         !word kViewResumeRadio
+         inc   iResumeVTAB
+         inc   iResumeVTAB
 .createResumeRadioDone
          rts
 
 PrintResumeLabelCallback
-         +STAY SAVE
-         lda   (SAVE)
-         beq   .printVersionLabelDone
-         ldx   #44
-         lda   SAVE
-         jsr   CreateNullTerminatedString
+; called via okvs_iter_values
+; X = index (0-based) into gSavedGamesStore, which is also the slot number
+; A/Y points to okvs record value, which we use as a printable label
+;   (length-prefixed and null-terminated, length=0 if slot is unused and should be skipped)
+         +STAY PTR
+         lda   (PTR)
+         beq   .printResumeLabelDone ; length=0 means this slot is unused, so we're done
+
+         lda   PTR
+         inc                         ; skip over length byte
+         bne   +
+         iny
++
+         +STAY .printResumeLabel     ; A/Y -> null-terminated string
          jsr   PrintAt
-         !byte 13                    ; htab (constant)
-.resumeVTAB
+         !byte 14                    ; htab (constant)
+iResumeVTAB
          !byte $FD                   ; SMC
-         !word kNullTerminatedBuffer
-         inc   .resumeVTAB
-         inc   .resumeVTAB
-.printVersionLabelDone
+.printResumeLabel
+         !word $FDFD                 ; SMC
+         inc   iResumeVTAB
+         inc   iResumeVTAB
+.printResumeLabelDone
          rts
 
 HandleResumeKey
@@ -224,93 +242,21 @@ kViewResumeCancel
          !word callback_resume_cancel ; callback
          !word kStringCancel         ; caption
 
-kViewResumeArray
-         !word kViewResumeSlot0
-         !word kViewResumeSlot1
-         !word kViewResumeSlot2
-         !word kViewResumeSlot3
-         !word kViewResumeSlot4
-         !word kViewResumeSlot5
-         !word kViewResumeSlot6
-         !word kViewResumeSlot7
-
-kViewResumeSlot0
-         !byte ID_RESUME_SLOT0       ; view ID
+kViewResumeRadio                     ; reused for each slot
+kViewResumeRadioSlot
+         !byte $FD                   ; view ID (SMC)
          !byte 8                     ; left
-         !byte 4                     ; top
-         !word kStringSlot0          ; caption
-
-kViewResumeSlot1
-         !byte ID_RESUME_SLOT1       ; view ID
-         !byte 8                     ; left
-         !byte 6                     ; top
-         !word kStringSlot1          ; caption
-
-kViewResumeSlot2
-         !byte ID_RESUME_SLOT2       ; view ID
-         !byte 8                     ; left
-         !byte 8                     ; top
-         !word kStringSlot2          ; caption
-
-kViewResumeSlot3
-         !byte ID_RESUME_SLOT3       ; view ID
-         !byte 8                     ; left
-         !byte 10                    ; top
-         !word kStringSlot3          ; caption
-
-kViewResumeSlot4
-         !byte ID_RESUME_SLOT4       ; view ID
-         !byte 8                     ; left
-         !byte 12                    ; top
-         !word kStringSlot4          ; caption
-
-kViewResumeSlot5
-         !byte ID_RESUME_SLOT5       ; view ID
-         !byte 8                     ; left
-         !byte 14                    ; top
-         !word kStringSlot5          ; caption
-
-kViewResumeSlot6
-         !byte ID_RESUME_SLOT6       ; view ID
-         !byte 8                     ; left
-         !byte 16                    ; top
-         !word kStringSlot6          ; caption
-
-kViewResumeSlot7
-         !byte ID_RESUME_SLOT7       ; view ID
-         !byte 8                     ; left
-         !byte 18                    ; top
-         !word kStringSlot7          ; caption
+kViewResumeRadioTop
+         !byte $FD                   ; top (SMC)
+kViewResumeRadioCaption
+         !word $FDFD                 ; caption (SMC)
 
 kViewResumeNewGame
          !byte ID_RESUME_NEWGAME     ; view ID
          !byte 8                     ; left
-         !byte 20                    ; top
+kViewResumeNewGameTop
+         !byte $FD                   ; top (SMC)
          !word kStringNewGame        ; caption
-
-kStringSlot0
-         !text " Slot ",$30,":",0
-
-kStringSlot1
-         !text " Slot ",$31,":",0
-
-kStringSlot2
-         !text " Slot ",$32,":",0
-
-kStringSlot3
-         !text " Slot ",$33,":",0
-
-kStringSlot4
-         !text " Slot ",$34,":",0
-
-kStringSlot5
-         !text " Slot ",$35,":",0
-
-kStringSlot6
-         !text " Slot ",$36,":",0
-
-kStringSlot7
-         !text " Slot ",$37,":",0
 
 kStringNewGame
          !text " Start ",110,"ew game",0

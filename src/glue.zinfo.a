@@ -102,14 +102,20 @@ zparse
          jsr   AddToPathWithHighBit  ; add final piece of information (moves or time, depending on how we got here)
          +LDADDR kRightParen
          jsr   AddToPathWithHighBit  ; add ')'
+         +LDADDR kNullByte
+         jsr   AddToPath             ; add 0x00
                                      ; execution falls through here
 .saveAndMoveToNextSlot
          plx
          phx
+         txa
+         ora   #$30
+         sta   kSlotNumber
+
          lda   gPathname
          beq   +
-         lda   #1
-+        sta   kSlotName             ; set length of key (0 if value is empty, otherwise 8)
+         lda   #9
++        sta   kSlotName             ; set length of key (0 if value is empty, otherwise 9)
 
          jsr   okvs_append           ; add this key/value to saved games store (used by ResumeDialog)
          !word gSavedGamesStore
@@ -138,8 +144,10 @@ kZINFOFilename
          !raw  "ZINFO.SYSTEM"
 
 kSlotName
-         !byte 1
-         !text " "
+         !byte 9
+         !text " Slot "
+kSlotNumber
+         !text "x:",0                ; ends with null byte on purpose
 
 kLeftParen
          !byte 2
@@ -148,6 +156,8 @@ kLeftParen
 kRightParen
          !byte 1
          !text ")"
+kNullByte
+         !byte 1,0
 
 kSlash
          !byte 1
