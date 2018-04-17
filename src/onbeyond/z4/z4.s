@@ -524,7 +524,7 @@ brand           jsr     $dbda
                 lda     #0
                 sta     $24
                 sta     $57b
-                jsr     $8a9
+                jsr     $fc22
                 lda     #>nosave
                 ldx     #<nosave
                 ldy     #(nosave_e-nosave)
