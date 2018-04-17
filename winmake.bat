@@ -9,7 +9,7 @@ goto :EOF
 if "%1" equ "asm" (
 :asm
 2>nul md build
-acme -r build\grue.system.lst src\grue.system.s
+acme -r build\grue.system.lst src\loader\grue.system.s
 acme -r build\pitchdark.lst src\pitchdark.a
 acme -r build\onbeyond.system.lst src\onbeyond\onbeyond.system.s
 acme -r build\z1.lst src\onbeyond\z1\z1.s
@@ -37,8 +37,8 @@ cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\ONBEYOND.SYSTEM"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\ZINFO.SYSTEM"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\PITCH.DARK"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "res\PITCH.DARK.CONF"
+cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "res\GAMES.CONF"
 cadius CREATEFOLDER "build\%DISK%" "/PITCH.DARK/LIB/"
-cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "res\WEEGUI"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ1"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ2"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ3"
