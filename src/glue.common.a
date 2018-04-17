@@ -5,7 +5,16 @@
 ;
 ; Public functions
 ; - SetStartupPathToCurrentVersionOfCurrentGame
+;
 
+;------------------------------------------------------------------------------
+; SetStartupPathToCurrentVersionOfCurrentGame
+; gets path+filename of current version of current game and stores it in $2006
+;
+; in:    current ProDOS prefix is the same as the ONBEYOND.SYSTEM file
+; out:   all other registers and flags clobbered
+;------------------------------------------------------------------------------
+!zone {
 SetStartupPathToCurrentVersionOfCurrentGame
          jsr   ResetPath             ; gPathname = ''
 
@@ -28,3 +37,4 @@ SetStartupPathToCurrentVersionOfCurrentGame
 
          +LDADDR gPathname
          jmp   SetStartupPath        ; store gPathname at $2006 to pass it to interpreter
+}

@@ -8,6 +8,7 @@
 ;
 ; Public variables
 ; - gSavedGamesStore
+; - gSavedGamesSlotsInUse
 ;
 
 ; TODO move these to a ZINFO_MLI kind of separate file
@@ -30,9 +31,10 @@ gSavedGamesSlotsInUse
 ; load ZINFO, call it with the current game, and parse the results
 ;
 ; in:    current ProDOS prefix is the same as the PITCH.DARK file
-; out:   C set if something went wrong
-;        C clear otherwise
+; out:   none
 ;------------------------------------------------------------------------------
+.error
+         jmp   SoftBell
 LoadSavedGameInfo
          jsr   okvs_init
          !word gSavedGamesStore
@@ -45,14 +47,8 @@ LoadSavedGameInfo
          bcs   .error
 
          jsr   SetStartupPathToCurrentVersionOfCurrentGame
-         jsr   kSystemAddress
-         jsr   zparse
-         clc
-         rts
-.error
-         jmp   SoftBell
+         jsr   kSystemAddress        ; call ZINFO (despite being a .SYSTEM program, it returns via RTS)
 
-zparse
          +LDADDR zinfo_base
          +STAY ZPTR
          ldx   #0
@@ -153,13 +149,14 @@ kLeftParen
          !byte 2
          !text " ("
 
-kRightParen
-         !byte 1
-         !text ")"
-kNullByte
-         !byte 1,0
-
 kSlash
          !byte 1
          !text "/"
+
+kRightParen
+         !byte 1
+         !text ")"
+
+kNullByte
+         !byte 1,0
 }
