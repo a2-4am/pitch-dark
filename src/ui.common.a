@@ -32,15 +32,15 @@ kStringCancel
 ; internal state and callbacks and so on) then calling WeeGUI WGResetAll method
 ;
 ; in:    WeeGUI initialized
-; out:   $00/$01 clobbered
+; out:   PARAM0/PARAM1 clobbered
 ;        all registers clobbered
 ;------------------------------------------------------------------------------
 HardResetWeeGUI
          lda   #15                   ; highest possible WeeGUI view ID
          sta   kHardResetDummyView
-.hardResetLoop
          +LDAY kHardResetDummyView
          +STAY PARAM0
+.hardResetLoop
          ldx   #WGCreateView
          jsr   WeeGUI                ; create dummy views to reset state on all views
          dec   kHardResetDummyView
