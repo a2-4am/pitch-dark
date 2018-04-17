@@ -72,7 +72,7 @@ VersionsDialog
 
          jsr   okvs_len
          !word gVersionsStore
-         sta   .numVersions
+         sta   iNumVersions
 
          asl
          inc
@@ -80,7 +80,7 @@ VersionsDialog
          sta   kViewVersionsFrame+7  ; frame height
          lda   #12
          sec
-         sbc   .numVersions
+         sbc   iNumVersions
          sta   kViewVersionsFrame+3  ; frame top = 12 - numVersions
          inc
          sta   kViewVersionsOK+2     ; OK top = frame top + 1
@@ -119,7 +119,7 @@ VersionsDialog
 +        !word $FDFD                 ; SMC
          plx
          inx
-.numVersions=*+1
+iNumVersions=*+1
          cpx   #$FD                  ; SMC
          bne   .createRadioLoop
 
@@ -157,7 +157,7 @@ VersionsDialog
          jsr   WeeGUI
 
          lda   #1                    ; WeeGUI radio buttons are limited to 15 characters, so we have just the
-         sta   .vtab                 ; hotkeys (1-9) 'in' the radio button then print the labels separately
+         sta   iVersionsVTAB         ; hotkeys (1-9) 'in' the radio button then print the labels separately
          jsr   okvs_iter_values
          !word gVersionsStore
          !word PrintVersionLabelCallback
@@ -178,17 +178,22 @@ VersionsDialog
 ; internal functions
 
 PrintVersionLabelCallback
+; called via okvs_iter_values
+; X = index (0-based) into gVersionsStore
+; A/Y points to okvs record value, which we use to create a printable label
          ldx   #50
          jsr   CreateNullTerminatedString
          jsr   PrintAt
          !byte 7                     ; htab (constant)
-.vtab    !byte $FD                   ; SMC
+iVersionsVTAB
+         !byte $FD                   ; SMC
          !word kNullTerminatedBuffer
-         inc   .vtab
-         inc   .vtab
+         inc   iVersionsVTAB
+         inc   iVersionsVTAB
          rts
 
 HandleVersionsKey
+; A = key code from $C000
          ldx   #.endkeys-.keys
 -        cmp   .keys,x
          beq   .foundKey
@@ -215,7 +220,7 @@ HandleVersionsKey
          lda   #$FD                  ; SMC
          cmp   #ID_VERSIONS_PREVIOUS
          beq   .previous
-         cpx   .numVersions          ; find 'next' view ID (wrapping around to 1)
+         cpx   iNumVersions          ; find 'next' view ID (wrapping around to 1)
          bcs   +
          inx
          !byte $2C
@@ -224,7 +229,7 @@ HandleVersionsKey
 .previous
          dex
          bne   .gotNewID
-         ldx   .numVersions
+         ldx   iNumVersions
 .gotNewID
          txa
          ldx   #WGSelectView         ; check new radio button and repaint it
@@ -250,7 +255,7 @@ GetCheckedVersion
          lda   #ID_VERSIONS_1
          pha
          clc
-         adc   .numVersions          ; .numVersions was populated during VersionsDialog and hasn't changed since
+         adc   iNumVersions          ; iNumVersions was populated during VersionsDialog and hasn't changed since
          tay
          pla
          jmp   GetCheckedRadioButton

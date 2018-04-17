@@ -5,6 +5,7 @@
 ;
 ; Public functions
 ; - HardResetWeeGUI
+; - ExitWeeGUI
 ; - CreateRadio
 ; - CreateCheckbox
 ; - CreateButton
@@ -35,6 +36,7 @@ kStringCancel
 ; out:   PARAM0/PARAM1 clobbered
 ;        all registers clobbered
 ;------------------------------------------------------------------------------
+!zone {
 HardResetWeeGUI
          lda   #15                   ; highest possible WeeGUI view ID
          sta   kHardResetDummyView
@@ -49,6 +51,25 @@ HardResetWeeGUI
          jmp   WeeGUI
 kHardResetDummyView
          !byte 0,0,0,0,0,0,0,0
+}
+
+;------------------------------------------------------------------------------
+; ExitWeeGUI
+; clears the screen and safely shuts down WeeGUI
+;
+; in:    WeeGUI initialized
+; out:   A,Y preserved
+;        X clobbered
+;------------------------------------------------------------------------------
+!zone {
+ExitWeeGUI
+         ldx   #WGDisableMouse       ; disable mouse support before quitting
+         jsr   WeeGUI
+         ldx   #WGClearScreen        ; clear screen (HOME)
+         jsr   WeeGUI
+         ldx   #WGExit               ; clean up WeeGUI
+         jmp   WeeGUI
+}
 
 ;------------------------------------------------------------------------------
 ; CreateRadio/CreateCheckbox/CreateButton

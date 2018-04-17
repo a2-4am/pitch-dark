@@ -80,13 +80,5 @@ MainScreen
          jsr   HandleKey             ; handle keypresses
          bra   .mainRunLoop
 
-ExitWeeGUI
-         ldx   #WGDisableMouse       ; disable mouse support before quitting
-         jsr   WeeGUI
-         ldx   #WGClearScreen        ; clear screen (HOME)
-         jsr   WeeGUI
-         ldx   #WGExit               ; clean up WeeGUI
-         jmp   WeeGUI
-
 gGamesListStore
          !word *+2                   ; address of first okvs store
