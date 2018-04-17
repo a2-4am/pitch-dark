@@ -65,8 +65,7 @@ goto :EOF
 if "%1" equ "artwork" (
 call :dsk
 :artwork
-1>nul xcopy /q /y /i res\artwork build\artwork
-cd build & cadius ADDFOLDER "%DISK%" "/PITCH.DARK/ARTWORK" artwork & cd ..
+cadius ADDFOLDER "build\%DISK%" "/PITCH.DARK/ARTWORK" "res\artwork"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/ARTWORK/" "res\DHRSLIDE.SYSTEM"
 if not "%1" equ "" set DISK=
 goto :EOF
@@ -101,7 +100,7 @@ for (b = new Enumerator(a.GetFolder("res\\text").files); !b.atEnd(); b.moveNext(
             lines = f.readline()
             !lines.length && (linelength = 0);
             l && linelength && (lines += new Array(linelength - lines.length).join(" "))
-            newf += lines + "\n"
+            newf += lines + "\r"
             if (lines.substring(0, 6) == "[info]") linelength = 65
             else if (lines.substring(0, 13) == "[description]") linelength = 78
             l = linelength
