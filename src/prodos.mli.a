@@ -9,7 +9,6 @@
 ; - SaveFile
 ; - SetPrefix
 ; - GetFileInfo
-; - QuitToProDOS
 ;
 
 ; MLI command codes
@@ -390,14 +389,6 @@ _setprefix
          ldy   #PC_SETPREFIX
          jmp   mli
 
-QuitUnless128KAnd65C02
-         lda   MACHID
-         and   #$30
-         cmp   #$30                  ; 128K?
-         bne   QuitToProDOS
-+        inc                         ; 65C02-only INC instruction will clear Z flag
-         bne   mliexit               ; if Z flag is clear, this is a 65C02 (good)
-                                     ; if Z flag is set, this is not a 65C02 (bad) and execution falls through here
 QuitToProDOS
          lda   #CMD_QUIT
          ldy   #PC_QUIT

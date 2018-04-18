@@ -1,4 +1,15 @@
 ;------------------------------------------------------------------------------
+; check machine requirements (128K with 65C02) and quit to ProDOS if not met
+;------------------------------------------------------------------------------
+         lda   MACHID
+         and   #$30
+         cmp   #$30                  ; 128K?
+         beq   +                     ; yes, continue
+-        jmp   QuitToProDOS
++        inc                         ; 65C02-only INC instruction will clear Z flag
+         beq   -                     ; if Z flag is still set, this is not a 65C02
+
+;------------------------------------------------------------------------------
 ; disconnect ProDOS /RAM disk in S3,D2
 ; (does not affect other RAM disks like RAMWorks or RAMFactor)
 ; see ProDOS TechNote #26 Polite Use of Auxiliary Memory

@@ -14,8 +14,8 @@
 
 *=kPitchDarkBinaryAddress
 
-         jsr   QuitUnless128KAnd65C02; check minimum hardware requirements
          !source "src/pitchdark.init.a"
+
          jsr   LoadGameInfo          ; get current game description and game-specific options
          jsr   WGInit                ; initialize WeeGUI
          ldx   #WGEnableMouse        ; enable mouse support
