@@ -5,6 +5,7 @@
 ;
 ; Public functions
 ; - ClearInterpreterOptions
+; - LaunchInterpreterWithNewGame
 ; - LaunchInterpreterWithGame
 ; - LaunchInterpreterWithHints
 ;
@@ -122,7 +123,7 @@ SetInterpreterOptions
          beq   SetInterpreterOptionsExceptForce40
          lda   #$CE
          !byte $2C
-; execution falls through here
+                                     ; execution falls through here
 
 ;------------------------------------------------------------------------------
 ; SetInterpreterOptionsExceptForce40

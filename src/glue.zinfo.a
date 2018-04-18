@@ -1,7 +1,7 @@
 ;license:MIT
 ;(c) 2018 by 4am
 ;
-; glue code to load and call ZINFO, the Z-Machine saved game parser
+; glue code to load and call ZINFO, the On Beyond Z-Machine! saved game parser
 ;
 ; Public functions
 ; - LoadSavedGameInfo
