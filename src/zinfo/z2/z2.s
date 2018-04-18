@@ -7,7 +7,6 @@
 
 save_name      =    $2006
 read_buffer    =    $3500 ;512 bytes
-file_buffer    =    $3900 ;$400 bytes, must not overlap with read_buffer, must be page-aligned
 record_size    =    $40
 info_buffer    =    $2000 ;record_size*8 (currently $200) bytes, can be anywhere
 zpage_info     =    $fe   ;word
@@ -95,6 +94,20 @@ fetch_info
     !byte  $cc       ;close file
     !word  cc_parms
 
+    jsr    $bf00
+    !byte  $c5
+    !word  c5_parms
+    ldx    $201
+    inx
+    txa
+    and    #$0f
+    sta    $200
+    lda    #$2f
+    sta    $201
+    jsr    $bf00
+    !byte  $c6
+    !word  c6_parms
+
 exchange
     ldx    #(zp_E9-zp_91)
 -   ldy    zpage_old-1,x
@@ -130,19 +143,10 @@ seekread
 seek_ret
     rts
 
-c7_parms
-    !byte    1
-    !word    $200
-
-c5_parms
-    !byte    2
-    !byte    0
-    !word    $201
-
 c8_parms
     !byte    3
     !word    save_name
-    !word    file_buffer
+    !word    $1C00
 c8_handle
     !byte    0
 
@@ -164,8 +168,16 @@ ca_size
     !word    $ffff
 
 cc_parms
+c6_parms
     !byte    1
     !byte    0
+    !byte    2
+
+c5_parms
+    !byte    2
+    !byte    0
+    !word    $201
+    !byte    $d1
 
 dump_info
     tsx
@@ -198,10 +210,6 @@ dump_info
     JSR    decompress
 
     lda    zpage_ptr
-    !if name_offset>0 {
-    sec
-    sbc    #name_offset
-    }
     ldy    #name_offset
     sta    (zpage_info),y
 

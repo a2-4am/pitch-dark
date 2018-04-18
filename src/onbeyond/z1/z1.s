@@ -103,6 +103,8 @@ tmp        =        $8
         sta     $28ff, y
         dey
         bne     -
+        lda     $bf30
+        sta     c5_parms+1
 
         sty     $1e37
         sty     $1e5d
@@ -186,15 +188,6 @@ brandtext
         +version
         !byte   0
 
-c7_parms
-        !byte   1
-        !word   $200
-
-c5_parms
-        !byte   2
-        !byte   0
-        !word   $201
-
 unrelochdd
 !pseudopc $2800 {
         clc
@@ -253,6 +246,21 @@ printer
 
 quit
         jsr     xclose
+
+        jsr     $bf00
+        !byte   $c5
+        !word   c5_parms
+        ldx     $201
+        inx
+        txa
+        and     #$0f
+        sta     $200
+        lda     #$2f
+        sta     $201
+        jsr     $bf00
+        !byte   $c6
+        !word   c6_parms
+
         jsr     $bf00
         !byte   $65
         !word   quit_parms
@@ -390,8 +398,15 @@ ca_parms
         !word    $ffff
 
 c1_parms
+c6_parms
         !byte    1
         !word    scrpname
+
+c5_parms
+        !byte    2
+        !byte    0
+        !word    scrpname+1
+        !byte    $d1
 
 cb_parms
 quit_parms
