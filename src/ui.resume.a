@@ -107,8 +107,11 @@ ResumeDialog
          jsr   CreateRadio
          !word kViewResumeNewGame
 
-         ; TODO set proper radio button based on ZINFO
-         lda   #ID_RESUME_NEWGAME
+         lda   gLastSavedGameSlot    ; initial checked radio button = last save slot + 1
+         bmi   +
+         inc
+         !byte $2C
++        lda   #ID_RESUME_NEWGAME    ; if last save slot is invalid, just check 'new game'
          ldx   #WGSelectView
          jsr   WeeGUI
          lda   #1

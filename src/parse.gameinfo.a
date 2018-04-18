@@ -9,6 +9,7 @@
 ;
 ; Public variables
 ; - gHasSavedGames        0=false, 1=true (set in CheckForSavedGames)
+; - gLastSavedGameSlot    0-7 (only valid if gHasSavedGames=1)
 ;
 ; Public constants (keys in gOptionsStore)
 ; - kHasArtwork
@@ -24,6 +25,8 @@ gVersionsStore
 gOptionsStore
          !word $FDFD                 ; set in LoadGameInfo
 gHasSavedGames
+         !byte 0
+gLastSavedGameSlot
          !byte 0
 kHasArtwork
          !byte 7
@@ -191,7 +194,16 @@ CheckForSavedGames
          lda   blocks
          cmp   #$06                  ; file exists but is small -> no saved games (.Z4/.Z5 files have a 5 block 'empty' .sav file)
          bcc   .no
-.yes     lda   #1
+.yes     lda   auxtype               ; if low byte of auxtype is $3x, x is the last save slot
+         and   #$F0
+         cmp   #$30
+         bne   +
+         lda   auxtype
+         and   #$0F
+         !byte $2C
++        lda   #$FF                  ; no save slot
+         sta   gLastSavedGameSlot
+         lda   #1
          !byte $2C
 .no      lda   #0
          sta   gHasSavedGames
