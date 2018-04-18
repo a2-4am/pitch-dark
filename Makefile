@@ -36,6 +36,7 @@ asm: md
 dsk: md asm
 	cp res/"Pitch Dark.master games collection.do.not.edit.2mg" build/"$(DISK)"
 	cp res/_FileInformation.txt build/
+	bin/fixFileInformation.sh build/_FileInformation.txt
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/GRUE.SYSTEM"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/ONBEYOND.SYSTEM"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/ZINFO.SYSTEM"

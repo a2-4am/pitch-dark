@@ -13,6 +13,7 @@
 ;     set to 1 if prefs have changed. SaveGlobalPreferences won't write to disk if this is 0.
 ;
 ; Public constants (all length-prefixed strings)
+; - kGlobalPrefsFilename
 ; - kForce40
 ; - kForceUpper
 ; - kScriptToFile
@@ -26,6 +27,10 @@ gGlobalPrefsStore
 
 gGlobalPrefsDirty
          !byte 0
+
+kGlobalPrefsFilename
+         !byte 15
+         !raw  "PITCH.DARK.CONF"
 
 kForce40
          !byte 14
@@ -43,29 +48,6 @@ kLastPlayed
          !byte 10
          !raw  "LASTPLAYED"
 
-;------------------------------------------------------------------------------
-; LoadGlobalPreferences
-; load global options and state (including current game) from file and populate
-; global prefs store
-;
-; in:    current ProDOS prefix is the same as the PITCH.DARK.CONF file
-; out:   all registers and flags clobbered
-;------------------------------------------------------------------------------
-LoadGlobalPreferences
-         stz   gGlobalPrefsDirty
-
-         jsr   LoadFile              ; load prefs file at $2000
-         !word .globalPrefsFilename
-.handle  !word kGlobalPrefsBuffer
-         !word kProDOSFileBuffer
-
-         jsr   ParseKeyValueText     ; parse contents into global prefs store
-         !word gGlobalPrefsStore
-         !word .handle
-         !byte 16
-
-         +LDAY SRC
-         +STAY gVersionsStore        ; save pointer to free space for next store
 .exit    rts
 
 ;------------------------------------------------------------------------------
@@ -122,7 +104,7 @@ SaveGlobalPreferences
          sta   .filelen+1
 
          jsr   SaveFile
-         !word .globalPrefsFilename
+         !word kGlobalPrefsFilename
          !byte 4                     ; filetype=TXT
          !word 0                     ; auxtype=0000
          !word kGlobalPrefsBuffer
@@ -181,10 +163,6 @@ addString
 +        cpy   #$FD                  ; SMC
          bne   -
          rts
-
-.globalPrefsFilename
-         !byte 15
-         !raw  "PITCH.DARK.CONF"
 
 .equals  !byte 1
          !raw  "="

@@ -5,6 +5,8 @@
 *=$2000
 !to "build/GRUE.SYSTEM",plain
 
+        !source "src/constants.a"
+
         lda     $BF98        ; machine identification byte
         and     #$30
         cmp     #$30         ; 128K?
@@ -90,7 +92,7 @@ reloc   cld
         jsr     $bf00
         !byte   $cc
         !word   cc_parms
-        jmp     $3FE3
+        jmp     kPitchDarkBinaryAddress
 
 c7_parms
 c6_parms
@@ -106,7 +108,7 @@ c8_parms
 ca_parms
         !byte   4
         !byte   $d1
-        !word   $3FE3
+        !word   kPitchDarkBinaryAddress
         !word   $ffff
         !word   $34d1
 

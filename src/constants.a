@@ -17,6 +17,8 @@
 ;~7400...... - program data (approximate)
 ;
 
+kPitchDarkBinaryAddress   = $3F4D
+
 kGameInfoBuffer           = $0800    ; used by LoadGameInfo
 kProDOSFileBuffer         = $1C00    ; 1K buffer for ProDOS MLI calls
 kSystemAddress            = $2000    ; used by LaunchInterpreter
@@ -28,6 +30,10 @@ gKey                      = $3F01
 gValLen                   = $3F80
 gVal                      = $3F81
 WGInit                    = $4000    ; WeeGUI file load address and initialization function
+NODEV                     = $BF10    ; means 'no device connected'
+RAM32                     = $BF26    ; S3,D2 /RAM device
+DEVCNT                    = $BF31    ; ProDOS device count
+DEVLST                    = $BF32    ; ProDOS device list
 MAGICRTS                  = $FF58    ; used to set overflow bit
 
 ; zero page

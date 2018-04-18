@@ -4,7 +4,6 @@
 ; glue code to load, set up, and launch the On Beyond Z-Machine! interpreter
 ;
 ; Public functions
-; - ClearInterpreterOptions
 ; - LaunchInterpreterWithNewGame
 ; - LaunchInterpreterWithGame
 ; - LaunchInterpreterWithHints
@@ -26,23 +25,6 @@ kOnBeyondScriptToFile     = $0303
 kOnBeyondAutoScript       = $0304
 kOnBeyondWarnMissing      = $0305
 kOnBeyondChecksum         = $0306
-
-;------------------------------------------------------------------------------
-; ClearInterpreterOptions
-; clear options script and make checksum invalid
-;
-; in:    none
-; out:   A/Y clobbered
-;        X preserved
-;        all flags clobbered
-;------------------------------------------------------------------------------
-ClearInterpreterOptions
-         ldy   #(kOnBeyondChecksum-kOnBeyondOptionsStruct)
-         lda   #0
--        sta   kOnBeyondOptionsStruct,y
-         dey
-         bpl   -
-         rts
 
 ;------------------------------------------------------------------------------
 ; LaunchInterpreterWithGame
