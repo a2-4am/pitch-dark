@@ -3,12 +3,6 @@
 ;
 ; It is Pitch Dark. You are likely to be eaten by a GUI.
 ;
-; Public functions
-; - MainScreen
-;
-; Public variables
-; - gGamesListStore
-;
 
 !cpu 65c02
 !ct "src/lcase.ct"
@@ -50,21 +44,6 @@
          !source "src/ui.resume.a"
          !source "src/ui.versions.a"
          !source "src/ui.artwork.a"
-
-MainScreen
-         ldx   #$FF
-         txs
-         jsr   PaintMain             ; create all WeeGUI views (UI elements) and paint them
-         jsr   ClearPendingInput
-.mainRunLoop
-         jsr   RepaintMainIfDirty
-         ldx   #WGPendingViewAction
-         jsr   WeeGUI                ; handle mouse movement and clicks
-         lda   $C000
-         bpl   .mainRunLoop
-         jsr   ClearPendingInput
-         jsr   HandleKey             ; handle keypresses
-         bra   .mainRunLoop
 
 gGamesListStore
          !word *+2                   ; address of first okvs store

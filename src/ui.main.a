@@ -4,8 +4,7 @@
 ; User interface - views and paint routines for main screen
 ;
 ; Public functions
-; - PaintMain
-; - RepaintMainIfDirty
+; - MainScreen
 ;
 ; Public variables
 ; - gMainScreenPaintDirty byte       0=false, nonzero=true
@@ -30,6 +29,30 @@ gViewInUse
 
 kInfoPaintWidth           = 65
 kDescriptionPaintWidth    = 78
+
+;------------------------------------------------------------------------------
+; MainScreen
+; display main screen and run to completion
+;------------------------------------------------------------------------------
+!zone {
+MainScreen
+         ldx   #$FF
+         txs
+         jsr   PaintMain             ; create all WeeGUI views (UI elements) and paint them
+         jsr   ClearPendingInput
+.mainRunLoop
+         jsr   RepaintMainIfDirty
+         ldx   #WGPendingViewAction
+         jsr   WeeGUI                ; handle mouse movement and clicks
+         lda   $C000
+         bpl   .mainRunLoop
+         jsr   ClearPendingInput
+         jsr   HandleKey             ; handle keypresses
+         bra   .mainRunLoop
+}
+
+;------------------------------------------------------------------------------
+; internal functions
 
 ;------------------------------------------------------------------------------
 ; PaintMain/RepaintMainIfDirty
@@ -151,9 +174,6 @@ RepaintMainIfDirty
          jsr   WeeGUI
          jmp   PaintDescriptionView  ; paint contents of description box
 }
-
-;------------------------------------------------------------------------------
-; internal functions
 
 ;------------------------------------------------------------------------------
 ; CreateOrDestroyButton
