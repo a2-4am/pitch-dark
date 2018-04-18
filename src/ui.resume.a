@@ -212,6 +212,7 @@ HandleResumeKey
          bpl   -
          jmp   SoftBell
 .foundKey
+         ; TODO need to handle up and down arrow keys like versions dialog
          lda   .keys+1,x
          ldx   #WGSelectView
          jsr   WeeGUI
