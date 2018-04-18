@@ -10,12 +10,10 @@
 ;
 ; does not reconnect /RAM on exit, which is rude
 ;
-MLI            = $BF00    ; ProDOS MLI entry point
 NODEV          = $BF10    ; means 'no device connected'
 RAM32          = $BF26    ; S3,D2 /RAM device
 DEVCNT         = $BF31    ; ProDOS device count
 DEVLST         = $BF32    ; ProDOS device list
-MACHID         = $BF98    ; machine identification byte
 
 ;------------------------------------------------------------------------------
 ; DisconnectRAM32

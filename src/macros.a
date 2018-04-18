@@ -4,8 +4,6 @@
 ; common assembler macros
 ;
 
-PARAM    =     $00
-
 ; for functions that take parameters on the stack
 ; set (PARAM) to point to the parameters and
 ; move the stack pointer to the first byte after the parameters

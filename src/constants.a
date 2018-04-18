@@ -12,13 +12,10 @@
 ; 3F00..3FFF - gPathname
 ;              kNullTerminatedBuffer
 ;              gKey/gVal
-; 4000.~5BFF - WeeGUI (approximate end)
-;~5C00.~71FF - program code (approximate start and end)
-;~7200.~7FFF - program data (approximate start and end)
+; 4000.~5BFF - WeeGUI (approximate)
+;~5C00.~73FF - program code (approximate)
+;~7400...... - program data (approximate)
 ;
-
-kInfoPaintWidth           = 65       ; used by paintInfoView
-kDescriptionPaintWidth    = 78       ; used by paintDescriptionView
 
 kGameInfoBuffer           = $0800    ; used by LoadGameInfo
 kProDOSFileBuffer         = $1C00    ; 1K buffer for ProDOS MLI calls
@@ -34,6 +31,7 @@ WGInit                    = $4000    ; WeeGUI file load address and initializati
 MAGICRTS                  = $FF58    ; used to set overflow bit
 
 ; zero page
+PARAM                     = $00      ; used by PARAMS_ON_STACK macro, so basically everywhere
 PTR                       = $02
 SRC                       = $04
 DEST                      = $06

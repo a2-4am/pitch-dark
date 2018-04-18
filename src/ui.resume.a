@@ -7,7 +7,6 @@
 ; - ResumeGameDialog
 ;
 
-!zone {
 ; View IDs (application-specific, acceptable range 0..15, no duplicates)
 ID_RESUME_FRAME          = 0
 ID_RESUME_SLOT0          = 1
@@ -26,7 +25,7 @@ gResumeViewInUse
          !byte 1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0
 
 ; action keys for options screen
-.keys
+kResumeKeys
          !byte $CF,ID_RESUME_OK      ; O
          !byte $EF,ID_RESUME_OK      ; o
          !byte $8D,ID_RESUME_OK      ; Return
@@ -47,7 +46,7 @@ gResumeViewInUse
          !byte $95,ID_RESUME_NEXT    ; right arrow
          !byte $8B,ID_RESUME_PREVIOUS; up arrow
          !byte $8A,ID_RESUME_NEXT    ; down arrow
-.endkeys
+_endResumeKeys
 
 ; IDs of actions that do not correspond to WeeGUI view IDs have high bit set
 ID_RESUME_PREVIOUS    = $81
@@ -60,6 +59,7 @@ ID_RESUME_NEXT        = $82
 ; in:    WeeGUI initialized
 ; out:   exits via MainScreen, LaunchInterpreterWithSavedGame, or LaunchInterpreterWithNewGame
 ;------------------------------------------------------------------------------
+!zone {
 ResumeDialog
          ldx   #$FF
          txs
@@ -145,10 +145,31 @@ ResumeDialog
          bit   $c010
          jsr   HandleResumeKey
          bra   .runLoop
+}
 
 ;------------------------------------------------------------------------------
 ; internal functions
 
+!zone {
+HandleResumeKey
+; A = key pressed
+; out: all registers and flags clobbered
+         ldx   #_endResumeKeys-kResumeKeys
+-        cmp   kResumeKeys,x
+         beq   .foundKey
+         dex
+         dex
+         bpl   -
+         jmp   SoftBell
+.foundKey
+         ; TODO need to handle up and down arrow keys like versions dialog
+         lda   kResumeKeys+1,x
+         ldx   #WGSelectView
+         jsr   WeeGUI
+         jmp   SimulateClick
+}
+
+!zone {
 CreateResumeRadioCallback
 ; called via okvs_iter
 ; X = index (0-based) into gSavedGamesStore, which is also the slot number
@@ -176,7 +197,9 @@ CreateResumeRadioCallback
          inc   iResumeVTAB
 .createResumeRadioDone
          rts
+}
 
+!zone {
 PrintResumeLabelCallback
 ; called via okvs_iter_values
 ; X = index (0-based) into gSavedGamesStore, which is also the slot number
@@ -202,23 +225,10 @@ iResumeVTAB
          inc   iResumeVTAB
 .printResumeLabelDone
          rts
+}
 
-HandleResumeKey
-         ldx   #.endkeys-.keys
--        cmp   .keys,x
-         beq   .foundKey
-         dex
-         dex
-         bpl   -
-         jmp   SoftBell
-.foundKey
-         ; TODO need to handle up and down arrow keys like versions dialog
-         lda   .keys+1,x
-         ldx   #WGSelectView
-         jsr   WeeGUI
-         jmp   SimulateClick
-
-callback_resume_ok
+!zone {
+ResumeOKCallback
          lda   #ID_RESUME_SLOT0
          ldy   #ID_RESUME_NEWGAME+1
          jsr   GetCheckedRadioButton ; returns A = WeeGUI view ID
@@ -227,8 +237,10 @@ callback_resume_ok
          lda   #0
 +        dec                         ; A = saved game slot (which is WeeGUI view ID - 1) or #$FF
          jmp   LaunchInterpreterWithGame
+}
 
-callback_resume_cancel = MainScreen
+;------------------------------------------------------------------------------
+; WeeGUI view configuration records
 
 kViewResumeFrame
          !byte ID_RESUME_FRAME       ; view ID
@@ -239,15 +251,13 @@ kViewResumeFrame
          !byte $FD                   ; visible height
          !byte 70                    ; width
          !byte $FD                   ; height
-kStringResumeFrame
-         !text "Resume Game",0
 
 kViewResumeOK
          !byte ID_RESUME_OK          ; view ID
          !byte 63                    ; left
          !byte $FD                   ; top
          !byte 10                    ; width
-         !word callback_resume_ok    ; callback
+         !word ResumeOKCallback      ; callback
          !word kStringOK             ; caption
 
 kViewResumeCancel
@@ -255,7 +265,7 @@ kViewResumeCancel
          !byte 63                    ; left
          !byte $FD                   ; top
          !byte 10                    ; width
-         !word callback_resume_cancel ; callback
+         !word MainScreen            ; callback
          !word kStringCancel         ; caption
 
 kViewResumeRadio                     ; reused for each slot
@@ -274,6 +284,7 @@ kViewResumeNewGameTop
          !byte $FD                   ; top (SMC)
          !word kStringNewGame        ; caption
 
+kStringResumeFrame
+         !text "Resume Game",0
 kStringNewGame
          !text " Start ",110,"ew game",0
-}

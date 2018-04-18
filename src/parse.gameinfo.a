@@ -8,8 +8,8 @@
 ; - CheckForSavedGames
 ;
 ; Public variables
-; - gHasSavedGames        0=false, 1=true (set in CheckForSavedGames)
-; - gLastSavedGameSlot    0-7 (only valid if gHasSavedGames=1)
+; - gHasSavedGames        byte       0=false, nonzero=true (set in CheckForSavedGames)
+; - gLastSavedGameSlot    byte       0-7 (only valid if gHasSavedGames=1)
 ;
 ; Public constants (keys in gOptionsStore)
 ; - kHasArtwork

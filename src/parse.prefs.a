@@ -8,7 +8,8 @@
 ; - SaveGlobalPreferences
 ;
 ; Public variables
-; - gGlobalPrefsDirty      byte       0=false, 1=true
+; - gGlobalPrefsStore     word       address of prefs okvs (set in LoadGameList)
+; - gGlobalPrefsDirty     byte       0=false, nonzero=true
 ;     set to 1 if prefs have changed. SaveGlobalPreferences won't write to disk if this is 0.
 ;
 ; Public constants (all length-prefixed strings)

@@ -3,7 +3,7 @@
 ;
 ; It is Pitch Dark. You are likely to be eaten by a GUI.
 ;
-; Public entry points
+; Public functions
 ; - MainScreen
 ;
 ; Public variables
@@ -13,10 +13,22 @@
 !cpu 65c02
 !ct "src/lcase.ct"
 !to "build/PITCH.DARK",plain
-*=$3FFD
+*=$3FE3
 
-         jmp   Start
+         jsr   QuitUnless128KAnd65C02; check minimum hardware requirements
+         jsr   DisconnectRAM32       ; disconnect /RAM in S3,D2
+         jsr   ClearInterpreterOptions ; clear options struct at $300
+         jsr   WGInit                ; initialize WeeGUI
+         jsr   LoadGameList          ; get master list of games
+         jsr   LoadGlobalPreferences ; get global options, including current game
+         jsr   LoadGameInfo          ; get current game description and game-specific options
+         ldx   #WGEnableMouse        ; enable mouse support
+         jsr   WeeGUI
+         jmp   MainScreen
 
+!if * != $4000 {
+  !serious "WeeGUI library must start at $4000"
+}
          !bin "res/WEEGUI"
 
          !source "src/macros.a"
@@ -43,23 +55,6 @@
          !source "src/ui.versions.a"
          !source "src/ui.artwork.a"
 
-Start
-         lda   MACHID
-         and   #$30
-         cmp   #$30                  ; 128K?
-         beq   +                     ; yes, continue
--        jmp   QuitToProDOS
-+        inc                         ; 65C02-only INC instruction will clear Z flag
-         beq   -                     ; if Z flag is still set, this is not a 65C02
-
-         jsr   DisconnectRAM32       ; disconnect /RAM in S3,D2
-         jsr   ClearInterpreterOptions ; clear options struct at $300
-         jsr   WGInit                ; initialize WeeGUI
-         jsr   LoadGameList          ; get master list of games
-         jsr   LoadGlobalPreferences ; get global options, including current game
-         jsr   LoadGameInfo          ; get current game description and game-specific options
-         ldx   #WGEnableMouse        ; enable mouse support
-         jsr   WeeGUI
 MainScreen
          ldx   #$FF
          txs

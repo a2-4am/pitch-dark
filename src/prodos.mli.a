@@ -13,28 +13,30 @@
 ;
 
 ; MLI command codes
-CMD_QUIT =     $65        ; quit to ProDOS
-CMD_CREATE =   $C0        ; create new file
-CMD_DESTROY =  $C1        ; delete a file
-CMD_GETFILEINFO = $C4     ; get file (or volume) info
-CMD_SETPREFIX= $C6        ; change default pathname prefix
-CMD_OPEN =     $C8        ; open a file
-CMD_READ =     $CA        ; read an open file
-CMD_WRITE =    $CB        ; write to an open file
-CMD_CLOSE =    $CC        ; close an open file
+CMD_QUIT       = $65      ; quit to ProDOS
+CMD_CREATE     = $C0      ; create new file
+CMD_DESTROY    = $C1      ; delete a file
+CMD_GETFILEINFO= $C4      ; get file (or volume) info
+CMD_SETPREFIX  = $C6      ; change default pathname prefix
+CMD_OPEN       = $C8      ; open a file
+CMD_READ       = $CA      ; read an open file
+CMD_WRITE      = $CB      ; write to an open file
+CMD_CLOSE      = $CC      ; close an open file
 
 ; MLI parameter counts
-PC_QUIT =      $04
-PC_CREATE =    $07
-PC_DESTROY =   $01
+PC_QUIT        = $04
+PC_CREATE      = $07
+PC_DESTROY     = $01
 PC_GETFILEINFO = $0A
-PC_SETPREFIX = $01
-PC_OPEN  =     $03
-PC_READ  =     $04
-PC_WRITE =     $04
-PC_CLOSE =     $01
+PC_SETPREFIX   = $01
+PC_OPEN        = $03
+PC_READ        = $04
+PC_WRITE       = $04
+PC_CLOSE       = $01
 
-PRODOSMLI =    $BF00      ; [callable] MLI entry point
+; ROM addresses
+PRODOSMLI      = $BF00    ; [callable] MLI entry point
+MACHID         = $BF98    ; machine identification byte
 
 ;-------------------------------
 ; LoadFile
@@ -249,8 +251,6 @@ GetFileInfo
          jmp   _getfileinfo
 }
 
-;------------------------------------------------------------------------------
-
 ;-------------------------------
 ; open file via ProDOS MLI
 ;
@@ -364,20 +364,6 @@ _deletefile
          rts
 
 ;-------------------------------
-; change current directory (set prefix)
-; using ProDOS MLI
-; in:  caller has filled @mliparam
-;        with address of pathname
-; out: if error, C set and A contains error code
-;      if success, C clear
-;-------------------------------
-_setprefix
-         lda   #CMD_SETPREFIX
-         ldy   #PC_SETPREFIX
-         jsr   mli
-         rts
-
-;-------------------------------
 ; get file info via ProDOS MLI
 ;
 ; in:  caller has filled @mliparam with address of
@@ -392,11 +378,30 @@ _getfileinfo
          jmp   mli
 
 ;-------------------------------
+; change current directory (set prefix)
+; using ProDOS MLI
+; in:  caller has filled @mliparam
+;        with address of pathname
+; out: if error, C set and A contains error code
+;      if success, C clear
+;-------------------------------
+_setprefix
+         lda   #CMD_SETPREFIX
+         ldy   #PC_SETPREFIX
+         jmp   mli
+
+QuitUnless128KAnd65C02
+         lda   MACHID
+         and   #$30
+         cmp   #$30                  ; 128K?
+         bne   QuitToProDOS
++        inc                         ; 65C02-only INC instruction will clear Z flag
+         bne   mliexit               ; if Z flag is clear, this is a 65C02 (good)
+                                     ; if Z flag is set, this is not a 65C02 (bad) and execution falls through here
 QuitToProDOS
          lda   #CMD_QUIT
          ldy   #PC_QUIT
-; execution falls through here
-
+                                     ; execution falls through here
 ;-------------------------------
 ; low-level MLI wrapper
 ; in:  A = MLI command code
@@ -414,7 +419,7 @@ mli      sta   mlicmd     ; store command code
          jsr   PRODOSMLI  ; call ProDOS
 mlicmd   !byte 00         ; command number
          !word mliparam   ; address of parameter table
-         rts
+mliexit  rts
 mliparam !byte $FE,$FE,$FE,$FE
 filetype !byte $FE        ; file type (set by MLI get_file_info)
 auxtype                   ; auxiliary file type (2 bytes, set by MLI get_file_info)

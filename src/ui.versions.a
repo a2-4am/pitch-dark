@@ -26,7 +26,7 @@ gVersionsViewInUse
          !byte 1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0
 
 ; action keys for versions screen
-.keys
+kVersionsKeys
          !byte $CF,ID_VERSIONS_OK    ; O
          !byte $EF,ID_VERSIONS_OK    ; o
          !byte $8D,ID_VERSIONS_OK    ; Return
@@ -46,7 +46,7 @@ gVersionsViewInUse
          !byte $95,ID_VERSIONS_NEXT  ; right arrow
          !byte $8B,ID_VERSIONS_PREVIOUS ; up arrow
          !byte $8A,ID_VERSIONS_NEXT  ; down arrow
-.endkeys
+_endVersionsKeys
 
 ; IDs of actions that do not correspond to WeeGUI view IDs have high bit set
 ID_VERSIONS_PREVIOUS      = $81
@@ -175,25 +175,11 @@ iNumVersions=*+1
 ;------------------------------------------------------------------------------
 ; internal functions
 
-PrintVersionLabelCallback
-; called via okvs_iter_values
-; X = index (0-based) into gVersionsStore
-; A/Y points to okvs record value, which we use to create a printable label
-         ldx   #50
-         jsr   CreateNullTerminatedString
-         jsr   PrintAt
-         !byte 7                     ; htab (constant)
-iVersionsVTAB
-         !byte $FD                   ; SMC
-         !word kNullTerminatedBuffer
-         inc   iVersionsVTAB
-         inc   iVersionsVTAB
-         rts
-
 HandleVersionsKey
-; A = key code from $C000
-         ldx   #.endkeys-.keys
--        cmp   .keys,x
+; A = key pressed
+; out: all registers and flags clobbered
+         ldx   #_endVersionsKeys-kVersionsKeys
+-        cmp   kVersionsKeys,x
          beq   .foundKey
          dex
          dex
@@ -201,7 +187,7 @@ HandleVersionsKey
 .notFound
          jmp   SoftBell
 .foundKey
-         lda   .keys+1,x             ; get ID associated with this key
+         lda   kVersionsKeys+1,x     ; get ID associated with this key
          bpl   .activateView         ; ID < #$80 is a WeeGUI view, so activate it
          sta   .keyID                ; ID >= #$80 is a screen-specific action, so stash it for now
 
@@ -240,7 +226,6 @@ HandleVersionsKey
          jsr   WeeGUI
          ldx   #WGPaintView
          jmp   WeeGUI
-
 .activateView
          tax
          ldy   gVersionsViewInUse,x
@@ -249,16 +234,31 @@ HandleVersionsKey
          jsr   WeeGUI
          jmp   SimulateClick
 
+PrintVersionLabelCallback
+; called via okvs_iter_values
+; X = index (0-based) into gVersionsStore
+; A/Y points to okvs record value, which we use to create a printable label
+         ldx   #50
+         jsr   CreateNullTerminatedString
+         jsr   PrintAt
+         !byte 7                     ; htab (constant)
+iVersionsVTAB
+         !byte $FD                   ; SMC
+         !word kNullTerminatedBuffer
+         inc   iVersionsVTAB
+         inc   iVersionsVTAB
+         rts
+
 GetCheckedVersion
          lda   #ID_VERSIONS_1
          pha
          clc
-         adc   iNumVersions          ; iNumVersions was populated during VersionsDialog and hasn't changed since
+         adc   iNumVersions          ; iNumVersions was populated in VersionsDialog and hasn't changed since
          tay
          pla
          jmp   GetCheckedRadioButton
 
-callback_versions_ok
+VersionsOKCallback
          jsr   GetCheckedVersion
          dec
          sta   .n
@@ -278,10 +278,11 @@ callback_versions_ok
          lda   #1
          sta   gGlobalPrefsDirty     ; must set, otherwise SaveGlobalPreferences does nothing
          jsr   SaveGlobalPreferences ; immediately write new preferences to disk
-         jsr   CheckForSavedGames    ; recheck whether the (newly selected) version has saved games (affects painting in main screen)
-                                     ; execution falls through here
-callback_versions_cancel
-         jmp   MainScreen
+         jsr   CheckForSavedGames    ; recheck whether the newly selected version has saved games (affects painting in main screen)
+         jmp   MainScreen            ; exit via main screen
+
+;------------------------------------------------------------------------------
+; WeeGUI view configuration records
 
 kViewVersionsFrame
          !byte ID_VERSIONS_FRAME     ; view ID
@@ -292,15 +293,13 @@ kViewVersionsFrame
          !byte $FD                   ; visible height
          !byte 70                    ; width
          !byte $FD                   ; height
-kStringVersionsFrame
-         !text "Select Version",0
 
 kViewVersionsOK
          !byte ID_VERSIONS_OK        ; view ID
          !byte 63                    ; left
          !byte $FD                   ; top
          !byte 10                    ; width
-         !word callback_versions_ok  ; callback
+         !word VersionsOKCallback    ; callback
          !word kStringOK             ; caption
 
 kViewVersionsCancel
@@ -308,7 +307,7 @@ kViewVersionsCancel
          !byte 63                    ; left
          !byte $FD                   ; top
          !byte 10                    ; width
-         !word callback_versions_cancel ; callback
+         !word MainScreen            ; callback
          !word kStringCancel         ; caption
 
 kViewVersionsArray
@@ -376,30 +375,24 @@ kViewVersions9
          !byte 20                    ; top
          !word kString9              ; caption
 
+kStringVersionsFrame
+         !text "Select Version",0
 kString1
          !text " ",$31,0
-
 kString2
          !text " ",$32,0
-
 kString3
          !text " ",$33,0
-
 kString4
          !text " ",$34,0
-
 kString5
          !text " ",$35,0
-
 kString6
          !text " ",$36,0
-
 kString7
          !text " ",$37,0
-
 kString8
          !text " ",$38,0
-
 kString9
          !text " ",$39,0
 }

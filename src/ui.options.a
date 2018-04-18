@@ -7,7 +7,6 @@
 ; - OptionsDialog
 ;
 
-!zone {
 ; View IDs (application-specific, acceptable range 0..15, no duplicates)
 ID_OPTIONS_FRAME          = 1
 ID_OPTIONS_FORCE40        = 2
@@ -18,7 +17,7 @@ ID_OPTIONS_OK             = 6
 ID_OPTIONS_CANCEL         = 7
 
 ; action keys for options screen
-.keys
+kOptionsKeys
          !byte $CF,ID_OPTIONS_OK                ; O
          !byte $EF,ID_OPTIONS_OK                ; o
          !byte $8D,ID_OPTIONS_OK                ; Return
@@ -32,7 +31,7 @@ ID_OPTIONS_CANCEL         = 7
          !byte $E6,ID_OPTIONS_SCRIPTTOFILE      ; f
          !byte $D3,ID_OPTIONS_AUTOSCRIPT        ; S
          !byte $F3,ID_OPTIONS_AUTOSCRIPT        ; s
-.endkeys
+_endOptionsKeys
 
 ;------------------------------------------------------------------------------
 ; OptionsDialog
@@ -118,15 +117,15 @@ OptionsDialog
 ; internal functions
 
 HandleOptionsKey
-         ldx   #.endkeys-.keys
--        cmp   .keys,x
+         ldx   #_endOptionsKeys-kOptionsKeys
+-        cmp   kOptionsKeys,x
          beq   .foundKey
          dex
          dex
          bpl   -
          jmp   SoftBell
 .foundKey
-         lda   .keys+1,x
+         lda   kOptionsKeys+1,x
          ldx   #WGSelectView
          jsr   WeeGUI
          jmp   SimulateClick
@@ -210,6 +209,9 @@ SetPrefByCheckbox
          !byte $FD                   ; SMC
 }
 
+;------------------------------------------------------------------------------
+; WeeGUI view configuration records
+
 kViewOptionsFrame
          !byte ID_OPTIONS_FRAME      ; view ID
          !byte 2                     ; style (decorated frame)
@@ -219,8 +221,6 @@ kViewOptionsFrame
          !byte 19                    ; visible height
          !byte 56                    ; width
          !byte 19                    ; height
-kStringOptionsFrame
-         !text "Settings",0
 
 kViewOptionsOK
          !byte ID_OPTIONS_OK         ; view ID
@@ -243,46 +243,48 @@ kViewForce40
          !byte 14                    ; left
          !byte 4                     ; top
          !word kStringForce40        ; caption
-kStringForce40
-         !text "Force "
-         !byte $34                   ; '4' inverse
-         !text "0 column",0
-kStringForce40Description
-         !text "Some games may be glitchy",0
 
 kViewForceUpper
          !byte ID_OPTIONS_FORCEUPPER ; view ID
          !byte 14                    ; left
          !byte 9                     ; top
          !word kStringForceUpper     ; caption
-kStringForceUpper
-         !text "Force "
-         !byte $75                   ; 'u' inverse
-         !text "ppercase",0
-kStringForceUpperDescription
-         !text "A MATTER OF PREFERENCE, I SUPPOSE",0
 
 kViewScriptToFile
          !byte ID_OPTIONS_SCRIPTTOFILE ; view ID
          !byte 14                    ; left
          !byte 14                    ; top
          !word kStringScriptToFile   ; caption
-kStringScriptToFile
-         !text "SCRIPT to "
-         !byte $66                   ; 'f' inverse
-         !text "ile",0
-kStringScriptToFileDescription
-         !text "Save transcripts to a file instead of printer",0
 
 kViewAutoScript
          !byte ID_OPTIONS_AUTOSCRIPT ; view ID
          !byte 14                    ; left
          !byte 19                    ; top
          !word kStringAutoScript     ; caption
+
+kStringOptionsFrame
+         !text "Settings",0
+kStringForce40
+         !text "Force "
+         !byte $34                   ; '4' inverse
+         !text "0 column",0
+kStringForce40Description
+         !text "Some games may be glitchy",0
+kStringForceUpper
+         !text "Force "
+         !byte $75                   ; 'u' inverse
+         !text "ppercase",0
+kStringForceUpperDescription
+         !text "A MATTER OF PREFERENCE, I SUPPOSE",0
+kStringScriptToFile
+         !text "SCRIPT to "
+         !byte $66                   ; 'f' inverse
+         !text "ile",0
+kStringScriptToFileDescription
+         !text "Save transcripts to a file instead of printer",0
 kStringAutoScript
          !text "Always "
          !byte $13                   ; 'S' inverse
          !text "CRIPT",0
 kStringAutoScriptDescription
          !text "Turn on SCRIPT mode automatically",0
-}

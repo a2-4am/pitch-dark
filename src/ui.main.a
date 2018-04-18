@@ -8,8 +8,8 @@
 ; - RepaintMainIfDirty
 ;
 ; Public variables
-; - gMainScreenPaintDirty
-; - gViewInUse
+; - gMainScreenPaintDirty byte       0=false, nonzero=true
+; - gViewInUse                       array of byte (each 0=false, nonzero=true)
 ;
 
 ; View IDs (application-specific, acceptable range 0..15, no duplicates)
@@ -24,9 +24,12 @@ ID_INFO        = 8
 ID_DESCRIPTION = 9
 
 gMainScreenPaintDirty
-         !byte 0                     ; 0=false, 1=true
+         !byte 0
 gViewInUse
          !byte 0,1,1,1,1,0,0,0,0,0,0,0,0,0,0
+
+kInfoPaintWidth           = 65
+kDescriptionPaintWidth    = 78
 
 ;------------------------------------------------------------------------------
 ; PaintMain/RepaintMainIfDirty
@@ -148,6 +151,9 @@ RepaintMainIfDirty
          jsr   WeeGUI
          jmp   PaintDescriptionView  ; paint contents of description box
 }
+
+;------------------------------------------------------------------------------
+; internal functions
 
 ;------------------------------------------------------------------------------
 ; CreateOrDestroyButton
@@ -284,6 +290,7 @@ MultiPrint
 }
 
 ;------------------------------------------------------------------------------
+; WeeGUI view configuration records
 
 kViewPrevious
          !byte ID_PREVIOUS           ; view ID
@@ -292,10 +299,6 @@ kViewPrevious
          !byte 13                    ; width
          !word callback_previous     ; callback
          !word kStringPrevious       ; caption
-kStringPrevious
-         !text "< "
-         !byte $10                   ; 'P' inverse
-         !text "revious",0
 
 kViewNext
          !byte ID_NEXT               ; view ID
@@ -304,79 +307,54 @@ kViewNext
          !byte 13                    ; width
          !word callback_next         ; callback
          !word kStringNext           ; caption
-kStringNext
-         !byte $0E                   ; 'N' inverse
-         !text "ext game >",0
 
 kViewOptions
          !byte ID_OPTIONS            ; view ID
          !byte 34                    ; left
          !byte 2                     ; top
          !byte 12                    ; width
-         !word callback_options      ; callback
+         !word OptionsDialog         ; callback
          !word kStringOptions
-kStringOptions
-         !byte $13                   ; 'S' inverse
-         !text "ettings",0
 
 kViewPlay
          !byte ID_PLAY               ; view ID
          !byte 66                    ; left
          !byte 6                     ; top
          !byte 13                    ; width
-         !word callback_play         ; callback
+         !word LaunchInterpreterWithNewGame ; callback
          !word kStringPlay           ; caption
-kStringPlay
-         !byte 144
-         !text "lay "
-         !byte $67                   ; 'g' inverse
-         !text "ame",0
 
 kViewResume
          !byte ID_PLAY               ; view ID
          !byte 66                    ; left
          !byte 6                     ; top
          !byte 13                    ; width
-         !word callback_resume       ; callback
+         !word ResumeDialog          ; callback
          !word kStringResume         ; caption
-kStringResume
-         !byte 146
-         !text "esume "
-         !byte $67                   ; 'g' inverse
-         !text "ame",0
 
 kViewBoxArt
          !byte ID_BOXART             ; view ID
          !byte 66                    ; left
          !byte 8                     ; top
          !byte 13                    ; width
-         !word callback_boxart       ; callback
+         !word DisplayArtwork        ; callback
          !word kStringBoxArt         ; caption
-kStringBoxArt
-         !byte $01                   ; 'A' inverse
-         !text "rtwork",0
 
 kViewHints
          !byte ID_HINTS              ; view ID
          !byte 66                    ; left
          !byte 10                    ; top
          !byte 13                    ; width
-         !word callback_hints        ; callback
+         !word LaunchInterpreterWithHints ; callback
          !word kStringHints          ; caption
-kStringHints
-         !byte $08                   ; 'H' inverse
-         !text "ints",0
 
 kViewVersions
          !byte ID_VERSIONS           ; view ID
          !byte 66                    ; left
          !byte 12                    ; top
          !byte 13                    ; width
-         !word callback_versions     ; callback
+         !word VersionsDialog        ; callback
          !word kStringVersions       ; caption
-kStringVersions
-         !byte $16                   ; 'V' inverse
-         !text "ersion",0
 
 kViewInfo
          !byte ID_INFO               ; view ID
@@ -397,3 +375,34 @@ kViewDescription
          !byte 8                     ; visible height
          !byte 77                    ; width
          !byte 39                    ; height
+
+kStringPrevious
+         !text "< "
+         !byte $10                   ; 'P' inverse
+         !text "revious",0
+kStringNext
+         !byte $0E                   ; 'N' inverse
+         !text "ext game >",0
+
+kStringOptions
+         !byte $13                   ; 'S' inverse
+         !text "ettings",0
+kStringPlay
+         !byte 144
+         !text "lay "
+         !byte $67                   ; 'g' inverse
+         !text "ame",0
+kStringResume
+         !byte 146
+         !text "esume "
+         !byte $67                   ; 'g' inverse
+         !text "ame",0
+kStringBoxArt
+         !byte $01                   ; 'A' inverse
+         !text "rtwork",0
+kStringHints
+         !byte $08                   ; 'H' inverse
+         !text "ints",0
+kStringVersions
+         !byte $16                   ; 'V' inverse
+         !text "ersion",0
