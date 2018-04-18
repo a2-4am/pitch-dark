@@ -76,7 +76,7 @@ HandleKey
          beq   .handleScrollDown
 .handleScrollUp
          lda   #$01
-         !byte $2C                   ; hide next LDA
+         +HIDE_NEXT_2_BYTES
 .handleScrollDown
          lda   #$FF
          pha
@@ -115,16 +115,16 @@ HandleKey
          bra   .xyzzyReset
 .x
          lda   #1
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 .y1
          lda   #2
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 .z1
          lda   #3
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 .z2
          lda   #4
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 .xyzzyReset
          lda   #0
 .xyzzyStoreAndExit

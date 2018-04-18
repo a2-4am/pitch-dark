@@ -221,7 +221,7 @@ HandleVersionsKey
          cpx   iNumVersions          ; find 'next' view ID (wrapping around to 1)
          bcs   +
          inx
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 +        ldx   #1
          bra   .gotNewID
 .previous

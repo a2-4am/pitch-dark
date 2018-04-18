@@ -89,7 +89,7 @@ ParseKeyValueText
          and   #1
          sta   gVal                  ; single-character values get converted to #$00 or #$01 in prefs store
          lda   #0
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 .useMaxLength
          lda   #$FD                  ; SMC
          sta   .appendMaxLength      ; all other values get upgraded to max_length so we can update them in place

@@ -139,7 +139,7 @@ addGameToPrefs
 
 addBooleanFromStore
          lda   #$24                  ; BIT opcode
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 addStringFromStore
          lda   #$80                  ; BRA opcode
          sta   .skipOverBooleanLogic

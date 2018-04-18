@@ -94,11 +94,11 @@ LoadGameInfo
          cmp   #$26                  ; '&' -> open-apple mousetext
          beq   .oa
          ora   #$80                  ; all other characters -> set high bit
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 .null    lda   #$00
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 .ca      lda   #$40
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 .oa      lda   #$41
          sta   ($FE),y
          bra   .convertSectionLoop
@@ -200,11 +200,11 @@ CheckForSavedGames
          bne   +
          lda   auxtype
          and   #$0F
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 +        lda   #$FF                  ; no save slot
          sta   gLastSavedGameSlot
          lda   #1
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 .no      lda   #0
          sta   gHasSavedGames
          rts

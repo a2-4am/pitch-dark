@@ -110,7 +110,7 @@ ResumeDialog
          lda   gLastSavedGameSlot    ; initial checked radio button = last save slot + 1
          bmi   +
          inc
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 +        lda   #ID_RESUME_NEWGAME    ; if last save slot is invalid, just check 'new game'
          ldx   #WGSelectView
          jsr   WeeGUI

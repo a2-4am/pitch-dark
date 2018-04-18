@@ -122,9 +122,8 @@ SetInterpreterOptions
          jsr   okvs_as_boolean
          beq   SetInterpreterOptionsExceptForce40
          lda   #$CE
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
                                      ; execution falls through here
-
 ;------------------------------------------------------------------------------
 ; SetInterpreterOptionsExceptForce40
 ; set options struct based on global preferences store, except always specify
@@ -143,7 +142,7 @@ SetInterpreterOptionsExceptForce40
          jsr   okvs_as_boolean
          beq   +
          lda   #0
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 +        lda   #1
          sta   kOnBeyondCase
 
@@ -153,7 +152,7 @@ SetInterpreterOptionsExceptForce40
          jsr   okvs_as_boolean
          beq   +
          lda   #1
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 +        lda   #0
          sta   kOnBeyondScriptToFile
 
@@ -163,7 +162,7 @@ SetInterpreterOptionsExceptForce40
          jsr   okvs_as_boolean
          beq   +
          lda   #1
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 +        lda   #0
          sta   kOnBeyondAutoScript
 

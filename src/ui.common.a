@@ -100,10 +100,10 @@ ClearPendingInput
 !zone {
 CreateRadio
          ldx   #WGCreateRadio
-         !byte $2C                   ; hide next 2 bytes
+         +HIDE_NEXT_2_BYTES
 CreateCheckbox
          ldx   #WGCreateCheckbox
-         !byte $2C                   ; hide next 2 bytes
+         +HIDE_NEXT_2_BYTES
 CreateButton
          ldx   #WGCreateButton
          stx   .type
@@ -255,7 +255,7 @@ GetCheckedRadioButton
 .max=*+1
          cmp   #$FD                  ; SMC
          bcc   -
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 .found   pla
          clc
          rts

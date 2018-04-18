@@ -39,7 +39,7 @@ ResetPath
 !zone {
 AddToPathWithHighBit
          ldx   #$80
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 AddToPath
          ldx   #0
          stx   .mask

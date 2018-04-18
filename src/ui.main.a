@@ -46,7 +46,7 @@ PaintMain
          stz   gViewInUse+ID_VERSIONS
          ldx   #1                    ; flag - clear screen before painting
          stx   gMainScreenPaintDirty
-         !byte $2C
+         +HIDE_NEXT_2_BYTES
 RepaintMainIfDirty
          ldx   #0                    ; flag - do not clear screen before painting
          lda   gMainScreenPaintDirty
@@ -254,8 +254,7 @@ PaintInfoView
          jsr   CreateNullTerminatedString ; copies string to kNullTerminatedBuffer
 
          +LDADDR kNullTerminatedBuffer ; now use that as the buffer to print the last line
-         !byte $2C
-                                     ; execution falls through here
+         +HIDE_NEXT_2_BYTES
 MultiPrint
          stz   SAVE                  ; VTAB, but 0-indexed
          stx   .printLineLength+1

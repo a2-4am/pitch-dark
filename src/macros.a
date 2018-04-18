@@ -53,3 +53,8 @@ PARAM    =     $00
          sta   .ptr
          sty   .ptr+1
 }
+
+; use BIT to swallow the following 2-byte opcode
+!macro   HIDE_NEXT_2_BYTES {
+         !byte $2C
+}
