@@ -131,28 +131,30 @@ HandleKey
          sta   .xyzzy
          jmp   SoftBell
 .xyzzy
-         !byte $00
+         !byte 0
 .xyzzyGo
          jsr   SaveGlobalPreferences
          jsr   ResetPath
          +LDADDR kArtworkRootDirectory
          jsr   AddToPath
-         jsr   SetPrefix
-         !word gPathname
+
+         jsr   SetPrefix             ; must set ProDOS prefix to directory where DHGR files actually are
+         !word gPathname             ; (DHRSLIDE does not look in subdirectories)
          bcs   .xyzzyError
+
          jsr   ResetPath
-         +LDADDR .dhrslideFilename
+         +LDADDR kDHRSLIDEFilename
          jsr   AddToPath
-         jsr   LoadFile
+
+         jsr   LoadFile              ; load DHRSLIDE program at $2000
          !word gPathname
          !word kSystemAddress
          !word kProDOSFileBuffer
-         bcs   .xyzzyError
-         jsr   ExitWeeGUI
-         jmp   kSystemAddress
-.xyzzyError
-         jmp   MainScreen
-.dhrslideFilename
+
+         jsr   ExitWeeGUI            ; shut down WeeGUI
+         jmp   kSystemAddress        ; exit via DHRSLIDE
+
+kDHRSLIDEFilename
          !byte 15
          !raw  "DHRSLIDE.SYSTEM"
 }

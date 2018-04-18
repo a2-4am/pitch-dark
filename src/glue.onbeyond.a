@@ -88,22 +88,18 @@ LaunchInterpreterWithHints
          bcs   .launchError
 
          jsr   ResetPath
-
          +LDADDR kHintsRootDirectory
          jsr   AddToPath
-
-         jsr   SetPrefix
-         !word gPathname
-         bcs   .launchError
-
          jsr   okvs_get
          !word gGlobalPrefsStore
          !word kLastPlayed
-         jsr   SetStartupPath        ; store hints filename at $2006
+         jsr   AddToPath
+         +LDADDR gPathname
+         jsr   SetStartupPath        ; store hints path+filename at $2006
 
-         jsr   ExitWeeGUI
-         jsr   SetInterpreterOptionsExceptForce40
-         jmp   kSystemAddress
+         jsr   ExitWeeGUI            ; shut down WeeGUI
+         jsr   SetInterpreterOptionsExceptForce40 ; set options struct at $300, but force 80 columns
+         jmp   kSystemAddress        ; exit via interpreter
 
 ;------------------------------------------------------------------------------
 ; internal functions
