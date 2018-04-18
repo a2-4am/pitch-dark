@@ -65,7 +65,7 @@ VersionsDialog
          txs
          jsr   HardResetWeeGUI
 
-         ldx   #9
+         ldx   #ID_VERSIONS_9
 -        stz   gVersionsViewInUse,x  ; reset flags for which radio buttons are in use (1-9)
          dex
          bne   -

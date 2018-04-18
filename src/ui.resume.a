@@ -65,6 +65,11 @@ ResumeDialog
          txs
          jsr   HardResetWeeGUI
 
+         ldx   #ID_RESUME_SLOT7
+-        stz   gResumeViewInUse,x    ; reset flags for which radio buttons are in use
+         dex
+         bne   -
+
          jsr   LoadSavedGameInfo     ; call ZINFO to get the information we need for this dialog
 
          lda   gSavedGamesSlotsInUse ; populated by LoadSavedGameInfo
