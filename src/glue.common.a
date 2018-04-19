@@ -6,6 +6,13 @@
 ; Public functions
 ; - SetStartupPathToCurrentVersionOfCurrentGame
 ;
+; Public constants
+; - kGameRootDirectory
+;
+
+kGameRootDirectory                   ; length-prefixed pathname of game subdirectories
+         !byte 2
+         !raw  "Z/"
 
 ;------------------------------------------------------------------------------
 ; SetStartupPathToCurrentVersionOfCurrentGame

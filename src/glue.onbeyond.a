@@ -9,9 +9,6 @@
 ; - LaunchInterpreterWithHints
 ;
 
-kGameRootDirectory                   ; length-prefixed pathname of game subdirectories
-         !byte 2
-         !raw  "Z/"
 kHintsRootDirectory                  ; length-prefixed pathname of hint files
          !byte 6
          !raw  "PRIZM/"

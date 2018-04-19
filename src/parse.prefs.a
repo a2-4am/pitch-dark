@@ -63,35 +63,35 @@ SaveGlobalPreferences
          +STAY $FE
 
          +LDADDR kFluff1
-         jsr   addString
+         jsr   @addString
 
-         jsr   addBooleanFromStore
+         jsr   @addBooleanFromStore
          !word kForce40
 
-         jsr   addBooleanFromStore
+         jsr   @addBooleanFromStore
          !word kForceUpper
 
-         jsr   addBooleanFromStore
+         jsr   @addBooleanFromStore
          !word kScriptToFile
 
-         jsr   addBooleanFromStore
+         jsr   @addBooleanFromStore
          !word kAutoScript
 
          +LDADDR kFluff2
-         jsr   addString
+         jsr   @addString
 
-         jsr   addStringFromStore
+         jsr   @addStringFromStore
          !word kLastPlayed
 
          +LDADDR kFluff3
-         jsr   addString
+         jsr   @addString
 
          jsr   okvs_iter
          !word gGamesListStore
-         !word addGameToPrefs
+         !word @addGameToPrefs
 
          +LDADDR kEOF
-         jsr   addString
+         jsr   @addString
 
          lda   $FE
          sta   @filelen
@@ -111,24 +111,24 @@ SaveGlobalPreferences
          stz   gGlobalPrefsDirty
 @exit    rts
 
-addGameToPrefs
+@addGameToPrefs
          +STAY +
-         jsr   addStringFromStore
+         jsr   @addStringFromStore
 +        !word $FDFD                 ; SMC
          rts
 
-addBooleanFromStore
+@addBooleanFromStore
          lda   #$24                  ; BIT opcode
          +HIDE_NEXT_2_BYTES
-addStringFromStore
+@addStringFromStore
          lda   #$80                  ; BRA opcode
          sta   @skipOverBooleanLogic
          +PARAMS_ON_STACK 2
          +LDPARAM 1
          +STAY @key
-         jsr   addString
+         jsr   @addString
          +LDADDR kEquals
-         jsr   addString
+         jsr   @addString
          jsr   okvs_get
          !word gGlobalPrefsStore
 @key     !word $FDFD                 ; SMC
@@ -140,11 +140,11 @@ addStringFromStore
          ora   #$30
          sta   (PTR),y
          +LDAY PTR
-+        jsr   addString
++        jsr   @addString
          +LDADDR kLF
-         jmp   addString
+         jmp   @addString
 
-addString
+@addString
          +STAY $00
          lda   ($00)
          inc
