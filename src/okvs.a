@@ -130,7 +130,7 @@ okvs_append
          +STAY SRC                   ; SRC -> new key to copy
          lda   (SRC)
          inc
-         sta   .keylen
+         sta   .append_keylen
          tay
 -        dey                         ; copy new key
          lda   (SRC),y
@@ -140,7 +140,7 @@ okvs_append
 
          lda   PTR                   ; update PTR to byte after copied key
          clc
-.keylen=*+1
+.append_keylen=*+1
          adc   #$FD                  ; SMC
          sta   PTR
          bcc   +
@@ -153,7 +153,7 @@ okvs_append
          bne   +
          lda   (SRC)                 ; no max, use actual length instead
          inc
-+        sta   .valuelen
++        sta   .append_valuelen
          tay
 -        dey
          lda   (SRC),y
@@ -163,7 +163,7 @@ okvs_append
 
          lda   PTR
          clc
-.valuelen=*+1
+.append_valuelen=*+1
          adc   #$FD                  ; SMC
          sta   SRC
          bcc   +
@@ -198,18 +198,18 @@ okvs_get
          +PARAMS_ON_STACK 4
          jsr   SetPTRFromStackParams
          lda   (PTR)
-         beq   .fail                 ; no keys, fail immediately
+         beq   .get_fail             ; no keys, fail immediately
          tax                         ; X = number of keys
          inx
-         stx   .maxKeys
+         stx   .get_maxkeys
          ldx   #0
          jsr   incptr                ; PTR -> first record
          +LDPARAM 3
          +STAY SRC                   ; SRC -> key we want to find
          lda   (SRC)
          inc
-         sta   .matchlen
-.matchRecordLoop
+         sta   .get_matchlen
+.get_match_record_loop
          lda   PTR+1
          sta   DEST+1
          lda   PTR
@@ -219,17 +219,17 @@ okvs_get
          bcc   +
          inc   DEST+1                ; DEST -> key of this record
 +        ldy   #0
-.matchKeyLoop
+.get_match_key_loop
          lda   (SRC),y
          cmp   (DEST),y
-         bne   .goToNextRecord
+         bne   .get_next
          iny
-.matchlen=*+1
+.get_matchlen=*+1
          cpy   #$FD                  ; SMC
-         bne   .matchKeyLoop
+         bne   .get_match_key_loop
          +LDAY PTR
          clc
-         adc   .matchlen
+         adc   .get_matchlen
          bcc   +
          iny
 +        clc
@@ -237,15 +237,16 @@ okvs_get
          sta   PTR
          bcc   +
          iny
-+        clc
-         rts
-.goToNextRecord
+         clc
++        rts
+.get_next
          jsr   derefptr              ; PTR -> next record
          inx
-.maxKeys=*+1
+.get_maxkeys=*+1
          cpx   #$FD                  ; SMC
-         bne   .matchRecordLoop
-.fail    sec
+         bne   .get_match_record_loop
+.get_fail
+         sec
          rts
 
 ;------------------------------------------------------------------------------
