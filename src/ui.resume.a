@@ -21,9 +21,6 @@ ID_RESUME_NEWGAME        = 9
 ID_RESUME_OK             = 10
 ID_RESUME_CANCEL         = 11
 
-gResumeViewInUse
-         !byte 1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0
-
 ; action keys for options screen
 kResumeKeys
          !byte $CF,ID_RESUME_OK      ; O
@@ -42,15 +39,11 @@ kResumeKeys
          !byte $B7,ID_RESUME_SLOT7   ; 7
          !byte $CE,ID_RESUME_NEWGAME ; N
          !byte $EE,ID_RESUME_NEWGAME ; n
-         !byte $88,ID_RESUME_PREVIOUS; left arrow
-         !byte $95,ID_RESUME_NEXT    ; right arrow
-         !byte $8B,ID_RESUME_PREVIOUS; up arrow
-         !byte $8A,ID_RESUME_NEXT    ; down arrow
+         !byte $88,ID_RADIO_PREVIOUS ; left arrow
+         !byte $95,ID_RADIO_NEXT     ; right arrow
+         !byte $8B,ID_RADIO_PREVIOUS ; up arrow
+         !byte $8A,ID_RADIO_NEXT     ; down arrow
 _endResumeKeys
-
-; IDs of actions that do not correspond to WeeGUI view IDs have high bit set
-ID_RESUME_PREVIOUS    = $81
-ID_RESUME_NEXT        = $82
 
 ;------------------------------------------------------------------------------
 ; ResumeDialog
@@ -63,11 +56,6 @@ ResumeDialog
          ldx   #$FF
          txs
          jsr   HardResetWeeGUI
-
-         ldx   #ID_RESUME_SLOT7
--        stz   gResumeViewInUse,x    ; reset flags for which radio buttons are in use
-         dex
-         bne   -
 
          jsr   LoadSavedGameInfo     ; call ZINFO to get the information we need for this dialog
 
@@ -88,7 +76,7 @@ ResumeDialog
          inc
          sta   kViewResumeCancel+2   ; Cancel top
 
-         jsr   CreateDialog
+         jsr   CreateDialog          ; create decorated frame
          !word kViewResumeFrame
          !word kStringResumeFrame
 
@@ -155,19 +143,26 @@ ResumeDialog
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 HandleResumeKey
+; A = key pressed
+; out: all registers and flags clobbered
          ldx   #_endResumeKeys-kResumeKeys
 -        cmp   kResumeKeys,x
          beq   @found
          dex
          dex
          bpl   -
-         jmp   SoftBell
-@found
-         ; TODO need to handle up and down arrow keys like versions dialog
-         lda   kResumeKeys+1,x
+@error   jmp   SoftBell
+@found   lda   kResumeKeys+1,x       ; get action ID associated with this key
+         bmi   @updown
+         tax                         ; action ID < #$80 is a WeeGUI view, so activate it
+         ldy   gViewInUse,x
+         beq   @error
          ldx   #WGSelectView
          jsr   WeeGUI
          jmp   SimulateClick
+@updown  ldx   #ID_RESUME_SLOT0
+         ldy   #ID_RESUME_NEWGAME
+         jmp   HandleUpDownRadio
 
 ;------------------------------------------------------------------------------
 ; CreateResumeRadioCallback
@@ -182,7 +177,6 @@ HandleResumeKey
 CreateResumeRadioCallback
          +STAY PTR
          lda   (PTR)
-         sta   gResumeViewInUse+1,x  ; mark whether this view is in use (hotkeys activate based on this array)
          beq   @exit                 ; length=0 means this slot is unused, so we're done
 
          lda   PTR
@@ -241,8 +235,8 @@ iResumeVTAB
 ; out:   exits via LaunchInterpreterWithGame
 ;------------------------------------------------------------------------------
 ResumeOKCallback
-         lda   #ID_RESUME_SLOT0
-         ldy   #ID_RESUME_NEWGAME+1
+         ldx   #ID_RESUME_SLOT0
+         ldy   #ID_RESUME_NEWGAME
          jsr   GetCheckedRadioButton ; returns A = WeeGUI view ID
          cmp   #ID_RESUME_NEWGAME
          bne   +

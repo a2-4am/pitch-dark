@@ -24,8 +24,6 @@ ID_DESCRIPTION = 9
 
 gMainScreenPaintDirty
          !byte 0
-gViewInUse
-         !byte 0,1,1,1,1,0,0,0,0,0,0,0,0,0,0
 
 kInfoPaintWidth           = 65
 kDescriptionPaintWidth    = 78

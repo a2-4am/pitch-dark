@@ -21,12 +21,19 @@
 ; - kStringCancel
 ;
 
+gViewInUse
+         !byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
 kStringOK
          !byte $0F                   ; 'O' inverse
          !byte 139,0
 kStringCancel
          !byte $03                   ; 'C' inverse
          !text "ancel",0
+
+; IDs of actions that do not correspond to WeeGUI view IDs have high bit set
+ID_RADIO_PREVIOUS         = $81
+ID_RADIO_NEXT             = $82
 
 ;------------------------------------------------------------------------------
 ; HardResetWeeGUI
@@ -44,6 +51,9 @@ HardResetWeeGUI
          +STAY PARAM0
 -        ldx   #WGCreateView
          jsr   WeeGUI                ; create dummy views to reset state on all views
+         ldx   @kHardResetDummyView
+         lda   #0
+         sta   gViewInUse,x
          dec   @kHardResetDummyView
          bpl   -
          ldx   #WGResetAll           ; reset WeeGUI (destroys everything we just created)
@@ -106,8 +116,11 @@ CreateButton
 @type=*+1
          ldx   #$FD                  ; SMC
          jsr   WeeGUI
-         ldx   #WGViewSetRawTitle
+         lda   (PARAM0)
+         tax
          lda   #1
+         sta   gViewInUse,x
+         ldx   #WGViewSetRawTitle
          sta   PARAM0
          jmp   WeeGUI
 
@@ -128,6 +141,10 @@ CreateDialog
          +STAY PARAM0
          ldx   #WGCreateView         ; create frame
          jsr   WeeGUI
+         lda   (PARAM0)
+         tax
+         lda   #1
+         sta   gViewInUse,x
 
          +LDPARAM 3
          +STAY PARAM0
@@ -212,18 +229,24 @@ SimulateClick
 ; WeeGUI has no way to query the type of a view, so this function takes the
 ; lower and upper IDs and all views within that range are presumed to be
 ; radio buttons.
-; WeeGUI has no way to query if a view is in use, so all views within the
-; given range are presumed to exist and be initialized properly.
+; WeeGUI has no way to query if a view is in use, so each view within the
+; given range must either (a) be in use, or (b) have had its state set to 0
+; (perhaps by calling HardResetWeeGUI earlier).
 ;
 ; in:    WeeGUI initialized
-;        A contains WeeGUI view ID of first radio button
-;        Y contains 1 greater than the WeeGUI view ID of last radio button
+;        X = WeeGUI view ID of first radio button
+;        Y = WeeGUI view ID of last radio button
 ; out:   C clear -> A contains WeeGUI view ID of selected radio button
 ;        C set -> error, there is no selected radio button
-;        all other registers and flags clobbered
+;        Y preserved
+;        X clobbered
+;        other flags clobbered
 ;------------------------------------------------------------------------------
 GetCheckedRadioButton
+         iny
          sty   @max
+         dey
+         txa
 -        pha
          ldx   #WGSelectView
          jsr   WeeGUI
@@ -241,6 +264,59 @@ GetCheckedRadioButton
 @found   pla
          clc
          rts
+
+;------------------------------------------------------------------------------
+; HandleUpDownRadio
+;
+; in:    WeeGUI initialized
+;        A = action ID (#ID_RADIO_PREVIOUS or #ID_RADIO_NEXT)
+;        X = WeeGUI view ID of first radio button
+;        Y = WeeGUI view ID of last radio button
+; out:   all registers and flags clobbered
+;------------------------------------------------------------------------------
+HandleUpDownRadio
+         sta   @action               ; action ID >= #$80 is a screen-specific action, so stash it for now
+         stx   @first
+         sty   @last
+         jsr   GetCheckedRadioButton ; A = WeeGUI view ID of currently checked radio button
+         ldx   #WGSelectView         ; uncheck it and repaint it
+         jsr   WeeGUI
+         stz   PARAM0
+         ldx   #WGSetState
+         jsr   WeeGUI
+         ldx   #WGPaintView
+         jsr   WeeGUI
+@findNewLoop
+@action=*+1
+         ldx   #$FD
+         cpx   #ID_RADIO_PREVIOUS
+         beq   @up
+@last=*+1
+         cmp   #$FD
+         bcs   +
+         inc                         ; move to next
+         +HIDE_NEXT_2_BYTES
+@first=*+1
++        lda   #$FD                  ; move to first
+         bra   @checkNew
+@up      dec                         ; tentatively move to previous
+         cmp   @first
+         bcs   @checkNew
+         lda   @last                 ; nope, we were already on the first, so move to last
+@checkNew
+         tax
+         ldy   gViewInUse,x          ; if new radio is unused, move again
+         beq   @findNewLoop
+         ldx   #WGSelectView         ; check new radio button and repaint it
+         jsr   WeeGUI
+         ldx   #WGViewFocus
+         jsr   WeeGUI
+         ldx   #WGSetState
+         lda   #1
+         sta   PARAM0
+         jsr   WeeGUI
+         ldx   #WGPaintView
+         jmp   WeeGUI
 
 ;------------------------------------------------------------------------------
 ; CreateNullTerminatedString

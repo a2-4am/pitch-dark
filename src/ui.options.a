@@ -46,7 +46,7 @@ OptionsDialog
          txs
          jsr   HardResetWeeGUI
 
-         jsr   CreateDialog          ; create frame and OK/Cancel buttons
+         jsr   CreateDialog          ; create decorated frame
          !word kViewOptionsFrame
          !word kStringOptionsFrame
 

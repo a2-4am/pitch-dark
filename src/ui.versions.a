@@ -21,9 +21,6 @@ ID_VERSIONS_9             = 9
 ID_VERSIONS_OK            = 10
 ID_VERSIONS_CANCEL        = 11
 
-gVersionsViewInUse
-         !byte 1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0
-
 ; action keys for versions screen
 kVersionsKeys
          !byte $CF,ID_VERSIONS_OK    ; O
@@ -41,15 +38,11 @@ kVersionsKeys
          !byte $B7,ID_VERSIONS_7     ; 7
          !byte $B8,ID_VERSIONS_8     ; 8
          !byte $B9,ID_VERSIONS_9     ; 9
-         !byte $88,ID_VERSIONS_PREVIOUS ; left arrow
-         !byte $95,ID_VERSIONS_NEXT  ; right arrow
-         !byte $8B,ID_VERSIONS_PREVIOUS ; up arrow
-         !byte $8A,ID_VERSIONS_NEXT  ; down arrow
+         !byte $88,ID_RADIO_PREVIOUS ; left arrow
+         !byte $95,ID_RADIO_NEXT     ; right arrow
+         !byte $8B,ID_RADIO_PREVIOUS ; up arrow
+         !byte $8A,ID_RADIO_NEXT     ; down arrow
 _endVersionsKeys
-
-; IDs of actions that do not correspond to WeeGUI view IDs have high bit set
-ID_VERSIONS_PREVIOUS      = $81
-ID_VERSIONS_NEXT          = $82
 
 ;------------------------------------------------------------------------------
 ; VersionsDialog
@@ -63,11 +56,6 @@ VersionsDialog
          ldx   #$FF
          txs
          jsr   HardResetWeeGUI
-
-         ldx   #ID_VERSIONS_9
--        stz   gVersionsViewInUse,x  ; reset flags for which radio buttons are in use (1-9)
-         dex
-         bne   -
 
          jsr   okvs_len
          !word gVersionsStore
@@ -87,7 +75,7 @@ VersionsDialog
          inc
          sta   kViewVersionsCancel+2 ; Cancel top = OK top + 2
 
-         jsr   CreateDialog
+         jsr   CreateDialog          ; create decorated frame
          !word kViewVersionsFrame
          !word kStringVersionsFrame
 
@@ -99,8 +87,6 @@ VersionsDialog
          ldx   #0                    ; X = index of radio button (0-based)
 .createRadioLoop
          phx
-         lda   #1
-         sta   gVersionsViewInUse+1,x ; mark this view as in use so hotkeys will activate
          txa
          asl
          tax
@@ -186,43 +172,14 @@ HandleVersionsKey
 @found   lda   kVersionsKeys+1,x     ; get action ID associated with this key
          bmi   @updown
          tax                         ; action ID < #$80 is a WeeGUI view, so activate it
-         ldy   gVersionsViewInUse,x
+         ldy   gViewInUse,x
          beq   @error
          ldx   #WGSelectView
          jsr   WeeGUI
          jmp   SimulateClick
-@updown  pha                         ; action ID >= #$80 is a screen-specific action, so stash it for now
-         jsr   GetCheckedVersion     ; figure out which radio button is checked
-         ldx   #WGSelectView         ; uncheck it and repaint it
-         jsr   WeeGUI
-         stz   PARAM0
-         ldx   #WGSetState
-         jsr   WeeGUI
-         ldx   #WGPaintView
-         jsr   WeeGUI
-         plx                         ; X = action ID (pushed earlier from A)
-         cpx   #ID_VERSIONS_PREVIOUS
-         beq   @up
-         cmp   iNumVersions          ; find 'next' view ID (wrapping around to 1)
-         bcs   +
-         inc
-         +HIDE_NEXT_2_BYTES
-+        lda   #1
-         bra   @checkNewVersion
-@up      dec
-         bne   @checkNewVersion
-         lda   iNumVersions
-@checkNewVersion
-         ldx   #WGSelectView         ; check new radio button and repaint it
-         jsr   WeeGUI
-         ldx   #WGViewFocus
-         jsr   WeeGUI
-         ldx   #WGSetState
-         lda   #1
-         sta   PARAM0
-         jsr   WeeGUI
-         ldx   #WGPaintView
-         jmp   WeeGUI
+@updown  ldx   #ID_VERSIONS_1
+         ldy   iNumVersions
+         jmp   HandleUpDownRadio
 
 PrintVersionLabelCallback
 ; called via okvs_iter_values
@@ -239,17 +196,10 @@ iVersionsVTAB
          inc   iVersionsVTAB
          rts
 
-GetCheckedVersion
-         lda   #ID_VERSIONS_1
-         pha
-         clc
-         adc   iNumVersions          ; iNumVersions was populated in VersionsDialog and hasn't changed since
-         tay
-         pla
-         jmp   GetCheckedRadioButton
-
 VersionsOKCallback
-         jsr   GetCheckedVersion
+         ldx   #ID_VERSIONS_1
+         ldy   iNumVersions
+         jsr   GetCheckedRadioButton ; figure out which radio button is checked
          dec
          sta   @n
          jsr   okvs_nth
