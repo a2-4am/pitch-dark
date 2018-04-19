@@ -10,9 +10,9 @@
                 ;user-defined options
                 verbose_info = 0        ;set to 1 to enable display of memory usage
 
-gamename=$2940
-savename=$2980
-scrpname=$29C0
+gamename=$2960
+savename=$2990
+scrpname=$29D0
 
 ;unpacker variables, no need to change these
 src        =        $0
