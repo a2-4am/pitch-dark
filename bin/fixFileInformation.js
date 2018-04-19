@@ -1,0 +1,7 @@
+a=new ActiveXObject("scripting.filesystemobject")
+b=a.opentextfile("src/constants.a").readall()
+b=b.substr(b.search(c=/kPitchDarkBinaryAddress/))
+d=a.opentextfile(e=WScript.Arguments(0))
+b=d.readall().replace(c,parseInt(b.substr(b.search(/\$/)+1),16).toString(16).toUpperCase())
+d.close()
+a.createtextfile(e).write(b)
