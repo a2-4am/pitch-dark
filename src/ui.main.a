@@ -61,9 +61,6 @@ MainScreen
 ;------------------------------------------------------------------------------
 PaintMain
          jsr   HardResetWeeGUI
-         stz   gViewInUse+ID_BOXART
-         stz   gViewInUse+ID_HINTS
-         stz   gViewInUse+ID_VERSIONS
          ldx   #1                    ; flag - clear screen before painting
          stx   gMainScreenPaintDirty
          +HIDE_NEXT_2_BYTES
