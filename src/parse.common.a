@@ -64,7 +64,7 @@ ParseKeyValueText
          cmp   #$0D                  ; found CR before '=', ignore key and start over (also handles blank lines)
          beq   .newKey
          cmp   #$5B                  ; '[' ends the parsing
-         beq   .done
+         beq   .parseKeyValueDone
          sta   gKey,x
          inx
          bpl   .gatherKey
@@ -113,4 +113,5 @@ IncAndGetChar
          bne   +
          inc   $FF
 +        lda   ($FE),y
-.done    rts
+.parseKeyValueDone
+         rts
