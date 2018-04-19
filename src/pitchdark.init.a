@@ -17,19 +17,20 @@
 ;------------------------------------------------------------------------------
          lda   RAM32
          cmp   NODEV
-         bne   +
+         bne   @maybeRAMdisk
          lda   RAM32+1
          cmp   NODEV+1
-         beq   .noRAMdisk
-+        ldy   DEVCNT
+         beq   @noRAMdisk
+@maybeRAMdisk
+         ldy   DEVCNT
 -        lda   DEVLST, y
          and   #$F3
          cmp   #$B3
-         beq   .foundRAMdisk
+         beq   @foundRAMdisk
          dey
          bpl   -
-         bmi   .noRAMdisk
-.foundRAMdisk
+         bmi   @noRAMdisk
+@foundRAMdisk
 -        lda   DEVLST+1, y           ; move other devices up in list
          sta   DEVLST, y
          beq   +                     ; device list is zero-terminated
@@ -40,7 +41,7 @@
          lda   NODEV+1
          sta   RAM32+1
          dec   DEVCNT                ; reduce ProDOS device count
-.noRAMdisk
+@noRAMdisk
 
 ;------------------------------------------------------------------------------
 ; clear options script and make checksum invalid

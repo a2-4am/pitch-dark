@@ -64,7 +64,7 @@ LoadFile
          +STAY mliparam+3            ; ProDOS file buffer
 
          jsr   _openfile
-         bcs   +                     ; C set on error
+         bcs   @exit                 ; C set on error
 
          pha                         ; push file reference number
          +LDPARAM 3
@@ -81,7 +81,7 @@ LoadFile
          plp                         ; restore flags from readfile
                                      ; (so caller gets codes from read attempt,
                                      ; not close)
-+        rts
+@exit    rts
 
 ;-------------------------------
 ; LoadDHRFile
@@ -111,8 +111,8 @@ LoadDHRFile
          bne   -
 
          jsr   _openfile
-         bcs   .dhrexit              ; C set on error
-         sta   .saverefnum           ; store file refnum
+         bcs   @exit                 ; C set on error
+         sta   @saverefnum           ; store file refnum
 
          ldy   #$20
          stz   mliparam+2            ; read into $2000 in main mem
@@ -121,34 +121,34 @@ LoadDHRFile
          sty   mliparam+5
 
          jsr   _readfile
-         bcs   .close
+         bcs   @close
 
          sta   $C000
          ldx   #$20                  ; copy $2000 bytes to auxmem
-         stx   .copya+2
-         stx   .copyb+2
-         ldy   #$00
-.writeToAuxLoop
+         stx   @copya+2
+         stx   @copyb+2
+         ldy   #0
+@writeToAuxLoop
          sta   $C005
-.copya   lda   $FF00, y
-.copyb   sta   $FF00, y
+@copya   lda   $FF00, y
+@copyb   sta   $FF00, y
          iny
-         bne   .copya
+         bne   @copya
          sta   $C004
-         inc   .copya+2
-         inc   .copyb+2
+         inc   @copya+2
+         inc   @copyb+2
          dex
-         bne   .writeToAuxLoop
+         bne   @writeToAuxLoop
 
-         lda   .saverefnum
+         lda   @saverefnum
          jsr   _readfile             ; read another $2000 bytes into $2000 (stays in main mem)
 
-.close   php                         ; save flags from readfile
-.saverefnum=*+1
-         lda   #$d1                  ; file refnum (set above)
+@close   php                         ; save flags from readfile
+@saverefnum=*+1
+         lda   #$FD                  ; file refnum (SMC)
          jsr   _closefile
          plp                         ; restore flags from readfile
-.dhrexit rts
+@exit    rts
 
 ;-------------------------------
 ; SaveFile
@@ -192,12 +192,12 @@ SaveFile
          lda   #CMD_CREATE           ; MLI create command
          ldy   #PC_CREATE            ; number of parameters for 'create' command
          jsr   mli
-         bcs   +
+         bcs   @exit
 
          +LDPARAM 10
          +STAY mliparam+3            ; PrODOS file buffer
          jsr   _openfile
-         bcs   +
+         bcs   @exit
 
          sta   mliparam+1            ; store file reference number
          +LDPARAM 6
@@ -212,7 +212,7 @@ SaveFile
          plp                         ; restore flags from write
                                      ; (so caller gets codes from write attempt,
                                      ; not close)
-+        rts
+@exit    rts
 
 ;-------------------------------
 ; SetPrefix
@@ -270,11 +270,11 @@ _openfile
          lda   #CMD_OPEN             ; MLI command
          ldy   #PC_OPEN              ; number of parameters for 'open' command
          jsr   mli
-         bcs   +
+         bcs   @exit
          lda   refnum                ; caller should save file reference number
                                      ; as this memory location may be
                                      ; overwritten by later MLI calls
-+        rts
+@exit    rts
 
 ;-------------------------------
 ; read an open file via ProDOS MLI
@@ -291,9 +291,9 @@ _readfile
          lda   #CMD_READ             ; MLI read command
          ldy   #PC_READ              ; number of parameters for 'read' command
          jsr   mli
-         bcs   +
+         bcs   @exit
          lda   mliparam+1            ; if no error, return file reference number
-+        rts
+@exit    rts
 
 ;-------------------------------
 ; close an open file
@@ -328,7 +328,7 @@ mli      sta   mlicmd                ; store command code
          jsr   PRODOSMLI             ; call ProDOS
 mlicmd   !byte 00                    ; command number
          !word mliparam              ; address of parameter table
-mliexit  rts
+         rts
 mliparam !byte $FE,$FE,$FE,$FE
 filetype !byte $FE                   ; file type (set by MLI get_file_info)
 auxtype                              ; auxiliary file type (2 bytes, set by MLI get_file_info)

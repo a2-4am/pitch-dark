@@ -34,6 +34,8 @@ NODEV                     = $BF10    ; means 'no device connected'
 RAM32                     = $BF26    ; S3,D2 /RAM device
 DEVCNT                    = $BF31    ; ProDOS device count
 DEVLST                    = $BF32    ; ProDOS device list
+SPEAKER                   = $C030    ; used by SoftBell
+WAIT                      = $FCA8
 MAGICRTS                  = $FF58    ; used to set overflow bit
 
 ; zero page

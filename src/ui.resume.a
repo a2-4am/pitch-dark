@@ -157,12 +157,12 @@ ResumeDialog
 HandleResumeKey
          ldx   #_endResumeKeys-kResumeKeys
 -        cmp   kResumeKeys,x
-         beq   +
+         beq   @found
          dex
          dex
          bpl   -
          jmp   SoftBell
-+
+@found
          ; TODO need to handle up and down arrow keys like versions dialog
          lda   kResumeKeys+1,x
          ldx   #WGSelectView
@@ -183,7 +183,7 @@ CreateResumeRadioCallback
          +STAY PTR
          lda   (PTR)
          sta   gResumeViewInUse+1,x  ; mark whether this view is in use (hotkeys activate based on this array)
-         beq   ++                    ; length=0 means this slot is unused, so we're done
+         beq   @exit                 ; length=0 means this slot is unused, so we're done
 
          lda   PTR
          inc                         ; skip over length byte
@@ -199,7 +199,7 @@ CreateResumeRadioCallback
          !word kViewResumeRadio
          inc   iResumeVTAB
          inc   iResumeVTAB
-++       rts
+@exit    rts
 
 ;------------------------------------------------------------------------------
 ; PrintResumeLabelCallback
@@ -214,7 +214,7 @@ CreateResumeRadioCallback
 PrintResumeLabelCallback
          +STAY PTR
          lda   (PTR)
-         beq   ++                    ; length=0 means this slot is unused, so we're done
+         beq   .printResumeExit      ; length=0 means this slot is unused, so we're done
 
          lda   PTR
          inc                         ; skip over length byte
@@ -230,7 +230,8 @@ iResumeVTAB
          !word $FDFD                 ; SMC
          inc   iResumeVTAB
          inc   iResumeVTAB
-++       rts
+.printResumeExit
+         rts
 
 ;------------------------------------------------------------------------------
 ; ResumeOKCallback

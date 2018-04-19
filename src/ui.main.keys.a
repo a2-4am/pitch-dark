@@ -56,28 +56,24 @@ _endMainKeys
 HandleKey
          ldx   #_endMainKeys-kMainKeys
 -        cmp   kMainKeys,x
-         beq   .foundKey
+         beq   @found
          dex
          dex
          bpl   -
-.notFound
-         jmp   SoftBell              ; unknown key, beep softly
-.foundKey
-         lda   kMainKeys+1,x         ; get ID associated with this key
-         bpl   .activateView         ; ID < #$80 is a WeeGUI view, so activate it
+@error   jmp   SoftBell              ; unknown key, beep softly
+@found   lda   kMainKeys+1,x         ; get ID associated with this key
+         bpl   @activateView         ; ID < #$80 is a WeeGUI view, so activate it
          cmp   #ID_X                 ; X, Y, and Z keys are part of
-         beq   .x                    ; an undocumented feature
+         beq   @x                    ; an undocumented feature
          cmp   #ID_Y
-         beq   .y
+         beq   @y
          cmp   #ID_Z
-         beq   .z
+         beq   @z
          cmp   #ID_SCROLLDOWN        ; arrow keys scroll the description box
-         beq   .handleScrollDown
-.handleScrollUp
+         beq   @down
          lda   #$01
          +HIDE_NEXT_2_BYTES
-.handleScrollDown
-         lda   #$FF
+@down    lda   #$FF
          pha
          ldx   #WGSelectView
          lda   #ID_DESCRIPTION
@@ -85,47 +81,45 @@ HandleKey
          ldx   #WGScrollYBy
          pla
          jsr   WeeGUI
-         bra   .focusAndDoAction
-.activateView
+         bra   @click
+@activateView
          tax
          ldy   gViewInUse,x
-         beq   .notFound
+         beq   @error
          ldx   #WGSelectView
          jsr   WeeGUI
-.focusAndDoAction
-         jmp   SimulateClick
+@click   jmp   SimulateClick
 
 ;------------------------------------------------------------------------------
 ; XYZZY handler
 ;------------------------------------------------------------------------------
-.y       lda   .xyzzyCounter
+@y       lda   @xyzzyCounter
          cmp   #1
-         beq   .y1
+         beq   @y1
          cmp   #4
-         bne   .xyzzyReset
-         beq   .xyzzyGo
-.z       lda   .xyzzyCounter
+         bne   @xyzzyReset
+         beq   @xyzzyGo
+@z       lda   @xyzzyCounter
          cmp   #2
-         beq   .z1
+         beq   @z1
          cmp   #3
-         beq   .z2
-         bra   .xyzzyReset
-.x       lda   #1
+         beq   @z2
+         bra   @xyzzyReset
+@x       lda   #1
          +HIDE_NEXT_2_BYTES
-.y1      lda   #2
+@y1      lda   #2
          +HIDE_NEXT_2_BYTES
-.z1      lda   #3
+@z1      lda   #3
          +HIDE_NEXT_2_BYTES
-.z2      lda   #4
+@z2      lda   #4
          +HIDE_NEXT_2_BYTES
-.xyzzyReset
+@xyzzyReset
          lda   #0
-         sta   .xyzzyCounter
-.xyzzyError
-         jmp   SoftBell
-.xyzzyCounter
+         sta   @xyzzyCounter
+         bra   @error
+@xyzzyCounter
          !byte 0
-.xyzzyGo
+@xyzzyGo
          jsr   SaveGlobalPreferences
          jsr   ResetPath
          +LDADDR kArtworkRootDirectory
@@ -133,7 +127,7 @@ HandleKey
 
          jsr   SetPrefix             ; must set ProDOS prefix to directory where DHGR files actually are
          !word gPathname             ; (DHRSLIDE does not look in subdirectories)
-         bcs   .xyzzyError
+         bcs   @error
 
          jsr   ResetPath
          +LDADDR kDHRSLIDEFilename
@@ -172,20 +166,21 @@ callback_previous
          !word gGamesListStore
          tax
          dex
-+        bra   .loadNewGameInfoAndRepaint
++        bra   loadNewGameInfoAndRepaint
 
 callback_next
          jsr   GetCurrentGameIndex
          inx
-         stx   .n
+         stx   @n
          jsr   okvs_len
          !word gGamesListStore
-         ldx   .n
-.n=*+1
+         ldx   @n
+@n=*+1
          cmp   #$FD                  ; SMC
-         bne   .loadNewGameInfoAndRepaint
+         bne   loadNewGameInfoAndRepaint
          ldx   #0
-.loadNewGameInfoAndRepaint
+
+loadNewGameInfoAndRepaint
          stx   +
          jsr   okvs_nth
          !word gGamesListStore

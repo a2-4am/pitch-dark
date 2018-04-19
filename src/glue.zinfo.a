@@ -50,14 +50,14 @@ LoadSavedGameInfo
          +LDADDR zinfo_base
          +STAY ZPTR
          ldx   #0
-.zParseLoop
+@zParseLoop
          +LDAY ZPTR
          pha
          phy
          phx
          jsr   ResetPath
          lda   (ZPTR)
-         beq   .saveAndMoveToNextSlot; no saved game in this slot
+         beq   @saveAndMoveToNextSlot; no saved game in this slot
          inc   gSavedGamesSlotsInUse ; update number of slots in use (separate from length of store)
          +LDAY ZPTR
          jsr   AddToPathWithHighBit  ; add location information
@@ -71,7 +71,7 @@ LoadSavedGameInfo
          +LDADDR kLeftParen
          jsr   AddToPathWithHighBit  ; add ' ('
          lda   (ZPTR)
-         bne   .justTime
+         bne   @justTime
          lda   ZPTR
          clc
          adc   #(score_offset-time_offset)
@@ -91,7 +91,7 @@ LoadSavedGameInfo
          inc   ZPTR+1
 +                                    ; A/Y -> ZINFO moves field (length-prefixed string, guaranteed non-empty)
                                      ; execution falls through here
-.justTime
+@justTime
          +LDAY ZPTR
          jsr   AddToPathWithHighBit  ; add final piece of information (moves or time, depending on how we got here)
          +LDADDR kRightParen
@@ -99,7 +99,7 @@ LoadSavedGameInfo
          +LDADDR kNullByte
          jsr   AddToPath             ; add 0x00
                                      ; execution falls through here
-.saveAndMoveToNextSlot
+@saveAndMoveToNextSlot
          plx
          phx
          txa
@@ -130,7 +130,7 @@ LoadSavedGameInfo
          inx
          cpx   #zinfo_maxslots
          bcs   +
-         jmp   .zParseLoop
+         jmp   @zParseLoop
 +        rts
 
 kZINFOFilename

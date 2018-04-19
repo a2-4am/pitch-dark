@@ -130,7 +130,7 @@ okvs_append
          +STAY SRC                   ; SRC -> new key to copy
          lda   (SRC)
          inc
-         sta   .append_keylen
+         sta   @keylen
          tay
 -        dey                         ; copy new key
          lda   (SRC),y
@@ -140,7 +140,7 @@ okvs_append
 
          lda   PTR                   ; update PTR to byte after copied key
          clc
-.append_keylen=*+1
+@keylen=*+1
          adc   #$FD                  ; SMC
          sta   PTR
          bcc   +
@@ -153,7 +153,7 @@ okvs_append
          bne   +
          lda   (SRC)                 ; no max, use actual length instead
          inc
-+        sta   .append_valuelen
++        sta   @valuelen
          tay
 -        dey
          lda   (SRC),y
@@ -163,7 +163,7 @@ okvs_append
 
          lda   PTR
          clc
-.append_valuelen=*+1
+@valuelen=*+1
          adc   #$FD                  ; SMC
          sta   SRC
          bcc   +
@@ -198,18 +198,18 @@ okvs_get
          +PARAMS_ON_STACK 4
          jsr   SetPTRFromStackParams
          lda   (PTR)
-         beq   .get_fail             ; no keys, fail immediately
+         beq   @fail                 ; no keys, fail immediately
          tax                         ; X = number of keys
          inx
-         stx   .get_maxkeys
+         stx   @maxkeys
          ldx   #0
          jsr   incptr                ; PTR -> first record
          +LDPARAM 3
          +STAY SRC                   ; SRC -> key we want to find
          lda   (SRC)
          inc
-         sta   .get_matchlen
-.get_match_record_loop
+         sta   @matchlen
+@matchRecordLoop
          lda   PTR+1
          sta   DEST+1
          lda   PTR
@@ -219,17 +219,17 @@ okvs_get
          bcc   +
          inc   DEST+1                ; DEST -> key of this record
 +        ldy   #0
-.get_match_key_loop
+@matchKeyLoop
          lda   (SRC),y
          cmp   (DEST),y
-         bne   .get_next
+         bne   @next
          iny
-.get_matchlen=*+1
+@matchlen=*+1
          cpy   #$FD                  ; SMC
-         bne   .get_match_key_loop
+         bne   @matchKeyLoop
          +LDAY PTR
          clc
-         adc   .get_matchlen
+         adc   @matchlen
          bcc   +
          iny
 +        clc
@@ -239,14 +239,12 @@ okvs_get
          iny
          clc
 +        rts
-.get_next
-         jsr   derefptr              ; PTR -> next record
+@next    jsr   derefptr              ; PTR -> next record
          inx
-.get_maxkeys=*+1
+@maxkeys=*+1
          cpx   #$FD                  ; SMC
-         bne   .get_match_record_loop
-.get_fail
-         sec
+         bne   @matchRecordLoop
+@fail    sec
          rts
 
 ;------------------------------------------------------------------------------
@@ -268,11 +266,11 @@ okvs_nth
          ldy   #3
          lda   (PARAM),y
          tax                         ; X = numeric index of key to get
-         beq   +
+         beq   @found
 -        jsr   derefptr
          dex
          bne   -
-+        jsr   incptr
+@found   jsr   incptr
          jsr   incptr
          +LDAY PTR
          rts
@@ -302,14 +300,14 @@ okvs_update
          sta   SAVE
          dey
 -        lda   (PARAM),y
-         sta   .getparams,y
+         sta   @getparams,y
          dey
          bne   -
          jsr   okvs_get
-.getparams=*-1
+@getparams=*-1
          !word $FDFD                 ; SMC
          !word $FDFD                 ; SMC
-         bcs   .exit
+         bcs   @exit
          +STAY DEST
          lda   (SAVE)
          tay
@@ -319,7 +317,7 @@ okvs_update
          cpy   #$FF
          bne   -
          clc
-.exit    rts
+@exit    rts
 
 ;------------------------------------------------------------------------------
 ; okvs_iter
@@ -338,14 +336,13 @@ okvs_iter
          +PARAMS_ON_STACK 4
          jsr   SetPTRFromStackParams
          lda   (PTR)
-         beq   .iterDone             ; no keys, exit immediately
-         sta   .iterMax
+         beq   @exit                 ; no keys, exit immediately
+         sta   @max
          +LDPARAM 3
-         +STAY .iterCallback
+         +STAY @callback
          jsr   incptr                ; PTR -> first record
          ldx   #0
-.iterLoop
-         +LDAY PTR
+@loop    +LDAY PTR
          pha                         ; save PTR on stack (in case callback clobbers it)
          phy
          clc
@@ -353,7 +350,7 @@ okvs_iter
          bcc   +
          iny                         ; A/Y -> key
 +        phx
-.iterCallback=*+1
+@callback=*+1
          jsr   $FDFD                 ; SMC
          plx
          ply
@@ -361,11 +358,10 @@ okvs_iter
          +STAY PTR                   ; restore PTR from stack
          jsr   derefptr              ; PTR -> next record
          inx
-.iterMax=*+1
+@max=*+1
          cpx   #$FD                  ; SMC
-         bne   .iterLoop
-.iterDone
-         rts
+         bne   @loop
+@exit    rts
 
 ;------------------------------------------------------------------------------
 ; okvs_iter_values
@@ -384,28 +380,27 @@ okvs_iter_values
          +PARAMS_ON_STACK 4
          jsr   SetPTRFromStackParams
          lda   (PTR)
-         beq   .iterValuesDone       ; no keys, exit immediately
-         sta   .iterValuesMax
+         beq   @exit                 ; no keys, exit immediately
+         sta   @max
          +LDPARAM 3
-         +STAY .iterValuesCallback
+         +STAY @callback
          jsr   incptr                ; PTR -> first record
          ldx   #0
-.iterValuesLoop
-         ldy   #2
+@loop    ldy   #2
          lda   (PTR),y               ; A = length of key
          clc
          adc   #3                    ; skip over pointer to next record (2 bytes) + key length (1 byte)
-         sta   .iterValuesSkipLen
+         sta   @skiplen
          +LDAY PTR
          pha                         ; save PTR on stack (in case callback clobbers it)
          phy
          clc
-.iterValuesSkipLen=*+1               ; skip over key
+@skiplen=*+1                         ; skip over key
          adc   #$FD                  ; SMC
          bcc   +
          iny                         ; A/Y -> value
 +        phx
-.iterValuesCallback=*+1
+@callback=*+1
          jsr   $FDFD                 ; SMC
          plx
          ply
@@ -413,11 +408,10 @@ okvs_iter_values
          +STAY PTR                   ; restore PTR from stack
          jsr   derefptr              ; PTR -> next record
          inx
-.iterValuesMax=*+1
+@max=*+1
          cpx   #$FD                  ; SMC
-         bne   .iterValuesLoop
-.iterValuesDone
-         rts
+         bne   @loop
+@exit    rts
 
 ;------------------------------------------------------------------------------
 ; okvs_as_boolean

@@ -118,12 +118,12 @@ OptionsDialog
 HandleOptionsKey
          ldx   #_endOptionsKeys-kOptionsKeys
 -        cmp   kOptionsKeys,x
-         beq   +
+         beq   @found
          dex
          dex
          bpl   -
          jmp   SoftBell
-+        lda   kOptionsKeys+1,x
+@found   lda   kOptionsKeys+1,x
          ldx   #WGSelectView
          jsr   WeeGUI
          jmp   SimulateClick
@@ -153,33 +153,33 @@ SetCheckboxByPref
 
          ldy   #1
          lda   (PARAM),y
-         sta   .checkboxViewID
+         sta   @view
          +LDPARAM 2
-         +STAY +
+         +STAY @key
 
          jsr   okvs_get
          !word gGlobalPrefsStore
-+        !word $FDFD                 ; SMC
-         bcs   +
+@key     !word $FDFD                 ; SMC
+         bcs   @exit
 
          jsr   okvs_as_boolean
-         beq   +
+         beq   @exit
 
          ldx   #WGSelectView
-.checkboxViewID=*+1
+@view=*+1
          lda   #$FD                  ; SMC
          jsr   WeeGUI
          ldx   #WGSetState
          lda   #1
          sta   PARAM0
          jsr   WeeGUI
-+        rts
+@exit    rts
 
 SetPrefByCheckbox
          +PARAMS_ON_STACK 3
 
          +LDPARAM 2
-         +STAY +
+         +STAY @key
          ldy   #1
          lda   (PARAM),y
          ldx   #WGSelectView
@@ -189,15 +189,15 @@ SetPrefByCheckbox
 
          lda   PARAM0
          and   #1
-         sta   +++
+         sta   @valueb
 
          jsr   okvs_update
          !word gGlobalPrefsStore
-+        !word $FDFD                 ; SMC
-         !word ++
+@key     !word $FDFD                 ; SMC
+         !word @value
          rts
-++       !byte 1
-+++      !byte $FD                   ; SMC
+@value   !byte 1
+@valueb  !byte $FD                   ; SMC
 
 ;------------------------------------------------------------------------------
 ; WeeGUI view configuration records

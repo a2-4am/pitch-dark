@@ -39,17 +39,16 @@ kStringCancel
 ;------------------------------------------------------------------------------
 HardResetWeeGUI
          lda   #15                   ; highest possible WeeGUI view ID
-         sta   kHardResetDummyView
-         +LDAY kHardResetDummyView
+         sta   @kHardResetDummyView
+         +LDAY @kHardResetDummyView
          +STAY PARAM0
-.hardResetLoop
-         ldx   #WGCreateView
+-        ldx   #WGCreateView
          jsr   WeeGUI                ; create dummy views to reset state on all views
-         dec   kHardResetDummyView
-         bpl   .hardResetLoop
+         dec   @kHardResetDummyView
+         bpl   -
          ldx   #WGResetAll           ; reset WeeGUI (destroys everything we just created)
          jmp   WeeGUI
-kHardResetDummyView
+@kHardResetDummyView
          !byte 0,0,0,0,0,0,0,0
 
 ;------------------------------------------------------------------------------
@@ -99,12 +98,12 @@ CreateCheckbox
          +HIDE_NEXT_2_BYTES
 CreateButton
          ldx   #WGCreateButton
-         stx   .createViewType
+         stx   @type
 
          +PARAMS_ON_STACK 2
          +LDPARAM 1
          +STAY PARAM0
-.createViewType=*+1
+@type=*+1
          ldx   #$FD                  ; SMC
          jsr   WeeGUI
          ldx   #WGViewSetRawTitle
@@ -224,7 +223,7 @@ SimulateClick
 ;        all other registers and flags clobbered
 ;------------------------------------------------------------------------------
 GetCheckedRadioButton
-         sty   .radioMax
+         sty   @max
 -        pha
          ldx   #WGSelectView
          jsr   WeeGUI
@@ -232,15 +231,14 @@ GetCheckedRadioButton
          jsr   WeeGUI
          lda   PARAM0
          and   #1
-         bne   .radioFound
+         bne   @found
          pla
          inc
-.radioMax=*+1
+@max=*+1
          cmp   #$FD                  ; SMC
          bcc   -
          +HIDE_NEXT_2_BYTES
-.radioFound
-         pla
+@found   pla
          clc
          rts
 

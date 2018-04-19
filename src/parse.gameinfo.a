@@ -81,32 +81,32 @@ LoadGameInfo
          ldy   #$00                  ; index into ($FE) pointing to current character
          ldx   #$08                  ; index into sectionPointers array, stores pointer to start of each section
 
-.convertSectionLoop
+@convertSectionLoop
          jsr   IncAndGetChar
-.convertSectionNoInc
+@convertSectionNoInc
          cmp   #$5B                  ; '[' is the start of a new section
-         beq   .skipSectionName
+         beq   @skipSectionName
          cmp   #$0D                  ; CR -> 0x00 (WeeGUI wants null-terminated strings)
-         beq   .null
+         beq   @null
          cmp   #$5E                  ; '^' -> closed-apple mousetext
-         beq   .ca
+         beq   @ca
          cmp   #$26                  ; '&' -> open-apple mousetext
-         beq   .oa
+         beq   @oa
          ora   #$80                  ; all other characters -> set high bit
          +HIDE_NEXT_2_BYTES
-.null    lda   #$00
+@null    lda   #$00
          +HIDE_NEXT_2_BYTES
-.ca      lda   #$40
+@ca      lda   #$40
          +HIDE_NEXT_2_BYTES
-.oa      lda   #$41
+@oa      lda   #$41
          sta   ($FE),y
-         bra   .convertSectionLoop
+         bra   @convertSectionLoop
 
 ; We found the start of a new section, so skip to the first character on the next line
-.skipSectionName
+@skipSectionName
          jsr   IncAndGetChar
          cmp   #$0D                  ; CR
-         bne   .skipSectionName
+         bne   @skipSectionName
          jsr   IncAndGetChar
 
 ; We are at the start of a section, so save this address in the sectionPointers array
@@ -122,7 +122,7 @@ LoadGameInfo
          pla
          dex
          dex
-         bpl   .convertSectionNoInc
+         bpl   @convertSectionNoInc
 
 ; We are done converting the game info file.
 ; Now handle the individual sections that require further parsing.
@@ -187,13 +187,13 @@ CheckForSavedGames
          jsr   AddToPath
          jsr   GetFileInfo
          !word gPathname
-         bcs   .no                   ; no file -> no saved games
+         bcs   @no                   ; no file -> no saved games
          lda   blocks+1
-         bne   .yes                  ; file exists and is quite large -> assume saved games
+         bne   @yes                  ; file exists and is quite large -> assume saved games
          lda   blocks
          cmp   #$06                  ; file exists but is small -> no saved games (.Z4/.Z5 files have a 5 block 'empty' .sav file)
-         bcc   .no
-.yes     lda   auxtype               ; if low byte of auxtype is $3x, x is the last save slot
+         bcc   @no
+@yes     lda   auxtype               ; if low byte of auxtype is $3x, x is the last save slot
          and   #$F0
          cmp   #$30
          bne   +
@@ -204,6 +204,6 @@ CheckForSavedGames
          sta   gLastSavedGameSlot
          lda   #1
          +HIDE_NEXT_2_BYTES
-.no      lda   #0
+@no      lda   #0
          sta   gHasSavedGames
          rts

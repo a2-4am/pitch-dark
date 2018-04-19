@@ -178,22 +178,20 @@ HandleVersionsKey
 ; out: all registers and flags clobbered
          ldx   #_endVersionsKeys-kVersionsKeys
 -        cmp   kVersionsKeys,x
-         beq   .foundVersionKey
+         beq   @found
          dex
          dex
          bpl   -
-.versionKeyError
-         jmp   SoftBell
-.foundVersionKey
-         lda   kVersionsKeys+1,x     ; get action ID associated with this key
-         bmi   +
+@error   jmp   SoftBell
+@found   lda   kVersionsKeys+1,x     ; get action ID associated with this key
+         bmi   @updown
          tax                         ; action ID < #$80 is a WeeGUI view, so activate it
          ldy   gVersionsViewInUse,x
-         beq   .versionKeyError
+         beq   @error
          ldx   #WGSelectView
          jsr   WeeGUI
          jmp   SimulateClick
-+        pha                         ; action ID >= #$80 is a screen-specific action, so stash it for now
+@updown  pha                         ; action ID >= #$80 is a screen-specific action, so stash it for now
          jsr   GetCheckedVersion     ; figure out which radio button is checked
          ldx   #WGSelectView         ; uncheck it and repaint it
          jsr   WeeGUI
@@ -204,18 +202,17 @@ HandleVersionsKey
          jsr   WeeGUI
          plx                         ; X = action ID (pushed earlier from A)
          cpx   #ID_VERSIONS_PREVIOUS
-         beq   .previousVersion
+         beq   @up
          cmp   iNumVersions          ; find 'next' view ID (wrapping around to 1)
          bcs   +
          inc
          +HIDE_NEXT_2_BYTES
 +        lda   #1
-         bra   .checkNewVersion
-.previousVersion
-         dec
-         bne   .checkNewVersion
+         bra   @checkNewVersion
+@up      dec
+         bne   @checkNewVersion
          lda   iNumVersions
-.checkNewVersion
+@checkNewVersion
          ldx   #WGSelectView         ; check new radio button and repaint it
          jsr   WeeGUI
          ldx   #WGViewFocus
@@ -254,19 +251,19 @@ GetCheckedVersion
 VersionsOKCallback
          jsr   GetCheckedVersion
          dec
-         sta   +
+         sta   @n
          jsr   okvs_nth
          !word gVersionsStore
-+        !byte $FD                   ; SMC
-         +STAY ++
+@n       !byte $FD                   ; SMC
+         +STAY @value
          jsr   okvs_get
          !word gGlobalPrefsStore
          !word kLastPlayed
-         +STAY +
+         +STAY @key
          jsr   okvs_update
          !word gGlobalPrefsStore
-+        !word $FDFD                 ; SMC
-++       !word $FDFD                 ; SMC
+@key     !word $FDFD                 ; SMC
+@value   !word $FDFD                 ; SMC
 
          lda   #1
          sta   gGlobalPrefsDirty     ; must set, otherwise SaveGlobalPreferences does nothing

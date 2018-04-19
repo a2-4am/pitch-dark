@@ -87,14 +87,14 @@ RepaintMainIfDirty
          !word kViewNext
 
          lda   gHasSavedGames        ; create 'play game' or 'resume game' button
-         beq   .wantPlayButton
+         beq   @wantPlayButton
          jsr   CreateButton
          !word kViewResume
-         bra   .donePlayOrResume
-.wantPlayButton
+         bra   @donePlayOrResume
+@wantPlayButton
          jsr   CreateButton
          !word kViewPlay
-.donePlayOrResume
+@donePlayOrResume
 
          jsr   CreateOrDestroyButton ; create or destroy 'artwork' button
          !byte ID_BOXART
@@ -112,7 +112,7 @@ RepaintMainIfDirty
          !word kHasVersions
 
          pla                         ; clear screen before repainting?
-         beq   .nohome               ; no -> repaint over existing screen, YOLO
+         beq   @nohome               ; no -> repaint over existing screen, YOLO
 
          ldx   #WGClearScreen        ; clear screen
          jsr   WeeGUI
@@ -132,7 +132,7 @@ RepaintMainIfDirty
          bne   -
          ldx   #WGSyncGlobalCursor
          jsr   WeeGUI
-.nohome
+@nohome
          ldx   #WGSelectView         ; delete info box but leave its contents on screen
          lda   #ID_INFO              ; (harmless if it doesn't exist yet)
          jsr   WeeGUI
@@ -191,31 +191,29 @@ CreateOrDestroyButton
          pha                         ; A = WeeGUI view ID
 
          +LDPARAM 2
-         +STAY .viewConfigurationRecord
+         +STAY @vcr
 
          +LDPARAM 4
-         +STAY .optionsStoreKey
+         +STAY @key
 
          jsr   okvs_get
          !word gOptionsStore
-.optionsStoreKey
-         !word $FDFD                 ; SMC
+@key     !word $FDFD                 ; SMC
          plx                         ; X = WeeGUI view ID
          jsr   okvs_as_boolean
-         beq   .destroy
+         beq   @destroy
 
          lda   gViewInUse,x          ; create button if it doesn't exist
-         bne   .createDestroyDone    ; oh it does exist, so we're done
+         bne   @exit                 ; oh it does exist, so we're done
          lda   #1
          sta   gViewInUse,x
          jsr   CreateButton
-.viewConfigurationRecord
-         !word $FDFD                 ; SMC
-.createDestroyDone
-         rts
+@vcr     !word $FDFD                 ; SMC
+@exit    rts
 
-.destroy lda   gViewInUse,x          ; destroy button if it exists
-         beq   .createDestroyDone    ; oh it doesn't exist, so we're done
+@destroy
+         lda   gViewInUse,x          ; destroy button if it exists
+         beq   @exit                 ; oh it doesn't exist, so we're done
          lda   #0
          sta   gViewInUse,x
          txa                         ; A = WeeGUI view ID
@@ -236,9 +234,9 @@ PaintDescriptionView
          jsr   MultiPrint
 
          lda   SAVE
-         cmp   #10                   ; minimum content height
+         cmp   #10
          bcs   +
-         lda   #10
+         lda   #10                   ; minimum content height
 +        ldx   #WGSetContentHeight   ; set content height so we stop scrolling on the last line of text
          jmp   WeeGUI
 
@@ -273,10 +271,9 @@ PaintInfoView
          +HIDE_NEXT_2_BYTES
 MultiPrint
          stz   SAVE                  ; VTAB, but 0-indexed
-         stx   .printLineLength+1
+         stx   @linelen
          +STAY SRC
-.printLoop
-         stz   PARAM0
+@loop    stz   PARAM0
          lda   SAVE
          sta   PARAM1
          ldx   #WGSetCursor
@@ -288,14 +285,14 @@ MultiPrint
          jsr   WeeGUI
          lda   SRC
          clc
-.printLineLength
+@linelen=*+1
          adc   #$FD                  ; SMC
          sta   SRC
          bcc   +
          inc   SRC+1
 +        inc   SAVE
          lda   (SRC)
-         bne   .printLoop
+         bne   @loop
          rts
 
 ;------------------------------------------------------------------------------
