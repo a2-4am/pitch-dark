@@ -14,7 +14,6 @@
 ; in:    current ProDOS prefix is the same as the ONBEYOND.SYSTEM file
 ; out:   all other registers and flags clobbered
 ;------------------------------------------------------------------------------
-!zone {
 SetStartupPathToCurrentVersionOfCurrentGame
          jsr   ResetPath             ; gPathname = ''
 
@@ -37,4 +36,3 @@ SetStartupPathToCurrentVersionOfCurrentGame
 
          +LDADDR gPathname
          jmp   SetStartupPath        ; store gPathname at $2006 to pass it to interpreter
-}

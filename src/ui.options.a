@@ -104,14 +104,13 @@ OptionsDialog
          !word kStringAutoScriptDescription
 
          jsr   ClearPendingInput
-.runLoop
-         ldx   #WGPendingViewAction
+-        ldx   #WGPendingViewAction
          jsr   WeeGUI                ; handle mouse movement and clicks
          lda   $C000
-         bpl   .runLoop
+         bpl   -
          jsr   ClearPendingInput
          jsr   HandleOptionsKey      ; handle keypresses
-         bra   .runLoop
+         bra   -
 
 ;------------------------------------------------------------------------------
 ; internal functions
@@ -119,13 +118,12 @@ OptionsDialog
 HandleOptionsKey
          ldx   #_endOptionsKeys-kOptionsKeys
 -        cmp   kOptionsKeys,x
-         beq   .foundKey
+         beq   +
          dex
          dex
          bpl   -
          jmp   SoftBell
-.foundKey
-         lda   kOptionsKeys+1,x
++        lda   kOptionsKeys+1,x
          ldx   #WGSelectView
          jsr   WeeGUI
          jmp   SimulateClick
@@ -150,64 +148,56 @@ callback_options_ok
 callback_options_cancel
          jmp   MainScreen
 
-!zone {
 SetCheckboxByPref
          +PARAMS_ON_STACK 3
 
          ldy   #1
          lda   (PARAM),y
-         sta   .id
+         sta   .checkboxViewID
          +LDPARAM 2
-         +STAY .key
+         +STAY +
 
          jsr   okvs_get
          !word gGlobalPrefsStore
-.key     !word $FDFD                 ; SMC
-         bcs   .exit
++        !word $FDFD                 ; SMC
+         bcs   +
 
          jsr   okvs_as_boolean
-         beq   .exit
+         beq   +
 
          ldx   #WGSelectView
-.id=*+1
+.checkboxViewID=*+1
          lda   #$FD                  ; SMC
          jsr   WeeGUI
          ldx   #WGSetState
          lda   #1
          sta   PARAM0
          jsr   WeeGUI
-.exit    rts
-}
++        rts
 
-!zone {
 SetPrefByCheckbox
          +PARAMS_ON_STACK 3
 
+         +LDPARAM 2
+         +STAY +
          ldy   #1
          lda   (PARAM),y
-         sta   .id
-         +LDPARAM 2
-         +STAY .key
-
          ldx   #WGSelectView
-.id=*+1
-         lda   #$FD                  ; SMC
          jsr   WeeGUI
          ldx   #WGGetState
          jsr   WeeGUI
 
          lda   PARAM0
          and   #1
-         sta   .value+1
+         sta   +++
 
          jsr   okvs_update
          !word gGlobalPrefsStore
-.key     !word $FDFD                 ; SMC
-         !word .value
++        !word $FDFD                 ; SMC
+         !word ++
          rts
-.value   !byte 1
-         !byte $FD                   ; SMC
-}
+++       !byte 1
++++      !byte $FD                   ; SMC
 
 ;------------------------------------------------------------------------------
 ; WeeGUI view configuration records

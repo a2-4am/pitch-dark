@@ -18,7 +18,6 @@ kArtworkRootDirectory                ; length-prefixed pathname of DHGR graphic 
 ; in:    WeeGUI initialized
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
-!zone {
 DisplayArtwork
          lda   #0                    ; set Z flag always
 !cpu 65816
@@ -28,8 +27,8 @@ DisplayArtwork
          lda   $C029
          and   #$1F
          sta   $C029                 ; set GS NEWVIDEO mode to turn off linearize
-+
-         jsr   ResetPath
+
++        jsr   ResetPath
          +LDADDR kArtworkRootDirectory
          jsr   AddToPath
 
@@ -38,12 +37,12 @@ DisplayArtwork
          !word kLastPlayed
          jsr   AddToPath             ; gPathname = 'ARTWORK/<game shortname>'
 
-+        jsr   LoadDHRFile           ; load artwork from file
+         jsr   LoadDHRFile           ; load artwork from file
          !word gPathname
          !word kProDOSFileBuffer
-         bcs   .error
-
-         sta   $C000                 ; display double hi-res page 1
+         bcc   +
+         jmp   SoftBell
++        sta   $C000                 ; display double hi-res page 1
          sta   $C00D
          sta   $C05E
          sta   $C001
@@ -53,15 +52,11 @@ DisplayArtwork
          sta   $C050
 
          jsr   ClearPendingInput
-.runLoop
-         ldx   #WGPendingClick
+-        ldx   #WGPendingClick
          jsr   WeeGUI
          cpx   #$FF
          bne   +                     ; X != #$FF -> user clicked mouse
          lda   $C000
-         bpl   .runLoop
+         bpl   -
 +        sta   $C051                 ; back to text
          jmp   ClearPendingInput
-.error
-         jmp   SoftBell
-}

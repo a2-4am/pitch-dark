@@ -4,7 +4,6 @@
 ; Parser for global preferences file
 ;
 ; Public functions
-; - LoadGlobalPreferences
 ; - SaveGlobalPreferences
 ;
 ; Public variables
@@ -21,7 +20,6 @@
 ; - kLastPlayed
 ;
 
-!zone {
 gGlobalPrefsStore
          !word 0
 
@@ -48,8 +46,6 @@ kLastPlayed
          !byte 10
          !raw  "LASTPLAYED"
 
-.exit    rts
-
 ;------------------------------------------------------------------------------
 ; SaveGlobalPreferences
 ; save global options and state to file
@@ -61,7 +57,8 @@ kLastPlayed
 ;------------------------------------------------------------------------------
 SaveGlobalPreferences
          lda   gGlobalPrefsDirty
-         beq   .exit
+         beq   +
+
          +LDADDR kGlobalPrefsBuffer
          +STAY $FE
 
@@ -112,7 +109,7 @@ SaveGlobalPreferences
          !word kProDOSFileBuffer
 
          stz   gGlobalPrefsDirty
-         rts
++        rts
 
 addGameToPrefs
          +STAY +
@@ -151,7 +148,7 @@ addString
          +STAY $00
          lda   ($00)
          inc
-         sta   .len
+         sta   .stringlen
          ldy   #1
 -        lda   ($00),y
          sta   ($FE)
@@ -159,7 +156,7 @@ addString
          inc   $FE
          bne   +
          inc   $FF
-.len=*+1
+.stringlen=*+1
 +        cpy   #$FD                  ; SMC
          bne   -
          rts
@@ -182,4 +179,3 @@ addString
 .eof     !byte 7
          !byte $0D
          !raw  "[eof]",$0D
-}

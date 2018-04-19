@@ -30,35 +30,21 @@
          bpl   -
          bmi   .noRAMdisk
 .foundRAMdisk
-         lda   DEVLST, y
-         sta   saveRAMDiskUnit       ; save RAM disk unit number
 -        lda   DEVLST+1, y           ; move other devices up in list
          sta   DEVLST, y
          beq   +                     ; device list is zero-terminated
          iny
          bne   -                     ; always branches
-+
-         lda   RAM32
-         sta   saveRAMDiskDriver     ; save RAM disk device address
-         lda   RAM32+1
-         sta   saveRAMDiskDriver+1
-         lda   NODEV                 ; tell ProDOS there's no RAM disk anymore
++        lda   NODEV                 ; tell ProDOS there's no RAM disk anymore
          sta   RAM32
          lda   NODEV+1
          sta   RAM32+1
          dec   DEVCNT                ; reduce ProDOS device count
 .noRAMdisk
-         bra   +
-saveRAMDiskUnit
-         !byte 0
-saveRAMDiskDriver
-         !word 0
-+
 
 ;------------------------------------------------------------------------------
 ; clear options script and make checksum invalid
 ;------------------------------------------------------------------------------
-ClearInterpreterOptions
          ldy   #(kOnBeyondChecksum-kOnBeyondOptionsStruct)
          lda   #0
 -        sta   kOnBeyondOptionsStruct,y
@@ -69,21 +55,20 @@ ClearInterpreterOptions
 ; load file with master game list
 ;------------------------------------------------------------------------------
          jsr   LoadFile              ; load prefs file at $2000
-         !word .gamesListFilename
-.gamesListHandle
-         !word $2000
+         !word kGamesListFilename
+-        !word $2000
          !word kProDOSFileBuffer
 
          jsr   ParseKeyValueText     ; parse contents into games list store
          !word gGamesListStore
-         !word .gamesListHandle
+         !word -
          !byte 0
 
          +LDAY SRC
          +STAY gGlobalPrefsStore     ; save pointer to free space for next store
          bra   +
 
-.gamesListFilename
+kGamesListFilename
          !byte 10
          !raw  "GAMES.CONF"
 +
@@ -95,14 +80,25 @@ ClearInterpreterOptions
          stz   gGlobalPrefsDirty
          jsr   LoadFile              ; load prefs file at $2000
          !word kGlobalPrefsFilename
-.globalPrefsHandle
-         !word kGlobalPrefsBuffer
+-        !word kGlobalPrefsBuffer
          !word kProDOSFileBuffer
 
          jsr   ParseKeyValueText     ; parse contents into global prefs store
          !word gGlobalPrefsStore
-         !word .globalPrefsHandle
+         !word -
          !byte 16
 
          +LDAY SRC
          +STAY gVersionsStore        ; save pointer to free space for next store
+
+;------------------------------------------------------------------------------
+; get current game description and game-specific options
+;------------------------------------------------------------------------------
+         jsr   LoadGameInfo
+
+;------------------------------------------------------------------------------
+; initialize WeeGUI and enable mouse support
+;------------------------------------------------------------------------------
+         jsr   WGInit
+         ldx   #WGEnableMouse
+         jsr   WeeGUI

@@ -10,7 +10,6 @@
 ;  and triggered through UI actions or called from HandleKey)
 ;
 
-!zone {
 ; IDs of actions that do not correspond to WeeGUI view IDs have high bit set
 ID_SCROLLUP    = $81
 ID_SCROLLDOWN  = $82
@@ -151,12 +150,10 @@ HandleKey
 kDHRSLIDEFilename
          !byte 15
          !raw  "DHRSLIDE.SYSTEM"
-}
 
 ;------------------------------------------------------------------------------
 ; button callbacks
 ;------------------------------------------------------------------------------
-!zone {
 GetCurrentGameIndex
          jsr   okvs_get              ; get shortname of current game
          !word gGlobalPrefsStore
@@ -202,4 +199,3 @@ callback_next
          sta   gGlobalPrefsDirty     ; will trigger a file write later
          sta   gMainScreenPaintDirty ; will trigger a repaint later, in main run loop
          jmp   LoadGameInfo          ; load new game info first
-}

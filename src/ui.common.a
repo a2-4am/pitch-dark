@@ -37,7 +37,6 @@ kStringCancel
 ; out:   PARAM0/PARAM1 clobbered
 ;        all registers clobbered
 ;------------------------------------------------------------------------------
-!zone {
 HardResetWeeGUI
          lda   #15                   ; highest possible WeeGUI view ID
          sta   kHardResetDummyView
@@ -52,7 +51,6 @@ HardResetWeeGUI
          jmp   WeeGUI
 kHardResetDummyView
          !byte 0,0,0,0,0,0,0,0
-}
 
 ;------------------------------------------------------------------------------
 ; ExitWeeGUI
@@ -62,7 +60,6 @@ kHardResetDummyView
 ; out:   A,Y preserved
 ;        X clobbered
 ;------------------------------------------------------------------------------
-!zone {
 ExitWeeGUI
          ldx   #WGDisableMouse       ; disable mouse support before quitting
          jsr   WeeGUI
@@ -70,7 +67,6 @@ ExitWeeGUI
          jsr   WeeGUI
          ldx   #WGExit               ; clean up WeeGUI
          jmp   WeeGUI
-}
 
 ;------------------------------------------------------------------------------
 ; ClearPendingInput
@@ -80,12 +76,10 @@ ExitWeeGUI
 ; out:   A,Y preserved
 ;        X clobbered
 ;------------------------------------------------------------------------------
-!zone {
 ClearPendingInput
          bit   $C010                 ; clear keyboard strobe
          ldx   #WGClearPendingClick  ; clear WeeGUI mouse strobe
          jmp   WeeGUI
-}
 
 ;------------------------------------------------------------------------------
 ; CreateRadio/CreateCheckbox/CreateButton
@@ -97,7 +91,6 @@ ClearPendingInput
 ; out:   $00/$01 clobbered
 ;        all registers clobbered
 ;------------------------------------------------------------------------------
-!zone {
 CreateRadio
          ldx   #WGCreateRadio
          +HIDE_NEXT_2_BYTES
@@ -106,19 +99,18 @@ CreateCheckbox
          +HIDE_NEXT_2_BYTES
 CreateButton
          ldx   #WGCreateButton
-         stx   .type
+         stx   .createViewType
 
          +PARAMS_ON_STACK 2
          +LDPARAM 1
          +STAY PARAM0
-.type=*+1
+.createViewType=*+1
          ldx   #$FD                  ; SMC
          jsr   WeeGUI
          ldx   #WGViewSetRawTitle
          lda   #1
          sta   PARAM0
          jmp   WeeGUI
-}
 
 ;------------------------------------------------------------------------------
 ; CreateDialog
@@ -131,7 +123,6 @@ CreateButton
 ; out:   $00/$01 clobbered
 ;        all registers clobbered
 ;------------------------------------------------------------------------------
-!zone {
 CreateDialog
          +PARAMS_ON_STACK 4
          +LDPARAM 1
@@ -143,7 +134,6 @@ CreateDialog
          +STAY PARAM0
          ldx   #WGViewSetTitle       ; set frame title
          jmp   WeeGUI
-}
 
 ;------------------------------------------------------------------------------
 ; PaintTitleBar
@@ -152,7 +142,6 @@ CreateDialog
 ; in:    WeeGUI initialized
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
-!zone {
 PaintTitleBar
          ldy   #79
 -        sty   PARAM0
@@ -173,7 +162,6 @@ kStringGlobalTitle
          !raw  "itch "
          !byte 4                     ; inverse D
          !raw  "ark                                   ",0
-}
 
 ;------------------------------------------------------------------------------
 ; PrintAt
@@ -188,7 +176,6 @@ kStringGlobalTitle
 ;        $00/$01 clobbered
 ;        all registers and flags clobbered
 ;------------------------------------------------------------------------------
-!zone {
 PrintAt
          +PARAMS_ON_STACK 4
          +LDPARAM 1
@@ -199,7 +186,6 @@ PrintAt
          +STAY PARAM0
          ldx   #WGPrint
          jmp   WeeGUI
-}
 
 ;------------------------------------------------------------------------------
 ; SimulateClick
@@ -211,7 +197,6 @@ PrintAt
 ;        A contains WeeGUI view ID
 ; out:   X clobbered
 ;------------------------------------------------------------------------------
-!zone {
 SimulateClick
          ldx   #WGViewFocus
          jsr   WeeGUI
@@ -219,7 +204,6 @@ SimulateClick
          jsr   WeeGUI
          ldx   #WGViewUnfocus
          jmp   WeeGUI
-}
 
 ;------------------------------------------------------------------------------
 ; GetCheckedRadioButton
@@ -239,9 +223,8 @@ SimulateClick
 ;        C set -> error, there is no selected radio button
 ;        all other registers and flags clobbered
 ;------------------------------------------------------------------------------
-!zone {
 GetCheckedRadioButton
-         sty   .max
+         sty   .radioMax
 -        pha
          ldx   #WGSelectView
          jsr   WeeGUI
@@ -249,17 +232,17 @@ GetCheckedRadioButton
          jsr   WeeGUI
          lda   PARAM0
          and   #1
-         bne   .found
+         bne   .radioFound
          pla
          inc
-.max=*+1
+.radioMax=*+1
          cmp   #$FD                  ; SMC
          bcc   -
          +HIDE_NEXT_2_BYTES
-.found   pla
+.radioFound
+         pla
          clc
          rts
-}
 
 ;------------------------------------------------------------------------------
 ; CreateNullTerminatedString
@@ -274,7 +257,6 @@ GetCheckedRadioButton
 ;        all other registers and flags clobbered
 ;        $00/$01 clobbered
 ;------------------------------------------------------------------------------
-!zone {
 CreateNullTerminatedString
          +STAY $00
 
@@ -294,4 +276,3 @@ CreateNullTerminatedString
          dey
          bne   -
          rts
-}

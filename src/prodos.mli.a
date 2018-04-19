@@ -12,15 +12,15 @@
 ;
 
 ; MLI command codes
-CMD_QUIT       = $65      ; quit to ProDOS
-CMD_CREATE     = $C0      ; create new file
-CMD_DESTROY    = $C1      ; delete a file
-CMD_GETFILEINFO= $C4      ; get file (or volume) info
-CMD_SETPREFIX  = $C6      ; change default pathname prefix
-CMD_OPEN       = $C8      ; open a file
-CMD_READ       = $CA      ; read an open file
-CMD_WRITE      = $CB      ; write to an open file
-CMD_CLOSE      = $CC      ; close an open file
+CMD_QUIT       = $65                 ; quit to ProDOS
+CMD_CREATE     = $C0                 ; create new file
+CMD_DESTROY    = $C1                 ; delete a file
+CMD_GETFILEINFO= $C4                 ; get file (or volume) info
+CMD_SETPREFIX  = $C6                 ; change default pathname prefix
+CMD_OPEN       = $C8                 ; open a file
+CMD_READ       = $CA                 ; read an open file
+CMD_WRITE      = $CB                 ; write to an open file
+CMD_CLOSE      = $CC                 ; close an open file
 
 ; MLI parameter counts
 PC_QUIT        = $04
@@ -34,8 +34,10 @@ PC_WRITE       = $04
 PC_CLOSE       = $01
 
 ; ROM addresses
-PRODOSMLI      = $BF00    ; [callable] MLI entry point
-MACHID         = $BF98    ; machine identification byte
+PRODOSMLI      = $BF00               ; [callable] MLI entry point
+MACHID         = $BF98               ; machine identification byte
+
+kAccessBits =   $C3                  ; full access (used in SaveFile)
 
 ;-------------------------------
 ; LoadFile
@@ -53,7 +55,6 @@ MACHID         = $BF98    ; machine identification byte
 ;      all registers clobbered
 ;      stack set to next instruction after parameters
 ;-------------------------------
-!zone {
 LoadFile
          +PARAMS_ON_STACK 6
 
@@ -63,7 +64,7 @@ LoadFile
          +STAY mliparam+3            ; ProDOS file buffer
 
          jsr   _openfile
-         bcs   .exit                 ; C set on error
+         bcs   +                     ; C set on error
 
          pha                         ; push file reference number
          +LDPARAM 3
@@ -79,9 +80,8 @@ LoadFile
          pla
          plp                         ; restore flags from readfile
                                      ; (so caller gets codes from read attempt,
-                          ;           not close)
-.exit    rts
-}
+                                     ; not close)
++        rts
 
 ;-------------------------------
 ; LoadDHRFile
@@ -101,7 +101,6 @@ LoadFile
 ;      all registers clobbered
 ;      stack set to next instruction after parameters
 ;-------------------------------
-!zone {
 LoadDHRFile
          +PARAMS_ON_STACK 4
 
@@ -112,8 +111,8 @@ LoadDHRFile
          bne   -
 
          jsr   _openfile
-         bcs   .exit                 ; C set on error
-         sta   .saverefnum+1         ; store file refnum
+         bcs   .dhrexit              ; C set on error
+         sta   .saverefnum           ; store file refnum
 
          ldy   #$20
          stz   mliparam+2            ; read into $2000 in main mem
@@ -129,7 +128,7 @@ LoadDHRFile
          stx   .copya+2
          stx   .copyb+2
          ldy   #$00
-.writeToAux
+.writeToAuxLoop
          sta   $C005
 .copya   lda   $FF00, y
 .copyb   sta   $FF00, y
@@ -139,20 +138,17 @@ LoadDHRFile
          inc   .copya+2
          inc   .copyb+2
          dex
-         bne   .writeToAux
+         bne   .writeToAuxLoop
 
-         lda   .saverefnum+1
+         lda   .saverefnum
          jsr   _readfile             ; read another $2000 bytes into $2000 (stays in main mem)
 
-.close
-         php                         ; save flags from readfile
-.saverefnum
+.close   php                         ; save flags from readfile
+.saverefnum=*+1
          lda   #$d1                  ; file refnum (set above)
          jsr   _closefile
          plp                         ; restore flags from readfile
-.exit
-         rts
-}
+.dhrexit rts
 
 ;-------------------------------
 ; SaveFile
@@ -165,48 +161,58 @@ LoadDHRFile
 ;      +6 address of data buffer
 ;      +8 [word] length of data buffer
 ;      +A address of ProDOS file buffer
-; out: if C set, save failed and A contains error code
-;        from open or write
+; out: if C set, save failed
 ;      if C clear, save succeeded
 ;      all other flags clobbered
 ;      all registers clobbered
 ;      stack set to next instruction after parameters
 ;-------------------------------
-!zone {
 SaveFile
          +PARAMS_ON_STACK $0B
          +LDPARAM 1
          +STAY mliparam+1            ; pathname
-         jsr   _deletefile           ; don't care if this fails
+         lda   #CMD_DESTROY          ; MLI destroy command
+         ldy   #PC_DESTROY           ; number of parameters for 'destroy' command
+         jsr   mli                   ; don't care if this fails
+
          ldy   #$03
          lda   (PARAM),y             ; file type
          sta   mliparam+4
          +LDPARAM 4
          +STAY mliparam+5            ; aux file type
-         jsr   _createfile
-         bcs   .exit
+         lda   #kAccessBits
+         sta   mliparam+3            ; access bits (full access)
+         ldy   #1
+         sty   mliparam+7            ; storage type (file)
+         dey
+         sty   mliparam+8            ; creation date (current)
+         sty   mliparam+9
+         sty   mliparam+10           ; creation time (current)
+         sty   mliparam+11
+         lda   #CMD_CREATE           ; MLI create command
+         ldy   #PC_CREATE            ; number of parameters for 'create' command
+         jsr   mli
+         bcs   +
 
          +LDPARAM 10
          +STAY mliparam+3            ; PrODOS file buffer
          jsr   _openfile
-         bcs   .exit
+         bcs   +
 
-         pha                         ; push file reference number
+         sta   mliparam+1            ; store file reference number
          +LDPARAM 6
          +STAY mliparam+2            ; data buffer
          +LDPARAM 8
          +STAY mliparam+4            ; data length
-         pla                         ; pull file reference number
-         jsr   _writefile
-         php                         ; save flags from writefile
-         pha
+         lda   #CMD_WRITE            ; MLI write command
+         ldy   #PC_WRITE             ; number of parameters for 'write' command
+         jsr   mli
+         php                         ; save flags from write command
          jsr   _closefile            ; always close whether write worked or not
-         pla
          plp                         ; restore flags from write
                                      ; (so caller gets codes from write attempt,
                                      ; not close)
-.exit    rts
-}
++        rts
 
 ;-------------------------------
 ; SetPrefix
@@ -220,13 +226,13 @@ SaveFile
 ;      all registers clobbered
 ;      stack set to next instruction after parameters
 ;-------------------------------
-!zone {
 SetPrefix
          +PARAMS_ON_STACK 2
          +LDPARAM 1
          +STAY mliparam+1            ; pathname
-         jmp   _setprefix
-}
+         lda   #CMD_SETPREFIX
+         ldy   #PC_SETPREFIX
+         bra   mli
 
 ;-------------------------------
 ; GetFileInfo
@@ -242,13 +248,13 @@ SetPrefix
 ;      all registers clobbered
 ;      stack set to next instruction after parameters
 ;-------------------------------
-!zone {
 GetFileInfo
          +PARAMS_ON_STACK 2
          +LDPARAM 1
          +STAY mliparam+1            ; pathname
-         jmp   _getfileinfo
-}
+         lda   #CMD_GETFILEINFO      ; MLI command
+         ldy   #PC_GETFILEINFO       ; number of parameters for 'getfileinfo' command
+         bra   mli
 
 ;-------------------------------
 ; open file via ProDOS MLI
@@ -261,13 +267,13 @@ GetFileInfo
 ;        file reference number
 ;-------------------------------
 _openfile
-         lda   #CMD_OPEN  ; MLI command
-         ldy   #PC_OPEN   ; number of parameters for 'open' command
+         lda   #CMD_OPEN             ; MLI command
+         ldy   #PC_OPEN              ; number of parameters for 'open' command
          jsr   mli
          bcs   +
-         lda   refnum     ; caller should save file reference number
-                          ; as this memory location may be
-                          ; overwritten by later MLI calls
+         lda   refnum                ; caller should save file reference number
+                                     ; as this memory location may be
+                                     ; overwritten by later MLI calls
 +        rts
 
 ;-------------------------------
@@ -281,31 +287,12 @@ _openfile
 ;        file reference number that was passed in
 ;-------------------------------
 _readfile
-         sta   mliparam+1 ; store file reference number
-         lda   #CMD_READ  ; MLI read command
-         ldy   #PC_READ   ; number of parameters for 'read' command
+         sta   mliparam+1            ; store file reference number
+         lda   #CMD_READ             ; MLI read command
+         ldy   #PC_READ              ; number of parameters for 'read' command
          jsr   mli
          bcs   +
-         lda   mliparam+1 ; if no error, return file reference number
-+        rts
-
-;-------------------------------
-; write to an open file via ProDOS MLI
-;
-; in:  A = file reference number
-;      caller has filled @mliparam with address of
-;        data buffer and data length
-; out: if C set, write failed and A contains error code
-;      if C clear, write succeeded and A contains the same
-;        file reference number that was passed in
-;-------------------------------
-_writefile
-         sta   mliparam+1 ; store file reference number
-         lda   #CMD_WRITE ; MLI write command
-         ldy   #PC_WRITE  ; number of parameters for 'write' command
-         jsr   mli
-         bcs   +
-         lda   mliparam+1 ; if no error, return file reference number
+         lda   mliparam+1            ; if no error, return file reference number
 +        rts
 
 ;-------------------------------
@@ -315,79 +302,10 @@ _writefile
 ;      if success, C clear
 ;-------------------------------
 _closefile
-         sta   mliparam+1 ; store file reference number
-         lda   #CMD_CLOSE ; MLI close command
-         ldy   #PC_CLOSE  ; number of parameters for 'close' command
-         jsr   mli
-         rts
-
-;-------------------------------
-; create a file via ProDOS MLI
-; always sets access bits to $C3 (full access)
-; always sets creation to 0 (current date/time)
-; always sets storage type to 1 (file)
-; in:  caller has filled @mliparam
-;        with address of pathname,
-;        file type, aux file type
-; out: if error, C set and A contains error code
-;      if success, C clear
-;-------------------------------
-accessbits =   $C3        ; full access
-
-_createfile
-         lda   #accessbits
-         sta   mliparam+3 ; access bits (full access)
-         ldy   #1
-         sty   mliparam+7 ; storage type (file)
-         dey
-         sty   mliparam+8 ; creation date (current)
-         sty   mliparam+9
-         sty   mliparam+10 ; creation time (current)
-         sty   mliparam+11
-         lda   #CMD_CREATE ; MLI create command
-         ldy   #PC_CREATE ; number of parameters for 'create' command
-         jsr   mli
-         rts
-
-;-------------------------------
-; delete a file using ProDOS MLI
-; in:  caller has filled @mliparam
-;        with address of pathname
-; out: if error, C set and A contains error code
-;      if success, C clear
-;-------------------------------
-_deletefile
-         lda   #CMD_DESTROY ; MLI destroy command
-         ldy   #PC_DESTROY ; number of parameters for 'destroy' command
-         jsr   mli
-         rts
-
-;-------------------------------
-; get file info via ProDOS MLI
-;
-; in:  caller has filled @mliparam with address of
-;        pathname
-; out: if C set, open failed and A contains error code
-;      if C clear, open succeeded and A contains
-;        file reference number
-;-------------------------------
-_getfileinfo
-         lda   #CMD_GETFILEINFO  ; MLI command
-         ldy   #PC_GETFILEINFO   ; number of parameters for 'getfileinfo' command
-         jmp   mli
-
-;-------------------------------
-; change current directory (set prefix)
-; using ProDOS MLI
-; in:  caller has filled @mliparam
-;        with address of pathname
-; out: if error, C set and A contains error code
-;      if success, C clear
-;-------------------------------
-_setprefix
-         lda   #CMD_SETPREFIX
-         ldy   #PC_SETPREFIX
-         jmp   mli
+         sta   mliparam+1            ; store file reference number
+         lda   #CMD_CLOSE            ; MLI close command
+         ldy   #PC_CLOSE             ; number of parameters for 'close' command
+         bra   mli
 
 QuitToProDOS
          lda   #CMD_QUIT
@@ -405,18 +323,18 @@ QuitToProDOS
 ;        the caller will see it
 ;        verbatim
 ;-------------------------------
-mli      sta   mlicmd     ; store command code
-         sty   mliparam   ; number of parameters
-         jsr   PRODOSMLI  ; call ProDOS
-mlicmd   !byte 00         ; command number
-         !word mliparam   ; address of parameter table
+mli      sta   mlicmd                ; store command code
+         sty   mliparam              ; number of parameters
+         jsr   PRODOSMLI             ; call ProDOS
+mlicmd   !byte 00                    ; command number
+         !word mliparam              ; address of parameter table
 mliexit  rts
 mliparam !byte $FE,$FE,$FE,$FE
-filetype !byte $FE        ; file type (set by MLI get_file_info)
-auxtype                   ; auxiliary file type (2 bytes, set by MLI get_file_info)
-refnum   !byte $FE        ; file refnum (set by MLI open)
-mlilen   !byte $FE,$FE    ; file length (set by MLI read)
-blocks   !byte $FE,$FE    ; blocks used (set by getvolumeinfo/getfileinfo)
-                          ; member is also used by createfile
+filetype !byte $FE                   ; file type (set by MLI get_file_info)
+auxtype                              ; auxiliary file type (2 bytes, set by MLI get_file_info)
+refnum   !byte $FE                   ; file refnum (set by MLI open)
+mlilen   !byte $FE,$FE               ; file length (set by MLI read)
+blocks   !byte $FE,$FE               ; blocks used (set by getvolumeinfo/getfileinfo)
+                                     ; member is also used by createfile
          !byte $FE,$FE,$FE,$FE,$FE,$FE,$FE,$FE
-                          ; used by get_file_info
+                                     ; used by get_file_info

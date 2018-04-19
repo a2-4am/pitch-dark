@@ -62,7 +62,6 @@ addrInfo
 ;        $00..$05 clobbered
 ;        $0800..$1FFF clobbered
 ;------------------------------------------------------------------------------
-!zone {
 LoadGameInfo
          jsr   ResetPath
          +LDADDR kTextRootDirectory
@@ -208,4 +207,3 @@ CheckForSavedGames
 .no      lda   #0
          sta   gHasSavedGames
          rts
-}

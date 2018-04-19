@@ -36,7 +36,6 @@ ResetPath
 ;        $00/$01 clobbered
 ;        gPathname updated with concatenated length-prefixed string
 ;------------------------------------------------------------------------------
-!zone {
 AddToPathWithHighBit
          ldx   #$80
          +HIDE_NEXT_2_BYTES
@@ -60,7 +59,6 @@ AddToPath
          bcc   -
          stx   gPathname
          rts
-}
 
 ;------------------------------------------------------------------------------
 ; SetStartupPath
@@ -72,7 +70,6 @@ AddToPath
 ; out:   all registers and flags clobbered
 ;        $00/$01 clobbered
 ;------------------------------------------------------------------------------
-!zone {
 SetStartupPath
          +STAY $00
          lda   ($00)
@@ -83,4 +80,3 @@ SetStartupPath
          dey
          bpl   -
          rts
-}

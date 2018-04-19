@@ -62,7 +62,6 @@
 ; +K+3 value
 ;  ... filler bytes up to value max length (set at append() time)
 
-!zone {
 ;------------------------------------------------------------------------------
 ; okvs_init
 ;
@@ -268,12 +267,11 @@ okvs_nth
          ldy   #3
          lda   (PARAM),y
          tax                         ; X = numeric index of key to get
-         beq   .done
+         beq   +
 -        jsr   derefptr
          dex
          bne   -
-.done
-         jsr   incptr
++        jsr   incptr
          jsr   incptr
          +LDAY PTR
          rts
@@ -472,4 +470,3 @@ derefptr
          pla
          sta   PTR
          rts
-}

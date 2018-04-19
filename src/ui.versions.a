@@ -7,7 +7,6 @@
 ; - VersionsDialog
 ;
 
-!zone {
 ; View IDs (application-specific, acceptable range 0..15, no duplicates)
 ID_VERSIONS_FRAME         = 0
 ID_VERSIONS_1             = 1        ; WARNING lots of logic in this screen assumes that the radio
@@ -163,14 +162,13 @@ iNumVersions=*+1
          !word PrintVersionLabelCallback
 
          jsr   ClearPendingInput
-.runLoop
-         ldx   #WGPendingViewAction
+-        ldx   #WGPendingViewAction
          jsr   WeeGUI                ; handle mouse movement and clicks
          lda   $C000
-         bpl   .runLoop
+         bpl   -
          jsr   ClearPendingInput
          jsr   HandleVersionsKey     ; handle keypresses
-         bra   .runLoop
+         bra   -
 
 ;------------------------------------------------------------------------------
 ; internal functions
@@ -180,17 +178,22 @@ HandleVersionsKey
 ; out: all registers and flags clobbered
          ldx   #_endVersionsKeys-kVersionsKeys
 -        cmp   kVersionsKeys,x
-         beq   .foundKey
+         beq   .foundVersionKey
          dex
          dex
          bpl   -
-.notFound
+.versionKeyError
          jmp   SoftBell
-.foundKey
-         lda   kVersionsKeys+1,x     ; get ID associated with this key
-         bpl   .activateView         ; ID < #$80 is a WeeGUI view, so activate it
-         sta   .keyID                ; ID >= #$80 is a screen-specific action, so stash it for now
-
+.foundVersionKey
+         lda   kVersionsKeys+1,x     ; get action ID associated with this key
+         bmi   +
+         tax                         ; action ID < #$80 is a WeeGUI view, so activate it
+         ldy   gVersionsViewInUse,x
+         beq   .versionKeyError
+         ldx   #WGSelectView
+         jsr   WeeGUI
+         jmp   SimulateClick
++        pha                         ; action ID >= #$80 is a screen-specific action, so stash it for now
          jsr   GetCheckedVersion     ; figure out which radio button is checked
          ldx   #WGSelectView         ; uncheck it and repaint it
          jsr   WeeGUI
@@ -199,23 +202,20 @@ HandleVersionsKey
          jsr   WeeGUI
          ldx   #WGPaintView
          jsr   WeeGUI
-         tax                         ; X = WeeGUI view ID of previously checked radio button
-.keyID=*+1
-         lda   #$FD                  ; SMC
-         cmp   #ID_VERSIONS_PREVIOUS
-         beq   .previous
-         cpx   iNumVersions          ; find 'next' view ID (wrapping around to 1)
+         plx                         ; X = action ID (pushed earlier from A)
+         cpx   #ID_VERSIONS_PREVIOUS
+         beq   .previousVersion
+         cmp   iNumVersions          ; find 'next' view ID (wrapping around to 1)
          bcs   +
-         inx
+         inc
          +HIDE_NEXT_2_BYTES
-+        ldx   #1
-         bra   .gotNewID
-.previous
-         dex
-         bne   .gotNewID
-         ldx   iNumVersions
-.gotNewID
-         txa
++        lda   #1
+         bra   .checkNewVersion
+.previousVersion
+         dec
+         bne   .checkNewVersion
+         lda   iNumVersions
+.checkNewVersion
          ldx   #WGSelectView         ; check new radio button and repaint it
          jsr   WeeGUI
          ldx   #WGViewFocus
@@ -226,13 +226,6 @@ HandleVersionsKey
          jsr   WeeGUI
          ldx   #WGPaintView
          jmp   WeeGUI
-.activateView
-         tax
-         ldy   gVersionsViewInUse,x
-         beq   .notFound
-         ldx   #WGSelectView
-         jsr   WeeGUI
-         jmp   SimulateClick
 
 PrintVersionLabelCallback
 ; called via okvs_iter_values
@@ -261,19 +254,19 @@ GetCheckedVersion
 VersionsOKCallback
          jsr   GetCheckedVersion
          dec
-         sta   .n
+         sta   +
          jsr   okvs_nth
          !word gVersionsStore
-.n       !byte $FD                   ; SMC
-         +STAY .val
++        !byte $FD                   ; SMC
+         +STAY ++
          jsr   okvs_get
          !word gGlobalPrefsStore
          !word kLastPlayed
-         +STAY .key
+         +STAY +
          jsr   okvs_update
          !word gGlobalPrefsStore
-.key     !word $FDFD                 ; SMC
-.val     !word $FDFD                 ; SMC
++        !word $FDFD                 ; SMC
+++       !word $FDFD                 ; SMC
 
          lda   #1
          sta   gGlobalPrefsDirty     ; must set, otherwise SaveGlobalPreferences does nothing
@@ -395,4 +388,3 @@ kString8
          !text " ",$38,0
 kString9
          !text " ",$39,0
-}

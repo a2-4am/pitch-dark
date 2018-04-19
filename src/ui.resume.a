@@ -4,7 +4,7 @@
 ; User interface - views and paint routines for 'resume game' screen
 ;
 ; Public functions
-; - ResumeGameDialog
+; - ResumeDialog
 ;
 
 ; View IDs (application-specific, acceptable range 0..15, no duplicates)
@@ -59,7 +59,6 @@ ID_RESUME_NEXT        = $82
 ; in:    WeeGUI initialized
 ; out:   exits via MainScreen, LaunchInterpreterWithSavedGame, or LaunchInterpreterWithNewGame
 ;------------------------------------------------------------------------------
-!zone {
 ResumeDialog
          ldx   #$FF
          txs
@@ -93,16 +92,16 @@ ResumeDialog
          !word kViewResumeFrame
          !word kStringResumeFrame
 
-         jsr   CreateButton          ; create UI controls
+         jsr   CreateButton          ; create OK/Cancel buttons
          !word kViewResumeOK
          jsr   CreateButton
          !word kViewResumeCancel
 
-         jsr   okvs_iter
+         jsr   okvs_iter             ; create radio buttons for saved games
          !word gSavedGamesStore
          !word CreateResumeRadioCallback
 
-         lda   iResumeVTAB
+         lda   iResumeVTAB           ; create 'new game' radio button
          sta   kViewResumeNewGameTop
          jsr   CreateRadio
          !word kViewResumeNewGame
@@ -137,49 +136,54 @@ ResumeDialog
          !word gSavedGamesStore
          !word PrintResumeLabelCallback
 
-.runLoop
-         ldx   #WGPendingViewAction
+         jsr   ClearPendingInput
+-        ldx   #WGPendingViewAction
          jsr   WeeGUI
-         lda   $c000
-         bpl   .runLoop
-         bit   $c010
+         lda   $C000
+         bpl   -
+         jsr   ClearPendingInput
          jsr   HandleResumeKey
-         bra   .runLoop
-}
+         bra   -
 
 ;------------------------------------------------------------------------------
 ; internal functions
 
-!zone {
+;------------------------------------------------------------------------------
+; HandleResumeKey
+;
+; in:    A = key pressed
+; out:   all registers and flags clobbered
+;------------------------------------------------------------------------------
 HandleResumeKey
-; A = key pressed
-; out: all registers and flags clobbered
          ldx   #_endResumeKeys-kResumeKeys
 -        cmp   kResumeKeys,x
-         beq   .foundKey
+         beq   +
          dex
          dex
          bpl   -
          jmp   SoftBell
-.foundKey
++
          ; TODO need to handle up and down arrow keys like versions dialog
          lda   kResumeKeys+1,x
          ldx   #WGSelectView
          jsr   WeeGUI
          jmp   SimulateClick
-}
 
-!zone {
-CreateResumeRadioCallback
+;------------------------------------------------------------------------------
+; CreateResumeRadioCallback
 ; called via okvs_iter
-; X = index (0-based) into gSavedGamesStore, which is also the slot number
-; A/Y points to okvs record key, which we use as the radio button caption
-;   (length-prefixed and null-terminated, length=0 if slot is unused and should be skipped)
 ;
+; in:    X = index (0-based) into gSavedGamesStore, which is also the slot number
+;        A/Y points to okvs record key, which we use as the radio button caption
+;          (length-prefixed and null-terminated, length=0 if slot is unused and
+;          should be skipped)
+; out:   all registers and flags clobbered
+;------------------------------------------------------------------------------
+CreateResumeRadioCallback
          +STAY PTR
          lda   (PTR)
          sta   gResumeViewInUse+1,x  ; mark whether this view is in use (hotkeys activate based on this array)
-         beq   .createResumeRadioDone; length=0 means this slot is unused, so we're done
+         beq   ++                    ; length=0 means this slot is unused, so we're done
 
          lda   PTR
          inc                         ; skip over length byte
@@ -195,19 +199,22 @@ CreateResumeRadioCallback
          !word kViewResumeRadio
          inc   iResumeVTAB
          inc   iResumeVTAB
-.createResumeRadioDone
-         rts
-}
+++       rts
 
-!zone {
-PrintResumeLabelCallback
+;------------------------------------------------------------------------------
+; PrintResumeLabelCallback
 ; called via okvs_iter_values
-; X = index (0-based) into gSavedGamesStore, which is also the slot number
-; A/Y points to okvs record value, which we use as a printable label
-;   (length-prefixed and null-terminated, length=0 if slot is unused and should be skipped)
+;
+; in:    X = index (0-based) into gSavedGamesStore, which is also the slot number
+;        A/Y points to okvs record value, which we use as a printable label
+;          (length-prefixed and null-terminated, length=0 if slot is unused and
+;          should be skipped)
+; out:   all registers and flags clobbered
+;------------------------------------------------------------------------------
+PrintResumeLabelCallback
          +STAY PTR
          lda   (PTR)
-         beq   .printResumeLabelDone ; length=0 means this slot is unused, so we're done
+         beq   ++                    ; length=0 means this slot is unused, so we're done
 
          lda   PTR
          inc                         ; skip over length byte
@@ -223,11 +230,15 @@ iResumeVTAB
          !word $FDFD                 ; SMC
          inc   iResumeVTAB
          inc   iResumeVTAB
-.printResumeLabelDone
-         rts
-}
+++       rts
 
-!zone {
+;------------------------------------------------------------------------------
+; ResumeOKCallback
+; called via OK button activation
+;
+; in:    none
+; out:   exits via LaunchInterpreterWithGame
+;------------------------------------------------------------------------------
 ResumeOKCallback
          lda   #ID_RESUME_SLOT0
          ldy   #ID_RESUME_NEWGAME+1
@@ -235,9 +246,8 @@ ResumeOKCallback
          cmp   #ID_RESUME_NEWGAME
          bne   +
          lda   #0
-+        dec                         ; A = saved game slot (which is WeeGUI view ID - 1) or #$FF
++        dec                         ; A = saved game slot or #$FF
          jmp   LaunchInterpreterWithGame
-}
 
 ;------------------------------------------------------------------------------
 ; WeeGUI view configuration records

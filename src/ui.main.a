@@ -34,22 +34,19 @@ kDescriptionPaintWidth    = 78
 ; MainScreen
 ; display main screen and run to completion
 ;------------------------------------------------------------------------------
-!zone {
 MainScreen
          ldx   #$FF
          txs
          jsr   PaintMain             ; create all WeeGUI views (UI elements) and paint them
          jsr   ClearPendingInput
-.mainRunLoop
-         jsr   RepaintMainIfDirty
+-        jsr   RepaintMainIfDirty
          ldx   #WGPendingViewAction
          jsr   WeeGUI                ; handle mouse movement and clicks
          lda   $C000
-         bpl   .mainRunLoop
+         bpl   -
          jsr   ClearPendingInput
          jsr   HandleKey             ; handle keypresses
-         bra   .mainRunLoop
-}
+         bra   -
 
 ;------------------------------------------------------------------------------
 ; internal functions
@@ -64,7 +61,6 @@ MainScreen
 ; in:    WeeGUI initialized
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
-!zone {
 PaintMain
          jsr   HardResetWeeGUI
          stz   gViewInUse+ID_BOXART
@@ -173,7 +169,6 @@ RepaintMainIfDirty
          ldx   #WGPaintView          ; paint frame of description box
          jsr   WeeGUI
          jmp   PaintDescriptionView  ; paint contents of description box
-}
 
 ;------------------------------------------------------------------------------
 ; CreateOrDestroyButton
@@ -188,13 +183,12 @@ RepaintMainIfDirty
 ;          +4 [word] address of length-prefixed key into gOptionsStore
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
-!zone {
 CreateOrDestroyButton
          +PARAMS_ON_STACK 5
 
          ldy   #1
          lda   (PARAM),y
-         sta   .viewID
+         pha                         ; A = WeeGUI view ID
 
          +LDPARAM 2
          +STAY .viewConfigurationRecord
@@ -206,22 +200,22 @@ CreateOrDestroyButton
          !word gOptionsStore
 .optionsStoreKey
          !word $FDFD                 ; SMC
-.viewID=*+1
-         ldx   #$FD                  ; SMC (X = WeeGUI view ID)
+         plx                         ; X = WeeGUI view ID
          jsr   okvs_as_boolean
          beq   .destroy
 
          lda   gViewInUse,x          ; create button if it doesn't exist
-         bne   .done                 ; oh it does exist, so we're done
+         bne   .createDestroyDone    ; oh it does exist, so we're done
          lda   #1
          sta   gViewInUse,x
          jsr   CreateButton
 .viewConfigurationRecord
          !word $FDFD                 ; SMC
-         bra   .done
+.createDestroyDone
+         rts
 
 .destroy lda   gViewInUse,x          ; destroy button if it exists
-         beq   .done                 ; oh it doesn't exist, so we're done
+         beq   .createDestroyDone    ; oh it doesn't exist, so we're done
          lda   #0
          sta   gViewInUse,x
          txa                         ; A = WeeGUI view ID
@@ -230,12 +224,8 @@ CreateOrDestroyButton
          ldx   #WGEraseView
          jsr   WeeGUI
          ldx   #WGResetView
-         jsr   WeeGUI
+         jmp   WeeGUI
 
-.done    rts
-}
-
-!zone {
 PaintDescriptionView
          ldx   #WGSelectView
          lda   #ID_DESCRIPTION
@@ -307,7 +297,6 @@ MultiPrint
          lda   (SRC)
          bne   .printLoop
          rts
-}
 
 ;------------------------------------------------------------------------------
 ; WeeGUI view configuration records

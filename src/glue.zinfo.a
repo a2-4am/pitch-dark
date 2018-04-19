@@ -20,7 +20,6 @@ time_offset    =    42 ;1+8 bytes ("12:01 pm")
 score_offset   =    51 ;1+6 bytes (-12345)
 moves_offset   =    58 ;1+5 bytes (12345)
 
-!zone {
 gSavedGamesStore
          !word $FDFD                 ; set in LoadGameInfo
 gSavedGamesSlotsInUse
@@ -33,8 +32,6 @@ gSavedGamesSlotsInUse
 ; in:    current ProDOS prefix is the same as the PITCH.DARK file
 ; out:   none
 ;------------------------------------------------------------------------------
-.error
-         jmp   SoftBell
 LoadSavedGameInfo
          jsr   okvs_init
          !word gSavedGamesStore
@@ -44,9 +41,10 @@ LoadSavedGameInfo
          !word kZINFOFilename
          !word kSystemAddress
          !word kProDOSFileBuffer
-         bcs   .error
+         bcc   +
+         jmp   SoftBell
 
-         jsr   SetStartupPathToCurrentVersionOfCurrentGame
++        jsr   SetStartupPathToCurrentVersionOfCurrentGame
          jsr   kSystemAddress        ; call ZINFO (despite being a .SYSTEM program, it returns via RTS)
 
          +LDADDR zinfo_base
@@ -159,4 +157,3 @@ kRightParen
 
 kNullByte
          !byte 1,0
-}
