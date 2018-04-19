@@ -115,6 +115,12 @@ OptionsDialog
 ;------------------------------------------------------------------------------
 ; internal functions
 
+;------------------------------------------------------------------------------
+; HandleOptions
+;
+; in:    A = key pressed
+; out:   all registers and flags clobbered
+;------------------------------------------------------------------------------
 HandleOptionsKey
          ldx   #_endOptionsKeys-kOptionsKeys
 -        cmp   kOptionsKeys,x

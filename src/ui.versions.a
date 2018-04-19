@@ -159,9 +159,13 @@ iNumVersions=*+1
 ;------------------------------------------------------------------------------
 ; internal functions
 
+;------------------------------------------------------------------------------
+; HandleVersionsKey
+;
+; in:    A = key pressed
+; out:   all registers and flags clobbered
+;------------------------------------------------------------------------------
 HandleVersionsKey
-; A = key pressed
-; out: all registers and flags clobbered
          ldx   #_endVersionsKeys-kVersionsKeys
 -        cmp   kVersionsKeys,x
          beq   @found

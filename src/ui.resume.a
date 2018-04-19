@@ -143,8 +143,6 @@ ResumeDialog
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 HandleResumeKey
-; A = key pressed
-; out: all registers and flags clobbered
          ldx   #_endResumeKeys-kResumeKeys
 -        cmp   kResumeKeys,x
          beq   @found
