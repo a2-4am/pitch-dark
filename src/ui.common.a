@@ -14,8 +14,12 @@
 ; - PrintAt
 ; - SimulateClick
 ; - GetCheckedRadioButton
+; - HandleUpDownRadio
 ; - CreateNullTerminatedString
 ;
+; Public variables
+; - gViewInUse                       array of byte (each 0=false, nonzero=true)
+
 ; Public constants
 ; - kStringOK
 ; - kStringCancel

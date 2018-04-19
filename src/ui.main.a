@@ -8,7 +8,6 @@
 ;
 ; Public variables
 ; - gMainScreenPaintDirty byte       0=false, nonzero=true
-; - gViewInUse                       array of byte (each 0=false, nonzero=true)
 ;
 
 ; View IDs (application-specific, acceptable range 0..15, no duplicates)
