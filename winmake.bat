@@ -1,4 +1,3 @@
-0</* :
 @echo off
 if "%1" equ "clean" (
 :clean
@@ -32,6 +31,7 @@ if "%1" equ "dsk" (
 call :asm
 1>nul copy /y res\"Pitch Dark.master games collection.do.not.edit.2mg" "build\%DISK%"
 1>nul copy /y res\_FileInformation.txt build\
+cscript /nologo bin\fixFileInformation.js build\_FileInformation.txt
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\GRUE.SYSTEM"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\ONBEYOND.SYSTEM"
 cadius ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\ZINFO.SYSTEM"
@@ -56,7 +56,7 @@ if "%1" equ "txt" (
 call :dsk
 :txt
 2>nul md build\text
-cscript /nologo //e:jscript %~f0
+cscript /nologo bin/textnormalize.js res\text
 cd build & cadius ADDFOLDER "%DISK%" "/PITCH.DARK/TEXT" text & cd ..
 if not "%1" equ "" set DISK=
 goto :EOF
@@ -82,41 +82,11 @@ goto :EOF
 
 echo usage: %0 clean / asm / dsk / txt / artwork / all
 goto :EOF
-*/
-WScript.echo("")
-a = new ActiveXObject("scripting.filesystemobject")
-fileinfo = ""
-for (b = new Enumerator(a.GetFolder("res\\text").files); !b.atEnd(); b.moveNext())
-{
-    f = a.opentextfile(b.item())
-    try
-    {
-        shortf = a.GetBaseName(b.item()).toUpperCase()
-        newf = ""
-        fileinfo += "\r\n" + shortf + "=Type(04),AuxType(0000),VersionCreate(70),MinVersion(BE),Access(C3)"
-        l = 0
-        while (1)
-        {
-            lines = f.readline()
-            !lines.length && (linelength = 0);
-            l && linelength && (lines += new Array(linelength - lines.length).join(" "))
-            newf += lines + "\r"
-            if (lines.substring(0, 6) == "[info]") linelength = 65
-            else if (lines.substring(0, 13) == "[description]") linelength = 78
-            l = linelength
-        }
-    }
-    catch(e){}
-    a.createtextfile("build\\text\\" + shortf, 1).write(newf)
-}
-a.createtextfile("build\\text\\_FileInformation.txt", 1).write(fileinfo.substring(2))
 
-/*
-bat/jscript hybrid make script for Windows environments
+make script for Windows environments
 a qkumba monstrosity from 2018-03-01
 requires ACME, CADIUS
 https://sourceforge.net/projects/acme-crossass/
 https://www.brutaldeluxe.fr/products/crossdevtools/cadius/
 https://github.com/mach-kernel/cadius
 requires ACME, CADIUS to be in path
-*/
