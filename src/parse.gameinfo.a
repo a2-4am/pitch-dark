@@ -19,15 +19,6 @@
 kTextRootDirectory
          !byte 5
          !raw "TEXT/"
-
-gVersionsStore
-         !word $FDFD                 ; set in LoadGlobalPreferences
-gOptionsStore
-         !word $FDFD                 ; set in LoadGameInfo
-gHasSavedGames
-         !byte 0
-gLastSavedGameSlot
-         !byte 0
 kHasArtwork
          !byte 7
          !raw  "ARTWORK"
@@ -38,17 +29,26 @@ kHasVersions
          !byte 8
          !raw  "VERSIONS"
 
+gVersionsStore
+         !word $FDFD                 ; set in LoadGlobalPreferences
+gOptionsStore
+         !word $FDFD                 ; set in LoadGameInfo
+gHasSavedGames
+         !byte $FD                   ; set in CheckForSavedGames
+gLastSavedGameSlot
+         !byte $FD                   ; set in CheckForSavedGames
+
 sectionPointers                      ; array of pointers to start of each section
 addrEOF
-         !word 0
+         !word $FDFD
 addrOptions
-         !word 0
+         !word $FDFD
 addrVersions
-         !word 0
+         !word $FDFD
 addrDescription
-         !word 0
+         !word $FDFD
 addrInfo
-         !word 0
+         !word $FDFD
 
 ;------------------------------------------------------------------------------
 ; LoadGameInfo
