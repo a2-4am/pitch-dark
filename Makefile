@@ -43,6 +43,7 @@ dsk: md asm
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/PITCH.DARK"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "res/PITCH.DARK.CONF"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "res/GAMES.CONF"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "res/CREDITS.TXT"
 	$(CADIUS) CREATEFOLDER build/"$(DISK)" "/PITCH.DARK/LIB/"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ1"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ2"
@@ -65,6 +66,7 @@ txt: dsk
 artwork: dsk
 	$(CADIUS) ADDFOLDER build/"$(DISK)" "/PITCH.DARK/ARTWORK" "res/artwork"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/ARTWORK/" "res/DHRSLIDE.SYSTEM"
+	$(CADIUS) ADDFOLDER build/"$(DISK)" "/PITCH.DARK/ARTWORKGS" "res/artworkgs"
 
 mount: dsk
 	osascript bin/V2Make.scpt "`pwd`" bin/pitchdark.vii build/"$(DISK)"

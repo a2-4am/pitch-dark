@@ -56,7 +56,7 @@
 ; load file with master game list
 ;------------------------------------------------------------------------------
          jsr   LoadFile              ; load prefs file at $2000
-         !word kGamesListFilename
+         !word @kGamesListFilename
 -        !word $2000
          !word kProDOSFileBuffer
 
@@ -69,7 +69,7 @@
          +STAY gGlobalPrefsStore     ; save pointer to free space for next store
          bra   +
 
-kGamesListFilename
+@kGamesListFilename
          !byte 10
          !raw  "GAMES.CONF"
 +

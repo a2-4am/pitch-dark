@@ -21,6 +21,7 @@
 ; - gViewInUse                       array of byte (each 0=false, nonzero=true)
 
 ; Public constants
+; - kStringGlobalTitle
 ; - kStringOK
 ; - kStringCancel
 ;
@@ -28,6 +29,12 @@
 gViewInUse
          !byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
+kStringGlobalTitle
+         !raw  "                                   "
+         !byte 16                    ; inverse P
+         !raw  "itch "
+         !byte 4                     ; inverse D
+         !raw  "ark                                   ",0
 kStringOK
          !byte $0F                   ; 'O' inverse
          !byte 139,0
@@ -175,13 +182,6 @@ PaintTitleBar
          bpl   -
          ldx   #WGSyncGlobalCursor
          jmp   WeeGUI
-
-kStringGlobalTitle
-         !raw  "                                   "
-         !byte 16                    ; inverse P
-         !raw  "itch "
-         !byte 4                     ; inverse D
-         !raw  "ark                                   ",0
 
 ;------------------------------------------------------------------------------
 ; PrintAt
