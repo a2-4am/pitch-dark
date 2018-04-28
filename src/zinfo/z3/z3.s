@@ -52,6 +52,7 @@ zp_D8    =    $d8
 zp_DB    =    $db
 zp_DC    =    $dc
 
+    jsr    exchange
     jsr    $bf00
     !byte  $c8       ;open file
     !word  c8_parms
@@ -59,7 +60,6 @@ zp_DC    =    $dc
     sta    ce_handle
     sta    ca_handle
 
-    jsr    exchange
     lda    #>info_buffer
     sta    zpage_info+1
     lda    #<info_buffer
@@ -133,6 +133,7 @@ nextpos
     !byte  $cc       ;close file
     !word  cc_parms
 
+quit
     lda    $bf30
     sta    c5_parms+1
     jsr    $bf00
@@ -157,7 +158,6 @@ exchange
     sta    zpage_old-1,x
     dex
     bne    -
-quit
     rts
 
 load_page

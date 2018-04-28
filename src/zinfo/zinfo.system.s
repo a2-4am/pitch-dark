@@ -19,7 +19,7 @@ init
 op_c7
         !byte   $c7
         !word   c7_parms
-        ldx     $200
+        ldx     $280
         bne     +
 
         ;if not, get volume name
@@ -27,24 +27,24 @@ op_c7
         jsr     $bf00
         !byte   $c5
         !word   c5_parms
-        ldx     $201
+        ldx     $281
         inx
         txa
         and     #$0f
-        sta     $200
+        sta     $280
         lda     #$2f
-        sta     $201
+        sta     $281
 
         ;set that as prefix
 
         dec     op_c7
         bne     -
 +       lda     #$2f
-        cmp     $200,x
+        cmp     $280,x
         beq     +
         inx
-        stx     $200
-        sta     $200,x
+        stx     $280
+        sta     $280,x
 
         ;form absolute path
 
@@ -57,11 +57,11 @@ op_c7
         tya
         pha
         clc
-        adc     $200
-        sta     $200
+        adc     $280
+        sta     $280
         tax
 -       lda     $2006,y
-        sta     $200,x
+        sta     $280,x
         dex
         dey
         bne     -
@@ -118,13 +118,13 @@ quit    jsr     $bf00
         jsr     $bf00
         !byte   $c5
         !word   c5_parms
-        ldx     $301
+        ldx     $381
         inx
         txa
         and     #$0f
-        sta     $300
+        sta     $380
         lda     #$2f
-        sta     $301
+        sta     $381
 
         ;use that for intepreter location
 
@@ -168,19 +168,18 @@ quit    jsr     $bf00
         jmp     $3000
 
 c7_parms
-cc_parms
         !byte   1
-        !word   $200
+        !word   $280
 
 c5_parms
         !byte   2
         !byte   0
-        !word   $201
+        !word   $281
         !byte   $d1
 
 c6_parms
         !byte   1
-        !word   $300
+        !word   $380
 
 c4_parms
         !byte   $0a
@@ -200,6 +199,10 @@ ca_parms
         !word   $3000
         !word   $ffff
         !word   $ffff
+
+cc_parms
+        !byte   1
+        !byte   0
 
 filename
         !byte   (filename_e-filename)-1

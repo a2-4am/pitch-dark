@@ -44,6 +44,7 @@ zp_E7    =    $e7
 zp_E8    =    $e8
 zp_E9    =    $e9
 
+    jsr    exchange
     jsr    $bf00
     !byte  $c8       ;open file
     !word  c8_parms
@@ -52,7 +53,6 @@ zp_E9    =    $e9
     sta    ce_handle
     sta    ca_handle
 
-    jsr    exchange
     lda    #>info_buffer
     sta    zpage_info+1
     lda    #<info_buffer
@@ -94,6 +94,7 @@ fetch_info
     !byte  $cc       ;close file
     !word  cc_parms
 
+quit
     jsr    $bf00
     !byte  $c5
     !word  c5_parms
@@ -116,7 +117,6 @@ exchange
     sta    zpage_old-1,x
     dex
     bne    -
-quit
     rts
 
 load_page

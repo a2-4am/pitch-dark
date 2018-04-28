@@ -42,6 +42,7 @@ zp_E5    =    $E5
 zp_E6    =    $E6
 zp_E7    =    $E7
 
+    jsr    exchange
     jsr    $bf00
     !byte  $c8       ;open file
     !word  c8_parms
@@ -50,7 +51,6 @@ zp_E7    =    $E7
     sta    ce_handle
     sta    ca_handle
 
-    jsr    exchange
     lda    #>info_buffer
     sta    zpage_info+1
     lda    #<info_buffer
@@ -92,14 +92,6 @@ fetch_info
     !byte  $cc       ;close file
     !word  cc_parms
 
-exchange
-    ldx    #(zp_E7-zp_91)
--   ldy    zpage_old-1,x
-    lda    zp_91-1,x
-    sty    zp_91-1,x
-    sta    zpage_old-1,x
-    dex
-    bne    -
 quit
     lda     $bf30
     sta     c5_parms+1
@@ -116,6 +108,16 @@ quit
     jsr     $bf00
     !byte   $c6
     !word   c6_parms
+
+exchange
+    ldx    #(zp_E7-zp_91)
+-   ldy    zpage_old-1,x
+    lda    zp_91-1,x
+    sty    zp_91-1,x
+    sta    zpage_old-1,x
+    dex
+    bne    -
+    rts
 
 load_page
     cmp    zp_C0
