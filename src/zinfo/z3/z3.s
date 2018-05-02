@@ -68,11 +68,7 @@ zp_DC    =    $dc
 zero_info
     ldy    #name_offset
     sty    zpage_ptr
-    !if name_offset=0 {
     tya
-    } else {
-    lda    #0
-    }
     sta    (zpage_info),y
     clc
     lda    zpage_info

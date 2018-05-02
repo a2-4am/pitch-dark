@@ -444,9 +444,10 @@ skipupper
 
                 ;skip suffix handling if not present
 
+                ldx     #0
                 ldy     $2006
                 lda     $2006-2,y
-                cmp     '.'
+                cmp     #'.'
                 bne     ++
                 inc     $2006
                 lda     #'V'
@@ -476,7 +477,9 @@ skipupper
                 sta     $2006,y
                 lda     #'Z'
                 sta     $2006-1,y
-++              jsr     hddopendir
+                ldx     $305
+++              stx     $305
+                jsr     hddopendir
                 jmp     entry
 
 call80          jsr     $c300

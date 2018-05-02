@@ -352,7 +352,6 @@ slot            lda     $cfff
                 sta     $300	;80-cols
                 ldx     #1
                 stx     $301	;lowercase
-                stx     $305	;warn about missing .sav
                 dex
                 dex
                 stx     $302	;no load
@@ -515,8 +514,6 @@ brand           jsr     $dbda
                 ldx     #<brandtext
                 ldy     #(brandtext_e-brandtext)
                 jsr     $dbda
-                lda     $305
-                beq     +
                 lda     $300
                 cmp     #$38
                 bne     +
