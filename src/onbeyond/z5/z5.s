@@ -1804,11 +1804,13 @@ sparseblk       ldx     #2
                 lda     adrhi
                 cmp     #(>hddencbuf) + 2
                 bne     --
-                inc     bloklo
+                ldx     bloklo
+                inx
                 bne     +
                 inc     blokhi
-+               dec     ldrhi
-                bne     --
++               lda     blokhi
+                dec     ldrhi
+                bne     ---
 
                 ;signal disk full via implicit carry set
 
@@ -1914,6 +1916,7 @@ quit_e
 !if verbose_info = 1 {
         !warn "base=",casemap-((quit_e-waitkey)+(callback_e-callback1))
         !warn "quit=",casemap-(quit_e-waitkey)
+        !warn "save=",$300+save_end-saveme
 }
 
 unpack ;unpacker entrypoint
