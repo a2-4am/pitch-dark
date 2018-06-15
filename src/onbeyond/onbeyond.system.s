@@ -27,11 +27,11 @@ op_c7
         jsr     $bf00
         !byte   $c5
         !word   c5_parms
-        ldx     $281
-        inx
-        txa
+        lda     $281
         and     #$0f
-        sta     $280
+        tax
+        inx
+        stx     $280
         lda     #$2f
         sta     $281
 

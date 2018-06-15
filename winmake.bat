@@ -31,6 +31,7 @@ if "%1" equ "asm" (
 %ACME% -r build\zinfo1.lst src\zinfo\z1\z1.s
 %ACME% -r build\zinfo2.lst src\zinfo\z2\z2.s
 %ACME% -r build\zinfo3.lst src\zinfo\z3\z3.s
+%ACME% -r build\zinfo4.lst src\zinfo\z4\z4.s
 goto :EOF
 )
 
@@ -57,6 +58,7 @@ cscript /nologo bin\fixFileInformation.js build\_FileInformation.txt
 %CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ZINFO1"
 %CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ZINFO2"
 %CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ZINFO3"
+%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ZINFO4"
 goto :EOF
 )
 

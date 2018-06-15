@@ -6,15 +6,17 @@
 *=$3000
 
 save_name      =    $2006
-read_buffer    =    $3500 ;512 bytes
-record_size    =    $40
-info_buffer    =    $2000 ;record_size*8 (currently $200) bytes, can be anywhere
+read_buffer    =    $2e00 ;512 bytes
+info_buffer    =    $2000 ;record_size*8, 600 ($258) bytes
 zpage_info     =    $fe   ;word
 zpage_ptr      =    $fd
-name_offset    =    0  ;1+37 bytes
+
+name_offset    =    0  ;1+37 bytes, a zero-length name is an empty record
 time_offset    =    42 ;1+8 bytes ("12:01 pm")
 score_offset   =    51 ;1+6 bytes (-12345)
 moves_offset   =    58 ;1+5 bytes (12345)
+date_offset    =    64 ;1+10 bytes (unused in this version)
+record_size    =    75 ;bytes
 
 
 ;zpage used by Infocom code
@@ -89,21 +91,21 @@ fetch_info
     !word  cc_parms
 
 quit
-    lda     $bf30
-    sta     c5_parms+1
-    jsr     $bf00
-    !byte   $c5
-    !word   c5_parms
-    ldx     $201
+    lda    $bf30
+    sta    c5_parms+1
+    jsr    $bf00
+    !byte  $c5
+    !word  c5_parms
+    ldx    $201
     inx
     txa
-    and     #$0f
-    sta     $200
-    lda     #$2f
-    sta     $201
-    jsr     $bf00
-    !byte   $c6
-    !word   c6_parms
+    and    #$0f
+    sta    $200
+    lda    #$2f
+    sta    $201
+    jsr    $bf00
+    !byte  $c6
+    !word  c6_parms
 
 exchange
     ldx    #(zp_E7-zp_91)
@@ -686,6 +688,3 @@ stack_pointer
 max_chars  !byte 0
 
 zpage_old
-!if *+(zp_E7-zp_91)>=read_buffer {
-  !error "Code is too large"
-}

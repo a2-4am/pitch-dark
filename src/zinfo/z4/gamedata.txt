@@ -1,0 +1,329 @@
+gamelist
+
+    !byte   amfvr77e-amfvr77b
+amfvr77b
+    !text   "R77.850814.SAV"
+amfvr77e
+
+    !byte   amfvr77de-amfvr77db
+amfvr77db
+    !text   "R77.DEPROT.SAV"
+amfvr77de
+
+    !byte   amfvr79e-amfvr79b
+amfvr79b
+    !text   "R79.851122.SAV"
+amfvr79e
+
+    !byte   amfvr79de-amfvr79db
+amfvr79db
+    !text   "R79.DEPROT.SAV"
+amfvr79de
+
+    !byte   bureaur86e-bureaur86b
+bureaur86b
+    !text   "R86.870212.SAV"
+bureaur86e
+
+    !byte   bureaur86de-bureaur86db
+bureaur86db
+    !text   "R86.DEPROT.SAV"
+bureaur86de
+
+    !byte   bureaur116e-bureaur116b
+bureaur116b
+    !text   "R116.870602.SAV"
+bureaur116e
+
+    !byte   bureaur116de-bureaur116db
+bureaur116db
+    !text   "R116.DEPROT.SAV"
+bureaur116de
+
+    !byte   nordr19e-nordr19b
+nordr19b
+    !text   "R19.870722.SAV"
+nordr19e
+
+    !byte   trinityr11e-trinityr11b
+trinityr11b
+    !text   "R11.860509.SAV"
+trinityr11e
+
+    !byte   trinityr12e-trinityr12b
+trinityr12b
+    !text   "R12.860926.SAV"
+trinityr12e
+
+    !byte   0 ;end of list
+
+gameloc
+;amfvr77
+    !byte   $a0
+
+;amfvr77d
+    !byte   $a0
+
+;amfvr79
+    !byte   $a0
+
+;amfvr79d
+    !byte   $a0
+
+;bureaur86
+    !byte   $b6
+
+;bureaur86d
+    !byte   $b6
+
+;bureaur116
+    !byte   $b6
+
+;bureaur116d
+    !byte   $b6
+
+;nordr19
+    !byte   $91
+
+;trinityr11
+    !byte   $be
+
+;trinityr12
+    !byte   $be
+
+gametime
+;amfvr77
+    !byte   $aa
+
+;amfvr77d
+    !byte   $aa
+
+;amfvr79
+    !byte   $aa
+
+;amfvr79d
+    !byte   $aa
+
+;bureaur86
+    !byte   0 ;no time
+
+;bureaur86d
+    !byte   0 ;no time
+
+;bureaur116
+    !byte   0 ;no time
+
+;bureaur86d
+    !byte   0 ;no time
+
+;nordr19
+    !byte   0 ;no time
+
+;trinityr11
+    !byte   0 ;no time
+
+;trinityr12
+    !byte   0 ;no time
+
+gamescore
+;amfvr77
+    !byte   0 ;no score
+
+;amfvr77d
+    !byte   0 ;no score
+
+;amfvr79
+    !byte   0 ;no score
+
+;amfvr79d
+    !byte   0 ;no score
+
+;bureaur86
+    !byte   $a1
+
+;bureaur86d
+    !byte   $a1
+
+;bureaur116
+    !byte   $a1
+
+;bureaur86d
+    !byte   $a1
+
+;nordr19
+    !byte   0 ;per-scenario score, not supported yet
+
+;trinityr11
+    !byte   $aa
+
+;trinityr12
+    !byte   $aa
+
+gamemoves
+;amfvr77
+    !byte   0 ;no moves
+
+;amfvr77d
+    !byte   0 ;no moves
+
+;amfvr79
+    !byte   0 ;no moves
+
+;amfvr79d
+    !byte   0 ;no moves
+
+;bureaur86
+    !byte   $8f
+
+;bureaur86d
+    !byte   $8f
+
+;bureaur116
+    !byte   $8e
+
+;bureaur86d
+    !byte   $8e
+
+;nordr19
+    !byte   0 ;no moves
+
+;trinityr11
+    !byte   $95
+
+;trinityr12
+    !byte   $95
+
+gamemonth
+;amfvr77
+    !byte   $18
+    !byte   $7c
+
+;amfvr77d
+    !byte   $18
+    !byte   $7c
+
+;amfvr79
+    !byte   $18
+    !byte   $7c
+
+;amfvr79d
+    !byte   $18
+    !byte   $7c
+
+;bureaur86
+    !byte   0 ;no month
+    !byte   0 ;no month
+
+;bureaur86d
+    !byte   0 ;no month
+    !byte   0 ;no month
+
+;bureaur116
+    !byte   0 ;no month
+    !byte   0 ;no month
+
+;bureaur86d
+    !byte   0 ;no month
+    !byte   0 ;no month
+
+;nordr19
+    !byte   0 ;no month
+    !byte   0 ;no month
+
+;trinityr11
+    !byte   0 ;no month
+    !byte   0 ;no month
+
+;trinityr12
+    !byte   0 ;no month
+    !byte   0 ;no month
+
+gameday
+;amfvr77
+    !byte   $91
+    !byte   $81
+
+;amfvr77d
+    !byte   $91
+    !byte   $81
+
+;amfvr79
+    !byte   $91
+    !byte   $81
+
+;amfvr79d
+    !byte   $91
+    !byte   $81
+
+;bureaur86
+    !byte   0 ;no day
+    !byte   0 ;no day
+
+;bureaur86d
+    !byte   0 ;no day
+    !byte   0 ;no day
+
+;bureaur116
+    !byte   0 ;no day
+    !byte   0 ;no day
+
+;bureaur86d
+    !byte   0 ;no day
+    !byte   0 ;no day
+
+;nordr19
+    !byte   0 ;no day
+    !byte   0 ;no day
+
+;trinityr11
+    !byte   0 ;no day
+    !byte   0 ;no day
+
+;trinityr12
+    !byte   0 ;no day
+    !byte   0 ;no day
+
+gameyear
+;amfvr77
+    !byte   $bb
+    !byte   $39
+
+;amfvr77d
+    !byte   $bb
+    !byte   $39
+
+;amfvr79
+    !byte   $bb
+    !byte   $39
+
+;amfvr79d
+    !byte   $bb
+    !byte   $39
+
+;bureaur86
+    !byte   0 ;no year
+    !byte   0 ;no year
+
+;bureaur86d
+    !byte   0 ;no year
+    !byte   0 ;no year
+
+;bureaur116
+    !byte   0 ;no year
+    !byte   0 ;no year
+
+;bureaur86d
+    !byte   0 ;no year
+    !byte   0 ;no year
+
+;nordr19
+    !byte   0 ;no year
+    !byte   0 ;no year
+
+;trinityr11
+    !byte   0 ;no year
+    !byte   0 ;no year
+
+;trinityr12
+    !byte   0 ;no year
+    !byte   0 ;no year
