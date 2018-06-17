@@ -1,0 +1,188 @@
+gamelist
+
+    !byte   bzoner9e-bzoner9b
+bzoner9b
+    !text   "R9.871008.SAV"
+bzoner9e
+
+    !byte   hgttgr31e-hgttgr31b
+hgttgr31b
+    !text   "R31.871119.SAV"
+hgttgr31e
+
+    !byte   lgopr4e-lgopr4b
+lgopr4b
+    !text   "R4.880405.SAV"
+lgopr4e
+
+    !byte   planetr10e-planetr10b
+planetr10b
+    !text   "R10.880531.SAV"
+planetr10e
+
+    !byte   sherlockr21e-sherlockr21b
+sherlockr21b
+    !text   "R21.871214.SAV"
+sherlockr21e
+
+    !byte   sherlockr26e-sherlockr26b
+sherlockr26b
+    !text   "R26.880127.SAV"
+sherlockr26e
+
+    !byte   wishbringr23e-wishbringr23b
+wishbringr23b
+    !text   "R23.880706.SAV"
+wishbringr23e
+
+    !byte   zorkr52e-zorkr52b
+zorkr52b
+    !text   "R52.871125.SAV"
+zorkr52e
+
+    !byte   ztuur16e-ztuur16b
+ztuur16b
+    !text   "R16.970828.SAV"
+ztuur16e
+
+    !byte   0 ;end of list
+
+gameloc
+;bzoner9
+    !byte   $a4
+
+;hgttgr31
+    !byte   $84
+
+;lgopr4
+    !byte   $81
+
+;planetr10
+    !byte   $b2
+
+;sherlockr21
+    !byte   $75
+
+;sherlockr26
+    !byte   $74
+
+;wishbringr23
+    !byte   $b1
+
+;zorkr52
+    !byte   $7b
+
+;ztuur16
+    !byte   $28
+
+gametime
+;bzoner9
+    !byte   $8a
+
+;hgttgr31
+    !byte   0 ;no time
+
+;lgopr4
+    !byte   0 ;no time
+
+;planetr10
+    !byte   $a4
+
+;sherlockr21
+    !byte   $6e
+
+;sherlockr26
+    !byte   $6d
+
+;wishbringr23
+    !byte   $9a
+
+;zorkr52
+    !byte   0 ;no time
+
+;ztuur16
+    !byte   0 ;no time
+
+gamescore
+;bzoner9
+    !byte   0 ;no score
+
+;hgttgr31
+    !byte   $79
+
+;lgopr4
+    !byte   $77
+
+;planetr10
+    !byte   $9b
+
+;sherlockr21
+    !byte   $aa
+
+;sherlockr26
+    !byte   $ab
+
+;wishbringr23
+    !byte   $9c
+
+;zorkr52
+    !byte   $6e
+
+;ztuur16
+    !byte   $16
+
+gamemoves
+;bzoner9
+    !byte   0 ;no moves
+
+;hgttgr31
+    !byte   $6b
+
+;lgopr4
+    !byte   $6a
+
+;planetr10
+    !byte   0 ;no moves
+
+;sherlockr21
+    !byte   0 ;no moves
+
+;sherlockr26
+    !byte   0 ;no moves
+
+;wishbringr23
+    !byte   $8d
+
+;zorkr52
+    !byte   $64
+
+;ztuur16
+    !byte   $17
+
+gameday
+;bzoner9
+    !byte   0 ;no day
+
+;hgttgr31
+    !byte   0 ;no day
+
+;lgopr4
+    !byte   0 ;no day
+
+;planetr10
+    !byte   $be
+
+;sherlockr21
+    !byte   $6e
+
+;sherlockr26
+    !byte   $6d
+
+;wishbringr23
+    !byte   0 ;no day
+
+;zorkr52
+    !byte   0 ;no day
+
+;ztuur16
+    !byte   0 ;no day

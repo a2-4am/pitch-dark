@@ -33,6 +33,7 @@ asm: md
 	$(ACME) -r build/zinfo2.lst src/zinfo/z2/z2.s
 	$(ACME) -r build/zinfo3.lst src/zinfo/z3/z3.s
 	$(ACME) -r build/zinfo4.lst src/zinfo/z4/z4.s
+	$(ACME) -r build/zinfo5.lst src/zinfo/z5/z5.s
 
 dsk: md asm
 	cp res/"Pitch Dark.master games collection.do.not.edit.2mg" build/"$(DISK)"
@@ -56,6 +57,7 @@ dsk: md asm
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ZINFO2"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ZINFO3"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ZINFO4"
+	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ZINFO5"
 	# TODO remove these save game files, just here for development
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/Z/WISHBRINGER/" "res/R69.850920.SAV"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/Z/ZORK.I/" "res/R88.840726.SAV"
