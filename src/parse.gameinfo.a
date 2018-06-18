@@ -51,6 +51,37 @@ addrInfo
          !word $FDFD
 
 ;------------------------------------------------------------------------------
+; FlushSaveInfo
+; update aux data for the current game save-slot if needed
+;
+; in:    current ProDOS prefix is the same as the PITCH.DARK binary
+; out:   all registers and flags clobbered
+;------------------------------------------------------------------------------
+FlushSaveInfo
+         lda   $50
+         cmp   #$50
+         bne   +
+         lda   $51
+         cmp   #$44
+         bne   +
+         dec   $50                   ; prevent re-check in future
+         lda   $52
+         sta   @slot
+         jsr   SetStartupPathToCurrentVersionOfCurrentGame
+         ldx   gPathname
+         lda   #'S'
+         sta   gPathname-1,x
+         lda   #'A'
+         sta   gPathname,x
+         lda   #'V'
+         sta   gPathname+1,x
+         inc   gPathname
+         jsr   SetAuxFileType        ; best-effort
+         !word gPathname
+@slot    !word 0
++        rts
+
+;------------------------------------------------------------------------------
 ; LoadGameInfo
 ; load file with information about the current game
 ;

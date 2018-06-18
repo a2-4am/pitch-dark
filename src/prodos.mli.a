@@ -15,6 +15,7 @@
 CMD_QUIT       = $65                 ; quit to ProDOS
 CMD_CREATE     = $C0                 ; create new file
 CMD_DESTROY    = $C1                 ; delete a file
+CMD_SETFILEINFO= $C3                 ; set file info
 CMD_GETFILEINFO= $C4                 ; get file (or volume) info
 CMD_SETPREFIX  = $C6                 ; change default pathname prefix
 CMD_OPEN       = $C8                 ; open a file
@@ -26,6 +27,7 @@ CMD_CLOSE      = $CC                 ; close an open file
 PC_QUIT        = $04
 PC_CREATE      = $07
 PC_DESTROY     = $01
+PC_SETFILEINFO = $07
 PC_GETFILEINFO = $0A
 PC_SETPREFIX   = $01
 PC_OPEN        = $03
@@ -215,6 +217,41 @@ SaveFile
 @exit    rts
 
 ;-------------------------------
+; SetAuxFileType
+; set auxiliary file information only
+; access bits and file-type are hard-coded
+; intended for updating save-games only
+;
+; in:  stack contains 4 bytes of parameters:
+;      +1 address of pathname
+;      +3 auxiliary type to set
+; out: if C set, MLI call failed and A contains error code
+;        from set
+;      if C clear, MLI call succeeded
+;      all other flags clobbered
+;      all registers clobbered
+;      stack set to next instruction after parameters
+;-------------------------------
+SetAuxFileType
+         +PARAMS_ON_STACK 4
+         +LDPARAM 1
+         +STAY mliparam+1            ; pathname
+         +LDPARAM 3
+         +STAY mliparam+5            ; aux type
+         lda   #%11000011
+         sta   mliparam+3            ; access bits
+         lda   #4
+         sta   mliparam+4            ; file type
+         lda   #0
+         sta   extra+0               ; date
+         sta   extra+1               ; date
+         sta   extra+2               ; time
+         sta   extra+3               ; time
+         lda   #CMD_SETFILEINFO      ; MLI command
+         ldy   #PC_SETFILEINFO       ; number of parameters for 'setfileinfo' command
+         bra   mli
+
+;-------------------------------
 ; SetPrefix
 ; set current directory
 ;
@@ -336,5 +373,5 @@ refnum   !byte $FE                   ; file refnum (set by MLI open)
 mlilen   !byte $FE,$FE               ; file length (set by MLI read)
 blocks   !byte $FE,$FE               ; blocks used (set by getvolumeinfo/getfileinfo)
                                      ; member is also used by createfile
-         !byte $FE,$FE,$FE,$FE,$FE,$FE,$FE,$FE
+extra    !byte $FE,$FE,$FE,$FE,$FE,$FE,$FE,$FE
                                      ; used by get_file_info

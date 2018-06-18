@@ -93,6 +93,11 @@
          +STAY gVersionsStore        ; save pointer to free space for next store
 
 ;------------------------------------------------------------------------------
+; set any pending save slot information for the current game
+;------------------------------------------------------------------------------
+         jsr   FlushSaveInfo
+
+;------------------------------------------------------------------------------
 ; get current game description and game-specific options
 ;------------------------------------------------------------------------------
          jsr   LoadGameInfo
