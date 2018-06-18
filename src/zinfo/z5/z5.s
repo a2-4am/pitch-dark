@@ -359,7 +359,7 @@ wishbr
     lda    #$5c
     jsr    fetch_obj
     lda    zp_6B
-    cmp    #$0c
+    cmp    #$0d
     bcc    +
     sbc    #$0c
 +   sta    zp_58

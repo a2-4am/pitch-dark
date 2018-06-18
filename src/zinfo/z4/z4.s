@@ -149,11 +149,7 @@ position
     bcs    nextpos
     ldy    #name_offset
     sty    zpage_ptr
-    lda    zpage_gamind
-    pha
     jsr    dump_info
-    pla
-    sta    zpage_gamind
 
 nextpos
     clc
@@ -311,9 +307,21 @@ dump_info
     sta    max_chars ;can't overflow anymore
     sta    (zpage_info),y
 
+    asl    zpage_gamind
     ldx    zpage_gamind
     lda    gametime, x
     beq    skip_time
+
+    lda    #$9d ;in-simulation
+    jsr    fetch_obj
+    lda    zp_6B
+    ora    zp_6C
+    bne    in_sim1
+    inc    zpage_gamind
+
+in_sim1
+    ldx    zpage_gamind
+    lda    gametime, x
     jsr    fetch_obj
     lda    zp_6B
     sta    zp_58
@@ -325,7 +333,7 @@ dump_info
     sta    zp_5B
     jsr    sub_E7FB
     sta    zp_59
-    cpx    #$0c
+    cpx    #$0d
     bcc    +
     txa
     sbc    #$0c
@@ -368,6 +376,7 @@ is_am
     sta    (zpage_info),y
 
 skip_time
+    lsr    zpage_gamind
     ldy    #score_offset
     sty    zpage_ptr
     lda    #0
@@ -424,10 +433,10 @@ skip_moves
     jsr    fetch_obj
     lda    zp_6B
     ora    zp_6C
-    bne    in_sim
+    bne    in_sim2
     inc    zpage_gamind
 
-in_sim
+in_sim2
     ldx    zpage_gamind
     lda    gamemonth, x
     jsr    fetch_obj
@@ -463,6 +472,7 @@ in_sim
     sta    (zpage_info),y
 
 skip_date
+    lsr    zpage_gamind
 rts
 
 !source "src/zinfo/z4/gamedata.txt"

@@ -13,12 +13,13 @@
 
 ; TODO move these to a ZINFO_MLI kind of separate file
 zinfo_base     =    $2000
-zinfo_recordlen=    64
 zinfo_maxslots =    8
-name_offset    =    0  ;1+37 bytes
+name_offset    =    0  ;1+37 bytes, a zero-length name is an empty record
 time_offset    =    42 ;1+8 bytes ("12:01 pm")
 score_offset   =    51 ;1+6 bytes (-12345)
 moves_offset   =    58 ;1+5 bytes (12345)
+date_offset    =    64 ;1+10 bytes ("10/10/2099")
+zinfo_recordlen=    75 ;bytes
 
 gSavedGamesStore
          !word $FDFD                 ; set in LoadGameInfo
@@ -57,43 +58,82 @@ LoadSavedGameInfo
          phx
          jsr   ResetPath
          lda   (ZPTR)
-         beq   @saveAndMoveToNextSlot; no saved game in this slot
+         beq   @branchToNextSlot     ; no saved game in this slot
          inc   gSavedGamesSlotsInUse ; update number of slots in use (separate from length of store)
          +LDAY ZPTR
          jsr   AddToPathWithHighBit  ; add location information
-         lda   ZPTR
-         clc
-         adc   #time_offset
-         sta   ZPTR
-         bcc   +
-         inc   ZPTR+1
-+                                    ; ZPTR -> ZINFO time field (length-prefixed string, may be empty string if no time)
+         ldx   #0                    ; count elements to print (there can be 0-3 of them)
+         jsr   @queryTime
+         beq   +
+         inx
++        jsr   @queryScore
+         beq   +
+         inx
++        jsr   @queryMoves
+         beq   +
+         inx
++        jsr   @queryDate
+         beq   +
+         inx
++        stx   @tempX+1
+         plx
+         ply
+         pla
+         pha
+         phy
+         phx
+         +STAY ZPTR
+@tempX   ldx   #0                    ; self-modified
+         cpx   #0                    ; to allow branch-linking from above
+@branchToNextSlot
+         beq   @saveAndMoveToNextSlot; only location, nothing more to print
+         phx
          +LDADDR kLeftParen
          jsr   AddToPathWithHighBit  ; add ' ('
-         lda   (ZPTR)
-         bne   @justTime
-         lda   ZPTR
-         clc
-         adc   #(score_offset-time_offset)
-         sta   ZPTR
-         bcc   +
-         inc   ZPTR+1
-+                                    ; ZPTR -> ZINFO score field (length-prefixed string, guaranteed non-empty if no time)
-         ldy   ZPTR+1
-         jsr   AddToPathWithHighBit  ; add score information
-         +LDADDR kSlash
-         jsr   AddToPathWithHighBit  ; add '/'
-         lda   ZPTR
-         clc
-         adc   #(moves_offset-score_offset)
-         sta   ZPTR
-         bcc   +
-         inc   ZPTR+1
-+                                    ; A/Y -> ZINFO moves field (length-prefixed string, guaranteed non-empty)
-                                     ; execution falls through here
-@justTime
+         jsr   @queryTime
+         beq   @noTime
          +LDAY ZPTR
-         jsr   AddToPathWithHighBit  ; add final piece of information (moves or time, depending on how we got here)
+         jsr   AddToPathWithHighBit  ; add time information
+                                     ; execution falls through here
+         plx
+         dex
+         beq   @doneState
+         phx
+         +LDADDR kSlash
+         jsr   AddToPathWithHighBit  ; add '/' because we have more to print
+@noTime
+         jsr   @queryScore
+         beq   @noScore
+         +LDAY ZPTR
+         jsr   AddToPathWithHighBit  ; add score information
+                                     ; execution falls through here
+         plx
+         dex
+         beq   @doneState
+         phx
+         +LDADDR kSlash
+         jsr   AddToPathWithHighBit  ; add '/' because we have more to print
+@noScore
+         jsr   @queryMoves
+         beq   @noMoves
+         +LDAY ZPTR
+         jsr   AddToPathWithHighBit  ; add moves information
+                                     ; execution falls through here
+         plx
+         dex
+         beq   @doneState
+         phx
+         +LDADDR kSlash
+         jsr   AddToPathWithHighBit  ; add '/' because we have more to print
+@noMoves
+         jsr   @queryDate
+         beq   @noDate
+         plx
+         +LDAY ZPTR
+         jsr   AddToPathWithHighBit  ; add date information
+                                     ; execution falls through here
+@noDate
+@doneState
          +LDADDR kRightParen
          jsr   AddToPathWithHighBit  ; add ')'
          +LDADDR kNullByte
@@ -132,6 +172,50 @@ LoadSavedGameInfo
          bcs   +
          jmp   @zParseLoop
 +        rts
+
+@queryTime
+         lda   ZPTR
+         clc
+         adc   #time_offset-name_offset
+         sta   ZPTR
+         bcc   +
+         inc   ZPTR+1
++                                    ; ZPTR -> ZINFO time field (length-prefixed string, may be empty string if no time)
+         lda   (ZPTR)
+         rts
+
+@queryScore
+         lda   ZPTR
+         clc
+         adc   #score_offset-time_offset
+         sta   ZPTR
+         bcc   +
+         inc   ZPTR+1
++                                    ; ZPTR -> ZINFO score field (length-prefixed string, may be empty string if no score)
+         lda   (ZPTR)
+         rts
+
+@queryMoves
+         lda   ZPTR
+         clc
+         adc   #moves_offset-score_offset
+         sta   ZPTR
+         bcc   +
+         inc   ZPTR+1
++                                    ; ZPTR -> ZINFO moves field (length-prefixed string, may be empty string if no moves)
+         lda   (ZPTR)
+         rts
+
+@queryDate
+         lda   ZPTR
+         clc
+         adc   #date_offset-moves_offset
+         sta   ZPTR
+         bcc   +
+         inc   ZPTR+1
++                                    ; ZPTR -> ZINFO date field (length-prefixed string, may be empty string if no date)
+         lda   (ZPTR)
+         rts
 
 kZINFOFilename
          !byte 12

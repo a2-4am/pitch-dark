@@ -93,15 +93,19 @@ gameloc
 
 gametime
 ;amfvr77
+    !byte   $50
     !byte   $aa
 
 ;amfvr77d
+    !byte   $50
     !byte   $aa
 
 ;amfvr79
+    !byte   $50
     !byte   $aa
 
 ;amfvr79d
+    !byte   $50
     !byte   $aa
 
 ;bureaur86
