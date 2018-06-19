@@ -219,19 +219,12 @@ CheckForSavedGames
          jsr   GetFileInfo
          !word gPathname
          bcs   @no                   ; no file -> no saved games
-         lda   blocks+1
-         bne   @yes                  ; file exists and is quite large -> assume saved games
-         lda   blocks
-         cmp   #$06                  ; file exists but is small -> no saved games (.Z4/.Z5 files have a 5 block 'empty' .sav file)
-         bcc   @no
-@yes     lda   auxtype               ; if low byte of auxtype is $3x, x is the last save slot
+         lda   auxtype               ; if low byte of auxtype is $3x, then saved and x is the last save slot
          and   #$F0
          cmp   #$30
-         bne   +
-         lda   auxtype
+         bne   @no
+@yes     lda   auxtype
          and   #$0F
-         +HIDE_NEXT_2_BYTES
-+        lda   #$FF                  ; no save slot
          sta   gLastSavedGameSlot
          lda   #1
          +HIDE_NEXT_2_BYTES
