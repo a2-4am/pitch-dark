@@ -137,11 +137,11 @@ quit
     jsr    $bf00
     !byte  $c5
     !word  c5_parms
-    ldx    $201
-    inx
-    txa
+    lda    $201
     and    #$0f
-    sta    $200
+    tax
+    inx
+    stx    $200
     lda    #$2f
     sta    $201
     jsr    $bf00
@@ -248,8 +248,10 @@ dump_info
     sta    max_chars
     LDA    #$10          ; location
     JSR    fetch_obj
-    LDA    zp_8C
-    JSR    decompress
+    lda    zp_8C
+    bne    +
+    rts
++   JSR    decompress
 
     lda    zpage_ptr
     ldy    #name_offset
@@ -259,6 +261,12 @@ dump_info
     sty    zpage_ptr
     lda    #0
     sta    max_chars ;can't overflow anymore
+    sta    (zpage_info),y
+    ldy    #score_offset
+    sta    (zpage_info),y
+    ldy    #moves_offset
+    sta    (zpage_info),y
+    ldy    #date_offset
     sta    (zpage_info),y
 
     LDA    #$11          ; score

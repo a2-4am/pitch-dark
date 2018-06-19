@@ -98,11 +98,11 @@ quit
     jsr    $bf00
     !byte  $c5
     !word  c5_parms
-    ldx    $201
-    inx
-    txa
+    lda    $201
     and    #$0f
-    sta    $200
+    tax
+    inx
+    stx    $200
     lda    #$2f
     sta    $201
     jsr    $bf00
@@ -243,6 +243,10 @@ dump_info
     lda    zpage_ptr
     sbc    #moves_offset
     ldy    #moves_offset
+    sta    (zpage_info),y
+
+    ldy    #date_offset
+    lda    #0
     sta    (zpage_info),y
     rts
 
