@@ -1,0 +1,49 @@
+gamelist
+
+    !byte   bzork47e-bzork47b
+bzork47b
+    !text   "R47.870915.SAV"
+bzork47e
+
+    !byte   bzork49e-bzork49b
+bzork49b
+    !text   "R49.870917.SAV"
+bzork49e
+
+    !byte   bzork51e-bzork51b
+bzork51b
+    !text   "R51.870923.SAV"
+bzork51e
+
+    !byte   bzork57e-bzork57b
+bzork57b
+    !text   "R57.871221.SAV"
+bzork57e
+
+    !byte   0 ;end of list
+
+gameloc
+;bzork47
+    !byte   $a6
+
+;bzork49
+    !byte   $a6
+
+;bzork51
+    !byte   $a6
+
+;bzork57
+    !byte   $a6
+
+gamemoves
+;bzork47
+    !byte   $8c
+
+;bzork49
+    !byte   $8c
+
+;bzork51
+    !byte   $8c
+
+;bzork57
+    !byte   $8c
