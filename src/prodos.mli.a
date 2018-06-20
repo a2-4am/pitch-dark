@@ -6,6 +6,7 @@
 ; Public functions
 ; - LoadFile
 ; - LoadDHRFile
+; - LoadSHRFile
 ; - SaveFile
 ; - SetPrefix
 ; - GetFileInfo
@@ -144,6 +145,83 @@ LoadDHRFile
 
          lda   @saverefnum
          jsr   _readfile             ; read another $2000 bytes into $2000 (stays in main mem)
+
+@close   php                         ; save flags from readfile
+@saverefnum=*+1
+         lda   #$FD                  ; file refnum (SMC)
+         jsr   _closefile
+         plp                         ; restore flags from readfile
+@exit    rts
+
+;-------------------------------
+; LoadSHRFile
+; load uncompressed SHR file into memory from .PIC file
+; 1. load first quarter ($2000 bytes)
+; 2. copy to graphics memory
+; 3. load second quarter ($2000 bytes)
+; 4. copy to graphics memory
+; 5. load third quarter ($2000 bytes)
+; 6. copy to graphics memory
+; 7. load fourth quarter ($2000 bytes)
+; 8. copy to graphics memory
+;
+; in:  stack contains 4 bytes of parameters:
+;      +1 address of pathname
+;      +3 address of ProDOS file buffer
+; out: if C set, load failed
+;      if C clear, load succeeded
+;      all other flags clobbered
+;      all registers clobbered
+;      stack set to next instruction after parameters
+;-------------------------------
+LoadSHRFile
+         +PARAMS_ON_STACK 4
+
+         ldy   #$04
+-        lda   (PARAM),y
+         sta   mliparam,y
+         dey
+         bne   -
+
+         jsr   _openfile
+         bcs   @exit                 ; C set on error
+         sta   @saverefnum           ; store file refnum
+
+         ldy   #$20
+         stz   mliparam+2            ; read into $2000 in main mem
+         sty   mliparam+3
+         stz   mliparam+4            ; read length = $2000 bytes (one quarter of file)
+         sty   mliparam+5
+         sty   @shrdest+2
+
+         ldx   #4                    ; four quarters
+-        lda   @saverefnum           ; file refnum
+         jsr   _readfile
+         bcs   @close
+         phx
+ 
+!cpu 65816
+         xce
+         rep   #$30
+!rl
+!al
+         lda   #$1FFF
+         tax
+         inx
+@shrdest ldy   #$FD00                ; SMC
+         phb
+         mvn   0,$E1
+         plb
+         sty   @shrdest+1
+!as
+!rs
+         sec
+         xce
+!cpu 65C02
+
+         plx
+         dex
+         bne   -
 
 @close   php                         ; save flags from readfile
 @saverefnum=*+1

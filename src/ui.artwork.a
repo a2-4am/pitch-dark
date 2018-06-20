@@ -11,6 +11,10 @@ kArtworkRootDirectory                ; length-prefixed pathname of DHGR graphic 
          !byte 8
          !raw  "ARTWORK/"
 
+kArtworkGSRootDirectory              ; length-prefixed pathname of SHGR graphic files
+         !byte 10
+         !raw  "ARTWORKGS/"
+
 ;------------------------------------------------------------------------------
 ; DisplayArtwork
 ; load and display double hi-res artwork, then wait for key or mouse click
@@ -19,7 +23,7 @@ kArtworkRootDirectory                ; length-prefixed pathname of DHGR graphic 
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 DisplayArtwork
-         lda   #0                    ; set Z flag always
+         ldx   #0                    ; set Z flag always
 !cpu 65816
          rep   #2                    ; clear Z flag on 65816 only
 !cpu 65c02
@@ -27,21 +31,30 @@ DisplayArtwork
          lda   $C029
          and   #$1F
          sta   $C029                 ; set GS NEWVIDEO mode to turn off linearize
+         inx
 
 +        jsr   ResetPath
          +LDADDR kArtworkRootDirectory
+         dex
+         bne   +
+         +LDADDR kArtworkGSRootDirectory
++        phx
          jsr   AddToPath
 
          jsr   okvs_get
          !word gGlobalPrefsStore
          !word kLastPlayed
-         jsr   AddToPath             ; gPathname = 'ARTWORK/<game shortname>'
+         jsr   AddToPath             ; gPathname = 'ARTWORK[GS]/<game shortname>'
+         plx
+         phx
+         beq   @loadSHR
 
          jsr   LoadDHRFile           ; load artwork from file
          !word gPathname
          !word kProDOSFileBuffer
+         plx
          bcc   +
-         jmp   SoftBell
+-        jmp   SoftBell
 +        sta   $C000                 ; display double hi-res page 1
          sta   $C00D
          sta   $C05E
@@ -50,7 +63,19 @@ DisplayArtwork
          sta   $C052
          sta   $C054
          sta   $C050
+         bcc   @waitKey
 
+@loadSHR
+         jsr   LoadSHRFile           ; load artwork from file
+         !word gPathname
+         !word kProDOSFileBuffer
+         plx
+         bcs   -
+         lda   $C029
+         ora   #$C1
+         sta   $C029                 ; set GS NEWVIDEO mode to turn on SHR mode
+
+@waitKey phx
          jsr   ClearPendingInput
 -        ldx   #WGPendingClick
          jsr   WeeGUI
@@ -59,4 +84,9 @@ DisplayArtwork
          lda   $C000
          bpl   -
 +        sta   $C051                 ; back to text
-         jmp   ClearPendingInput
+         plx
+         bne   +
+         lda   $C029
+         and   #$3F
+         sta   $C029                 ; back to text GS-style
++        jmp   ClearPendingInput
