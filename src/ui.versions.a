@@ -166,7 +166,7 @@ iNumVersions=*+1
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 HandleVersionsKey
-         ldx   #_endVersionsKeys-kVersionsKeys
+         ldx   #(_endVersionsKeys-kVersionsKeys)-2
 -        cmp   kVersionsKeys,x
          beq   @found
          dex

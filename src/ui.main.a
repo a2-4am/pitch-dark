@@ -20,6 +20,7 @@ ID_HINTS       = 6
 ID_VERSIONS    = 7
 ID_INFO        = 8
 ID_DESCRIPTION = 9
+ID_ABOUT       = 10
 
 gMainScreenPaintDirty
          !byte 0
@@ -104,6 +105,9 @@ RepaintMainIfDirty
          !byte ID_VERSIONS
          !word kViewVersions
          !word kHasVersions
+
+         jsr   CreateButton          ; create '?' button
+         !word kViewAbout
 
          pla                         ; clear screen before repainting?
          beq   @nohome               ; no -> repaint over existing screen, YOLO
@@ -376,6 +380,14 @@ kViewDescription
          !byte 77                    ; width
          !byte 39                    ; height
 
+kViewAbout
+         !byte ID_ABOUT              ; view ID
+         !byte 79                    ; left
+         !byte 0                     ; top
+         !byte 1                     ; width
+         !word CreditsDialog         ; callback
+         !word kStringAbout
+
 kStringPrevious
          !text "< "
          !byte $10                   ; 'P' inverse
@@ -406,3 +418,5 @@ kStringHints
 kStringVersions
          !byte $16                   ; 'V' inverse
          !text "ersion",0
+kStringAbout
+         !byte $3F, 0                ; '?' inverse

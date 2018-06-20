@@ -1,0 +1,226 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; User interface - views and paint routines for credits screen
+;
+; Public functions
+; - CreditsDialog
+;
+
+; View IDs (application-specific, acceptable range 0..15, no duplicates)
+ID_CREDITS_FRAME          = 1
+ID_CREDITS_OK             = 2
+
+; action keys for credits screen
+kCreditsKeys
+         !byte $CF,ID_CREDITS_OK     ; O
+         !byte $EF,ID_CREDITS_OK     ; o
+         !byte $8D,ID_CREDITS_OK     ; Return
+         !byte $9B,ID_CREDITS_OK     ; Esc
+         !byte $8B,ID_SCROLLUP       ; up arrow
+         !byte $8A,ID_SCROLLDOWN     ; down arrow
+_endCreditsKeys
+
+;------------------------------------------------------------------------------
+; CreditsDialog
+; call WeeGUI to create and paint credits screen, and run to completion
+;
+; in:    WeeGUI initialized
+; out:   exits via MainScreen
+;        all registers and flags clobbered
+;------------------------------------------------------------------------------
+CreditsDialog
+         ldx   #$FF
+         txs
+         jsr   HardResetWeeGUI
+
+         jsr   CreateDialog          ; create decorated frame
+         !word kViewCreditsFrame
+         !word kStringCreditsFrame
+
+         ldx   #WGViewSetAction      ; set view action (called automatically after scrolling)
+         +LDADDR PaintCreditsView
+         +STAY PARAM0
+         jsr   WeeGUI
+
+         jsr   CreateButton          ; create OK button
+         !word kViewCreditsOK
+
+         ldx   #WGDesktop            ; paint background
+         jsr   WeeGUI
+
+         jsr   PaintTitleBar         ; paint top title bar
+
+         ldx   #WGViewPaintAll       ; paint UI controls (window frame, buttons, checkboxes, radio buttons)
+         jsr   WeeGUI
+
+         jsr   LoadCredits           ; fetch contents for credits box
+         jsr   PaintCreditsView      ; paint contents of credits box
+
+         jsr   ClearPendingInput
+-        ldx   #WGPendingViewAction
+         jsr   WeeGUI                ; handle mouse movement and clicks
+         lda   $C000
+         bpl   -
+         jsr   ClearPendingInput
+         jsr   HandleCreditsKey      ; handle keypresses
+         bra   -
+
+LoadCredits
+         jsr   LoadFile              ; load credits file at $2800
+         !word @kStringCreditsFilename
+         !word $2800
+         !word kProDOSFileBuffer
+         bcs   @NoCredits
+         ldy   #$20
+         lda   #0
+         +STAY PARAM2
+         ldy   #$28                  ; doubles as 40-column width
+         +STAY PARAM0
+         stz   CreditsMaxLine+1
+--       lda   (PARAM0)
+         inc   PARAM0
+         bne   +
+         inc   PARAM1
++        cmp   #$0A
+         beq   ++                    ; ignore LF entirely
+         ora   #$80                  ; set bit 7
+         tax
+-        cpx   #$8D                  ; watch for CR
+         php
+         bne   +
+         lda   #$A0                  ; switch to spaces
++        dey
+         beq   +
+         sta   (PARAM2)
+         inc   PARAM2
+         bne   +
+         inc   PARAM3
++        plp
+         bne   ++
+         tya
+         bne   -                     ; pad line with spaces until width
+         inc   CreditsMaxLine+1
+         tya
+         ldy   #$29                  ; reload 40-column width, +1 to compensate for DEY
+         tax                         ; replace cached char with #$00
+         beq   -                     ; loop to store it and then resume
+++       lda   mliparam+6
+         bne   +
+         dec   mliparam+7
++        dec   mliparam+6
+         dec
+         ora   mliparam+7
+         bne   --
+@NoCredits
+         rts
+
+@kStringCreditsFilename
+         !byte 11
+         !raw  "CREDITS.TXT"
+
+PaintCreditsView
+         ldx   #WGSelectView
+         lda   #ID_CREDITS_FRAME
+         jsr   WeeGUI
+         lda   #$20
+         sta   CreditsPosHi+1
+         stz   CreditsPosLo+1
+         stz   CreditsCurLine+1
+
+--
+CreditsCurLine
+         lda   #$FD                  ; SMC
+         stz   PARAM0
+         sta   PARAM1
+         ldx   #WGSetCursor
+         jsr   WeeGUI
+
+CreditsPosHi
+         ldy   #$20
+CreditsPosLo
+         lda   #0
+         +STAY PARAM0
+         ldx   #WGPrint
+         jsr   WeeGUI
+-        lda   (PARAM0)
+         inc   PARAM0
+         bne   +
+         inc   PARAM1
++        tax
+         bne   -
+         lda   PARAM0
+         sta   CreditsPosLo+1
+         lda   PARAM1
+         sta   CreditsPosHi+1
+         inc   CreditsCurLine+1
+         lda   CreditsCurLine+1
+
+CreditsMaxLine
+         cmp   #$FD                  ; SMC
+         bne   --
+         lda   CreditsMaxLine+1      ; minimum content height
+         ldx   #WGSetContentHeight   ; set content height so we stop scrolling on the last line of text
+         jmp   WeeGUI
+
+;------------------------------------------------------------------------------
+; internal functions
+
+;------------------------------------------------------------------------------
+; HandleCredits
+;
+; in:    A = key pressed
+; out:   all registers and flags clobbered
+;------------------------------------------------------------------------------
+HandleCreditsKey
+         ldy   #(_endCreditsKeys-kCreditsKeys)-2
+-        cmp   kCreditsKeys,y
+         beq   @found
+         dey
+         dey
+         bpl   -
+         jmp   SoftBell
+@found   ldx   #WGSelectView
+         lda   kCreditsKeys+1,y
+         bpl   @activateView         ; ID < #$80 is a WeeGUI view, so activate it
+         ldy   #$FF
+         cmp   #ID_SCROLLDOWN        ; arrow keys scroll the description box
+         beq   @scroll
+         ldy   #$01
+@scroll  phy
+         ldx   #WGSelectView
+         lda   #ID_CREDITS_FRAME
+         jsr   WeeGUI
+         ldx   #WGScrollYBy
+         pla
+
+@activateView
+         jsr   WeeGUI
+         jmp   SimulateClick
+
+callback_credits_ok
+         jmp   MainScreen
+
+;------------------------------------------------------------------------------
+; WeeGUI view configuration records
+
+kViewCreditsFrame
+         !byte ID_CREDITS_FRAME      ; view ID
+         !byte 2                     ; style (decorated frame)
+         !byte 1                     ; left
+         !byte 3                     ; top
+         !byte 77                    ; visible width
+         !byte 20                    ; visible height
+         !byte 77                    ; width
+         !byte 100                   ; height
+
+kViewCreditsOK
+         !byte ID_CREDITS_OK         ; view ID
+         !byte 67                    ; left
+         !byte 4                     ; top
+         !byte 10                    ; width
+         !word callback_credits_ok   ; callback
+         !word kStringOK             ; caption
+
+kStringCreditsFrame
+         !text "Credits",0

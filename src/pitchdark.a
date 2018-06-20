@@ -40,6 +40,7 @@
          !source "src/ui.resume.a"
          !source "src/ui.versions.a"
          !source "src/ui.artwork.a"
+         !source "src/ui.credits.a"
 
 gGamesListStore
          !word *+2                   ; address of first okvs store

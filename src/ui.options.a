@@ -122,7 +122,7 @@ OptionsDialog
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 HandleOptionsKey
-         ldx   #_endOptionsKeys-kOptionsKeys
+         ldx   #(_endOptionsKeys-kOptionsKeys)-2
 -        cmp   kOptionsKeys,x
          beq   @found
          dex

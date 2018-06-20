@@ -1,88 +1,90 @@
-Games, descriptions, and artwork are
-copyright 1979-1988 Infocom, Inc.
 
-Invisiclues are copyright 1993, 1999
-Activision, Inc.
+ Games, descriptions, and artwork are
+ copyright 1979-1988 Infocom, Inc.
 
-Zork and all other game names are
-registered trademarks of Activision.
+ Invisiclues are copyright 1993, 1999
+ Activision, Inc.
 
-                   ~
+ Zork and all other game names are
+ registered trademarks of Activision.
 
-Pitch Dark is a frontend for exploring
-and playing Infocom text adventures.
+                    ~
 
-Copyright 2018 4am
+ Pitch Dark is a frontend for exploring
+ and playing Infocom text adventures.
 
-https://github.com/a2-4am/pitch-dark
+ Copyright 2018 4am
 
-                   ~
+ https://github.com/a2-4am/pitch-dark
 
-On Beyond Z-Machine! is a ProDOS port of
-Infocom's Z-Machine interpreters.
+                    ~
 
-Copyright 2018 qkumba
+ On Beyond Z-Machine! is a ProDOS port
+ of Infocom's Z-Machine interpreters.
 
-based on code from six different games
-copyright 1979-1988 Infocom, Inc.
+ Copyright 2018 qkumba
 
-                   ~
+ based on code from six different games
+ copyright 1979-1988 Infocom, Inc.
 
-WeeGUI is a compact and easy to use GUI
-library for 8-bit Apple ][ computers.
+                    ~
 
-Copyright 2014-8 Quinn Dunki
+ WeeGUI is a compact and easy to use
+ GUI library for 8-bit Apple ][
+ computers.
 
-https://github.com/blondie7575/WeeGUI/
+ Copyright 2014-8 Quinn Dunki
 
-                   ~
+ https://github.com/blondie7575/WeeGUI/
 
-Artwork was scanned from original retail
-boxes and converted to Apple II native
-formats with the help of
+                    ~
 
-Bmp2DHR copyright 2014 Bill Buckels
-A2FCBmp copyright 2012-5 Bill Buckels
-buckshot copyright 2017 Dagen Brock
+ Artwork was scanned from original
+ retail boxes and converted to Apple II
+ native formats with the help of
 
-http://www.appleoldies.ca/bmp2dhr/
-https://apple2.gs/buckshot/
+ Bmp2DHR copyright 2014 Bill Buckels
+ A2FCBmp copyright 2012-5 Bill Buckels
+ buckshot copyright 2017 Dagen Brock
 
-                   ~
+ http://www.appleoldies.ca/bmp2dhr/
+ https://apple2.gs/buckshot/
 
-The PRIZM Project (Pretty Reliable
-Invisiclues for Z-Machine) are genuine
-Infocom Invisiclues, accessible in your
-favorite Z-Machine interpreter.
+                    ~
 
-Copyright 1999 Digby McWiggle and
-Steven Marsh
+ The PRIZM Project (Pretty Reliable
+ Invisiclues for Z-Machine) are genuine
+ Infocom Invisiclues, accessible in
+ your favorite Z-Machine interpreter.
 
-Compiled, edited, and Z-coded by
-  Digby McWiggle
-  Steven Marsh
+ Copyright 1999 Digby McWiggle and
+ Steven Marsh
 
-from material supplied by
-  Henrik Dittmann
-  Paul David Doherty
-  Volker Blasius
-  Mike Threepoint
+ Compiled, edited, and Z-coded by
+   Digby McWiggle
+   Steven Marsh
 
-Thanks also to
-  Brian Hall
-  L. Ross Raszewski
-  Graham Nelson
+ from material supplied by
+   Henrik Dittmann
+   Paul David Doherty
+   Volker Blasius
+   Mike Threepoint
 
-http://www.waitingforgo.com/
+ Thanks also to
+   Brian Hall
+   L. Ross Raszewski
+   Graham Nelson
 
-                   ~
+ http://www.waitingforgo.com/
 
-The authors also wish to express their
-gratitude to their wonderfully patient
-beta testers, who will be named here:
+                    ~
 
-  - TODO1
-  - TODO2
-  - TODO3
+ The authors also wish to express their
+ gratitude to their wonderfully patient
+ beta testers, who will be named here:
 
-                 [EOF]
+   - TODO1
+   - TODO2
+   - TODO3
+
+                  [EOF]

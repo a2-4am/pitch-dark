@@ -143,7 +143,7 @@ ResumeDialog
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 HandleResumeKey
-         ldx   #_endResumeKeys-kResumeKeys
+         ldx   #(_endResumeKeys-kResumeKeys)-2
 -        cmp   kResumeKeys,x
          beq   @found
          dex

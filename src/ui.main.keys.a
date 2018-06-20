@@ -44,6 +44,7 @@ kMainKeys
          !byte $F9,ID_Y              ; y
          !byte $DA,ID_Z              ; Z
          !byte $FA,ID_Z              ; z
+         !byte $BF,ID_ABOUT          ; ?
 _endMainKeys
 
 ;------------------------------------------------------------------------------
@@ -54,7 +55,7 @@ _endMainKeys
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 HandleKey
-         ldx   #_endMainKeys-kMainKeys
+         ldx   #(_endMainKeys-kMainKeys)-2
 -        cmp   kMainKeys,x
          beq   @found
          dex
