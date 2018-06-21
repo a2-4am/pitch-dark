@@ -82,11 +82,11 @@ LoadCredits
          inc   PARAM0
          bne   +
          inc   PARAM1
-+        cmp   #$0A
-         beq   ++                    ; ignore LF entirely
++        cmp   #$0D
+         beq   ++                    ; ignore CR entirely
          ora   #$80                  ; set bit 7
          tax
--        cpx   #$8D                  ; watch for CR
+-        cpx   #$8A                  ; watch for LF
          php
          bne   +
          lda   #$A0                  ; switch to spaces
