@@ -16,6 +16,7 @@
 ; - GetCheckedRadioButton
 ; - HandleUpDownRadio
 ; - CreateNullTerminatedString
+; - AnyKeyOrClick
 ;
 ; Public variables
 ; - gViewInUse                       array of byte (each 0=false, nonzero=true)
@@ -353,4 +354,28 @@ CreateNullTerminatedString
          sta   kNullTerminatedBuffer,y
          dey
          bne   -
+         rts
+
+;------------------------------------------------------------------------------
+; AnyKeyOrClick
+; check for any user input (keypress or mouse click)
+;
+; in:    none
+; out:   C set if key has been pressed or mouse has been clicked
+;        C clear if there have been no user input events
+;        all other flags clobbered
+;        all registers preserved
+;------------------------------------------------------------------------------
+AnyKeyOrClick
+         phx
+         ldx   #WGPendingClick
+         jsr   WeeGUI
+         cpx   #$FF
+         bne   +                     ; X != #$FF -> user clicked mouse
+         ldx   $C000
+         bmi   +
+         clc
+         +HIDE_NEXT_BYTE
++        sec
+         plx
          rts

@@ -1,0 +1,110 @@
+;license:MIT
+;(c) 2018 by 4am
+;TextFizzle routine (c) 2018 by qkumba
+;
+; Sound and animation effects
+;
+; Public functions
+; - SoftBell
+; - TextFizzle
+;
+
+;------------------------------------------------------------------------------
+; SoftBell
+;
+; in:    none
+; out:   all registers and flags preserved
+;------------------------------------------------------------------------------
+SoftBell
+         php
+         phx
+         pha
+         ldx   #32
+-        lda   #2
+         jsr   WAIT
+         bit   SPEAKER
+         lda   #33
+         jsr   WAIT
+         bit   SPEAKER
+         dex
+         bne   -
+         pla
+         plx
+         plp
+         rts
+
+;------------------------------------------------------------------------------
+; TextFizzle
+;
+; in:    none
+; out:   all registers and flags clobbered
+;------------------------------------------------------------------------------
+TextFizzle
+         sta   @src+1
+         sta   $c005
+         ldy   #0
+@copy
+         lda   TextFizzle,y
+         sta   TextFizzle,y
+         iny
+         bne   @copy
+         sta   $c004
+
+; init RNG
+         ldx   #1
+         stx   @rndval1+1
+         dex
+         stx   @rndval2+1
+
+@mainloop
+         ldy   @rndval1+1
+         ldx   @rndval2+1
+         lsr   @rndval2+1
+         ror   @rndval1+1
+         bcc   +
+
+; feedback polynomial forms #$402 for period of 2047
+         lda   @rndval1+1
+         eor   #2
+         sta   @rndval1+1
+         lda   @rndval2+1
+         eor   #4
+         sta   @rndval2+1
+
+; little hack to avoid missing offset zero
+; screen hole at $xxFF is missed instead
++        tya
+         eor   #$ff
+         sta   $26
+         and   #$78
+         cmp   #$78
+         beq   @rndval2
+         txa
+         and   #3
+         ora   #4
+         sta   $27
+
+         ldy   #0
+         cpx   #4
+         bcc   @src
+         sta   $c003
+         sta   $c055
+@src     lda   #$d1            ; SMC
+         sta   ($26),y
+         sta   $c002
+         sta   $c054
+
+         lda   #6
+         jsr   WAIT
+
+         jsr   AnyKeyOrClick
+         bcs   @exit
+@rndval2
+         lda   #0
+         bne   @mainloop
+@rndval1
+         lda   #0
+         cmp   #1
+         bne   @mainloop
+@exit
+         rts

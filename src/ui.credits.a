@@ -7,19 +7,7 @@
 ; - CreditsDialog
 ;
 
-; View IDs (application-specific, acceptable range 0..15, no duplicates)
-ID_CREDITS_FRAME          = 1
-ID_CREDITS_OK             = 2
-
-; action keys for credits screen
-kCreditsKeys
-         !byte $CF,ID_CREDITS_OK     ; O
-         !byte $EF,ID_CREDITS_OK     ; o
-         !byte $8D,ID_CREDITS_OK     ; Return
-         !byte $9B,ID_CREDITS_OK     ; Esc
-         !byte $8B,ID_SCROLLUP       ; up arrow
-         !byte $8A,ID_SCROLLDOWN     ; down arrow
-_endCreditsKeys
+ID_CREDITS = 0
 
 ;------------------------------------------------------------------------------
 ; CreditsDialog
@@ -32,195 +20,236 @@ _endCreditsKeys
 CreditsDialog
          ldx   #$FF
          txs
+
+         jsr   LoadCredits           ; fetch contents from file
+         jsr   ClearPendingInput
+
+@creditsOuterLoop
+         lda   #5
+         sta   currentSection
+
+@creditsInnerLoop
+         lda   #$20                  ; fade to white
+         jsr   TextFizzle
+         jsr   @ExitOnAnyInput
+
+         lda   #' '                  ; fade to black
+         jsr   TextFizzle
+         jsr   @ExitOnAnyInput
+
+         ldx   currentSection        ; set up border frame
+         lda   kCreditsTop,x
+         sta   kViewCreditsTop
+         lda   kCreditsHeight,x
+         sta   kViewCreditsVisibleHeight
+         sta   kViewCreditsHeight
+
          jsr   HardResetWeeGUI
-
-         jsr   CreateDialog          ; create decorated frame
-         !word kViewCreditsFrame
-         !word kStringCreditsFrame
-
-         ldx   #WGViewSetAction      ; set view action (called automatically after scrolling)
-         +LDADDR PaintCreditsView
+         ldx   #WGCreateView
+         +LDADDR kViewCredits
          +STAY PARAM0
-         jsr   WeeGUI
+         jsr   WeeGUI                ; create border frame
 
-         jsr   CreateButton          ; create OK button
-         !word kViewCreditsOK
-
-         ldx   #WGDesktop            ; paint background
-         jsr   WeeGUI
-
-         jsr   PaintTitleBar         ; paint top title bar
-
-         ldx   #WGViewPaintAll       ; paint UI controls (window frame, buttons, checkboxes, radio buttons)
-         jsr   WeeGUI
-
-         jsr   LoadCredits           ; fetch contents for credits box
-         jsr   PaintCreditsView      ; paint contents of credits box
-
-         jsr   ClearPendingInput
--        ldx   #WGPendingViewAction
-         jsr   WeeGUI                ; handle mouse movement and clicks
-         lda   $C000
-         bpl   -
-         jsr   ClearPendingInput
-         jsr   HandleCreditsKey      ; handle keypresses
-         bra   -
-
-LoadCredits
-         jsr   LoadFile              ; load credits file at $2800
-         !word @kStringCreditsFilename
-         !word $2800
-         !word kProDOSFileBuffer
-         bcs   @NoCredits
-         ldy   #$20
-         lda   #0
-         +STAY PARAM2
-         ldy   #$28                  ; doubles as 40-column width
-         +STAY PARAM0
-         stz   CreditsMaxLine+1
---       lda   (PARAM0)
-         inc   PARAM0
-         bne   +
-         inc   PARAM1
-+        cmp   #$0D
-         beq   ++                    ; ignore CR entirely
-         ora   #$80                  ; set bit 7
-         tax
--        cpx   #$8A                  ; watch for LF
-         php
-         bne   +
-         lda   #$A0                  ; switch to spaces
-+        dey
-         beq   +
-         sta   (PARAM2)
-         inc   PARAM2
-         bne   +
-         inc   PARAM3
-+        plp
-         bne   ++
-         tya
-         bne   -                     ; pad line with spaces until width
-         inc   CreditsMaxLine+1
-         tya
-         ldy   #$29                  ; reload 40-column width, +1 to compensate for DEY
-         tax                         ; replace cached char with #$00
-         beq   -                     ; loop to store it and then resume
-++       lda   mliparam+6
-         bne   +
-         dec   mliparam+7
-+        dec   mliparam+6
-         dec
-         ora   mliparam+7
-         bne   --
-@NoCredits
-         rts
-
-@kStringCreditsFilename
-         !byte 11
-         !raw  "CREDITS.TXT"
-
-PaintCreditsView
          ldx   #WGSelectView
-         lda   #ID_CREDITS_FRAME
+         lda   #ID_CREDITS
          jsr   WeeGUI
-         lda   #$20
-         sta   CreditsPosHi+1
-         stz   CreditsPosLo+1
-         stz   CreditsCurLine+1
+         ldx   #WGPaintView
+         jsr   WeeGUI                ; paint border frame
+         jsr   PaintCredits          ; paint text
+         jsr   @ExitOnAnyInput
 
---
-CreditsCurLine
-         lda   #$FD                  ; SMC
-         stz   PARAM0
-         sta   PARAM1
-         ldx   #WGSetCursor
-         jsr   WeeGUI
+         ldx   currentSection        ; wait a variable period of time
+         lda   kCreditsHeight,x      ; based on the number of lines of text
+         asl
+         asl
+         tay
+-        lda   #0
+         jsr   WAIT
+         jsr   @ExitOnAnyInput
+         dey
+         bpl   -
 
-CreditsPosHi
-         ldy   #$20
-CreditsPosLo
-         lda   #0
-         +STAY PARAM0
-         ldx   #WGPrint
-         jsr   WeeGUI
--        lda   (PARAM0)
-         inc   PARAM0
-         bne   +
-         inc   PARAM1
-+        tax
-         bne   -
-         lda   PARAM0
-         sta   CreditsPosLo+1
-         lda   PARAM1
-         sta   CreditsPosHi+1
-         inc   CreditsCurLine+1
-         lda   CreditsCurLine+1
+         dec   currentSection
+         lda   currentSection
+         bpl   @creditsInnerLoop
+         bra   @creditsOuterLoop
 
-CreditsMaxLine
-         cmp   #$FD                  ; SMC
-         bne   --
-         lda   CreditsMaxLine+1      ; minimum content height
-         ldx   #WGSetContentHeight   ; set content height so we stop scrolling on the last line of text
-         jmp   WeeGUI
+@ExitOnAnyInput
+         jsr   AnyKeyOrClick
+         bcs   @exit
+         rts
+@exit
+         jmp   MainScreen
 
 ;------------------------------------------------------------------------------
 ; internal functions
 
 ;------------------------------------------------------------------------------
-; HandleCredits
+; LoadCredits
+; load credits from file and convert it for use by WeeGUI
 ;
-; in:    A = key pressed
-; out:   all registers and flags clobbered
+; NOTE: this routine assumes there are no more than 6 sections of credits.
+; Section 1 starts at the beginning of the file.
+; Sections 1-5 end with the '~' character.
+; Sections 2-6 start at the first non-0x0D character after the '~' delimiter.
+; Section 6 ends with '[' character (not '~')
+; Text is stored on disk with high bit off.
+; Each line must be no more than 40 characters.
+; Parsing would obviously be easier if these constraints were different,
+;   but I like the way the file looks.
+;
+; in:    WeeGUI initialized
+; out:   exits to caller
+;        all registers and flags clobbered
 ;------------------------------------------------------------------------------
-HandleCreditsKey
-         ldy   #(_endCreditsKeys-kCreditsKeys)-2
--        cmp   kCreditsKeys,y
-         beq   @found
-         dey
-         dey
-         bpl   -
-         jmp   SoftBell
-@found   ldx   #WGSelectView
-         lda   kCreditsKeys+1,y
-         bpl   @activateView         ; ID < #$80 is a WeeGUI view, so activate it
-         ldy   #$FF
-         cmp   #ID_SCROLLDOWN        ; arrow keys scroll the description box
-         beq   @scroll
-         ldy   #$01
-@scroll  phy
-         ldx   #WGSelectView
-         lda   #ID_CREDITS_FRAME
-         jsr   WeeGUI
-         ldx   #WGScrollYBy
+LoadCredits
+         jsr   LoadFile              ; load credits file at $2000
+         !word kCreditsFilename
+         !word kCreditsBuffer
+         !word kProDOSFileBuffer
+
+         +LDADDR kCreditsBuffer
+         +STAY $FE                   ; ($FE) points to start of data buffer
+         ldy   #$00                  ; index into ($FE) pointing to current character
+         ldx   #$0C                  ; (= 6 x 2) index into creditsSectionPointers array
+         lda   ($FE)
+         bra   @saveSectionPointer
+
+@convertSectionLoop
+         jsr   IncAndGetChar
+@convertSectionNoInc
+         cmp   #$7E                  ; '~' ends the section
+         beq   @skipSectionDelimiter
+         cmp   #$5B                  ; '[' ends the parsing
+         beq   @exit
+         cmp   #$0D                  ; CR -> 0x00 (WeeGUI wants null-terminated strings)
+         beq   @null
+         ora   #$80                  ; all other characters -> set high bit
+         +HIDE_NEXT_2_BYTES
+@null    lda   #$00
+         sta   ($FE),y
+         bra   @convertSectionLoop
+
+; We found the start of a new section, so skip to the first character on the next line
+@skipSectionDelimiter
+         jsr   IncAndGetChar
+         cmp   #$0D                  ; CR
+         beq   @skipSectionDelimiter
+
+; We are at the start of a section, so save this address in the creditsSectionPointers array
+@saveSectionPointer
+         pha
+         tya
+         clc
+         adc   $FE
+         sta   creditsSectionPointers-2,x
+         lda   $FF
+         bcc   +
+         inc
++        sta   creditsSectionPointers-1,x
          pla
-
-@activateView
-         jsr   WeeGUI
-         jmp   SimulateClick
-
-callback_credits_ok
-         jmp   MainScreen
+         dex
+         dex
+         bpl   @convertSectionNoInc
+@exit
+         rts
 
 ;------------------------------------------------------------------------------
-; WeeGUI view configuration records
+; PaintCredits
+; paint one section of credits on the screen
+;
+; in:    WeeGUI initialized
+; out:   exits to caller
+;        all registers and flags clobbered
+;------------------------------------------------------------------------------
+PaintCredits
+         lda   currentSection
+         asl
+         tax
+         lda   creditsSectionPointers,x
+         sta   $FE
+         lda   creditsSectionPointers+1,x
+         sta   $FF                   ; ($FE) points to start of data buffer
+         ldy   #0                    ; index into ($FE) pointing to current character
+         stz   @VTAB                 ; line number within WeeGUI view
+@printLine
+         lda   #1
+         sta   PARAM0
+         inc   @VTAB
+@VTAB=*+1
+         lda   #$FD
+         sta   PARAM1
+         ldx   #WGSetCursor
+         jsr   WeeGUI                ; set cursor to start of this line
+         tya
+         clc
+         adc   $FE
+         sta   PARAM0
+         lda   $FF
+         bcc   +
+         inc
++        sta   PARAM1                ; calculate exact start of text for this line
+         lda   (PARAM0)              ; skip blank lines
+         beq   @skipNull
+         ldx   #WGPrint              ; otherwise print it
+         jsr   WeeGUI
+@skipToNextLine
+         jsr   IncAndGetChar
+         bne   @notNull
+@skipNull
+         jsr   IncAndGetChar
+         bra   @printLine
+@notNull
+         cmp   #$7E                  ; '~' ends section
+         beq   @exit
+         cmp   #$5B                  ; '[' ends section
+         bne   @skipToNextLine
+@exit
+         rts
 
-kViewCreditsFrame
-         !byte ID_CREDITS_FRAME      ; view ID
-         !byte 2                     ; style (decorated frame)
-         !byte 1                     ; left
-         !byte 3                     ; top
-         !byte 77                    ; visible width
-         !byte 20                    ; visible height
-         !byte 77                    ; width
-         !byte 100                   ; height
+;------------------------------------------------------------------------------
+; internal data
 
-kViewCreditsOK
-         !byte ID_CREDITS_OK         ; view ID
-         !byte 67                    ; left
-         !byte 4                     ; top
-         !byte 10                    ; width
-         !word callback_credits_ok   ; callback
-         !word kStringOK             ; caption
+kCreditsFilename
+         !byte 11
+         !raw  "CREDITS.TXT"
 
-kStringCreditsFrame
-         !text "Credits",0
+currentSection                       ; used by PaintCredits
+         !byte $FD
+
+creditsSectionPointers               ; [array of word] address of start of each page of credits
+         !word $FDFD
+         !word $FDFD
+         !word $FDFD
+         !word $FDFD
+         !word $FDFD
+         !word $FDFD
+
+kCreditsTop                          ; [array of byte] top row to draw border for each section of credits
+         !byte 7                     ; note: stored here in reverse order compared to the credits file
+         !byte 2
+         !byte 6
+         !byte 8
+         !byte 8
+         !byte 8
+
+kCreditsHeight                       ; [array of byte] height of bounding box for each section of credits
+         !byte 10                    ; note: stored here in reverse order compared to the credits file
+         !byte 20
+         !byte 12
+         !byte 8
+         !byte 9
+         !byte 8
+
+kViewCredits
+         !byte ID_CREDITS            ; view ID
+         !byte 1                     ; style
+         !byte 19                    ; left
+kViewCreditsTop
+         !byte $FD                   ; top (SMC)
+         !byte 42                    ; visible width
+kViewCreditsVisibleHeight
+         !byte $FD                   ; visible height (SMC)
+         !byte 42                    ; width
+kViewCreditsHeight
+         !byte $FD                   ; height (SMC)

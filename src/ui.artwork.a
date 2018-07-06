@@ -75,15 +75,12 @@ DisplayArtwork
          ora   #$C1
          sta   $C029                 ; set GS NEWVIDEO mode to turn on SHR mode
 
-@waitKey phx
+@waitKey
+         phx
          jsr   ClearPendingInput
--        ldx   #WGPendingClick
-         jsr   WeeGUI
-         cpx   #$FF
-         bne   +                     ; X != #$FF -> user clicked mouse
-         lda   $C000
-         bpl   -
-+        sta   $C051                 ; back to text
+-        jsr   AnyKeyOrClick
+         bcc   -
+         sta   $C051                 ; back to text
          plx
          bne   +
          lda   $C029

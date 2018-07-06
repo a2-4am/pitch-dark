@@ -23,6 +23,7 @@ kGameInfoBuffer           = $0800    ; used by LoadGameInfo
 kProDOSFileBuffer         = $1C00    ; 1K buffer for ProDOS MLI calls
 kSystemAddress            = $2000    ; used by LaunchInterpreter
 kGlobalPrefsBuffer        = $2000    ; used by LoadGlobalPreferences/SaveGlobalPreferences
+kCreditsBuffer            = $2000    ; used by CreditsDialog
 gPathname                 = $3F00    ; used by ResetPath/AddToPath
 kNullTerminatedBuffer     = $3F00    ; used by paintInfoView
 gKeyLen                   = $3F00    ; used by ParseKeyValueText

@@ -33,7 +33,7 @@
          !source "src/glue.onbeyond.a"
          !source "src/glue.zinfo.a"
          !source "src/ui.common.a"
-         !source "src/ui.sound.a"
+         !source "src/ui.effects.a"
          !source "src/ui.main.a"
          !source "src/ui.main.keys.a"
          !source "src/ui.options.a"
