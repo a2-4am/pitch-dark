@@ -16,6 +16,7 @@ ZINFO2=Type(06),AuxType(3000),Access(C3)
 ZINFO3=Type(06),AuxType(3000),Access(C3)
 ZINFO4=Type(06),AuxType(3000),Access(C3)
 ZINFO5=Type(06),AuxType(3000),Access(C3)
+ZINFO5U=Type(06),AuxType(3000),Access(C3)
 WEEGUI=Type(06),AuxType(4000),Access(C3)
 DHRSLIDE.SYSTEM=Type(FF),AuxType(2000),Access(C3)
 # TODO remove these save game files, just here for development
