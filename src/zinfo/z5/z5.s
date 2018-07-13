@@ -317,8 +317,10 @@ dump_info
     lda    zp_6C
     sta    zp_59
     ldx    zpage_gamind
-    beq    bzone
+    beq    branch_bzone
     cpx    #3
+    beq    branch_print
+    cpx    #$0f
     beq    branch_print
     cpx    #4
     beq    sherlock1
@@ -326,12 +328,40 @@ dump_info
     beq    sherlock1
     cpx    #6
     beq    wishbr
+    cpx    #$12
+    beq    eleven
+    cpx    #$16
+    beq    i0
+    cpx    #$19
+    beq    jigsaw
+    cpx    #$1d
+    beq    ramses
 
 branch_skip
     jmp    skip_time
 
 branch_print
     jmp    print_time
+
+branch_bzone
+    jmp    bzone
+
+ramses
+jigsaw
+i0
+    lda    #$12
+    jsr    fetch_obj
+    lda    zp_6B
+    pha
+    lda    zp_6C
+    pha
+    lda    zp_58
+    sta    zp_6B
+    cmp    #$0c
+    bcc    +
+    sbc    #$0c
++   sta    zp_58
+    jmp    print_hhmm
 
 sherlock1
     ldy    zp_6B
@@ -359,12 +389,31 @@ wishbr
     lda    #$5c
     jsr    fetch_obj
     lda    zp_6B
-    cmp    #$0d
+    cmp    #$0c
     bcc    +
     sbc    #$0c
 +   sta    zp_58
     lda    zp_6C
     sta    zp_59
+    jmp    print_hhmm
+
+eleven
+    lda    #$3c
+    sta    zp_5A
+    lda    #0
+    sta    zp_5B
+    jsr    sub_E7E1
+    sta    zp_59
+    stx    zp_6B
+    txa
+    cmp    #$0c
+    bcc    +
+    sbc    #$0c
++   sta    zp_58
+    lda    zp_CF
+    pha
+    lda    zp_D0
+    pha
     jmp    print_hhmm
 
 bzone
@@ -425,11 +474,19 @@ print_time
     jsr    loc_EA1C
 
     ldx    zpage_gamind
+    cpx    #$1d
+    beq    ++
+    cpx    #$19
+    beq    ++
+    cpx    #$16
+    beq    ++
+    cpx    #$12
+    beq    ++
     cpx    #4
     bcc    +
     cpx    #7
     bcs    +
-    lda    zp_6B
+++  lda    zp_6B
     cmp    #$0c
     lda    #'a'
     bcc    print_ampm
@@ -505,6 +562,8 @@ skip_moves
     ldx    zpage_gamind
     cpx    #6
     beq    +
+    cpx    #$0e
+    beq    curses
     ldy    zp_6B
     iny
     iny
@@ -526,7 +585,7 @@ skip_moves
     sta    zp_5B
     jsr    sub_E7E1
     ldx    zp_CF
-    lda    day_index, x
+-   lda    day_index, x
     sta    day_load+1
 day_load
     lda    day_table
@@ -535,6 +594,12 @@ day_load
     inc    day_load+1
     bne    day_load
 +   jsr    loc_EA1C
+    jmp    ++
+curses
+    lda    zp_58
+    adc    #(date_index - day_index) - 2
+    tax
+    bne    -
 ++  sec
     lda    zpage_ptr
     sbc    #date_offset
@@ -548,7 +613,10 @@ rts
 
 day_index
     !byte  <sun, <mon, <tue, <wed, <thu, <fri, <sat
+date_index
+    !byte  <jun3, <oct5, <oct31, <none, <jun3, <mar14, <sixc, <jun3, <wint, <jun3
 
+* = (* + 255) & -256
 day_table
 sun !text  "Sunday", 0
 mon !text  "Monday", 0
@@ -557,6 +625,15 @@ wed !text  "Wednesday", 0
 thu !text  "Thursday", 0
 fri !text  "Friday", 0
 sat !text  "Saturday", 0
+
+date_table
+jun3  !text "06/03/1993", 0
+oct5  !text "10/5/1922", 0
+oct31 !text "10/31/1988", 0
+none  !byte 0
+mar14 !text "3/14/1808", 0
+sixc  !text "500AD", 0
+wint  !text "275BC", 0
 
 fetch_obj:
                 JSR     sub_E1D9
