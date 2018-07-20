@@ -45,6 +45,176 @@ ztuur16b
     !text   "R16.970828.SAV"
 ztuur16e
 
+    !byte   advente-adventb
+adventb
+    !text   "ADVENT.SAV"
+advente
+
+    !byte   beare-bearb
+bearb
+    !text   "BEAR.SAV"
+beare
+
+    !byte   buildinge-buildingb
+buildingb
+    !text   "BUILDING.SAV"
+buildinge
+
+    !byte   changee-changeb
+changeb
+    !text   "CHANGE.SAV"
+changee
+
+    !byte   clawe-clawb
+clawb
+    !text   "CLAW.SAV"
+clawe
+
+    !byte   cursese-cursesb
+cursesb
+    !text   "CURSES.SAV"
+cursese
+
+    !byte   delusnse-delusnsb
+delusnsb
+    !text   "DELUSNS.SAV"
+delusnse
+
+    !byte   ease-easb
+easb
+    !text   "EAS.SAV"
+ease
+
+    !byte   edificee-edificeb
+edificeb
+    !text   "EDIFICE.SAV"
+edificee
+
+    !byte   elevene-elevenb
+elevenb
+    !text   "ELEVEN.SAV"
+elevene
+
+    !byte   feare-fearb
+fearb
+    !text   "FEAR.SAV"
+feare
+
+    !byte   geiste-geistb
+geistb
+    !text   "GEIST.SAV"
+geiste
+
+    !byte   heroese-heroesb
+heroesb
+    !text   "HEROES.SAV"
+heroese
+
+    !byte   i0e-i0b
+i0b
+    !text   "I0.SAV"
+i0e
+
+    !byte   inevitae-inevitab
+inevitab
+    !text   "INEVITA.SAV"
+inevitae
+
+    !byte   jewele-jewelb
+jewelb
+    !text   "JEWEL.SAV"
+jewele
+
+    !byte   jigsawe-jigsawb
+jigsawb
+    !text   "JIGSAW.SAV"
+jigsawe
+
+    !byte   loosee-looseb
+looseb
+    !text   "LOOSE.SAV"
+loosee
+
+    !byte   moonlite-moonlitb
+moonlitb
+    !text   "MOONLIT.SAV"
+moonlite
+
+    !byte   ralphe-ralphb
+ralphb
+    !text   "RALPH.SAV"
+ralphe
+
+    !byte   ramesese-ramesesb
+ramesesb
+    !text   "RAMESES.SAV"
+ramesese
+
+    !byte   shadee-shadeb
+shadeb
+    !text   "SHADE.SAV"
+shadee
+
+    !byte   sherbete-sherbetb
+sherbetb
+    !text   "SHERBET.SAV"
+sherbete
+
+    !byte   softfoode-softfoodb
+softfoodb
+    !text   "SOFTFOOD.SAV"
+softfoode
+
+    !byte   spirite-spiritb
+spiritb
+    !text   "SPIRIT.SAV"
+spirite
+
+    !byte   springe-springb
+springb
+    !text   "SPRING.SAV"
+springe
+
+    !byte   tanglee-tangleb
+tangleb
+    !text   "TANGLE.SAV"
+tanglee
+
+    !byte   tapestrye-tapestryb
+tapestryb
+    !text   "TAPESTRY.SAV"
+tapestrye
+
+    !byte   theatree-theatreb
+theatreb
+    !text   "THEATRE.SAV"
+theatree
+
+    !byte   vacatione-vacationb
+vacationb
+    !text   "VACATION.SAV"
+vacatione
+
+    !byte   waspe-waspb
+waspb
+    !text   "WASP.SAV"
+waspe
+
+    !byte   weathere-weatherb
+weatherb
+    !text   "WEATHER.SAV"
+weathere
+
+    !byte   wintere-winterb
+winterb
+    !text   "WINTER.SAV"
+wintere
+
+    !byte   yagwade-yagwadb
+yagwadb
+    !text   "YAGWAD.SAV"
+yagwade
+
     !byte   0 ;end of list
 
 gameloc
@@ -75,6 +245,108 @@ gameloc
 ;ztuur16
     !byte   $28
 
+;advent
+    !byte   $10
+
+;bear
+    !byte   $10
+
+;building
+    !byte   $10
+
+;change
+    !byte   $10
+
+;claw
+    !byte   $10
+
+;curses
+    !byte   $11
+
+;delusns
+    !byte   $10
+
+;eas
+    !byte   $10
+
+;edifice
+    !byte   $10
+
+;eleven
+    !byte   $10
+
+;fear
+    !byte   $10
+
+;geist
+    !byte   $10
+
+;heroes
+    !byte   $11
+
+;i0
+    !byte   $10
+
+;inevita
+    !byte   $1b
+
+;jewel
+    !byte   $10
+
+;jigsaw
+    !byte   $10
+
+;loose
+    !byte   $10
+
+;moonlit
+    !byte   $10
+
+;ralph
+    !byte   $11
+
+;rameses
+    !byte   $10
+
+;shade
+    !byte   $10
+
+;sherbet
+    !byte   $10
+
+;softfood
+    !byte   $10
+
+;spirit
+    !byte   $10
+
+;spring
+    !byte   $1f
+
+;tangle
+    !byte   $1f
+
+;tapestry
+    !byte   $10
+
+;theatre
+    !byte   $10
+
+;vacation
+    !byte   $11
+
+;wasp
+    !byte   $11
+
+;weather
+    !byte   $10
+
+;winter
+    !byte   $16
+
+;yagwad
+    !byte   $13
+
 gametime
 ;bzoner9
     !byte   $8a
@@ -101,6 +373,108 @@ gametime
     !byte   0 ;no time
 
 ;ztuur16
+    !byte   0 ;no time
+
+;advent
+    !byte   0 ;no time
+
+;bear
+    !byte   0 ;no time
+
+;building
+    !byte   0 ;no time
+
+;change
+    !byte   0 ;no time
+
+;claw
+    !byte   0 ;no time
+
+;curses
+    !byte   0 ;no time
+
+;delusns
+    !byte   $12
+
+;eas
+    !byte   0 ;no time
+
+;edifice
+    !byte   0 ;no time
+
+;eleven
+    !byte   $19
+
+;fear
+    !byte   0 ;no time
+
+;geist
+    !byte   0 ;no time
+
+;heroes
+    !byte   0 ;no time
+
+;i0
+    !byte   $11
+
+;inevita
+    !byte   0 ;no time
+
+;jewel
+    !byte   0 ;no time
+
+;jigsaw
+    !byte   $11
+
+;loose
+    !byte   0 ;no time
+
+;moonlit
+    !byte   0 ;no time
+
+;ralph
+    !byte   0 ;no time
+
+;rameses
+    !byte   $11
+
+;shade
+    !byte   0 ;no time
+
+;sherbet
+    !byte   0 ;no time
+
+;softfood
+    !byte   0 ;no time
+
+;spirit
+    !byte   0 ;no time
+
+;spring
+    !byte   0 ;no time
+
+;tangle
+    !byte   0 ;no time
+
+;tapestry
+    !byte   0 ;no time
+
+;theatre
+    !byte   0 ;no time
+
+;vacation
+    !byte   0 ;no time
+
+;wasp
+    !byte   0 ;no time
+
+;weather
+    !byte   0 ;no time
+
+;winter
+    !byte   0 ;no time
+
+;yagwad
     !byte   0 ;no time
 
 gamescore
@@ -131,6 +505,108 @@ gamescore
 ;ztuur16
     !byte   $16
 
+;advent
+    !byte   $21
+
+;bear
+    !byte   $1d
+
+;building
+    !byte   $21
+
+;change
+    !byte   0 ;no score
+
+;claw
+    !byte   0 ;no score
+
+;curses
+    !byte   $17
+
+;delusns
+    !byte   $11
+
+;eas
+    !byte   0 ;no score
+
+;edifice
+    !byte   0 ;no score
+
+;eleven
+    !byte   0 ;no score
+
+;fear
+    !byte   $11
+
+;geist
+    !byte   $21
+
+;heroes
+    !byte   $1e
+
+;i0
+    !byte   0 ;no score
+
+;inevita
+    !byte   $28
+
+;jewel
+    !byte   $1d
+
+;jigsaw
+    !byte   $16
+
+;loose
+    !byte   $1d
+
+;moonlit
+    !byte   0 ;no score
+
+;ralph
+    !byte   $22
+
+;rameses
+    !byte   0 ;no score
+
+;shade
+    !byte   0 ;no score
+
+;sherbet
+    !byte   $1d
+
+;softfood
+    !byte   $1d
+
+;spirit
+    !byte   $18
+
+;spring
+    !byte   $2c
+
+;tangle
+    !byte   0 ;no score
+
+;tapestry
+    !byte   0 ;no score
+
+;theatre
+    !byte   0 ;no score
+
+;vacation
+    !byte   $17
+
+;wasp
+    !byte   $12
+
+;weather
+    !byte   0 ;no score
+
+;winter
+    !byte   $1c
+
+;yagwad
+    !byte   $20
+
 gamemoves
 ;bzoner9
     !byte   0 ;no moves
@@ -159,6 +635,108 @@ gamemoves
 ;ztuur16
     !byte   $17
 
+;advent
+    !byte   $1c
+
+;bear
+    !byte   $18
+
+;building
+    !byte   $1c
+
+;change
+    !byte   0 ;no moves
+
+;claw
+    !byte   0 ;no moves
+
+;curses
+    !byte   $18
+
+;delusns
+    !byte   0 ;no moves
+
+;eas
+    !byte   0 ;no moves
+
+;edifice
+    !byte   0 ;no moves
+
+;eleven
+    !byte   0 ;no moves
+
+;fear
+    !byte   $12
+
+;geist
+    !byte   $1c
+
+;heroes
+    !byte   $19
+
+;i0
+    !byte   0 ;no moves
+
+;inevita
+    !byte   $23
+
+;jewel
+    !byte   $18
+
+;jigsaw
+    !byte   $17
+
+;loose
+    !byte   $18
+
+;moonlit
+    !byte   0 ;no moves
+
+;ralph
+    !byte   $1d
+
+;rameses
+    !byte   0 ;no moves
+
+;shade
+    !byte   0 ;no moves
+
+;sherbet
+    !byte   $18
+
+;softfood
+    !byte   $18
+
+;spirit
+    !byte   $19
+
+;spring
+    !byte   $27
+
+;tangle
+    !byte   0 ;no moves
+
+;tapestry
+    !byte   0 ;no moves
+
+;theatre
+    !byte   0 ;no moves
+
+;vacation
+    !byte   $18
+
+;wasp
+    !byte   $13
+
+;weather
+    !byte   $93
+
+;winter
+    !byte   $1d
+
+;yagwad
+    !byte   $1b
+
 gameday
 ;bzoner9
     !byte   0 ;no day
@@ -186,3 +764,106 @@ gameday
 
 ;ztuur16
     !byte   0 ;no day
+
+;advent
+    !byte   0 ;no day
+
+;bear
+    !byte   0 ;no day
+
+;building
+    !byte   0 ;no day
+
+;change
+    !byte   0 ;no day
+
+;claw
+    !byte   0 ;no day
+
+;curses
+    !byte   $8c
+
+;delusns
+    !byte   0 ;no day
+
+;eas
+    !byte   0 ;no day
+
+;edifice
+    !byte   0 ;no day
+
+;eleven
+    !byte   0 ;no day
+
+;fear
+    !byte   0 ;no day
+
+;geist
+    !byte   0 ;no day
+
+;heroes
+    !byte   0 ;no day
+
+;i0
+    !byte   0 ;no day
+
+;inevita
+    !byte   0 ;no day
+
+;jewel
+    !byte   0 ;no day
+
+;jigsaw
+    !byte   0 ;no day
+
+;loose
+    !byte   0 ;no day
+
+;moonlit
+    !byte   0 ;no day
+
+;ralph
+    !byte   0 ;no day
+
+;rameses
+    !byte   0 ;no day
+
+;shade
+    !byte   0 ;no day
+
+;sherbet
+    !byte   0 ;no day
+
+;softfood
+    !byte   0 ;no day
+
+;spirit
+    !byte   0 ;no day
+
+;spring
+    !byte   0 ;no day
+
+;tangle
+    !byte   0 ;no day
+
+;tapestry
+    !byte   0 ;no day
+
+;theatre
+    !byte   0 ;no day
+
+;vacation
+    !byte   0 ;no day
+
+;wasp
+    !byte   0 ;no day
+
+;weather
+    !byte   0 ;no day
+
+;winter
+    !byte   0 ;no day
+
+;yagwad
+    !byte   0 ;no day
+

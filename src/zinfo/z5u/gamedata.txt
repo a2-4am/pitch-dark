@@ -20,6 +20,21 @@ bzork57b
     !text   "R57.871221.SAV"
 bzork57e
 
+    !byte   allroadse-allroadsb
+allroadsb
+    !text   "ALLROADS.SAV"
+allroadse
+
+    !byte   huntdarke-huntdarkb
+huntdarkb
+    !text   "HUNTDARK.SAV"
+huntdarke
+
+    !byte   shrapnele-shrapnelb
+shrapnelb
+    !text   "SHRAPNEL.SAV"
+shrapnele
+
     !byte   0 ;end of list
 
 gameloc
@@ -35,6 +50,15 @@ gameloc
 ;bzork57
     !byte   $a6
 
+;allroads
+    !byte   $13
+
+;huntdark
+    !byte   $10
+
+;shrapnel
+    !byte   $12
+
 gamemoves
 ;bzork47
     !byte   $8c
@@ -47,3 +71,12 @@ gamemoves
 
 ;bzork57
     !byte   $8c
+
+;allroads
+    !byte   0 ;no moves
+
+;huntdark
+    !byte   0 ;no moves
+
+;shrapnel
+    !byte   0 ;no moves
