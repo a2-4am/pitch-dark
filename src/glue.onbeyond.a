@@ -11,7 +11,7 @@
 
 kHintsRootDirectory                  ; length-prefixed pathname of hint files
          !byte 6
-         !raw  "PRIZM/"
+         !raw  "HINTS/"
 
 kOnBeyondOptionsStruct    = $0300
 kOnBeyondColumns          = $0300
@@ -99,7 +99,7 @@ SetInterpreterOptions
 ;------------------------------------------------------------------------------
 ; SetInterpreterOptionsExceptForce40
 ; set options struct based on global preferences store, except always specify
-; 80-column mode (used to launch PRIZM hint files)
+; 80-column mode (used to launch hint files)
 ;
 ; in:    none
 ; out:   all registers and flags clobbered
