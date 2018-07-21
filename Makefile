@@ -60,7 +60,7 @@ dsk: md asm
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ZINFO4"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ZINFO5"
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ZINFO5U"
-	# TODO remove these save game files, just here for development
+	# sample save game files for development
 	#$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/Z/WISHBRINGER/" "res/R69.850920.SAV"
 	#$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/Z/ZORK.I/" "res/R88.840726.SAV"
 

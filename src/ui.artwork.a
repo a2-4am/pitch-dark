@@ -29,7 +29,7 @@ DisplayArtwork
 !cpu 65c02
          beq   +                     ; skip GS-specific code on non-GS machines (required, will crash on //c, grr)
          lda   $C029
-         and   #$1F
+         ora   #$40
          sta   $C029                 ; set GS NEWVIDEO mode to turn off linearize
          inx
 
