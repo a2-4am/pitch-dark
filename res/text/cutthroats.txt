@@ -20,9 +20,12 @@
  the plunge. You're the type who believes that when stakes are this high,
  even when your odds are this low, it's worth running the risks of dealing
  with Cutthroats.
+ 
+ NOTE: This game is patched to remove the in-game copy protection. No matter
+ which item you are shown, you can visit either wreck.
 
 [versions]
-R23.840809.Z3=Release 23 / Serial number 840809
+R23.DEPROT.Z3=Release 23 / Serial number 840809 (patched)
 
 [options]
 ARTWORK=1
