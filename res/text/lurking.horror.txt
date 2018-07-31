@@ -36,10 +36,13 @@
  first-time and experienced players, and Lebling's chilling descriptions
  will leave you with images you'll never forget.
 
+ NOTE: this game is patched to remove the in-game copy protection. When you
+ login to the computer, you can type anything to proceed.
+
 [versions]
-R221.870918.Z3=Release 221 / Serial number 870918
-R219.870912.Z3=Release 219 / Serial number 870912
-R203.870506.Z3=Release 203 / Serial number 870506
+R221.DEPROT.Z3=Release 221 / Serial number 870918 (patched)
+R219.DEPROT.Z3=Release 219 / Serial number 870912 (patched)
+R203.DEPROT.Z3=Release 203 / Serial number 870506 (patched)
 
 [options]
 ARTWORK=1
