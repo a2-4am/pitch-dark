@@ -3,7 +3,7 @@
  by Steve Meretzky
  Copyright 1985 Infocom, Inc.
  Genre: science fiction
- Difficulty: ^^^^^&
+ Difficulty: ^^^^&
 
 [description]
  
