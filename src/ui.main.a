@@ -21,6 +21,7 @@ ID_VERSIONS    = 7
 ID_INFO        = 8
 ID_DESCRIPTION = 9
 ID_ABOUT       = 10
+ID_CATALOG     = 11
 
 gMainScreenPaintDirty
          !byte 0
@@ -74,6 +75,9 @@ RepaintMainIfDirty
 
          jsr   CreateButton          ; create 'previous' button
          !word kViewPrevious
+
+         jsr   CreateButton          ; create 'catalog' button
+         !word kViewCatalog
 
          jsr   CreateButton          ; create 'settings' button
          !word kViewOptions
@@ -312,9 +316,17 @@ kViewNext
          !word callback_next         ; callback
          !word kStringNext           ; caption
 
+kViewCatalog
+         !byte ID_CATALOG            ; view ID
+         !byte 27                    ; left
+         !byte 2                     ; top
+         !byte 11                    ; width
+         !word CatalogDialog         ; callback
+         !word kStringCatalog
+
 kViewOptions
          !byte ID_OPTIONS            ; view ID
-         !byte 34                    ; left
+         !byte 41                    ; left
          !byte 2                     ; top
          !byte 12                    ; width
          !word OptionsDialog         ; callback
@@ -395,7 +407,9 @@ kStringPrevious
 kStringNext
          !byte $0E                   ; 'N' inverse
          !text "ext game >",0
-
+kStringCatalog
+         !byte $03                   ; 'C' inverse
+         !text "atalog",0
 kStringOptions
          !byte $13                   ; 'S' inverse
          !text "ettings",0

@@ -28,6 +28,8 @@ kMainKeys
          !byte $E1,ID_BOXART         ; a
          !byte $D6,ID_VERSIONS       ; V
          !byte $F6,ID_VERSIONS       ; v
+         !byte $C3,ID_CATALOG        ; C
+         !byte $E3,ID_CATALOG        ; c
          !byte $D3,ID_OPTIONS        ; S
          !byte $F3,ID_OPTIONS        ; s
          !byte $D0,ID_PREVIOUS       ; P

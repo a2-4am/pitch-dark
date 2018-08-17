@@ -1,0 +1,225 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; User interface - views and paint routines for catalog screen
+;
+; Public functions
+; - CatalogDialog
+;
+
+; View IDs (application-specific, acceptable range 0..15, no duplicates)
+ID_CATALOG_FRAME          = 1
+ID_CATALOG_OK             = 2
+ID_CATALOG_CANCEL         = 3
+ID_CATALOG_PREVIOUS       = 4
+ID_CATALOG_NEXT           = 5
+
+; action keys for catalog screen
+kCatalogKeys
+         !byte $8D,ID_CATALOG_OK                ; Return
+         !byte $9B,ID_CATALOG_CANCEL            ; Esc
+         !byte $88,ID_CATALOG_PREVIOUS          ; left arrow
+         !byte $8B,ID_CATALOG_PREVIOUS          ; up arrow
+         !byte $95,ID_CATALOG_NEXT              ; right arrow
+         !byte $8A,ID_CATALOG_NEXT              ; down arrow
+_endCatalogKeys
+
+MAXGAMES  =  20   ; max number of displayed games
+
+;------------------------------------------------------------------------------
+; CatalogDialog
+; call WeeGUI to create and paint option screen, and run to completion
+;
+; in:    WeeGUI initialized
+; out:   exits via MainScreen
+;        all registers and flags clobbered
+;------------------------------------------------------------------------------
+CatalogDialog
+         ldx   #$FF
+         txs
+         jsr   HardResetWeeGUI
+
+         jsr   CreateDialog          ; create decorated frame
+         !word kViewCatalogFrame
+         !word kStringCatalogFrame
+
+         ldx   #WGDesktop            ; paint background
+         jsr   WeeGUI
+
+         jsr   PaintTitleBar         ; paint top title bar
+
+         ldx   #WGViewPaintAll       ; paint UI controls (window frame, buttons, checkboxes, radio buttons)
+         jsr   WeeGUI
+
+         ldx   #WGSelectView         ; select frame (required for print routines that follow)
+         lda   #ID_CATALOG_FRAME
+         jsr   WeeGUI
+
+         lda   @gameCount
+         bne   @alreadyCounted
+         jsr   okvs_iter             ; count the total number of games
+         !word gGamesListStore
+         !word @countGames
+@alreadyCounted
+         lda   #$FD                  ; reset previous start index just in case
+         sta   @prevStartIndex
+         jsr   @RefreshCatalog
+
+; WeeGUI cursor/key loop
+         jsr   ClearPendingInput
+-        ldx   #WGPendingViewAction
+         jsr   WeeGUI                ; handle mouse movement and clicks
+         lda   $C000
+         bpl   -
+         jsr   ClearPendingInput
+         jsr   @HandleCatalogKey      ; handle keypresses
+         bra   -
+
+;------------------------------------------------------------------------------
+; internal functions
+;         !byte $01,$02,$03,$04,$05
+
+;------------------------------------------------------------------------------
+@RefreshCatalog
+         jsr   GetCurrentGameIndex
+         stx   @currGameIndex
+; Determine where to start in the game list
+         lda   #0
+         sta   @startIndex
+         sta   @lineNum
+         lda   @currGameIndex
+         cmp   #MAXGAMES/2           ; within MAXGAMES/2 of start?
+         bcc   @cont                 ; yes, start at top
+         clc
+         adc   #MAXGAMES/2
+         cmp   @gameCount            ; within MAXGAMES/2 of the end?
+         bcc   @1                    ; no
+         lda   @gameCount            ; yes, start at end
+@1       sec                         ; subtract off MAXGAMES
+         sbc   #MAXGAMES
+         sta   @startIndex
+
+@cont                                ; Print out the list of games
+         lda   @startIndex
+         cmp   @prevStartIndex       ; avoid redrawing the list if possible
+         beq   @noRefreshNeeded
+         sta   @prevStartIndex
+         jsr   okvs_iter
+         !word gGamesListStore
+         !word @printCatalog
+@noRefreshNeeded
+         jsr   @eraseOldCursor
+         jmp   @printCursor
+
+;------------------------------------------------------------------------------
+;         !byte $01,$02,$03,$04,$05
+@currGameIndex
+         !byte $FD                   ; SMC
+@gameCount
+         !byte $00                   ; SMC
+@startIndex
+         !byte $FD                   ; SMC
+@prevStartIndex
+         !byte $FD                   ; SMC
+
+; Count up the total number of games
+@countGames
+         inc   @gameCount
+         rts
+
+;------------------------------------------------------------------------------
+; Add an arrow cursor next to current game
+@printCursor
+         lda   @currGameIndex
+         sec
+         sbc   @startIndex
+         sta   @line1
+         jsr   PrintAt
+         !byte 1
+@line1   !byte $00                   ; SMC
+         !word @kStringCursor
+         rts
+@kStringCursor
+         !text "---->",0
+
+;------------------------------------------------------------------------------
+; Erase previous arrow cursor
+@eraseOldCursor
+         lda   @line1
+         sta   @line2
+         jsr   PrintAt
+         !byte 1
+@line2   !byte $FD                   ; SMC
+         !word @kStringErase
+@done
+         rts
+@kStringErase
+         !text "     ",0
+
+;------------------------------------------------------------------------------
+; Print out a single game name, A/Y contains key, X contains index
+@printCatalog
+         cpx   @startIndex
+         bcc   @skip
+         +STAY @key
+         jsr   okvs_get
+         !word gGamesListStore
+@key     !word $FDFD                 ; SMC
+         ldx   #55
+         jsr   CreateNullTerminatedString ; copies string to kNullTerminatedBuffer
+         jsr   PrintAt
+         !byte 6
+@lineNum !byte $FD                   ; SMC
+         !word kNullTerminatedBuffer
+         inc   @lineNum
+@skip    rts
+
+;------------------------------------------------------------------------------
+; HandleCatalog
+;
+; in:    A = key pressed
+; out:   all registers and flags clobbered
+;------------------------------------------------------------------------------
+@HandleCatalogKey
+         ldx   #(_endCatalogKeys-kCatalogKeys)-2
+-        cmp   kCatalogKeys,x
+         beq   @found
+         dex
+         dex
+         bpl   -
+         jmp   SoftBell
+@found   lda   kCatalogKeys+1,x
+         cmp   #ID_CATALOG_OK
+         beq   @callback_catalog_ok
+         cmp   #ID_CATALOG_CANCEL
+         beq   @callback_catalog_cancel
+         cmp   #ID_CATALOG_PREVIOUS
+         bne   @next
+         jsr   callback_previous
+         jmp   @RefreshCatalog
+@next    jsr   callback_next
+         jmp   @RefreshCatalog
+
+@callback_catalog_ok
+         jsr   SoftBell
+         jmp   MainScreen
+
+@callback_catalog_cancel
+         jmp   MainScreen
+
+
+;------------------------------------------------------------------------------
+; WeeGUI view configuration records
+
+kViewCatalogFrame
+         !byte ID_CATALOG_FRAME      ; view ID
+         !byte 0                     ; style (decorated frame)
+         !byte 4                     ; left
+         !byte 2                     ; top
+         !byte 72                    ; visible width
+         !byte 20                    ; visible height
+         !byte 72                    ; width
+         !byte 20                    ; height
+
+kStringCatalogFrame
+         !text "Catalog",0
