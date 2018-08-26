@@ -39,7 +39,7 @@ CatalogDialog
          txs
          jsr   HardResetWeeGUI
 
-         ldx   #WGClearScreen            ; paint background
+         ldx   #WGClearScreen        ; paint background
          jsr   WeeGUI
 
          jsr   CreateDialog          ; create decorated frame
@@ -57,11 +57,7 @@ CatalogDialog
          jsr   CreateButton          ; create 'main' button
          !word kViewCatalogMain
 
-         ldx   #WGViewPaintAll       ; paint UI controls (window frame, buttons, checkboxes, radio buttons)
-         jsr   WeeGUI
-
-         ldx   #WGSelectView         ; select frame (required for print routines that follow)
-         lda   #ID_CATALOG_FRAME
+         ldx   #WGViewPaintAll       ; paint UI controls (window frame, buttons)
          jsr   WeeGUI
 
          lda   gameCount
@@ -73,17 +69,15 @@ CatalogDialog
 
          lda   #0
          sta   startIndex
-         lda   #$FD                  ; reset previous start index just in case
-         sta   prevStartIndex
          jsr   RefreshCatalog
 
 ; WeeGUI cursor/key loop
          jsr   ClearPendingInput
--        ldx   #WGPendingClick
-         jsr   WeeGUI                ; check for mouse click
+-        ldx   #WGPendingClick       ; since our game list isn't WeeGUI buttons
+         jsr   WeeGUI                ; we need to manually check for mouse click
          cpx   #$FF
-         beq   @1
-         jsr   HandleCatalogClick
+         beq   @1                    ; no click
+         jsr   HandleCatalogClick    ; yes, mouse click
 @1       ldx   #WGPendingViewAction
          jsr   WeeGUI                ; handle mouse movement and clicks
          lda   $C000
@@ -97,22 +91,18 @@ CatalogDialog
 
 ;------------------------------------------------------------------------------
 RefreshCatalog
-         lda   startIndex
-         cmp   prevStartIndex       ; avoid redrawing the list if possible
-         beq   @noRefreshNeeded
-         sta   prevStartIndex
-         lda   #1
-         sta   lineNum
-         lda   #$C1                  ; letter 'A'
-         sta   kIndex + 1
-         ldx   #WGSelectView
+         lda   #ID_CATALOG_FRAME
+         ldx   #WGSelectView         ; select frame (required for print routines)
          jsr   WeeGUI
          ldx   #WGEraseViewContents
          jsr   WeeGUI
+         lda   #1                    ; start at second line within text frame
+         sta   catLineNum
+         lda   #$C1                  ; letter 'A', first game in game list
+         sta   kCatLetter + 1
          jsr   okvs_iter
          !word gGamesListStore
          !word printCatalog
-@noRefreshNeeded
          rts
 
 ;------------------------------------------------------------------------------
@@ -121,8 +111,6 @@ gameCount
          !byte $00                   ; SMC
 startIndex
          !byte $FD                   ; SMC
-prevStartIndex
-         !byte $FD                   ; SMC
 
 ; Count up the total number of games
 countGames
@@ -130,6 +118,42 @@ countGames
          rts
 
 ;------------------------------------------------------------------------------
+; Print out a single game name/letter, A/Y contains key, X contains index
+printCatalog
+         cpx   startIndex            ; skip until we reach our current start index
+         bcc   @skip
+         ldx   catLineNum
+         dex
+         cpx   #MAXGAMES             ; are we on the last line?
+         bcc   +
+@skip    rts
++        +STAY @key
+         jsr   okvs_get              ; retrieve the game name
+         !word gGamesListStore
+@key     !word $FDFD                 ; SMC
+         ldx   #55                   ; maximum string length
+         jsr   CreateNullTerminatedString ; copies string to kNullTerminatedBuffer
+         jsr   PrintAt
+         !byte 8
+catLineNum
+         !byte $FD                   ; SMC
+         !word kNullTerminatedBuffer
+         lda   catLineNum
+         sta   @ln2
+         jsr   PrintAt               ; print a letter key next to each game
+         !byte 4
+@ln2     !byte $FD                   ; SMC
+         !word kCatLetter
+        
+         inc   catLineNum
+         inc   kCatLetter + 1
+         rts
+
+kCatLetter
+         !text "[A]",0
+
+;------------------------------------------------------------------------------
+; User clicked on the screen, X, Y contain absolute mouse position
 HandleCatalogClick
          cpx   #8
          bcc   @outOfBounds
@@ -140,7 +164,7 @@ HandleCatalogClick
          tya
          clc
          adc   #$BF                 ; convert Y pos into 'A'-'Z' key
-         bra   isUpper
+         bra   isUppercaseKey       ; use our keyboard handler to verify
 @outOfBounds
          jmp   SoftBell
 
@@ -152,14 +176,14 @@ HandleCatalogClick
 ;------------------------------------------------------------------------------
 HandleCatalogKey
          cmp   #$E0
-         bcc   isUpper
+         bcc   isUppercaseKey
          and   #%11011111            ; convert lower to uppercase
-isUpper
+isUppercaseKey
          cmp   #$C1                  ; 'A'
          bcc   @notLetter
-         cmp   kIndex + 1
+         cmp   kCatLetter + 1        ; highest key (+1) on the game list
          bcs   @notLetter
-; we have an uppercase letter, convert to game index
+; convert uppercase letter to game index (+1)
          and   #%00011111
          clc
          adc   startIndex
@@ -167,7 +191,7 @@ isUpper
          dex
          jsr   loadNewGameInfoAndRepaint
 @main    jmp   MainScreen
-@notLetter
+@notLetter                           ; handle other (non-game) keys
          ldx   #(_endCatalogKeys-kCatalogKeys)-2
 -        cmp   kCatalogKeys,x
          beq   @activateView
@@ -208,40 +232,6 @@ catalog_previous
 
 catalog_main
          jmp   MainScreen
-
-;------------------------------------------------------------------------------
-; Print out a single game name, A/Y contains key, X contains index
-printCatalog
-         cpx   startIndex
-         bcc   @skip
-         ldx   lineNum
-         dex
-         cpx   #MAXGAMES
-         bcc   +
-@skip    rts
-+        +STAY @key
-         jsr   okvs_get
-         !word gGamesListStore
-@key     !word $FDFD                 ; SMC
-         ldx   #55                   ; maximum string length
-         jsr   CreateNullTerminatedString ; copies string to kNullTerminatedBuffer
-         jsr   PrintAt
-         !byte 8
-lineNum  !byte $FD                   ; SMC
-         !word kNullTerminatedBuffer
-         lda   lineNum
-         sta   @ln2
-         jsr   PrintAt
-         !byte 4
-@ln2     !byte $FD                   ; SMC
-         !word kIndex
-         inc   lineNum
-         inc   kIndex + 1
-         rts
-
-kIndex
-         !text "[A]",0
-
 
 ;------------------------------------------------------------------------------
 ; WeeGUI view configuration records
