@@ -57,19 +57,33 @@
          bne   @nextslot
          dey
          bpl   @matchVidHD
-         dec   PatchVidHD1+1         ; affect branch to pretend IIGS
          lda   #$90
-         sta   PatchVidHD2           ; affect branch to pretend IIGS
-         ldx   #$c1                  ; force exit via fall-through
+         sta   PatchVidHD
+         bne   @setSHR               ; always
+
+@kVidHDID
+         !byte $24, $EA, $4C
 
 @nextslot
          dex
          cpx   #$c0
          bne   @findVidHD
-         beq   +
-@kVidHDID
-         !byte $24, $EA, $4C
+
+;------------------------------------------------------------------------------
+; detect IIGS by running CPU-specific magic
+;------------------------------------------------------------------------------
+
+!cpu 65816
+         rep   #2                    ; clear Z flag on 65816 only
+!cpu 65c02
+         beq   +                     ; skip GS-specific code on non-GS machines (required, will crash on //c, grr)
+@setSHR
+         inc   WeCanHazSHR+1
+         lda   $C029
+         ora   #$40
+         sta   $C029                 ; set GS NEWVIDEO mode to turn off linearize
 +
+
 ;------------------------------------------------------------------------------
 ; clear options script and make checksum invalid
 ;------------------------------------------------------------------------------

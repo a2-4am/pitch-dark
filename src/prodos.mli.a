@@ -200,7 +200,7 @@ LoadSHRFile
          bcs   close
          phx
 
-PatchVidHD2
+PatchVidHD
          bcs   copyvidhd
 
 !cpu 65816
