@@ -27,6 +27,7 @@ DisplayArtwork
 !cpu 65816
          rep   #2                    ; clear Z flag on 65816 only
 !cpu 65c02
+PatchVidHD1
          beq   +                     ; skip GS-specific code on non-GS machines (required, will crash on //c, grr)
          lda   $C029
          ora   #$40

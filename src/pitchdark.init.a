@@ -44,6 +44,33 @@
 @noRAMdisk
 
 ;------------------------------------------------------------------------------
+; detect VidHD by searching for magic bytes across all slots
+;------------------------------------------------------------------------------
+
+         ldx   #$c7
+@findVidHD
+         stx   @matchVidHD+2
+         ldy   #2
+@matchVidHD
+         lda   $c700, y              ; SMC
+         cmp   @kVidHDID, y
+         bne   @nextslot
+         dey
+         bpl   @matchVidHD
+         dec   PatchVidHD1+1         ; affect branch to pretend IIGS
+         lda   #$90
+         sta   PatchVidHD2           ; affect branch to pretend IIGS
+         ldx   #$c1                  ; force exit via fall-through
+
+@nextslot
+         dex
+         cpx   #$c0
+         bne   @findVidHD
+         beq   +
+@kVidHDID
+         !byte $24, $EA, $4C
++
+;------------------------------------------------------------------------------
 ; clear options script and make checksum invalid
 ;------------------------------------------------------------------------------
          ldy   #(kOnBeyondChecksum-kOnBeyondOptionsStruct)
