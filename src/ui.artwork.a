@@ -29,6 +29,9 @@ WeCanHazSHR
          +LDADDR kArtworkRootDirectory
          dex
          bne   +
+         lda   $C029
+         ora   #$40
+         sta   $C029                 ; set GS NEWVIDEO mode to turn off linearize
          +LDADDR kArtworkGSRootDirectory
 +        phx
          jsr   AddToPath

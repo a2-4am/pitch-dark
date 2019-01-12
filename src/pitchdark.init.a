@@ -62,7 +62,7 @@
          bne   @setSHR               ; always
 
 @kVidHDID
-         !byte $24, $EA, $4C
+         !byte 0,0,0
 
 @nextslot
          dex
@@ -79,9 +79,6 @@
          beq   +                     ; skip GS-specific code on non-GS machines (required, will crash on //c, grr)
 @setSHR
          inc   WeCanHazSHR+1
-         lda   $C029
-         ora   #$40
-         sta   $C029                 ; set GS NEWVIDEO mode to turn off linearize
 +
 
 ;------------------------------------------------------------------------------
