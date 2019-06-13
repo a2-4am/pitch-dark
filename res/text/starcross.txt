@@ -21,7 +21,7 @@
  course for a UM, you may enter any coordinates for R, THETA, and PHI.
 
 [versions]
-R18.830114.Z3=Release 18 / Serial number 830114
+R18.DEPROT.Z3=Release 18 / Serial number 830114 (patched)
 R17.DEPROT.Z3=Release 17 / Serial number 821021 (patched)
 R15.DEPROT.Z3=Release 15 / Serial number 820901 (patched)
 
