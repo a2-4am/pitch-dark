@@ -55,6 +55,11 @@ nordr19b
     !text   "R19.870722.SAV"
 nordr19e
 
+    !byte   nordr20e-nordr20b
+nordr20b
+    !text   "R20.870722.SAV"
+nordr20e
+
     !byte   trinityr11e-trinityr11b
 trinityr11b
     !text   "R11.860509.SAV"
@@ -105,6 +110,9 @@ gameloc
 
 ;nordr19
     !byte   $91
+
+;nordr20
+    !byte   $92
 
 ;trinityr11
     !byte   $be
@@ -160,6 +168,10 @@ gametime
     !byte   0 ;no time
     !byte   0 ;no time
 
+;nordr20
+    !byte   0 ;no time
+    !byte   0 ;no time
+
 ;trinityr11
     !byte   0 ;no time
     !byte   0 ;no time
@@ -206,6 +218,9 @@ gamescore
 ;nordr19
     !byte   0 ;per-scenario score, not supported yet
 
+;nordr20
+    !byte   0 ;per-scenario score, not supported yet
+
 ;trinityr11
     !byte   $aa
 
@@ -247,6 +262,9 @@ gamemoves
     !byte   $8c
 
 ;nordr19
+    !byte   0 ;no moves
+
+;nordr20
     !byte   0 ;no moves
 
 ;trinityr11
@@ -300,6 +318,10 @@ gamemonth
     !byte   0 ;no month
 
 ;nordr19
+    !byte   0 ;no month
+    !byte   0 ;no month
+
+;nordr20
     !byte   0 ;no month
     !byte   0 ;no month
 
@@ -360,6 +382,10 @@ gameday
     !byte   0 ;no day
     !byte   0 ;no day
 
+;nordr20
+    !byte   0 ;no day
+    !byte   0 ;no day
+
 ;trinityr11
     !byte   0 ;no day
     !byte   0 ;no day
@@ -414,6 +440,10 @@ gameyear
     !byte   0 ;no year
 
 ;nordr19
+    !byte   0 ;no year
+    !byte   0 ;no year
+
+;nordr20
     !byte   0 ;no year
     !byte   0 ;no year
 
