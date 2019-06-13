@@ -50,6 +50,11 @@ zorkr52b
     !text   "R52.871125.SAV"
 zorkr52e
 
+    !byte   zzeror153e-zzeror153b
+zzeror153b
+    !text   "R153.880510.SAV"
+zzeror153e
+
     !byte   ztuur16e-ztuur16b
 ztuur16b
     !text   "R16.970828.SAV"
@@ -258,6 +263,9 @@ gameloc
 ;zorkr52
     !byte   $7b
 
+;zzeror153
+    !byte   $b7
+
 ;ztuur16
     !byte   $28
 
@@ -392,6 +400,9 @@ gametime
     !byte   $9a
 
 ;zorkr52
+    !byte   0 ;no time
+
+;zzeror153
     !byte   0 ;no time
 
 ;ztuur16
@@ -530,6 +541,9 @@ gamescore
 ;zorkr52
     !byte   $6e
 
+;zzeror153
+    !byte   $85
+
 ;ztuur16
     !byte   $16
 
@@ -666,6 +680,9 @@ gamemoves
 ;zorkr52
     !byte   $64
 
+;zzeror153
+    !byte   $6e
+
 ;ztuur16
     !byte   $17
 
@@ -800,6 +817,9 @@ gameday
     !byte   0 ;no day
 
 ;zorkr52
+    !byte   0 ;no day
+
+;zzeror153
     !byte   0 ;no day
 
 ;ztuur16
