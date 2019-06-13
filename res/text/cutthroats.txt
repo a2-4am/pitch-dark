@@ -25,11 +25,12 @@
  which item you are shown, you can visit either wreck.
 
 [versions]
+R25.840917.Z3=Release 25 / Serial number 840917
 R23.DEPROT.Z3=Release 23 / Serial number 840809 (patched)
 
 [options]
 ARTWORK=1
 CLUES=1
-VERSIONS=0
+VERSIONS=1
 
 [eof]

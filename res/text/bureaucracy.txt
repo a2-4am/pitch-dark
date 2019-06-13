@@ -40,6 +40,7 @@
  are in the paranoid's house, he will not ask you any questions.
 
 [versions]
+R160.880521.Z4=Release 160 / Licence number 880521
 R116.DEPROT.Z4=Release 116 / Licence number 870602 (patched)
 R86.DEPROT.Z4=Release 86 / Licence number 870212 (patched)
 

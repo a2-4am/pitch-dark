@@ -48,7 +48,9 @@
  And now, come, Watson! The game is afoot...
 
 [versions]
+R4.880324.Z5=Release 4 / Serial number 880324
 R26.880127.Z5=Release 26 / Serial number 880127
+R22.880112.Z5=Release 22 / Serial number 880112
 R21.871214.Z5=Release 21 / Serial number 871214
 
 [options]

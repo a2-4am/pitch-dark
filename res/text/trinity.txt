@@ -22,6 +22,7 @@
  puts the course of history in your hands.
 
 [versions]
+R15.870628.Z4=Release 15 / Serial number 870628
 R12.860926.Z4=Release 12 / Serial number 860926
 R11.860509.Z4=Release 11 / Serial number 860509
 

@@ -19,10 +19,11 @@
 
 [versions]
 R34.871124.Z3=Release 34 / Serial number 871124
+R2.840207.Z3=Release 2 / Serial number 840207
 
 [options]
 ARTWORK=0
 CLUES=0
-VERSIONS=0
+VERSIONS=1
 
 [eof]
