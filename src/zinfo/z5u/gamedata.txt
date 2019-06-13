@@ -20,6 +20,11 @@ bzork57b
     !text   "R57.871221.SAV"
 bzork57e
 
+    !byte   bzork60e-bzork60b
+bzork60b
+    !text   "R60.880610.SAV"
+bzork60e
+
     !byte   allroadse-allroadsb
 allroadsb
     !text   "ALLROADS.SAV"
@@ -50,6 +55,9 @@ gameloc
 ;bzork57
     !byte   $a6
 
+;bzork60
+    !byte   $a6
+
 ;allroads
     !byte   $13
 
@@ -70,6 +78,9 @@ gamemoves
     !byte   $8c
 
 ;bzork57
+    !byte   $8c
+
+;bzork60
     !byte   $8c
 
 ;allroads
