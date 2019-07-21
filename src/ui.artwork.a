@@ -76,6 +76,7 @@ WeCanHazSHR
 -        jsr   AnyKeyOrClick
          bcc   -
          sta   $C051                 ; back to text
+         sta   $C056                 ; turn off hires
          plx
          bne   +
          lda   $C029
