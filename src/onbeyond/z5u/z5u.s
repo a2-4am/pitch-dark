@@ -199,6 +199,9 @@ init            lda     DEVNUM
 
                 ;find current directory name in directory
 
+                sec
+                php
+
 readblock       jsr     MLI
                 !byte   $80
                 !word   x80_parms
@@ -220,7 +223,8 @@ inextent        ldy     #0
                 ;match failed, move to next directory in this block, if possible
 
 -               pla
-                clc
+
+skiphdr         clc
                 lda     bloklo
                 adc     #ENTRY_SIZE
                 sta     bloklo
@@ -249,7 +253,17 @@ ifoundname      dex
                 lda     (namlo), y
                 cmp     #'/'
                 bne     -
-                tya
+                pla
+                and     #$20 ;Volume Directory Header XOR subdirectory
+                beq     adjpath
+                pla
+                clc
+                php
+                lsr
+                bcc     skiphdr
+                inx
+
+adjpath         tya
                 eor     #$ff
                 adc     sizelo
                 sta     sizelo
@@ -257,9 +271,8 @@ ifoundname      dex
                 tya
                 adc     namlo
                 sta     namlo
-                pla
-                and     #$20 ;Volume Directory Header XOR subdirectory
-                bne     ++
+                dex
+                beq     ++
 
                 ;cache block number of current directory
                 ;as starting position for subsequent searches
@@ -275,6 +288,7 @@ ifoundname      dex
                 stx     x80_parms + 5
 ++              lda     sizelo
                 bne     readblock
+                pla
 
                 ;unit to slot for ProDOS interface
 
