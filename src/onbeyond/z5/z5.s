@@ -1,6 +1,6 @@
 ;license:BSD-3-Clause
 ;extended open/read/write binary file in ProDOS filesystem, with random access
-;copyright (c) Peter Ferrie 2013-18
+;copyright (c) Peter Ferrie 2013-19
 
 ver_02 = 1
 
@@ -180,7 +180,6 @@ tmp	=	$8
 
 init            lda     DEVNUM
                 sta     x80_parms + 1
-                sta     unrunit
                 and     #$70
                 pha
                 ldx     #1
@@ -199,6 +198,9 @@ init            lda     DEVNUM
                 bmi     +++
 
                 ;find current directory name in directory
+
+                sec
+                php
 
 readblock       jsr     MLI
                 !byte   $80
@@ -221,7 +223,8 @@ inextent        ldy     #0
                 ;match failed, move to next directory in this block, if possible
 
 -               pla
-                clc
+
+skiphdr         clc
                 lda     bloklo
                 adc     #ENTRY_SIZE
                 sta     bloklo
@@ -250,7 +253,17 @@ ifoundname      dex
                 lda     (namlo), y
                 cmp     #'/'
                 bne     -
-                tya
+                pla
+                and     #$20 ;Volume Directory Header XOR subdirectory
+                beq     adjpath
+                pla
+                clc
+                php
+                lsr
+                bcc     skiphdr
+                inx
+
+adjpath         tya
                 eor     #$ff
                 adc     sizelo
                 sta     sizelo
@@ -258,9 +271,8 @@ ifoundname      dex
                 tya
                 adc     namlo
                 sta     namlo
-                pla
-                and     #$20 ;Volume Directory Header XOR subdirectory
-                bne     ++
+                dex
+                beq     ++
 
                 ;cache block number of current directory
                 ;as starting position for subsequent searches
@@ -276,22 +288,79 @@ ifoundname      dex
                 stx     x80_parms + 5
 ++              lda     sizelo
                 bne     readblock
+                pla
 
-                ;unit to slot for SmartPort interface
+                ;unit to slot for ProDOS interface
 
 +++             pla
                 lsr
                 lsr
                 lsr
-                tax
-                lsr
-                ora     #$c0
-                ldy     DEVADR01HI, x
-                cpy     #$c8
-                bcs     set_slot
-                tya
-set_slot        sta     slot + 2
-                sta     unrentry + 1
+                tay
+                ldx     DEVADR01HI, y
+                cpx     #$c8
+                bcc     set_slot
+
+                ;find SmartPort device for basic MicroDrive support
+
+                ldx     #$c8
+-               dex
+                stx     blokhi
+                ldy     #0
+                sty     bloklo
+                iny
+                lda     (bloklo), y
+                cmp     #$20
+                bne     -
+                iny
+                iny
+                lda     (bloklo), y
+                bne     -
+                iny
+                iny
+                lda     (bloklo), y
+                cmp     #3
+                bne     -
+                ldy     #$ff
+                lda     (bloklo), y
+                beq     -
+
+set_slot        stx     slot + 2
+                stx     unrentry1 + 2
+                stx     unrentry3 + 2
+
+slot            ldx     $cfff
+
+                ;use SmartPort entrypoint instead
+
+                inx
+                inx
+                inx
+                stx     unrentry1 + 1
+                stx     unrentry3 + 1
+
+                ldx     #2
+                stx     x80_parms + 4
+                lda     #0
+                sta     x80_parms + 5
+                jsr     MLI
+                !byte   $80
+                !word   x80_parms
+
+iterunit        inc     unrunit2
+
+unrentry1       jsr     $d1d1
+                !byte   cmdread
+                !word   unrpacket
+                bcs     iterunit
+
+                ldy     #$0f
+-               lda     readbuff + 4, y
+                cmp     readbuff + $204, y
+                bne     iterunit
+                dey
+                bpl     -
+
 !if load_aux = 1 {
                 sta     SETAUXWR + (load_banked * 4) ;SETAUXWR or SETAUXZP
 } ;load_aux
@@ -319,8 +388,6 @@ set_slot        sta     slot + 2
 
                 ;copy new RWTS and interpreter support routines
 
-slot            lda     $cfff
-                sta     unrentry
                 ldy     #0
 -               lda     unrelochdd, y
                 sta     reloc, y
@@ -1560,22 +1627,32 @@ hddreaddirsect
                 sty     adrhi
 hddseekrd       ldy     #cmdread
 !if (aligned_read + enable_write) > 1 {
-hddseekrdwr     sty     command
+hddseekrdwr     sty     pcommand
 } else { ;not (aligned_read or enable_write)
-                sty     command
+                sty     pcommand
 hddseekrdwr
 } ;aligned_read and enable_write
 
-                stx     bloklo
-                sta     blokhi
+                stx     pblock
+                sta     pblock + 1
 
 hddcallsp
-unrunit = unrelochdd + (* + 1 - reloc)
-                lda     #$d1
-                sta     unit
+                lda     adrhi
+                sta     paddr + 1
+                lda     adrlo
+                sta     paddr
+unrentry3 = unrelochdd + (* - reloc)
+                jsr     $d1d1
+pcommand        !byte   0
+                !word   packet
+                rts
 
-unrentry = unrelochdd + (* + 1 - reloc)
-                jmp     $d1d1
+unrpacket = unrelochdd + (* - reloc)
+packet          !byte   3
+unrunit2 = unrelochdd + (* - reloc)
+                !byte   0
+paddr           !word   readbuff + $200
+pblock          !byte   2, 0, 0
 
 hddcodeend
   !if swap_zp = 1 {
@@ -1746,7 +1823,7 @@ hddsavetreehi = * + 1
                 lda     hdddirbuf, y
                 ora     hdddirbuf + 256, y
                 beq     sparseblk
-                inc     command
+                inc     pcommand
 
 copyblock       ldy     #0
 -               lda     $a00, y
@@ -1804,11 +1881,11 @@ sparseblk       ldx     #2
                 lda     adrhi
                 cmp     #(>hddencbuf) + 2
                 bne     --
-                ldx     bloklo
+                ldx     pblock
                 inx
                 bne     +
-                inc     blokhi
-+               lda     blokhi
+                inc     pblock + 1
++               lda     pblock + 1
                 dec     ldrhi
                 bne     ---
 
@@ -1837,7 +1914,7 @@ foundbit        lda     (adrlo), y
                 jmp     copyblock
 
 writeimm        sta     adrhi
-                inc     command
+                inc     pcommand
                 jmp     hddcallsp
 
 readpart        lda     istree

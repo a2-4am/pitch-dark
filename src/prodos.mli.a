@@ -184,22 +184,25 @@ LoadSHRFile
          bne   -
 
          jsr   _openfile
-         bcs   @exit                 ; C set on error
-         sta   @saverefnum           ; store file refnum
+         bcs   exit                  ; C set on error
+         sta   saverefnum            ; store file refnum
 
          ldy   #$20
          stz   mliparam+2            ; read into $2000 in main mem
          sty   mliparam+3
          stz   mliparam+4            ; read length = $2000 bytes (one quarter of file)
          sty   mliparam+5
-         sty   @shrdest+2
+         sty   shrdest+2
 
          ldx   #4                    ; four quarters
--        lda   @saverefnum           ; file refnum
+-        lda   saverefnum            ; file refnum
          jsr   _readfile
-         bcs   @close
+         bcs   close
          phx
- 
+
+PatchVidHD
+         bcs   copyvidhd
+
 !cpu 65816
          xce
          rep   #$30
@@ -208,29 +211,58 @@ LoadSHRFile
          lda   #$1FFF
          tax
          inx
-@shrdest ldy   #$FD00                ; SMC
+shrdest  ldy   #$FD00                ; SMC
          phb
          mvn   0,$E1
          plb
-         sty   @shrdest+1
+         sty   shrdest+1
 !as
 !rs
          sec
          xce
 !cpu 65C02
-
+resumeread
          plx
          dex
          bne   -
 
-@close   php                         ; save flags from readfile
-@saverefnum=*+1
+close    php                         ; save flags from readfile
+saverefnum=*+1
          lda   #$FD                  ; file refnum (SMC)
          jsr   _closefile
          plp                         ; restore flags from readfile
-@exit    rts
+exit     rts
 
-;-------------------------------
+copyvidhd
+         lda   $C035
+         and   #$F7 ;Enable SHR shadowing
+         sta   $C035
+         lda   #$a0
+         sec
+@calcdest
+         sbc   #$20
+         dex
+         bne   @calcdest
+         sta   $45
+         stx   $44
+         ldx   #$20
+         ldy   #0
+         stx   $43
+         sty   $42
+         sta   $C005 ;CPU writes go to aux 64K
+@copyshr
+         lda   ($42), y
+         sta   ($44), y
+         iny
+         bne   @copyshr
+         inc   $43
+         inc   $45
+         dex
+         bne   @copyshr
+         sta   $C004 ;CPU writes go to main 64K
+         clc
+         bcc   resumeread
+
 ; SaveFile
 ; save a file to disk all at once, using ProDOS MLI calls
 ;

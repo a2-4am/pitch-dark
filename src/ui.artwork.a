@@ -23,20 +23,15 @@ kArtworkGSRootDirectory              ; length-prefixed pathname of SHGR graphic 
 ; out:   all registers and flags clobbered
 ;------------------------------------------------------------------------------
 DisplayArtwork
-         ldx   #0                    ; set Z flag always
-!cpu 65816
-         rep   #2                    ; clear Z flag on 65816 only
-!cpu 65c02
-         beq   +                     ; skip GS-specific code on non-GS machines (required, will crash on //c, grr)
-         lda   $C029
-         ora   #$40
-         sta   $C029                 ; set GS NEWVIDEO mode to turn off linearize
-         inx
-
-+        jsr   ResetPath
+WeCanHazSHR
+         ldx   #0                    ; SMC
+         jsr   ResetPath
          +LDADDR kArtworkRootDirectory
          dex
          bne   +
+         lda   $C029
+         ora   #$40
+         sta   $C029                 ; set GS NEWVIDEO mode to turn off linearize
          +LDADDR kArtworkGSRootDirectory
 +        phx
          jsr   AddToPath
@@ -72,7 +67,7 @@ DisplayArtwork
          plx
          bcs   -
          lda   $C029
-         ora   #$C1
+         ora   #$81
          sta   $C029                 ; set GS NEWVIDEO mode to turn on SHR mode
 
 @waitKey
@@ -81,9 +76,10 @@ DisplayArtwork
 -        jsr   AnyKeyOrClick
          bcc   -
          sta   $C051                 ; back to text
+         sta   $C056                 ; turn off hires
          plx
          bne   +
          lda   $C029
-         and   #$3F
+         and   #$7F
          sta   $C029                 ; back to text GS-style
 +        jmp   ClearPendingInput

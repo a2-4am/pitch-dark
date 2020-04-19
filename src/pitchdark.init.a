@@ -44,6 +44,44 @@
 @noRAMdisk
 
 ;------------------------------------------------------------------------------
+; detect VidHD by searching for magic bytes across all slots
+;------------------------------------------------------------------------------
+
+         ldx   #$c7
+@findVidHD
+         stx   @matchVidHD+2
+         ldy   #2
+@matchVidHD
+         lda   $c700, y              ; SMC
+         cmp   @kVidHDID, y
+         bne   @nextslot
+         dey
+         bpl   @matchVidHD
+         lda   #$90
+         sta   PatchVidHD
+         bne   @setSHR               ; always
+
+@kVidHDID
+         !byte $24, $EA, $4C
+
+@nextslot
+         dex
+         cpx   #$c0
+         bne   @findVidHD
+
+;------------------------------------------------------------------------------
+; detect IIGS by running CPU-specific magic
+;------------------------------------------------------------------------------
+
+!cpu 65816
+         rep   #2                    ; clear Z flag on 65816 only
+!cpu 65c02
+         beq   +                     ; skip GS-specific code on non-GS machines (required, will crash on //c, grr)
+@setSHR
+         inc   WeCanHazSHR+1
++
+
+;------------------------------------------------------------------------------
 ; clear options script and make checksum invalid
 ;------------------------------------------------------------------------------
          ldy   #(kOnBeyondChecksum-kOnBeyondOptionsStruct)

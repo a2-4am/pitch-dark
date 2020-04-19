@@ -23,6 +23,7 @@
  because you are The Witness.
 
 [versions]
+R23.840925.Z3=Release 23 / Serial number 840925
 R22.840924.Z3=Release 22 / Serial number 840924
 R21.831208.Z3=Release 21 / Serial number 831208
 R20.831119.Z3=Release 20 / Serial number 831119

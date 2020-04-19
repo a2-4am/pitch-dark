@@ -20,6 +20,7 @@
  you in.
 
 [versions]
+R28.850129.Z3=Release 28 / Serial number 850129
 R27.831005.Z3=Release 27 / Serial number 831005
 R26.821108.Z3=Release 26 / Serial number 821108
 R22.820809.Z3=Release 22 / Serial number 820809

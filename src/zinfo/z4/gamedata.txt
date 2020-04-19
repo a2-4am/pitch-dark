@@ -40,10 +40,25 @@ bureaur116db
     !text   "R116.DEPROT.SAV"
 bureaur116de
 
+    !byte   bureaur160e-bureaur160b
+bureaur160b
+    !text   "R160.880521.SAV"
+bureaur160e
+
+    !byte   bureaur160de-bureaur160db
+bureaur160db
+    !text   "R160.DEPROT.SAV"
+bureaur160de
+
     !byte   nordr19e-nordr19b
 nordr19b
     !text   "R19.870722.SAV"
 nordr19e
+
+    !byte   nordr20e-nordr20b
+nordr20b
+    !text   "R20.870722.SAV"
+nordr20e
 
     !byte   trinityr11e-trinityr11b
 trinityr11b
@@ -54,6 +69,11 @@ trinityr11e
 trinityr12b
     !text   "R12.860926.SAV"
 trinityr12e
+
+    !byte   trinityr15e-trinityr15b
+trinityr15b
+    !text   "R15.870628.SAV"
+trinityr15e
 
     !byte   0 ;end of list
 
@@ -82,13 +102,25 @@ gameloc
 ;bureaur116d
     !byte   $b6
 
+;bureaur160
+    !byte   $b5
+
+;bureaur160d
+    !byte   $b5
+
 ;nordr19
     !byte   $91
+
+;nordr20
+    !byte   $92
 
 ;trinityr11
     !byte   $be
 
 ;trinityr12
+    !byte   $be
+
+;trinityr15
     !byte   $be
 
 gametime
@@ -110,23 +142,46 @@ gametime
 
 ;bureaur86
     !byte   0 ;no time
+    !byte   0 ;no time
 
 ;bureaur86d
+    !byte   0 ;no time
     !byte   0 ;no time
 
 ;bureaur116
     !byte   0 ;no time
+    !byte   0 ;no time
 
-;bureaur86d
+;bureaur116d
+    !byte   0 ;no time
+    !byte   0 ;no time
+
+;bureaur160
+    !byte   0 ;no time
+    !byte   0 ;no time
+
+;bureaur160d
+    !byte   0 ;no time
     !byte   0 ;no time
 
 ;nordr19
     !byte   0 ;no time
+    !byte   0 ;no time
+
+;nordr20
+    !byte   0 ;no time
+    !byte   0 ;no time
 
 ;trinityr11
     !byte   0 ;no time
+    !byte   0 ;no time
 
 ;trinityr12
+    !byte   0 ;no time
+    !byte   0 ;no time
+
+;trinityr15
+    !byte   0 ;no time
     !byte   0 ;no time
 
 gamescore
@@ -151,16 +206,28 @@ gamescore
 ;bureaur116
     !byte   $a1
 
-;bureaur86d
+;bureaur116d
     !byte   $a1
 
+;bureaur160
+    !byte   $9f
+
+;bureaur160d
+    !byte   $9f
+
 ;nordr19
+    !byte   0 ;per-scenario score, not supported yet
+
+;nordr20
     !byte   0 ;per-scenario score, not supported yet
 
 ;trinityr11
     !byte   $aa
 
 ;trinityr12
+    !byte   $aa
+
+;trinityr15
     !byte   $aa
 
 gamemoves
@@ -185,16 +252,28 @@ gamemoves
 ;bureaur116
     !byte   $8e
 
-;bureaur86d
+;bureaur116d
     !byte   $8e
 
+;bureaur160
+    !byte   $8c
+
+;bureaur160d
+    !byte   $8c
+
 ;nordr19
+    !byte   0 ;no moves
+
+;nordr20
     !byte   0 ;no moves
 
 ;trinityr11
     !byte   $95
 
 ;trinityr12
+    !byte   $95
+
+;trinityr15
     !byte   $95
 
 gamemonth
@@ -226,11 +305,23 @@ gamemonth
     !byte   0 ;no month
     !byte   0 ;no month
 
-;bureaur86d
+;bureaur116d
+    !byte   0 ;no month
+    !byte   0 ;no month
+
+;bureaur160
+    !byte   0 ;no month
+    !byte   0 ;no month
+
+;bureaur160d
     !byte   0 ;no month
     !byte   0 ;no month
 
 ;nordr19
+    !byte   0 ;no month
+    !byte   0 ;no month
+
+;nordr20
     !byte   0 ;no month
     !byte   0 ;no month
 
@@ -239,6 +330,10 @@ gamemonth
     !byte   0 ;no month
 
 ;trinityr12
+    !byte   0 ;no month
+    !byte   0 ;no month
+
+;trinityr15
     !byte   0 ;no month
     !byte   0 ;no month
 
@@ -271,11 +366,23 @@ gameday
     !byte   0 ;no day
     !byte   0 ;no day
 
-;bureaur86d
+;bureaur116d
+    !byte   0 ;no day
+    !byte   0 ;no day
+
+;bureaur160
+    !byte   0 ;no day
+    !byte   0 ;no day
+
+;bureaur160d
     !byte   0 ;no day
     !byte   0 ;no day
 
 ;nordr19
+    !byte   0 ;no day
+    !byte   0 ;no day
+
+;nordr20
     !byte   0 ;no day
     !byte   0 ;no day
 
@@ -284,6 +391,10 @@ gameday
     !byte   0 ;no day
 
 ;trinityr12
+    !byte   0 ;no day
+    !byte   0 ;no day
+
+;trinityr15
     !byte   0 ;no day
     !byte   0 ;no day
 
@@ -316,11 +427,23 @@ gameyear
     !byte   0 ;no year
     !byte   0 ;no year
 
-;bureaur86d
+;bureaur116d
+    !byte   0 ;no year
+    !byte   0 ;no year
+
+;bureaur160
+    !byte   0 ;no year
+    !byte   0 ;no year
+
+;bureaur160d
     !byte   0 ;no year
     !byte   0 ;no year
 
 ;nordr19
+    !byte   0 ;no year
+    !byte   0 ;no year
+
+;nordr20
     !byte   0 ;no year
     !byte   0 ;no year
 
@@ -329,5 +452,9 @@ gameyear
     !byte   0 ;no year
 
 ;trinityr12
+    !byte   0 ;no year
+    !byte   0 ;no year
+
+;trinityr15
     !byte   0 ;no year
     !byte   0 ;no year

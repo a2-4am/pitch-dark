@@ -25,10 +25,20 @@ sherlockr21b
     !text   "R21.871214.SAV"
 sherlockr21e
 
+    !byte   sherlockr22e-sherlockr22b
+sherlockr22b
+    !text   "R22.880112.SAV"
+sherlockr22e
+
     !byte   sherlockr26e-sherlockr26b
 sherlockr26b
     !text   "R26.880127.SAV"
 sherlockr26e
+
+    !byte   sherlockr4e-sherlockr4b
+sherlockr4b
+    !text   "R4.880324.SAV"
+sherlockr4e
 
     !byte   wishbringr23e-wishbringr23b
 wishbringr23b
@@ -39,6 +49,11 @@ wishbringr23e
 zorkr52b
     !text   "R52.871125.SAV"
 zorkr52e
+
+    !byte   zzeror153e-zzeror153b
+zzeror153b
+    !text   "R153.880510.SAV"
+zzeror153e
 
     !byte   ztuur16e-ztuur16b
 ztuur16b
@@ -233,14 +248,23 @@ gameloc
 ;sherlockr21
     !byte   $75
 
+;sherlockr22
+    !byte   $75
+
 ;sherlockr26
     !byte   $74
+
+;sherlockr4
+    !byte   $75
 
 ;wishbringr23
     !byte   $b1
 
 ;zorkr52
     !byte   $7b
+
+;zzeror153
+    !byte   $b7
 
 ;ztuur16
     !byte   $28
@@ -363,13 +387,22 @@ gametime
 ;sherlockr21
     !byte   $6e
 
+;sherlockr22
+    !byte   $6e
+
 ;sherlockr26
     !byte   $6d
+
+;sherlockr4
+    !byte   $6e
 
 ;wishbringr23
     !byte   $9a
 
 ;zorkr52
+    !byte   0 ;no time
+
+;zzeror153
     !byte   0 ;no time
 
 ;ztuur16
@@ -493,14 +526,23 @@ gamescore
 ;sherlockr21
     !byte   $aa
 
+;sherlockr22
+    !byte   $aa
+
 ;sherlockr26
     !byte   $ab
+
+;sherlockr4
+    !byte   $aa
 
 ;wishbringr23
     !byte   $9c
 
 ;zorkr52
     !byte   $6e
+
+;zzeror153
+    !byte   $85
 
 ;ztuur16
     !byte   $16
@@ -623,7 +665,13 @@ gamemoves
 ;sherlockr21
     !byte   0 ;no moves
 
+;sherlockr22
+    !byte   0 ;no moves
+
 ;sherlockr26
+    !byte   0 ;no moves
+
+;sherlockr4
     !byte   0 ;no moves
 
 ;wishbringr23
@@ -631,6 +679,9 @@ gamemoves
 
 ;zorkr52
     !byte   $64
+
+;zzeror153
+    !byte   $6e
 
 ;ztuur16
     !byte   $17
@@ -753,13 +804,22 @@ gameday
 ;sherlockr21
     !byte   $6e
 
+;sherlockr22
+    !byte   $6e
+
 ;sherlockr26
     !byte   $6d
+
+;sherlockr4
+    !byte   $6e
 
 ;wishbringr23
     !byte   0 ;no day
 
 ;zorkr52
+    !byte   0 ;no day
+
+;zzeror153
     !byte   0 ;no day
 
 ;ztuur16

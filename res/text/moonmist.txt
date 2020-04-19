@@ -26,6 +26,7 @@
  soundly. The next victim might be you.
 
 [versions]
+R13.880501.Z3=Release 13 / Serial number 880501
 R9.861022.Z3=Release 9 / Serial number 861022
 R4.860918.Z3=Release 4 / Serial number 860918
 

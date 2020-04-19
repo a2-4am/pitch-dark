@@ -22,10 +22,10 @@
  shark bait!
 
 [versions]
+R18.850919.Z3=Release 18 / Serial number 850919
 R16B.850603.Z3=Release 16 / Serial number 850603
 R16A.850515.Z3=Release 16 / Serial number 850515
-R15B.840522.Z3=Release 15 / Serial number 840522
-R15A.840501.Z3=Release 15 / Serial number 840501
+R15.840501.Z3=Release 15 / Serial number 840501
 R86.840320.Z3=Release 86 / Serial number 840320
 
 [options]

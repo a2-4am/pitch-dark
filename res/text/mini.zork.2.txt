@@ -1,0 +1,20 @@
+[info]
+ MINI-ZORK II: something something
+ by Dave Lebling and Marc Blank
+ Copyright sometime Infocom, Inc.
+ Genre: fantasy
+ Difficulty: ^^^&&
+
+[description]
+ 
+ text
+
+[versions]
+R2.871123.Z3=Release 2 / Serial number 871123
+
+[options]
+ARTWORK=0
+CLUES=0
+VERSIONS=0
+
+[eof]

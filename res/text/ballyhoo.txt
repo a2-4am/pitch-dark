@@ -23,11 +23,12 @@
  lot, trying to set you up for a permanent slot in the freak show.
 
 [versions]
+R99.861014.Z3=Release 99 / Serial number 861014
 R97.851218.Z3=Release 97 / Serial number 851218
 
 [options]
 ARTWORK=1
 CLUES=1
-VERSIONS=0
+VERSIONS=1
 
 [eof]
