@@ -12,7 +12,7 @@ ver_02 = 1
 !to "build/ONBEYONDZ5",plain
 *=$3000
 
-!macro version {!text "1/180221"}
+!macro version {!scrxor $80, "2/191025"}
 
 xsechi=$b7
 xseclo=$b6
