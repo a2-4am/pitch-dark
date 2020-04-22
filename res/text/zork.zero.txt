@@ -1,13 +1,26 @@
 [info]
- ZORK ZERO: something something
- by people
- Copyright some time Infocom, Inc.
+ ZORK ZERO: The Revenge of Megaboz
+ by Steve Meretzky
+ Copyright 1988 Infocom, Inc.
  Genre: fantasy
  Difficulty: ^^^&&
 
 [description]
  
- text
+ The Great Underground Empire is in its heyday. Upscale condos crowd the
+ massive caverns. Subterranean highways stretch from Aragain to the Fublio
+ Valley. And no adventurer has yet set foot in the open field west of the
+ white house.
+ 
+ But now both town and countryside are being abandoned, their inhabitants
+ fleeing in the wake of a dread wizard's curse. The curse has already
+ disposed of the royal Flathead family. It threatens to destroy the entire
+ kingdom -- unless you can stop it.
+ 
+ Your quest will take you to every corner of the empire, as you seek out
+ objects ranging from the absurd to the sublime. The quixotic jester will
+ test you with games, riddles, and tricks. The immense Flathead palace and
+ its environs offer a multitude of surprises.
 
 [versions]
 R153.880510.Z5=Release 153 / Serial number 880510
