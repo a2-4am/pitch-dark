@@ -26,8 +26,8 @@
 R153.880510.Z5=Release 153 / Serial number 880510
 
 [options]
-ARTWORK=0
-CLUES=0
+ARTWORK=1
+CLUES=1
 VERSIONS=0
 
 [eof]
