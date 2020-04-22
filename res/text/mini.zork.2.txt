@@ -1,13 +1,19 @@
 [info]
- MINI-ZORK II: something something
+ MINI-ZORK II: The Wizard of Frobozz
  by Dave Lebling and Marc Blank
- Copyright sometime Infocom, Inc.
+ Copyright 1988 Infocom, Inc.
  Genre: fantasy
  Difficulty: ^^^&&
 
 [description]
  
- text
+ This is a condensed version of Zork II. It was never released by Infocom.
+ Its source code was recovered in 2019 from the infamous "Infocom drive,"
+ along with many other artifacts and unreleased projects.
+ 
+ 
+ 
+ 
 
 [versions]
 R2.871123.Z3=Release 2 / Serial number 871123
