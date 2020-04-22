@@ -1,0 +1,283 @@
+;license:MIT
+;(c) 2018 by 4am
+;
+; User interface - views and paint routines for catalog screen
+;
+; Public functions
+; - CatalogDialog
+;
+
+; View IDs (application-specific, acceptable range 0..15, no duplicates)
+ID_CATALOG_FRAME          = 1
+ID_CATALOG_MAIN           = 2
+ID_CATALOG_PREVIOUS       = 3
+ID_CATALOG_NEXT           = 4
+
+; action keys for catalog screen
+kCatalogKeys
+         !byte $8D,ID_CATALOG_MAIN              ; <Return>
+         !byte $9B,ID_CATALOG_MAIN              ; <Esc>
+         !byte $88,ID_CATALOG_PREVIOUS          ; left arrow
+         !byte $8B,ID_CATALOG_PREVIOUS          ; up arrow
+         !byte $95,ID_CATALOG_NEXT              ; right arrow
+         !byte $8A,ID_CATALOG_NEXT              ; down arrow
+         !byte $A0,ID_CATALOG_NEXT              ; <Space>
+_endCatalogKeys
+
+MAXGAMES  =  18   ; max number of displayed games
+
+;------------------------------------------------------------------------------
+; CatalogDialog
+; call WeeGUI to create and paint option screen, and run to completion
+;
+; in:    WeeGUI initialized
+; out:   exits via MainScreen
+;        all registers and flags clobbered
+;------------------------------------------------------------------------------
+CatalogDialog
+         ldx   #$FF
+         txs
+         jsr   HardResetWeeGUI
+
+         ldx   #WGClearScreen        ; paint background
+         jsr   WeeGUI
+
+         jsr   CreateDialog          ; create decorated frame
+         !word kViewCatalogFrame
+         !word kStringCatalogFrame
+
+         jsr   PaintTitleBar         ; paint top title bar
+
+         jsr   CreateButton          ; create 'previous' button
+         !word kViewCatalogPrevious
+
+         jsr   CreateButton          ; create 'next' button
+         !word kViewCatalogNext
+
+         jsr   CreateButton          ; create 'main' button
+         !word kViewCatalogMain
+
+         ldx   #WGViewPaintAll       ; paint UI controls (window frame, buttons)
+         jsr   WeeGUI
+
+         lda   gameCount
+         bne   @alreadyCounted
+         jsr   okvs_iter             ; count the total number of games
+         !word gGamesListStore
+         !word countGames
+@alreadyCounted
+
+         lda   #0
+         sta   startIndex
+         jsr   RefreshCatalog
+
+; WeeGUI cursor/key loop
+         jsr   ClearPendingInput
+-        ldx   #WGPendingClick       ; since our game list isn't WeeGUI buttons
+         jsr   WeeGUI                ; we need to manually check for mouse click
+         cpx   #$FF
+         beq   @1                    ; no click
+         jsr   HandleCatalogClick    ; yes, mouse click
+@1       ldx   #WGPendingViewAction
+         jsr   WeeGUI                ; handle mouse movement and clicks
+         lda   $C000
+         bpl   -
+         jsr   ClearPendingInput
+         jsr   HandleCatalogKey      ; handle keypresses
+         bra   -
+
+;------------------------------------------------------------------------------
+; internal functions
+
+;------------------------------------------------------------------------------
+RefreshCatalog
+         lda   #ID_CATALOG_FRAME
+         ldx   #WGSelectView         ; select frame (required for print routines)
+         jsr   WeeGUI
+         ldx   #WGEraseViewContents
+         jsr   WeeGUI
+         lda   #1                    ; start at second line within text frame
+         sta   catLineNum
+         lda   #$C1                  ; letter 'A', first game in game list
+         sta   kCatLetter + 1
+         jsr   okvs_iter
+         !word gGamesListStore
+         !word printCatalog
+         rts
+
+;------------------------------------------------------------------------------
+;         !byte $01,$02,$03,$04,$05
+gameCount
+         !byte $00                   ; SMC
+startIndex
+         !byte $FD                   ; SMC
+
+; Count up the total number of games
+countGames
+         inc   gameCount
+         rts
+
+;------------------------------------------------------------------------------
+; Print out a single game name/letter, A/Y contains key, X contains index
+printCatalog
+         cpx   startIndex            ; skip until we reach our current start index
+         bcc   @skip
+         ldx   catLineNum
+         dex
+         cpx   #MAXGAMES             ; are we on the last line?
+         bcc   +
+@skip    rts
++        +STAY @key
+         jsr   okvs_get              ; retrieve the game name
+         !word gGamesListStore
+@key     !word $FDFD                 ; SMC
+         ldx   #55                   ; maximum string length
+         jsr   CreateNullTerminatedString ; copies string to kNullTerminatedBuffer
+         jsr   PrintAt
+         !byte 8
+catLineNum
+         !byte $FD                   ; SMC
+         !word kNullTerminatedBuffer
+         lda   catLineNum
+         sta   @ln2
+         jsr   PrintAt               ; print a letter key next to each game
+         !byte 4
+@ln2     !byte $FD                   ; SMC
+         !word kCatLetter
+        
+         inc   catLineNum
+         inc   kCatLetter + 1
+         rts
+
+kCatLetter
+         !text "[A]",0
+
+;------------------------------------------------------------------------------
+; User clicked on the screen, X, Y contain absolute mouse position
+HandleCatalogClick
+         cpx   #8
+         bcc   @outOfBounds
+         cpx   #68
+         bcs   @outOfBounds
+         cpy   #2
+         bcc   @outOfBounds
+         tya
+         clc
+         adc   #$BF                 ; convert Y pos into 'A'-'Z' key
+         bra   isUppercaseKey       ; use our keyboard handler to verify
+@outOfBounds
+         jmp   SoftBell
+
+;------------------------------------------------------------------------------
+; HandleCatalogKey
+;
+; in:    A = key pressed
+; out:   all registers and flags clobbered
+;------------------------------------------------------------------------------
+HandleCatalogKey
+         cmp   #$E0
+         bcc   isUppercaseKey
+         and   #%11011111            ; convert lower to uppercase
+isUppercaseKey
+         cmp   #$C1                  ; 'A'
+         bcc   @notLetter
+         cmp   kCatLetter + 1        ; highest key (+1) on the game list
+         bcs   @notLetter
+; convert uppercase letter to game index (+1)
+         and   #%00011111
+         clc
+         adc   startIndex
+         tax
+         dex
+         jsr   loadNewGameInfoAndRepaint
+@main    jmp   MainScreen
+@notLetter                           ; handle other (non-game) keys
+         ldx   #(_endCatalogKeys-kCatalogKeys)-2
+-        cmp   kCatalogKeys,x
+         beq   @activateView
+         dex
+         dex
+         bpl   -
+@error   jmp   SoftBell
+
+@activateView
+         lda   kCatalogKeys+1,x
+         tax
+         ldy   gViewInUse,x
+         beq   @error
+         ldx   #WGSelectView
+         jsr   WeeGUI
+@click   jmp   SimulateClick
+
+catalog_next
+         lda   startIndex
+         clc
+         adc   #MAXGAMES               ; page forward and refresh
+         cmp   gameCount
+         beq   @good
+         bcc   @good
+         jmp   SoftBell                ; at end of list
+@good    sta   startIndex
+         jmp   RefreshCatalog
+
+catalog_previous
+         lda   startIndex
+         bne   @1
+         jmp   SoftBell                ; at beginning of list
+@1
+         sec
+         sbc   #MAXGAMES               ; page back and refresh
+         sta   startIndex
+         jmp   RefreshCatalog
+
+catalog_main
+         jmp   MainScreen
+
+;------------------------------------------------------------------------------
+; WeeGUI view configuration records
+
+kViewCatalogPrevious
+         !byte ID_CATALOG_PREVIOUS   ; view ID
+         !byte 1                     ; left
+         !byte 22                    ; top
+         !byte 13                    ; width
+         !word catalog_previous      ; callback
+         !word kStringCatPrevious    ; caption
+
+kViewCatalogNext
+         !byte ID_CATALOG_NEXT       ; view ID
+         !byte 66                    ; left
+         !byte 22                    ; top
+         !byte 13                    ; width
+         !word catalog_next          ; callback
+         !word kStringCatNext        ; caption
+
+kViewCatalogMain
+         !byte ID_CATALOG_MAIN       ; view ID
+         !byte 34                    ; left
+         !byte 22                    ; top
+         !byte 14                    ; width
+         !word catalog_main          ; callback
+         !word kStringCatMain        ; caption
+
+kViewCatalogFrame
+         !byte ID_CATALOG_FRAME      ; view ID
+         !byte 0                     ; style (decorated frame)
+         !byte 4                     ; left
+         !byte 1                     ; top
+         !byte 72                    ; visible width
+         !byte 20                    ; visible height
+         !byte 72                    ; width
+         !byte 20                    ; height
+
+kStringCatalogFrame
+         !text "Catalog",0
+
+kStringCatPrevious
+         !text "<--",0
+
+kStringCatNext
+         !text "-->",0
+
+kStringCatMain
+         !text "<ESC> Main",0

@@ -37,6 +37,7 @@
          !source "src/ui.main.a"
          !source "src/ui.main.keys.a"
          !source "src/ui.options.a"
+         !source "src/ui.catalog.a"
          !source "src/ui.resume.a"
          !source "src/ui.versions.a"
          !source "src/ui.artwork.a"
