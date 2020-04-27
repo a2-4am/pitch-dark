@@ -1,12 +1,7 @@
-# Revision 2 / serial number 20200427
+# Revision 3 / serial number 20200427
 
-## New games
-
- - Mini-Zork II
- - Zork Zero
-
-## Enhancements & bug fixes
-
+ - Added Mini-Zork II
+ - Added Zork Zero
  - "Jump to" button shows a paged catalog of all games (Chris Torrence)
  - Updated in-game deprotection for Bureaucracy, Cutthroats, and Starcross
  - Improved saved game support for Bureaucracy, Trinity, Nord and Bert, Sherlock
@@ -18,6 +13,11 @@
  - Artwork now supports VidHD on 8-bit Apple II models
  - Fixed difficulty rating for A Mind Forever Voyaging (Chris Torrence)
 
-# Revision 1 / serial number 20180731
+# Revision 2 / serial number 20180731
+
+ - Updated in-game deprotection for Cutthroats, The Lurking Horror
+ - Disable sound in The Lurking Horror
+
+# Revision 1 / serial number 20180721
 
 Initial release
