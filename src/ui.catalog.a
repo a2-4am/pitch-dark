@@ -283,4 +283,5 @@ kStringCatNext
          !text "ext page >",0
 
 kStringCatMain
-         !text "Cancel",0
+         !byte $83
+         !text "ancel",0
