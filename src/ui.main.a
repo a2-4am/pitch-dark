@@ -408,8 +408,8 @@ kStringNext
          !byte $0E                   ; 'N' inverse
          !text "ext game >",0
 kStringCatalog
-         !byte $03                   ; 'C' inverse
-         !text "atalog",0
+         !byte $0A                   ; 'J' inverse
+         !text "ump to",0
 kStringOptions
          !byte $13                   ; 'S' inverse
          !text "ettings",0

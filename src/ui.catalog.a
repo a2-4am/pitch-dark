@@ -144,13 +144,13 @@ catLineNum
          !byte 4
 @ln2     !byte $FD                   ; SMC
          !word kCatLetter
-        
+
          inc   catLineNum
          inc   kCatLetter + 1
          rts
 
 kCatLetter
-         !text "[A]",0
+         !text "(A)",0
 
 ;------------------------------------------------------------------------------
 ; User clicked on the screen, X, Y contain absolute mouse position
@@ -216,14 +216,14 @@ catalog_next
          cmp   gameCount
          beq   @good
          bcc   @good
-         jmp   SoftBell                ; at end of list
+         jmp   catalog_previous
 @good    sta   startIndex
          jmp   RefreshCatalog
 
 catalog_previous
          lda   startIndex
          bne   @1
-         jmp   SoftBell                ; at beginning of list
+         jmp   catalog_next
 @1
          sec
          sbc   #MAXGAMES               ; page back and refresh
@@ -274,10 +274,13 @@ kStringCatalogFrame
          !text "Catalog",0
 
 kStringCatPrevious
-         !text "<--",0
+         !text "< "
+         !byte 144
+         !text "revious",0
 
 kStringCatNext
-         !text "-->",0
+         !byte 142
+         !text "ext page >",0
 
 kStringCatMain
-         !text "<ESC> Main",0
+         !text "Cancel",0
