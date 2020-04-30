@@ -22,6 +22,7 @@
  the cosmic cookie crumbles.
 
 [versions]
+R42.190616.Z5=Release 42 / Serial number 190616 (modern)
 R39.880501.Z3=Release 39 / Serial number 880501
 R37.851003.Z3=Release 37 / Serial number 851003
 R29.840118.Z3=Release 29 / Serial number 840118
