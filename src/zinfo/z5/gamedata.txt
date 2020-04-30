@@ -230,6 +230,12 @@ yagwadb
     !text   "YAGWAD.SAV"
 yagwade
 
+    !byte   planetr42e-planetr42b
+planetr42b
+    !text   "R42.190616.SAV"
+planetr42e
+
+
     !byte   0 ;end of list
 
 gameloc
@@ -371,6 +377,9 @@ gameloc
 ;yagwad
     !byte   $13
 
+;planetr42
+    !byte   $23
+
 gametime
 ;bzoner9
     !byte   $8a
@@ -509,6 +518,9 @@ gametime
 
 ;yagwad
     !byte   0 ;no time
+
+;planetr42
+    !byte   $51
 
 gamescore
 ;bzoner9
@@ -649,6 +661,9 @@ gamescore
 ;yagwad
     !byte   $20
 
+;planetr42
+    !byte   $53
+
 gamemoves
 ;bzoner9
     !byte   0 ;no moves
@@ -787,6 +802,9 @@ gamemoves
 
 ;yagwad
     !byte   $1b
+
+;planetr42
+    !byte   0 ;no moves
 
 gameday
 ;bzoner9
@@ -927,3 +945,5 @@ gameday
 ;yagwad
     !byte   0 ;no day
 
+;planetr42
+    !byte   0 ;no day

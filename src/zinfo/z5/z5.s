@@ -336,6 +336,8 @@ dump_info
     beq    jigsaw
     cpx    #$1d
     beq    ramses
+    cpx    #$2e
+    beq    branch_print
 
 branch_skip
     jmp    skip_time
