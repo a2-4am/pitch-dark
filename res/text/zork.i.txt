@@ -24,8 +24,8 @@
  you new surprises no matter how many times you explore it.
 
 [versions]
+R119.880429.Z3=Release 119 / Serial number 880429
 R88.840726.Z3=Release 88 / Serial number 840726
-R76.840509.Z3=Release 76 / Serial number 840509
 R75.830929.Z3=Release 75 / Serial number 830929
 R52.871125.Z5=Release 52 / Serial number 871125 (Solid Gold)
 R30.830330.Z3=Release 30 / Serial number 830330

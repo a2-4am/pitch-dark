@@ -29,6 +29,6 @@ R14.841005.Z3=Release 14 / Serial number 841005
 [options]
 ARTWORK=1
 CLUES=1
-VERSIONS=0
+VERSIONS=1
 
 [eof]
