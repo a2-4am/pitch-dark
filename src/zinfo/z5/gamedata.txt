@@ -235,6 +235,11 @@ planetr42b
     !text   "R42.190616.SAV"
 planetr42e
 
+    !byte   zdungeonr13e-zdungeonr13b
+zdungeonr13b
+    !text   "R13.040826.SAV"
+zdungeonr13e
+
 
     !byte   0 ;end of list
 
@@ -380,6 +385,9 @@ gameloc
 ;planetr42
     !byte   $23
 
+;zdungeonr13
+    !byte   $10
+
 gametime
 ;bzoner9
     !byte   $8a
@@ -521,6 +529,9 @@ gametime
 
 ;planetr42
     !byte   $51
+
+;zdungeonr13
+    !byte   0 ;no time
 
 gamescore
 ;bzoner9
@@ -664,6 +675,9 @@ gamescore
 ;planetr42
     !byte   $53
 
+;zdungeonr13
+    !byte   $1d
+
 gamemoves
 ;bzoner9
     !byte   0 ;no moves
@@ -806,6 +820,9 @@ gamemoves
 ;planetr42
     !byte   0 ;no moves
 
+;zdungeonr13
+    !byte   $18
+
 gameday
 ;bzoner9
     !byte   0 ;no day
@@ -946,4 +963,7 @@ gameday
     !byte   0 ;no day
 
 ;planetr42
+    !byte   0 ;no day
+
+;zdungeonr13
     !byte   0 ;no day
