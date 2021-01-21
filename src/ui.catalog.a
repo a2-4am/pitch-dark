@@ -212,22 +212,26 @@ isUppercaseKey
 catalog_next
          lda   startIndex
          clc
-         adc   #MAXGAMES               ; page forward and refresh
+         adc   #MAXGAMES
          cmp   gameCount
-         beq   @good
-         bcc   @good
-         jmp   catalog_previous
-@good    sta   startIndex
+         bcc   +
+         lda   #0
++        sta   startIndex
          jmp   RefreshCatalog
 
 catalog_previous
          lda   startIndex
-         bne   @1
-         jmp   catalog_next
-@1
          sec
-         sbc   #MAXGAMES               ; page back and refresh
-         sta   startIndex
+         sbc   #MAXGAMES
+         bcs   +
+         lda   #0
+-        clc
+         adc   #MAXGAMES
+         cmp   gameCount
+         bcc   -
+         sec
+         sbc   #MAXGAMES
++        sta   startIndex
          jmp   RefreshCatalog
 
 catalog_main
