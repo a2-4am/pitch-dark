@@ -25,7 +25,7 @@ kArtworkGSRootDirectory              ; length-prefixed pathname of SHGR graphic 
 DisplayArtwork
 WeCanHazSHR
          ldx   #0                    ; SMC
-         jsr   ResetPath
+-        jsr   ResetPath
          +LDADDR kArtworkRootDirectory
          dex
          bne   +
@@ -49,7 +49,7 @@ WeCanHazSHR
          !word kProDOSFileBuffer
          plx
          bcc   +
--        jmp   SoftBell
+         jmp   SoftBell
 +        sta   $C000                 ; display double hi-res page 1
          sta   $C00D
          sta   $C05E
@@ -65,8 +65,10 @@ WeCanHazSHR
          !word gPathname
          !word kProDOSFileBuffer
          plx
-         bcs   -
-         lda   $C029
+         bcc   +
+         ldx   #0
+         bra   -
++        lda   $C029
          ora   #$81
          sta   $C029                 ; set GS NEWVIDEO mode to turn on SHR mode
 
