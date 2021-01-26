@@ -18,6 +18,8 @@ ACME=acme
 # https://github.com/mach-kernel/cadius
 CADIUS=cadius
 
+PY3=python3
+
 asm: md
 	$(ACME) -r build/grue.system.lst src/loader/grue.system.s
 	$(ACME) -r build/pitchdark.lst src/pitchdark.a
