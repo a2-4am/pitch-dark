@@ -4,7 +4,7 @@
 - Added Zork II r63
 - Added Suspect r14
 - Added Planetfall r42 ("modern" version)
-- Remade DHGR box art with new tool by Kris Kennaway
+- Remade DHGR box art with [ii-pix](https://github.com/KrisKennaway/ii-pix) by Kris Kennaway
 - Paged catalog now works properly with more than two pages
 - Artwork on IIgs now falls back to DHGR if SHR file is not available
 - Fixed some misspellings
