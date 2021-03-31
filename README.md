@@ -9,7 +9,7 @@
 You will need
  - [Xcode command line tools](https://www.google.com/search?q=xcode+command+line+tools)
  - [ACME](https://sourceforge.net/projects/acme-crossass/)
- - [sicklittlemonkey's Cadius fork](https://github.com/sicklittlemonkey/cadius)
+ - [Cadius](https://github.com/mach-kernel/cadius)
 
 Then open a terminal window and type
 
@@ -18,7 +18,7 @@ $ cd pitch-dark/
 $ make
 ```
 
-If all goes well, the `build/` subdirectory will contain a `Pitch Dark.2mg` image which can be mounted in emulators like [OpenEmulator](https://archive.org/details/OpenEmulatorSnapshots) or [Virtual II](http://virtualii.com/).
+If all goes well, the `build/` subdirectory will contain a `Pitch Dark.hdv` image which can be mounted in emulators like [OpenEmulator](https://archive.org/details/OpenEmulatorSnapshots) or [Virtual II](http://virtualii.com/).
 
 ## Windows
 
@@ -34,4 +34,4 @@ Then open a `CMD.EXE` window and type
 C:\> CD PITCH-DARK
 C:\4cade> WINMAKE
 ```
-If all goes well, the `BUILD\` subdirectory will contain a `Pitch Dark.2mg` image which can be mounted in emulators like [AppleWin](https://github.com/AppleWin/AppleWin).
+If all goes well, the `BUILD\` subdirectory will contain a `Pitch Dark.hdv` image which can be mounted in emulators like [AppleWin](https://github.com/AppleWin/AppleWin).

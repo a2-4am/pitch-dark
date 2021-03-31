@@ -9,7 +9,7 @@
 # adapted by 4am on 2018-01-07
 #
 
-DISK=Pitch Dark.2mg
+DISK=Pitch Dark.hdv
 
 # third-party tools required to build
 # https://sourceforge.net/projects/acme-crossass/
@@ -39,7 +39,7 @@ asm: md
 	$(ACME) -r build/zinfo5u.lst src/zinfo/z5u/z5u.s
 
 dsk: md asm
-	cp res/"Pitch Dark.master games collection.do.not.edit.2mg" build/"$(DISK)"
+	cp res/"Pitch Dark.master games collection.do.not.edit.hdv" build/"$(DISK)"
 	cp res/_FileInformation.txt build/
 	bin/fixFileInformation.sh build/_FileInformation.txt
 	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/GRUE.SYSTEM"
