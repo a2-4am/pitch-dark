@@ -513,8 +513,8 @@ skipupper
 
                 ldx     #0
                 ldy     $2006
-                lda     $2006-2,y
-                cmp     #'.'
+                lda     $2006-1,y
+                cmp     #'Z'
                 bne     ++
                 inc     $2006
                 lda     #'V'
