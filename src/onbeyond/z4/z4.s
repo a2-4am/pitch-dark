@@ -1,6 +1,6 @@
 ;license:BSD-3-Clause
 ;extended open/read/write binary file in ProDOS filesystem, with random access
-;copyright (c) Peter Ferrie 2013-19
+;copyright (c) Peter Ferrie 2013-19, 2023
 
 ver_02 = 1
 
@@ -12,7 +12,7 @@ ver_02 = 1
 !to "build/ONBEYONDZ4",plain
 *=$3000
 
-!macro version {!scrxor $80, "2/191025"}
+!macro version {!scrxor $80, "3/230502"}
 
 xsechi=$b1
 xseclo=$b0
