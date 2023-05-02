@@ -43,7 +43,7 @@
  mind is constantly working on artful new turns of phrase.
 
 [versions]
-R20.870722.Z4=Release 19 / Serial number 870722
+R20.870722.Z4=Release 20 / Serial number 870722
 R19.870722.Z4=Release 19 / Serial number 870722
 
 [options]

@@ -40,7 +40,7 @@ goto :EOF
 if "%1" equ "dsk" (
 :dsk
 call :asm
-1>nul copy /y res\"Pitch Dark.master games collection.do.not.edit.2mg" "build\%DISK%"
+1>nul copy /y res\"Pitch Dark.master games collection.do.not.edit.hdv" "build\%DISK%"
 1>nul copy /y res\_FileInformation.txt build\
 cscript /nologo bin\fixFileInformation.js build\_FileInformation.txt
 %CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\GRUE.SYSTEM"
