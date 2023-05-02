@@ -6,7 +6,7 @@ rem
 rem a qkumba monstrosity from 2018-03-01
 rem
 
-set DISK=Pitch Dark.2mg
+set DISK=Pitch Dark.hdv
 
 rem third-party tools required to build (must be in path)
 rem https://sourceforge.net/projects/acme-crossass/
