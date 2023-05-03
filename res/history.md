@@ -1,3 +1,8 @@
+# Revision 5 / serial number 20230503
+
+- Fixed spurious error when viewing Zork II hints
+- Added support for last Z4 revision [fixes Bureaucracy r160]
+
 # Revision 4 / serial number 20210331
 
 - Added Zork I r119

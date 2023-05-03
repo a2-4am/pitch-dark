@@ -231,7 +231,7 @@ kCreditsTop                          ; [array of byte] top row to draw border fo
          !byte 5
          !byte 8
          !byte 8
-         !byte 8
+         !byte 7
 
 kCreditsHeight                       ; [array of byte] height of bounding box for each section of credits
          !byte 10                    ; note: stored here in reverse order compared to the credits file
@@ -239,7 +239,7 @@ kCreditsHeight                       ; [array of byte] height of bounding box fo
          !byte 14
          !byte 8
          !byte 9
-         !byte 8
+         !byte 10
 
 kViewCredits
          !byte ID_CREDITS            ; view ID
