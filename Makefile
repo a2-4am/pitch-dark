@@ -48,7 +48,7 @@ dsk: md asm
 		$(CADIUS) ADDFOLDER "$(BUILDDISK)" "/$(VOLUME)/Z/$$(basename $$f)" "$$f"; \
 	done
 	$(CADIUS) ADDFOLDER "$(BUILDDISK)" "/$(VOLUME)/" "res/HINTS"
-	for f in "build/GRUE.SYSTEM" "build/ONBEYOND.SYSTEM" "build/ZINFO.SYSTEM" "build/$(VOLUME)" "res/$(VOLUME).CONF" "res/GAMES.CONF" "res/CREDITS.TXT"; do \
+	for f in "build/GRUE.SYSTEM" "build/ONBEYOND.SYSTEM" "build/ZINFO.SYSTEM" "build/$(VOLUME)" "res/PITCH.DARK.CONF" "res/GAMES.CONF" "res/CREDITS.TXT"; do \
 		$(CADIUS) ADDFILE "$(BUILDDISK)" "/$(VOLUME)/" "$$f"; \
 	done
 	$(CADIUS) CREATEFOLDER "$(BUILDDISK)" "/$(VOLUME)/LIB/"
