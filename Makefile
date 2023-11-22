@@ -9,7 +9,8 @@
 # adapted by 4am on 2018-01-07
 #
 
-DISK=Pitch Dark.hdv
+BUILDDISK=build/Pitch Dark.hdv
+VOLUME=PITCH.DARK
 
 # third-party tools required to build
 # https://sourceforge.net/projects/acme-crossass/
@@ -39,45 +40,37 @@ asm: md
 	$(ACME) -r build/zinfo5u.lst src/zinfo/z5u/z5u.s
 
 dsk: md asm
-	cp res/"Pitch Dark.master games collection.do.not.edit.hdv" build/"$(DISK)"
+	cp res/blank.hdv "$(BUILDDISK)"
 	cp res/_FileInformation.txt build/
 	bin/fixFileInformation.sh build/_FileInformation.txt
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/GRUE.SYSTEM"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/ONBEYOND.SYSTEM"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/ZINFO.SYSTEM"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "build/PITCH.DARK"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "res/PITCH.DARK.CONF"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "res/GAMES.CONF"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/" "res/CREDITS.TXT"
-	$(CADIUS) CREATEFOLDER build/"$(DISK)" "/PITCH.DARK/LIB/"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ1"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ2"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ3"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ4"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ5"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ONBEYONDZ5U"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ZINFO1"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ZINFO2"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ZINFO3"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ZINFO4"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ZINFO5"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/LIB/" "build/ZINFO5U"
+	$(CADIUS) CREATEFOLDER "$(BUILDDISK)" "/$(VOLUME)/Z/"
+	for f in res/Z/*; do \
+		$(CADIUS) ADDFOLDER "$(BUILDDISK)" "/$(VOLUME)/Z/$$(basename $$f)" "$$f"; \
+	done
+	$(CADIUS) ADDFOLDER "$(BUILDDISK)" "/$(VOLUME)/" "res/HINTS"
+	for f in "build/GRUE.SYSTEM" "build/ONBEYOND.SYSTEM" "build/ZINFO.SYSTEM" "build/$(VOLUME)" "res/$(VOLUME).CONF" "res/GAMES.CONF" "res/CREDITS.TXT"; do \
+		$(CADIUS) ADDFILE "$(BUILDDISK)" "/$(VOLUME)/" "$$f"; \
+	done
+	$(CADIUS) CREATEFOLDER "$(BUILDDISK)" "/$(VOLUME)/LIB/"
+	for f in ONBEYONDZ1 ONBEYONDZ2 ONBEYONDZ3 ONBEYONDZ4 ONBEYONDZ5 ONBEYONDZ5U ZINFO1 ZINFO2 ZINFO3 ZINFO4 ZINFO5 ZINFO5U; do \
+		$(CADIUS) ADDFILE "$(BUILDDISK)" "/$(VOLUME)/LIB/" "build/$$f"; \
+	done
 	# sample save game files for development
-	#$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/Z/WISHBRINGER/" "res/R69.850920.SAV"
-	#$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/Z/ZORK.I/" "res/R88.840726.SAV"
+	#$(CADIUS) ADDFILE "$(BUILDDISK)" "/$(VOLUME)/Z/WISHBRINGER/" "res/R69.850920.SAV"
+	#$(CADIUS) ADDFILE "$(BUILDDISK)" "/$(VOLUME)/Z/ZORK.I/" "res/R88.840726.SAV"
 
 txt: dsk
-	mkdir -p build/text
+	mkdir -p build/TEXT
 	$(PY3) bin/textnormalize.py res/text/*
-	cd build && $(CADIUS) ADDFOLDER "$(DISK)" "/PITCH.DARK/TEXT" text
+	$(CADIUS) ADDFOLDER "$(BUILDDISK)" "/$(VOLUME)/TEXT" build/TEXT
 
 artwork: dsk
-	$(CADIUS) ADDFOLDER build/"$(DISK)" "/PITCH.DARK/ARTWORK" "res/artwork"
-	$(CADIUS) ADDFILE build/"$(DISK)" "/PITCH.DARK/ARTWORK/" "res/DHRSLIDE.SYSTEM"
-	$(CADIUS) ADDFOLDER build/"$(DISK)" "/PITCH.DARK/ARTWORKGS" "res/artworkgs"
+	$(CADIUS) ADDFOLDER "$(BUILDDISK)" "/$(VOLUME)/ARTWORK" "res/artwork"
+	$(CADIUS) ADDFILE "$(BUILDDISK)" "/$(VOLUME)/ARTWORK/" "res/DHRSLIDE.SYSTEM"
+	$(CADIUS) ADDFOLDER "$(BUILDDISK)" "/$(VOLUME)/ARTWORKGS" "res/artworkgs"
 
 mount: dsk
-	osascript bin/V2Make.scpt "`pwd`" bin/pitchdark.vii build/"$(DISK)"
+	osascript bin/V2Make.scpt "`pwd`" bin/pitchdark.vii "$(BUILDDISK)"
 
 md:
 	mkdir -p build

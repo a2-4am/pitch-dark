@@ -17,10 +17,11 @@
 
 [versions]
 R2.871123.Z3=Release 2 / Serial number 871123
+R15.210307.Z3=Release 15 / Serial number 210307
 
 [options]
 ARTWORK=0
 CLUES=0
-VERSIONS=0
+VERSIONS=1
 
 [eof]
