@@ -6,7 +6,8 @@ rem
 rem a qkumba monstrosity from 2018-03-01
 rem
 
-set DISK=Pitch Dark.hdv
+set BUILDDISK=build\Pitch Dark.hdv
+set VOLUME=PITCH.DARK
 
 rem third-party tools required to build (must be in path)
 rem https://sourceforge.net/projects/acme-crossass/
@@ -40,47 +41,33 @@ goto :EOF
 if "%1" equ "dsk" (
 :dsk
 call :asm
-1>nul copy /y res\"Pitch Dark.master games collection.do.not.edit.hdv" "build\%DISK%"
+1>nul copy /y res\blank.hdv "%BUILDDISK%"
 1>nul copy /y res\_FileInformation.txt build\
 cscript /nologo bin\fixFileInformation.js build\_FileInformation.txt
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\GRUE.SYSTEM"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\ONBEYOND.SYSTEM"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\ZINFO.SYSTEM"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/" "build\PITCH.DARK"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/" "res\PITCH.DARK.CONF"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/" "res\GAMES.CONF"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/" "res\CREDITS.TXT"
-%CADIUS% CREATEFOLDER "build\%DISK%" "/PITCH.DARK/LIB/"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ1"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ2"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ3"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ4"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ5"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ONBEYONDZ5U"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ZINFO1"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ZINFO2"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ZINFO3"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ZINFO4"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ZINFO5"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/LIB/" "build\ZINFO5U"
+%CADIUS% CREATEFOLDER "%BUILDDISK%" "/%VOLUME%/Z/"
+for /d %%q in (res\Z\*) do %CADIUS% ADDFOLDER "%BUILDDISK%" "/%VOLUME%/Z/%%~nxq" "%%q"
+%CADIUS% ADDFOLDER "%BUILDDISK%" "/%VOLUME%/" "res/HINTS"
+for %%q in ("build\GRUE.SYSTEM" "build\ONBEYOND.SYSTEM" "build\ZINFO.SYSTEM" "build\PITCH.DARK" "res\PITCH.DARK.CONF" "res\GAMES.CONF" "res\CREDITS.TXT") do %CADIUS% ADDFILE "%BUILDDISK%" "/%VOLUME%" "%%q"
+%CADIUS% CREATEFOLDER "%BUILDDISK%" "/%VOLUME%/LIB/"
+for %%q in (ONBEYONDZ1 ONBEYONDZ2 ONBEYONDZ3 ONBEYONDZ4 ONBEYONDZ5 ONBEYONDZ5U ZINFO1 ZINFO2 ZINFO3 ZINFO4 ZINFO5 ZINFO5U) do %CADIUS% ADDFILE "%BUILDDISK%" "/%VOLUME%/LIB/" "build\%%q"
 goto :EOF
 )
 
 if "%1" equ "txt" (
 call :dsk
 :txt
-2>nul md build\text
+2>nul md build\TEXT
 cscript /nologo bin/textnormalize.js res\text
-cd build & %CADIUS% ADDFOLDER "%DISK%" "/PITCH.DARK/TEXT" text & cd ..
+%CADIUS% ADDFOLDER "%BUILDDISK%" "/%VOLUME%/TEXT" build/TEXT
 goto :EOF
 )
 
 if "%1" equ "artwork" (
 call :dsk
 :artwork
-%CADIUS% ADDFOLDER "build\%DISK%" "/PITCH.DARK/ARTWORK" "res\artwork"
-%CADIUS% ADDFILE "build\%DISK%" "/PITCH.DARK/ARTWORK/" "res\DHRSLIDE.SYSTEM"
-%CADIUS% ADDFOLDER "build\%DISK%" "/PITCH.DARK/ARTWORKGS" "res\artworkgs"
+%CADIUS% ADDFOLDER "%BUILDDISK%" "/%VOLUME%/ARTWORK" "res\artwork"
+%CADIUS% ADDFILE "%BUILDDISK%" "/%VOLUME%/ARTWORK/" "res\DHRSLIDE.SYSTEM"
+%CADIUS% ADDFOLDER "%BUILDDISK%" "/%VOLUME%/ARTWORKGS" "res\artworkgs"
 goto :EOF
 )
 
